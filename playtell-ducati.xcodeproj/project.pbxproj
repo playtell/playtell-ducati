@@ -22,13 +22,13 @@
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F4A9D5D81576B5950015D977 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */ = {isa = PBXFileReference; path = "playtell-ducati-Info.plist"; sourceTree = "<group>"; };
+		F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "playtell-ducati-Info.plist"; sourceTree = "<group>"; };
 		F4A9D5DE1576B5950015D977 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F4A9D5E01576B5950015D977 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */ = {isa = PBXFileReference; path = "playtell-ducati-Prefix.pch"; sourceTree = "<group>"; };
-		F4A9D5E31576B5950015D977 /* PTAppDelegate.h */ = {isa = PBXFileReference; path = PTAppDelegate.h; sourceTree = "<group>"; };
+		F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "playtell-ducati-Prefix.pch"; sourceTree = "<group>"; };
+		F4A9D5E31576B5950015D977 /* PTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTAppDelegate.h; sourceTree = "<group>"; };
 		F4A9D5E41576B5950015D977 /* PTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTAppDelegate.m; sourceTree = "<group>"; };
-		F4A9D5E61576B5950015D977 /* PTViewController.h */ = {isa = PBXFileReference; path = PTViewController.h; sourceTree = "<group>"; };
+		F4A9D5E61576B5950015D977 /* PTViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTViewController.h; sourceTree = "<group>"; };
 		F4A9D5E71576B5950015D977 /* PTViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTViewController.m; sourceTree = "<group>"; };
 		F4A9D5EA1576B5950015D977 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PTViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -243,6 +243,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -254,6 +255,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
