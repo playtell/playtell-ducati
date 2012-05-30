@@ -1,0 +1,285 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
+		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
+		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
+		F4A9D5DF1576B5950015D977 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D5DD1576B5950015D977 /* InfoPlist.strings */; };
+		F4A9D5E11576B5950015D977 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D5E01576B5950015D977 /* main.m */; };
+		F4A9D5E51576B5950015D977 /* PTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D5E41576B5950015D977 /* PTAppDelegate.m */; };
+		F4A9D5E81576B5950015D977 /* PTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D5E71576B5950015D977 /* PTViewController.m */; };
+		F4A9D5EB1576B5950015D977 /* PTViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D5E91576B5950015D977 /* PTViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F4A9D5D81576B5950015D977 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */ = {isa = PBXFileReference; path = "playtell-ducati-Info.plist"; sourceTree = "<group>"; };
+		F4A9D5DE1576B5950015D977 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F4A9D5E01576B5950015D977 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */ = {isa = PBXFileReference; path = "playtell-ducati-Prefix.pch"; sourceTree = "<group>"; };
+		F4A9D5E31576B5950015D977 /* PTAppDelegate.h */ = {isa = PBXFileReference; path = PTAppDelegate.h; sourceTree = "<group>"; };
+		F4A9D5E41576B5950015D977 /* PTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTAppDelegate.m; sourceTree = "<group>"; };
+		F4A9D5E61576B5950015D977 /* PTViewController.h */ = {isa = PBXFileReference; path = PTViewController.h; sourceTree = "<group>"; };
+		F4A9D5E71576B5950015D977 /* PTViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTViewController.m; sourceTree = "<group>"; };
+		F4A9D5EA1576B5950015D977 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PTViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F4A9D5CD1576B5950015D977 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */,
+				F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */,
+				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F4A9D5C51576B5950015D977 = {
+			isa = PBXGroup;
+			children = (
+				F4A9D5DA1576B5950015D977 /* playtell-ducati */,
+				F4A9D5D31576B5950015D977 /* Frameworks */,
+				F4A9D5D11576B5950015D977 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F4A9D5D11576B5950015D977 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D5D01576B5950015D977 /* playtell-ducati.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4A9D5D31576B5950015D977 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D5D41576B5950015D977 /* UIKit.framework */,
+				F4A9D5D61576B5950015D977 /* Foundation.framework */,
+				F4A9D5D81576B5950015D977 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4A9D5DA1576B5950015D977 /* playtell-ducati */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
+				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
+				F4A9D5E61576B5950015D977 /* PTViewController.h */,
+				F4A9D5E71576B5950015D977 /* PTViewController.m */,
+				F4A9D5E91576B5950015D977 /* PTViewController.xib */,
+				F4A9D5DB1576B5950015D977 /* Supporting Files */,
+			);
+			path = "playtell-ducati";
+			sourceTree = "<group>";
+		};
+		F4A9D5DB1576B5950015D977 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */,
+				F4A9D5DD1576B5950015D977 /* InfoPlist.strings */,
+				F4A9D5E01576B5950015D977 /* main.m */,
+				F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F4A9D5CF1576B5950015D977 /* playtell-ducati */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4A9D5EE1576B5950015D977 /* Build configuration list for PBXNativeTarget "playtell-ducati" */;
+			buildPhases = (
+				F4A9D5CC1576B5950015D977 /* Sources */,
+				F4A9D5CD1576B5950015D977 /* Frameworks */,
+				F4A9D5CE1576B5950015D977 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "playtell-ducati";
+			productName = "playtell-ducati";
+			productReference = F4A9D5D01576B5950015D977 /* playtell-ducati.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4A9D5C71576B5950015D977 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = PT;
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = LovelyRide;
+			};
+			buildConfigurationList = F4A9D5CA1576B5950015D977 /* Build configuration list for PBXProject "playtell-ducati" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F4A9D5C51576B5950015D977;
+			productRefGroup = F4A9D5D11576B5950015D977 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F4A9D5CF1576B5950015D977 /* playtell-ducati */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4A9D5CE1576B5950015D977 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4A9D5DF1576B5950015D977 /* InfoPlist.strings in Resources */,
+				F4A9D5EB1576B5950015D977 /* PTViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F4A9D5CC1576B5950015D977 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4A9D5E11576B5950015D977 /* main.m in Sources */,
+				F4A9D5E51576B5950015D977 /* PTAppDelegate.m in Sources */,
+				F4A9D5E81576B5950015D977 /* PTViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F4A9D5DD1576B5950015D977 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4A9D5DE1576B5950015D977 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F4A9D5E91576B5950015D977 /* PTViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4A9D5EA1576B5950015D977 /* en */,
+			);
+			name = PTViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F4A9D5EC1576B5950015D977 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		F4A9D5ED1576B5950015D977 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F4A9D5EF1576B5950015D977 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
+				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F4A9D5F01576B5950015D977 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
+				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F4A9D5CA1576B5950015D977 /* Build configuration list for PBXProject "playtell-ducati" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4A9D5EC1576B5950015D977 /* Debug */,
+				F4A9D5ED1576B5950015D977 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4A9D5EE1576B5950015D977 /* Build configuration list for PBXNativeTarget "playtell-ducati" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4A9D5EF1576B5950015D977 /* Debug */,
+				F4A9D5F01576B5950015D977 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F4A9D5C71576B5950015D977 /* Project object */;
+}
