@@ -15,6 +15,9 @@
 		F4A9D5E51576B5950015D977 /* PTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D5E41576B5950015D977 /* PTAppDelegate.m */; };
 		F4A9D5E81576B5950015D977 /* PTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D5E71576B5950015D977 /* PTViewController.m */; };
 		F4A9D5EB1576B5950015D977 /* PTViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D5E91576B5950015D977 /* PTViewController.xib */; };
+		F4A9D60C1576B8B00015D977 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */; };
+		F4A9D61B1576BA330015D977 /* 72.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D61A1576BA330015D977 /* 72.png */; };
+		F4A9D61D1576BA370015D977 /* 144.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D61C1576BA370015D977 /* 144.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		F4A9D5E61576B5950015D977 /* PTViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTViewController.h; sourceTree = "<group>"; };
 		F4A9D5E71576B5950015D977 /* PTViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTViewController.m; sourceTree = "<group>"; };
 		F4A9D5EA1576B5950015D977 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PTViewController.xib; sourceTree = "<group>"; };
+		F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		F4A9D61A1576BA330015D977 /* 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 72.png; path = ../../72.png; sourceTree = "<group>"; };
+		F4A9D61C1576BA370015D977 /* 144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 144.png; path = ../../144.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,7 @@
 		F4A9D5DA1576B5950015D977 /* playtell-ducati */ = {
 			isa = PBXGroup;
 			children = (
+				F4A9D6061576B8B00015D977 /* artwork */,
 				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
 				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
 				F4A9D5E61576B5950015D977 /* PTViewController.h */,
@@ -96,6 +103,16 @@
 				F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F4A9D6061576B8B00015D977 /* artwork */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D61C1576BA370015D977 /* 144.png */,
+				F4A9D61A1576BA330015D977 /* 72.png */,
+				F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */,
+			);
+			path = artwork;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,6 +169,9 @@
 			files = (
 				F4A9D5DF1576B5950015D977 /* InfoPlist.strings in Resources */,
 				F4A9D5EB1576B5950015D977 /* PTViewController.xib in Resources */,
+				F4A9D60C1576B8B00015D977 /* Default-Landscape~ipad.png in Resources */,
+				F4A9D61B1576BA330015D977 /* 72.png in Resources */,
+				F4A9D61D1576BA370015D977 /* 144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +300,7 @@
 				F4A9D5F01576B5950015D977 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
