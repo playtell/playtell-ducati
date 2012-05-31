@@ -3,12 +3,13 @@
 //  playtell-ducati
 //
 //  Created by Ricky Hussmann on 5/30/12.
-//  Copyright (c) 2012 LovelyRide. All rights reserved.
+//  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
 #import "PTAppDelegate.h"
-
 #import "PTViewController.h"
+#import "UAPush.h"
+#import "UAirship.h"
 
 @implementation PTAppDelegate
 
@@ -22,7 +23,27 @@
     self.viewController = [[PTViewController alloc] initWithNibName:@"PTViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
+
+    [self setupPushNotifications:launchOptions];
     return YES;
+}
+
+- (void)setupPushNotifications:(NSDictionary*)theLaunchOptions {
+    [self registerForAPNS];
+    [self registerForUrbanAirshipNotifications:theLaunchOptions];
+}
+
+- (void)registerForAPNS {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert |
+                                                                           UIRemoteNotificationTypeBadge |
+                                                                           UIRemoteNotificationTypeSound)];
+}
+
+- (void)registerForUrbanAirshipNotifications:(NSDictionary*)theLaunchOptions {
+    NSMutableDictionary *takeOffOptions = [NSMutableDictionary dictionary];
+    [takeOffOptions setValue:theLaunchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+    [UAirship takeOff:takeOffOptions];
+    [[UAPush shared] resetBadge];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

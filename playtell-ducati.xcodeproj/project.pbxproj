@@ -584,6 +584,7 @@
 		F4A9D83715771F3F0015D977 /* CrittercismGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrittercismGridViewController.xib; sourceTree = "<group>"; };
 		F4A9D83815771F3F0015D977 /* CrittercismRootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrittercismRootViewController.xib; sourceTree = "<group>"; };
 		F4A9D83915771F3F0015D977 /* CrittercismViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CrittercismViewController.xib; sourceTree = "<group>"; };
+		F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "playtell-ducati.entitlements"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -659,6 +660,7 @@
 		F4A9D5DA1576B5950015D977 /* playtell-ducati */ = {
 			isa = PBXGroup;
 			children = (
+				F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */,
 				F4A9D6061576B8B00015D977 /* artwork */,
 				F4A9D7CF15771F3F0015D977 /* crittercism-sdk */,
 				F4A9D7B515771CAE0015D977 /* pusher */,

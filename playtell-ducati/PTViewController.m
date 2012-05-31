@@ -3,7 +3,7 @@
 //  playtell-ducati
 //
 //  Created by Ricky Hussmann on 5/30/12.
-//  Copyright (c) 2012 LovelyRide. All rights reserved.
+//  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
 #import "PTViewController.h"
