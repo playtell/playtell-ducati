@@ -123,6 +123,10 @@
 		F4A9D7A81576C3A70015D977 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7A71576C3A70015D977 /* MessageUI.framework */; };
 		F4A9D7AA1576C3AD0015D977 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */; };
 		F4A9D7AC1576C7440015D977 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D7AB1576C7440015D977 /* AirshipConfig.plist */; };
+		F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C615771CAE0015D977 /* libPusher-combined.a */; };
+		F4A9D7CB15771CAE0015D977 /* libPusher-iphoneos5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C715771CAE0015D977 /* libPusher-iphoneos5.1.a */; };
+		F4A9D7CC15771CAE0015D977 /* libPusher-iphonesimulator5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C815771CAE0015D977 /* libPusher-iphonesimulator5.1.a */; };
+		F4A9D7CD15771CAE0015D977 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D7C915771CAE0015D977 /* README.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -384,6 +388,25 @@
 		F4A9D7A71576C3A70015D977 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F4A9D7AB1576C7440015D977 /* AirshipConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AirshipConfig.plist; sourceTree = "<group>"; };
+		F4A9D7B715771CAE0015D977 /* PTEventListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTEventListener.h; sourceTree = "<group>"; };
+		F4A9D7B815771CAE0015D977 /* PTJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTJSON.h; sourceTree = "<group>"; };
+		F4A9D7B915771CAE0015D977 /* PTJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTJSONParser.h; sourceTree = "<group>"; };
+		F4A9D7BA15771CAE0015D977 /* PTPusher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusher.h; sourceTree = "<group>"; };
+		F4A9D7BB15771CAE0015D977 /* PTPusherAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherAPI.h; sourceTree = "<group>"; };
+		F4A9D7BC15771CAE0015D977 /* PTPusherChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherChannel.h; sourceTree = "<group>"; };
+		F4A9D7BD15771CAE0015D977 /* PTPusherConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherConnection.h; sourceTree = "<group>"; };
+		F4A9D7BE15771CAE0015D977 /* PTPusherDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherDelegate.h; sourceTree = "<group>"; };
+		F4A9D7BF15771CAE0015D977 /* PTPusherErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherErrors.h; sourceTree = "<group>"; };
+		F4A9D7C015771CAE0015D977 /* PTPusherEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherEvent.h; sourceTree = "<group>"; };
+		F4A9D7C115771CAE0015D977 /* PTPusherEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherEventDispatcher.h; sourceTree = "<group>"; };
+		F4A9D7C215771CAE0015D977 /* PTPusherEventPublisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherEventPublisher.h; sourceTree = "<group>"; };
+		F4A9D7C315771CAE0015D977 /* PTPusherMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherMacros.h; sourceTree = "<group>"; };
+		F4A9D7C415771CAE0015D977 /* PTPusherPresenceChannelDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPusherPresenceChannelDelegate.h; sourceTree = "<group>"; };
+		F4A9D7C515771CAE0015D977 /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRWebSocket.h; sourceTree = "<group>"; };
+		F4A9D7C615771CAE0015D977 /* libPusher-combined.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPusher-combined.a"; sourceTree = "<group>"; };
+		F4A9D7C715771CAE0015D977 /* libPusher-iphoneos5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPusher-iphoneos5.1.a"; sourceTree = "<group>"; };
+		F4A9D7C815771CAE0015D977 /* libPusher-iphonesimulator5.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPusher-iphonesimulator5.1.a"; sourceTree = "<group>"; };
+		F4A9D7C915771CAE0015D977 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -407,6 +430,9 @@
 				F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */,
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
 				F4A9D72B1576C1B50015D977 /* libUAirship-1.2.1.a in Frameworks */,
+				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
+				F4A9D7CB15771CAE0015D977 /* libPusher-iphoneos5.1.a in Frameworks */,
+				F4A9D7CC15771CAE0015D977 /* libPusher-iphonesimulator5.1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +482,7 @@
 			isa = PBXGroup;
 			children = (
 				F4A9D6061576B8B00015D977 /* artwork */,
+				F4A9D7B515771CAE0015D977 /* pusher */,
 				F4A9D61E1576C1B50015D977 /* urban airship */,
 				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
 				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
@@ -1029,6 +1056,40 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		F4A9D7B515771CAE0015D977 /* pusher */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D7B615771CAE0015D977 /* headers */,
+				F4A9D7C615771CAE0015D977 /* libPusher-combined.a */,
+				F4A9D7C715771CAE0015D977 /* libPusher-iphoneos5.1.a */,
+				F4A9D7C815771CAE0015D977 /* libPusher-iphonesimulator5.1.a */,
+				F4A9D7C915771CAE0015D977 /* README.txt */,
+			);
+			path = pusher;
+			sourceTree = "<group>";
+		};
+		F4A9D7B615771CAE0015D977 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D7B715771CAE0015D977 /* PTEventListener.h */,
+				F4A9D7B815771CAE0015D977 /* PTJSON.h */,
+				F4A9D7B915771CAE0015D977 /* PTJSONParser.h */,
+				F4A9D7BA15771CAE0015D977 /* PTPusher.h */,
+				F4A9D7BB15771CAE0015D977 /* PTPusherAPI.h */,
+				F4A9D7BC15771CAE0015D977 /* PTPusherChannel.h */,
+				F4A9D7BD15771CAE0015D977 /* PTPusherConnection.h */,
+				F4A9D7BE15771CAE0015D977 /* PTPusherDelegate.h */,
+				F4A9D7BF15771CAE0015D977 /* PTPusherErrors.h */,
+				F4A9D7C015771CAE0015D977 /* PTPusherEvent.h */,
+				F4A9D7C115771CAE0015D977 /* PTPusherEventDispatcher.h */,
+				F4A9D7C215771CAE0015D977 /* PTPusherEventPublisher.h */,
+				F4A9D7C315771CAE0015D977 /* PTPusherMacros.h */,
+				F4A9D7C415771CAE0015D977 /* PTPusherPresenceChannelDelegate.h */,
+				F4A9D7C515771CAE0015D977 /* SRWebSocket.h */,
+			);
+			path = headers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1137,6 +1198,7 @@
 				F4A9D7901576C1B50015D977 /* UASubscriptionSettingsViewController.xib in Resources */,
 				F4A9D7911576C1B50015D977 /* UASubscriptionUserProductsViewController.xib in Resources */,
 				F4A9D7AC1576C7440015D977 /* AirshipConfig.plist in Resources */,
+				F4A9D7CD15771CAE0015D977 /* README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1273,6 +1335,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
+					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1289,6 +1352,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
+					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
