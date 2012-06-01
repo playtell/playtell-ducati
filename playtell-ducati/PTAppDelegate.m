@@ -7,6 +7,7 @@
 //
 
 #import "PTAppDelegate.h"
+#import "PTLoginViewController.h"
 #import "PTViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
@@ -20,7 +21,8 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[PTViewController alloc] initWithNibName:@"PTViewController" bundle:nil];
+//    self.viewController = [[PTViewController alloc] initWithNibName:@"PTViewController" bundle:nil];
+    self.viewController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
@@ -61,6 +63,8 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

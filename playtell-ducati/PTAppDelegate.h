@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class PTViewController;
+@class PTLoginViewController;
 
 @interface PTAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) PTViewController *viewController;
+@property (strong, nonatomic) PTLoginViewController *viewController;
 
 @end
