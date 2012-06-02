@@ -233,6 +233,9 @@
 		F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EB1579218E0015D977 /* PTUser.m */; };
 		F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */; };
 		F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D8F415798DBF0015D977 /* libicucore.dylib */; };
+		F4A9D8F8157A86620015D977 /* PTDialpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */; };
+		F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */; };
+		F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -671,6 +674,12 @@
 		F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUpdateSettingsRequest.h; sourceTree = "<group>"; };
 		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
 		F4A9D8F415798DBF0015D977 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTDialpadViewController.h; sourceTree = "<group>"; };
+		F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTDialpadViewController.m; sourceTree = "<group>"; };
+		F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateButton.h; sourceTree = "<group>"; };
+		F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateButton.m; sourceTree = "<group>"; };
+		F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+PlayTell.h"; sourceTree = "<group>"; };
+		F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+PlayTell.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -706,7 +715,6 @@
 		F4A9D5C51576B5950015D977 = {
 			isa = PBXGroup;
 			children = (
-				F4A9D8F415798DBF0015D977 /* libicucore.dylib */,
 				F4A9D5DA1576B5950015D977 /* playtell-ducati */,
 				F4A9D5D31576B5950015D977 /* Frameworks */,
 				F4A9D5D11576B5950015D977 /* Products */,
@@ -730,6 +738,7 @@
 				F4A9D7A51576C3930015D977 /* CoreLocation.framework */,
 				F4A9D7A11576C3850015D977 /* CoreTelephony.framework */,
 				F4A9D5D61576B5950015D977 /* Foundation.framework */,
+				F4A9D8F415798DBF0015D977 /* libicucore.dylib */,
 				F4A9D79F1576C37C0015D977 /* libsqlite3.dylib */,
 				F4A9D79D1576C3710015D977 /* libz.dylib */,
 				F4A9D7931576C32E0015D977 /* MapKit.framework */,
@@ -1513,6 +1522,8 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */,
+				F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */,
 				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
 				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
 				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
@@ -1527,6 +1538,8 @@
 				F4A9D8941577FC150015D977 /* NSDictionary+Util.m */,
 				F4A9D8B615780C360015D977 /* NSMutableURLRequest+POSTParameters.h */,
 				F4A9D8B715780C360015D977 /* NSMutableURLRequest+POSTParameters.m */,
+				F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */,
+				F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -1562,6 +1575,8 @@
 		F4A9D8CF1578153E0015D977 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
+				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				F4A9D8D01578153E0015D977 /* PTTextField.h */,
 				F4A9D8D11578153E0015D977 /* PTTextField.m */,
 			);
@@ -1798,6 +1813,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A9D8F8157A86620015D977 /* PTDialpadViewController.m in Sources */,
 				F4A9D5E11576B5950015D977 /* main.m in Sources */,
 				F4A9D5E51576B5950015D977 /* PTAppDelegate.m in Sources */,
 				F4A9D5E81576B5950015D977 /* PTViewController.m in Sources */,
@@ -1861,6 +1877,8 @@
 				F4A9D8E91579217E0015D977 /* PTPlaymate.m in Sources */,
 				F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */,
 				F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */,
+				F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */,
+				F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
