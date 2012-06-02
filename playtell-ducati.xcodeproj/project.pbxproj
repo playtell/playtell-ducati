@@ -236,6 +236,8 @@
 		F4A9D8F8157A86620015D977 /* PTDialpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */; };
 		F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */; };
 		F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */; };
+		F4A9D900157A88870015D977 /* profile_default_2.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8FF157A88870015D977 /* profile_default_2.png */; };
+		F4A9D902157A92F90015D977 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D901157A92F80015D977 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -680,6 +682,8 @@
 		F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateButton.m; sourceTree = "<group>"; };
 		F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+PlayTell.h"; sourceTree = "<group>"; };
 		F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+PlayTell.m"; sourceTree = "<group>"; };
+		F4A9D8FF157A88870015D977 /* profile_default_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_default_2.png; sourceTree = "<group>"; };
+		F4A9D901157A92F80015D977 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -687,6 +691,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A9D902157A92F90015D977 /* QuartzCore.framework in Frameworks */,
 				F4A9D79C1576C3690015D977 /* SystemConfiguration.framework in Frameworks */,
 				F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */,
 				F4A9D7AA1576C3AD0015D977 /* AudioToolbox.framework in Frameworks */,
@@ -744,6 +749,7 @@
 				F4A9D7931576C32E0015D977 /* MapKit.framework */,
 				F4A9D7A71576C3A70015D977 /* MessageUI.framework */,
 				F4A9D7971576C35A0015D977 /* MobileCoreServices.framework */,
+				F4A9D901157A92F80015D977 /* QuartzCore.framework */,
 				F4A9D7991576C3620015D977 /* Security.framework */,
 				F4A9D7A31576C38C0015D977 /* StoreKit.framework */,
 				F4A9D79B1576C3690015D977 /* SystemConfiguration.framework */,
@@ -806,6 +812,7 @@
 				F4A9D8C2157814EF0015D977 /* form-field.png */,
 				F4A9D8D31578157F0015D977 /* form-field-depressed.png */,
 				F4A9D8C3157814EF0015D977 /* login_bg.png */,
+				F4A9D8FF157A88870015D977 /* profile_default_2.png */,
 			);
 			path = artwork;
 			sourceTree = "<group>";
@@ -1803,6 +1810,7 @@
 				F4A9D8CE157814EF0015D977 /* login_bg.png in Resources */,
 				F4A9D8D41578157F0015D977 /* form-field-depressed.png in Resources */,
 				F4A9D8D6157815990015D977 /* dual-form-field-depressed.png in Resources */,
+				F4A9D900157A88870015D977 /* profile_default_2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1972,7 +1980,10 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
@@ -1996,7 +2007,10 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
@@ -2042,7 +2056,10 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
@@ -2087,7 +2104,10 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";

@@ -11,11 +11,11 @@
 
 #import <UIKit/UIKit.h>
 
-@class PTViewController;
-@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPusherDelegate>
+@class PTDialpadViewController;
+@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPusherDelegate, PTPusherPresenceChannelDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) PTViewController *viewController;
+@property (strong, nonatomic) PTDialpadViewController *viewController;
 
 @end

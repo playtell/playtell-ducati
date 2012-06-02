@@ -20,14 +20,19 @@
 - (void)loadView {
     [super loadView];
 
+    UIImage* backgroundImage = [UIImage imageNamed:@"login_bg.png"];
+    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
+    background.tag = 666;
+    [self.view addSubview:background];
+
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
     [self.view addSubview:self.scrollView];
 }
 
 - (void)viewDidLoad {
-    self.view.backgroundColor = [UIColor redColor];
+//    self.view.backgroundColor = [UIColor redColor];
 
-    NSUInteger numPlaymates = 12;
+    NSUInteger numPlaymates = 8;
     NSMutableArray* playmates = [NSMutableArray arrayWithCapacity:100];
     for (int playmateIndex = 0; playmateIndex < numPlaymates; playmateIndex++) {
         [playmates addObject:[[PTPlaymate alloc] init]];
@@ -70,6 +75,14 @@
 
     self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
     NSLog(@"Number of rows: %u", numRows);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    UIView* background = [self.view viewWithTag:666];
+    CGRect backgroundFrame = self.view.frame;
+    backgroundFrame.origin = CGPointZero;
+    background.frame = backgroundFrame;
 }
 
 - (void)playmateClicked:(id)sender {
