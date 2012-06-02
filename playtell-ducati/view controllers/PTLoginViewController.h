@@ -10,6 +10,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class PTLoginViewController;
+
+@protocol PTLoginViewControllerDelegate <NSObject>
+- (void)loginControllerDidLogin:(PTLoginViewController*)controller;
+@end
+
 @interface PTLoginViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, retain) IBOutlet UITextField* nicknameField;
@@ -27,6 +33,8 @@
 @property (nonatomic, retain) IBOutlet UIImageView* errorExclamation;
 @property (nonatomic, retain) IBOutlet UILabel* errorTextLabel;
 @property (nonatomic, retain) IBOutlet UIImageView* passwordFieldBackground;
+
+@property (nonatomic) id<PTLoginViewControllerDelegate> delegate;
 
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)testShowErrors:(id)sender;

@@ -7,7 +7,7 @@
 //
 
 #import "PTAppDelegate.h"
-#import "PTLoginViewController.h"
+#import "PTPusher.h"
 #import "PTViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
@@ -21,12 +21,16 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-//    self.viewController = [[PTViewController alloc] initWithNibName:@"PTViewController" bundle:nil];
-    self.viewController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
+    self.viewController = [[PTViewController alloc] initWithNibName:@"PTViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
     [self setupPushNotifications:launchOptions];
+
+    PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
+    loginController.delegate = self;
+
+    [self.viewController presentModalViewController:loginController animated:YES];
     return YES;
 }
 
@@ -48,6 +52,18 @@
     [[UAPush shared] resetBadge];
 }
 
+- (void)loginControllerDidLogin:(PTLoginViewController*)controller {
+    [self.viewController dismissModalViewControllerAnimated:YES];
+
+    PTPusher* pusher = [PTPusher pusherWithKey:@"cdac251f32d5b6d2ef7d" delegate:self encrypted:NO];
+    pusher.authorizationURL = [NSURL URLWithString:[self pusherAuthURL]];
+}
+
+- (NSString*)pusherAuthURL {
+    NSString* urlString = [NSString stringWithFormat:@"%@/pusher/auth", ROOT_URL];
+    return [NSURL URLWithString:urlString];
+}
+                               
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

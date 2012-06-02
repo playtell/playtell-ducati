@@ -124,8 +124,6 @@
 		F4A9D7AA1576C3AD0015D977 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */; };
 		F4A9D7AC1576C7440015D977 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D7AB1576C7440015D977 /* AirshipConfig.plist */; };
 		F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C615771CAE0015D977 /* libPusher-combined.a */; };
-		F4A9D7CB15771CAE0015D977 /* libPusher-iphoneos5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C715771CAE0015D977 /* libPusher-iphoneos5.1.a */; };
-		F4A9D7CC15771CAE0015D977 /* libPusher-iphonesimulator5.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7C815771CAE0015D977 /* libPusher-iphonesimulator5.1.a */; };
 		F4A9D7CD15771CAE0015D977 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D7C915771CAE0015D977 /* README.txt */; };
 		F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D7D415771F3F0015D977 /* libCrittercism_v3_1_5.a */; };
 		F4A9D83B15771F3F0015D977 /* crittercism-arrow-l.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D7F015771F3F0015D977 /* crittercism-arrow-l.png */; };
@@ -229,6 +227,12 @@
 		F4A9D8D21578153E0015D977 /* PTTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8D11578153E0015D977 /* PTTextField.m */; };
 		F4A9D8D41578157F0015D977 /* form-field-depressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8D31578157F0015D977 /* form-field-depressed.png */; };
 		F4A9D8D6157815990015D977 /* dual-form-field-depressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */; };
+		F4A9D8E21579096F0015D977 /* PTRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8E11579096F0015D977 /* PTRequest.m */; };
+		F4A9D8E51579098E0015D977 /* PTLoginRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8E41579098E0015D977 /* PTLoginRequest.m */; };
+		F4A9D8E91579217E0015D977 /* PTPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8E81579217E0015D977 /* PTPlaymate.m */; };
+		F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EB1579218E0015D977 /* PTUser.m */; };
+		F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */; };
+		F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D8F415798DBF0015D977 /* libicucore.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -656,6 +660,17 @@
 		F4A9D8D11578153E0015D977 /* PTTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTextField.m; sourceTree = "<group>"; };
 		F4A9D8D31578157F0015D977 /* form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form-field-depressed.png"; sourceTree = "<group>"; };
 		F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dual-form-field-depressed.png"; sourceTree = "<group>"; };
+		F4A9D8E01579096F0015D977 /* PTRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTRequest.h; sourceTree = "<group>"; };
+		F4A9D8E11579096F0015D977 /* PTRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTRequest.m; sourceTree = "<group>"; };
+		F4A9D8E31579098E0015D977 /* PTLoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoginRequest.h; sourceTree = "<group>"; };
+		F4A9D8E41579098E0015D977 /* PTLoginRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTLoginRequest.m; sourceTree = "<group>"; };
+		F4A9D8E71579217E0015D977 /* PTPlaymate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymate.h; sourceTree = "<group>"; };
+		F4A9D8E81579217E0015D977 /* PTPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymate.m; sourceTree = "<group>"; };
+		F4A9D8EA1579218E0015D977 /* PTUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUser.h; sourceTree = "<group>"; };
+		F4A9D8EB1579218E0015D977 /* PTUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUser.m; sourceTree = "<group>"; };
+		F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUpdateSettingsRequest.h; sourceTree = "<group>"; };
+		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
+		F4A9D8F415798DBF0015D977 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -663,6 +678,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A9D79C1576C3690015D977 /* SystemConfiguration.framework in Frameworks */,
+				F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */,
 				F4A9D7AA1576C3AD0015D977 /* AudioToolbox.framework in Frameworks */,
 				F4A9D7A81576C3A70015D977 /* MessageUI.framework in Frameworks */,
 				F4A9D7A61576C3930015D977 /* CoreLocation.framework in Frameworks */,
@@ -670,7 +687,6 @@
 				F4A9D7A21576C3850015D977 /* CoreTelephony.framework in Frameworks */,
 				F4A9D7A01576C37C0015D977 /* libsqlite3.dylib in Frameworks */,
 				F4A9D79E1576C3710015D977 /* libz.dylib in Frameworks */,
-				F4A9D79C1576C3690015D977 /* SystemConfiguration.framework in Frameworks */,
 				F4A9D79A1576C3620015D977 /* Security.framework in Frameworks */,
 				F4A9D7981576C35A0015D977 /* MobileCoreServices.framework in Frameworks */,
 				F4A9D7961576C34A0015D977 /* CFNetwork.framework in Frameworks */,
@@ -680,8 +696,6 @@
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
 				F4A9D72B1576C1B50015D977 /* libUAirship-1.2.1.a in Frameworks */,
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
-				F4A9D7CB15771CAE0015D977 /* libPusher-iphoneos5.1.a in Frameworks */,
-				F4A9D7CC15771CAE0015D977 /* libPusher-iphonesimulator5.1.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -692,6 +706,7 @@
 		F4A9D5C51576B5950015D977 = {
 			isa = PBXGroup;
 			children = (
+				F4A9D8F415798DBF0015D977 /* libicucore.dylib */,
 				F4A9D5DA1576B5950015D977 /* playtell-ducati */,
 				F4A9D5D31576B5950015D977 /* Frameworks */,
 				F4A9D5D11576B5950015D977 /* Products */,
@@ -733,9 +748,11 @@
 			children = (
 				F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */,
 				F4A9D8961577FCDD0015D977 /* AFNetworking */,
+				F4A9D8DF157909530015D977 /* api */,
 				F4A9D6061576B8B00015D977 /* artwork */,
 				F4A9D8921577FC150015D977 /* categories */,
 				F4A9D7CF15771F3F0015D977 /* crittercism-sdk */,
+				F4A9D8E6157921630015D977 /* model */,
 				F4A9D7B515771CAE0015D977 /* pusher */,
 				F4A9D61E1576C1B50015D977 /* urban airship */,
 				F4A9D88C1577FBB40015D977 /* view controllers */,
@@ -1551,6 +1568,30 @@
 			path = views;
 			sourceTree = "<group>";
 		};
+		F4A9D8DF157909530015D977 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D8E01579096F0015D977 /* PTRequest.h */,
+				F4A9D8E11579096F0015D977 /* PTRequest.m */,
+				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
+				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
+				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
+				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
+			);
+			path = api;
+			sourceTree = "<group>";
+		};
+		F4A9D8E6157921630015D977 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D8E71579217E0015D977 /* PTPlaymate.h */,
+				F4A9D8E81579217E0015D977 /* PTPlaymate.m */,
+				F4A9D8EA1579218E0015D977 /* PTUser.h */,
+				F4A9D8EB1579218E0015D977 /* PTUser.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1815,6 +1856,11 @@
 				F4A9D8B51577FCDD0015D977 /* UIImageView+AFNetworking.m in Sources */,
 				F4A9D8B815780C360015D977 /* NSMutableURLRequest+POSTParameters.m in Sources */,
 				F4A9D8D21578153E0015D977 /* PTTextField.m in Sources */,
+				F4A9D8E21579096F0015D977 /* PTRequest.m in Sources */,
+				F4A9D8E51579098E0015D977 /* PTLoginRequest.m in Sources */,
+				F4A9D8E91579217E0015D977 /* PTPlaymate.m in Sources */,
+				F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */,
+				F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1908,6 +1954,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
@@ -1931,6 +1978,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
@@ -1976,6 +2024,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
@@ -2020,6 +2069,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";

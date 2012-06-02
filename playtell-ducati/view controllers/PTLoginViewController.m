@@ -9,8 +9,10 @@
 //#import "ASIFormDataRequest.h"
 #import "AFNetworking.h"
 #import "PTAppDelegate.h"
+#import "PTLoginRequest.h"
 #import "PTLoginViewController.h"
-//#import "PTUser.h"
+#import "PTUpdateSettingsRequest.h"
+#import "PTUser.h"
 
 #import "NSDictionary+Util.h"
 #import "NSMutableURLRequest+POSTParameters.h"
@@ -23,7 +25,6 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 @interface PTLoginViewController ()
 - (NSString*)loginSettingsURL;
 - (NSString*)playdateSettingsURL;
-- (NSString*)authTokenURL;
 
 - (void)showPasswordErrorArrowIndicators;
 - (void)showError:(NSString*)errorMessage;
@@ -79,6 +80,7 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 @synthesize tempUsername, tempUserId, tempToken;
 
 @synthesize nicknameError, emailError, firstPasswordError, secondPasswordError;
+@synthesize delegate;
 
 
 - (IBAction)doneButtonPressed:(id)sender {
@@ -164,79 +166,25 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 
 - (void)requestSettingsUpdate {
 
-    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:self.tempToken, @"authentication_token",
-                                    self.emailField.text, @"user[email]",
-                                    self.passwordField.text, @"user[password]",
-                                    self.confirmPasswordField.text, @"user[password_confirmation]",
-                                    nil];
-
-    NSURL* url = [NSURL URLWithString:[self loginSettingsURL]];
-    NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
-    [request setPostParameters:postParameters];
-
-    AFJSONRequestOperation* updateSettings;
-    updateSettings = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                                     success:^(NSURLRequest *request,
-                                                                               NSHTTPURLResponse *response,
-                                                                               id JSON)
+    PTUpdateSettingsRequest* updateRequest = [[PTUpdateSettingsRequest alloc] init];
+    [updateRequest udpateSettingsWithEmail:self.emailField.text
+                                  password:self.passwordField.text
+                      passwordConfirmation:self.confirmPasswordField.text
+                                 authToken:self.tempToken
+                                 onSuccess:^(NSDictionary *result)
     {
-        NSLog(@"Update settings success: %@", JSON);
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"Update settings failure: %@", error);
+        [[PTUser currentUser] setAuthToken:[result valueForKey:@"token"]];
+
+        if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
+            [self.delegate loginControllerDidLogin:self];
+        }
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        [self showError:@"Unable to update settings"];
     }];
-    [updateSettings start];
-    
-//    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];
-//    [request setPostValue:self.tempToken forKey:@"authentication_token"];
-//    [request setPostValue:self.emailField.text forKey:@"user[email]"];
-//    [request setPostValue:self.passwordField.text forKey:@"user[password]"];
-//    [request setPostValue:self.confirmPasswordField.text forKey:@"user[password_confirmation]"];
-//    [request setFailedBlock:^{
-//        NSLog(@"Failed response: %@", request.responseString);
-//        NSError* failureParseError = nil;
-//        NSDictionary* failureResponse = [NSJSONSerialization JSONObjectWithData:request.responseData
-//                                                                        options:kNilOptions
-//                                                                          error:&failureParseError];
-//        if (failureParseError) {
-//            NSLog(@"Error parsing failure text into JSON.");
-//            [self showError:@"Error connecting to PlayTell for settings_update"];
-//        } else {
-//            // TODO : should ensure these keys exist before dereferencing them
-//            NSLog(@"Parsed update_settings failure JSON: %@", failureResponse);
-//            [self showArrowIndicatorsForFields:[failureResponse valueForKey:@"keys"]];
-//            [self showErrorsForMessages:[failureResponse valueForKey:@"errors"]];
-//        }
-//    }];
-//    [request setCompletionBlock:^{
-//        NSLog(@"Succeeded response: %@", request.responseString);
-//        if (request.responseStatusCode == 200) {
-//            // TODO: need to guard against bad JSON
-//            NSError *jsonDecodeError = nil;
-//            NSDictionary *response = [NSJSONSerialization JSONObjectWithData:request.responseData
-//                                                                     options:kNilOptions
-//                                                                       error:&jsonDecodeError];
-//            if ([response containsKey:@"token"]) {
-//                [[PTUser currentUser] setToken:[response valueForKey:@"token"]];
-//                [[PTUser currentUser] setUserId:self.tempUserId];
-//                [[PTUser currentUser] setUsername:self.tempUsername];
-//            } else {
-//                NSAssert(NO, @"Token not included in sign-in response");
-//            }
-//
-//            [self dismissModalViewControllerAnimated:YES];
-//            // TODO : this is hack-y. Need to rework it.
-//            PTAppDelegate *appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-//            [appDelegate finishAppLaunch];
-//        } else {
-//            [self showError:@"Unable to update settings"];
-//        }
-//    }];
-//    [request startAsynchronous];
 }
 
 - (NSString*)loginSettingsURL {
-    return [NSString stringWithFormat:@"%@/api/update_settings.json",
-            ROOT_URL];
+    return [NSString stringWithFormat:@"%@/api/update_settings.json", ROOT_URL];
 }
 
 - (void)showArrowIndicatorsForFields:(NSArray*)errorFields {
@@ -331,86 +279,25 @@ typedef void (^PTLoginFailureBlock) (NSError *);
                 onSuccess:(PTLoginSuccessBlock)success
                 onFailure:(PTLoginFailureBlock)failure {
 
-    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    aUsername, @"email",
-                                    aPassword, @"password",
-                                    [[UAirship shared] deviceToken], @"device_token",
-                                    nil];
-
-    NSURL *tokenURL = [NSURL URLWithString:[self authTokenURL]];
-    NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:tokenURL];
-    [request setPostParameters:postParameters];
-
-    [[AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request,
-                                                                              NSHTTPURLResponse *response,
-                                                                              id JSON)
+    PTLoginRequest* loginRequest = [[PTLoginRequest alloc] init];
+    [loginRequest loginWithUsername:aUsername password:aPassword pushToken:[[UAirship shared] deviceToken]
+                          onSuccess:^(NSDictionary *result)
     {
-        NSLog(@"Login success: %@", JSON);
-        if (![JSON containsKey:@"token"]) {
-            NSDictionary *errorDict = [NSDictionary dictionaryWithObject:[JSON valueForKey:@"message"]
-                                                                  forKey:NSLocalizedDescriptionKey];
-            failure([NSError errorWithDomain:@"PTLoginDomain"
-                                        code:0
-                                    userInfo:errorDict]);
-            return;
-        } else {
-            success(JSON);
-        }
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"Login failure: %@", error);
-    }] start];
-//    ASIFormDataRequest* loginRequest = [ASIFormDataRequest requestWithURL:tokenURL];
-//    [loginRequest setPostValue:aUsername forKey:@"email"];
-//    [loginRequest setPostValue:aPassword forKey:@"password"];
-//    [loginRequest setPostValue:[[UAirship shared] deviceToken] forKey:@"device_token"];
-//
-//    [loginRequest setFailedBlock:^{
-//        failure(loginRequest.error);
-//    }];
-//
-//    [loginRequest setCompletionBlock:^{
-//        NSError* decodingError = nil;
-//        NSDictionary* loginDict = [NSJSONSerialization JSONObjectWithData:loginRequest.responseData
-//                                                                  options:NSJSONReadingMutableContainers
-//                                                                    error:&decodingError];
-//
-//        // TODO: Need to better handle this error...
-//        if (decodingError) {
-//            failure(decodingError);
-//            return;
-//        }
-//
-//        if (![loginDict containsKey:@"token"]) {
-//            NSDictionary *errorDict = [NSDictionary dictionaryWithObject:[loginDict valueForKey:@"message"]
-//                                                                  forKey:NSLocalizedDescriptionKey];
-//            failure([NSError errorWithDomain:@"PTLoginDomain"
-//                                        code:0
-//                                    userInfo:errorDict]);
-//            return;
-//        } else {
-//            success(loginDict);
-//        }
-//
-//    }];
-//    [loginRequest startAsynchronous];
-}
-
-- (NSString*)authTokenURL {
-    return [NSString stringWithFormat:@"%@/api/tokens.json",
-            ROOT_URL];
+        NSLog(@"Login result: %@", result);
+        NSString* token = [result valueForKey:@"token"];
+        NSNumber* userID = [result valueForKey:@"user_id"];
+        [[PTUser currentUser] setUsername:aUsername];
+        [[PTUser currentUser] setAuthToken:token];
+        [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
+        NSLog(@"Current user: %@", [PTUser currentUser]);
+        success(result);
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {
+        failure(error);
+    }];
 }
 
 - (void)showConnectionError {
     [self showError:@"There seems to be a problem connecting..."];
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
 }
 
 - (void)viewDidLoad {
@@ -500,10 +387,6 @@ typedef void (^PTLoginFailureBlock) (NSError *);
         [self activatePasswordFields];
     }
 }
-
-//-(void)textFieldDidEndEditing:(UITextField *)textField {
-//    self.activeTextField = nil;
-//}
 
 - (void)deactivateAllFields {
     [self.nicknameField setBackground:self.fieldInactive];
