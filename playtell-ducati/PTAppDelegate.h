@@ -7,12 +7,12 @@
 //
 
 #import "PTLoginViewController.h"
-#import "PTPusher.h"
+#import "PTPlayTellPusher.h"
 
 #import <UIKit/UIKit.h>
 
 @class PTDialpadViewController;
-@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPusherDelegate, PTPusherPresenceChannelDelegate>
+@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPLayTellPusherDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

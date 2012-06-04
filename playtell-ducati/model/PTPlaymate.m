@@ -3,7 +3,7 @@
 //  playtell-ducati
 //
 //  Created by Ricky Hussmann on 6/1/12.
-//  Copyright (c) 2012 LovelyRide. All rights reserved.
+//  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
 #import "PTPlaymate.h"
@@ -12,6 +12,7 @@
 @synthesize email;
 @synthesize username;
 @synthesize userID;
+@synthesize photoURL;
 
 - (id)initWithEmail:(NSString*)anEmail username:(NSString*)aName userID:(NSUInteger)aUserID {
     if (self = [super init]) {

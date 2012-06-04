@@ -238,6 +238,9 @@
 		F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */; };
 		F4A9D900157A88870015D977 /* profile_default_2.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8FF157A88870015D977 /* profile_default_2.png */; };
 		F4A9D902157A92F90015D977 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D901157A92F80015D977 /* QuartzCore.framework */; };
+		F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D904157AAAC40015D977 /* PTPlaydate.m */; };
+		F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */; };
+		F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -684,6 +687,13 @@
 		F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+PlayTell.m"; sourceTree = "<group>"; };
 		F4A9D8FF157A88870015D977 /* profile_default_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_default_2.png; sourceTree = "<group>"; };
 		F4A9D901157A92F80015D977 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F4A9D903157AAAC40015D977 /* PTPlaydate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydate.h; sourceTree = "<group>"; };
+		F4A9D904157AAAC40015D977 /* PTPlaydate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydate.m; sourceTree = "<group>"; };
+		F4A9D906157AB1450015D977 /* PTPlaymateFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateFactory.h; sourceTree = "<group>"; };
+		F4A9D907157AB17F0015D977 /* PTMockPlaymateFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMockPlaymateFactory.h; sourceTree = "<group>"; };
+		F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMockPlaymateFactory.m; sourceTree = "<group>"; };
+		F4A9D90A157ABB060015D977 /* PTPlayTellPusher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlayTellPusher.h; sourceTree = "<group>"; };
+		F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlayTellPusher.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1606,10 +1616,17 @@
 		F4A9D8E6157921630015D977 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				F4A9D907157AB17F0015D977 /* PTMockPlaymateFactory.h */,
+				F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */,
+				F4A9D903157AAAC40015D977 /* PTPlaydate.h */,
+				F4A9D904157AAAC40015D977 /* PTPlaydate.m */,
 				F4A9D8E71579217E0015D977 /* PTPlaymate.h */,
 				F4A9D8E81579217E0015D977 /* PTPlaymate.m */,
+				F4A9D906157AB1450015D977 /* PTPlaymateFactory.h */,
 				F4A9D8EA1579218E0015D977 /* PTUser.h */,
 				F4A9D8EB1579218E0015D977 /* PTUser.m */,
+				F4A9D90A157ABB060015D977 /* PTPlayTellPusher.h */,
+				F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1887,6 +1904,9 @@
 				F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */,
 				F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */,
 				F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */,
+				F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */,
+				F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */,
+				F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

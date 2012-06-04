@@ -8,6 +8,9 @@
 
 #import "PTAppDelegate.h"
 #import "PTDialpadViewController.h"
+#import "PTMockPlaymateFactory.h"
+#import "PTPlaydate.h"
+#import "PTPlayTellPusher.h"
 #import "PTPusher.h"
 #import "PTUser.h"
 #import "PTPusherChannel.h"
@@ -63,21 +66,8 @@
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     [self.viewController dismissModalViewControllerAnimated:YES];
 
-    self.client = [PTPusher pusherWithKey:@"cdac251f32d5b6d2ef7d" delegate:self encrypted:NO];
-    self.client.authorizationURL = [self pusherAuthURL];
-
-    PTPusherPresenceChannel* rendezvouzChannel = [self.client subscribeToPresenceChannelNamed:@"rendezvous-channel" delegate:self];
-    [rendezvouzChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
-        NSLog(@"Playdate joined: %@", channelEvent);
-    }];
-    [rendezvouzChannel bindToEventNamed:@"playdate_requested" handleWithBlock:^(PTPusherEvent *channelEvent) {
-        NSLog(@"Playdate requested: %@", channelEvent);
-    }];
-}
-
-- (NSURL*)pusherAuthURL {
-    NSString* urlString = [NSString stringWithFormat:@"%@/pusher/auth", ROOT_URL];
-    return [NSURL URLWithString:urlString];
+    [[PTPlayTellPusher sharedPusher] setDelegate:self];
+    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
 }
                                
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -109,28 +99,15 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark PTPusherDelegate methods
-- (void)pusher:(PTPusher *)pusher willAuthorizeChannelWithRequest:(NSMutableURLRequest *)request {
-    NSString* headers = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
-    NSString* appendedParameters = [headers stringByAppendingFormat:@"&authentication_token=%@", [[PTUser currentUser] authToken]];
-    request.HTTPBody = [appendedParameters dataUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"Pusher auth request: %@", request.URL);
-    NSLog(@"Pusher auth parameters: %@", appendedParameters);
+- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateJoinedEvent:(PTPlaydate*)playdate {
+    LOGMETHOD;
+    NSLog(@"Playdate -> %@", playdate);
 }
 
-#pragma mark PTPusherPresenceChannelDelegate methods
-- (void)presenceChannel:(PTPusherPresenceChannel *)channel didSubscribeWithMemberList:(NSArray *)members {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate {
+    LOGMETHOD;
+    NSLog(@"Playdate -> %@", playdate);
+    [pusher unsubscribeFromRendezvousChannel];
 }
-
-
-- (void)presenceChannel:(PTPusherPresenceChannel *)channel memberAddedWithID:(NSString *)memberID memberInfo:(NSDictionary *)memberInfo {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
-}
-
-- (void)presenceChannel:(PTPusherPresenceChannel *)channel memberRemovedWithID:(NSString *)memberID atIndex:(NSInteger)index {
-    NSLog(@"%@", NSStringFromSelector(_cmd));    
-}
-
 
 @end
