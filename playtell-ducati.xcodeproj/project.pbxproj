@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249D157D182A00FC288E /* PTBooksParentView.m */; };
+		237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249F157D182A00FC288E /* PTBooksScrollView.m */; };
+		237B24A8157D182A00FC288E /* PTBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A1157D182A00FC288E /* PTBookView.m */; };
+		237B24A9157D182A00FC288E /* PTPagesScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A3157D182A00FC288E /* PTPagesScrollView.m */; };
+		237B24AA157D182A00FC288E /* PTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A5157D182A00FC288E /* PTPageView.m */; };
+		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
+		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
+		237B24B3157D1AB600FC288E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237B24B2157D1AB600FC288E /* QuartzCore.framework */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -244,6 +252,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		237B249C157D182A00FC288E /* PTBooksParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksParentView.h; sourceTree = "<group>"; };
+		237B249D157D182A00FC288E /* PTBooksParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksParentView.m; sourceTree = "<group>"; };
+		237B249E157D182A00FC288E /* PTBooksScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksScrollView.h; sourceTree = "<group>"; };
+		237B249F157D182A00FC288E /* PTBooksScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksScrollView.m; sourceTree = "<group>"; };
+		237B24A0157D182A00FC288E /* PTBookView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBookView.h; sourceTree = "<group>"; };
+		237B24A1157D182A00FC288E /* PTBookView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBookView.m; sourceTree = "<group>"; };
+		237B24A2157D182A00FC288E /* PTPagesScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPagesScrollView.h; sourceTree = "<group>"; };
+		237B24A3157D182A00FC288E /* PTPagesScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPagesScrollView.m; sourceTree = "<group>"; };
+		237B24A4157D182A00FC288E /* PTPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPageView.h; sourceTree = "<group>"; };
+		237B24A5157D182A00FC288E /* PTPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPageView.m; sourceTree = "<group>"; };
+		237B24AC157D184700FC288E /* PTMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMacros.h; sourceTree = "<group>"; };
+		237B24AD157D191400FC288E /* PTDateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTDateViewController.h; sourceTree = "<group>"; };
+		237B24AE157D191500FC288E /* PTDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDateViewController.m; sourceTree = "<group>"; };
+		237B24AF157D191500FC288E /* PTDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDateViewController.xib; sourceTree = "<group>"; };
+		237B24B2157D1AB600FC288E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -727,6 +750,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		237B24AB157D183D00FC288E /* extras */ = {
+			isa = PBXGroup;
+			children = (
+				237B24AC157D184700FC288E /* PTMacros.h */,
+			);
+			name = extras;
+			sourceTree = "<group>";
+		};
 		F4A9D5C51576B5950015D977 = {
 			isa = PBXGroup;
 			children = (
@@ -747,6 +778,7 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
 				F4A9D5D81576B5950015D977 /* CoreGraphics.framework */,
@@ -771,6 +803,7 @@
 		F4A9D5DA1576B5950015D977 /* playtell-ducati */ = {
 			isa = PBXGroup;
 			children = (
+				237B24AB157D183D00FC288E /* extras */,
 				F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */,
 				F4A9D8961577FCDD0015D977 /* AFNetworking */,
 				F4A9D8DF157909530015D977 /* api */,
@@ -1544,6 +1577,9 @@
 				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
 				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
 				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
+				237B24AD157D191400FC288E /* PTDateViewController.h */,
+				237B24AE157D191500FC288E /* PTDateViewController.m */,
+				237B24AF157D191500FC288E /* PTDateViewController.xib */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -1594,6 +1630,16 @@
 			children = (
 				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
+				237B249C157D182A00FC288E /* PTBooksParentView.h */,
+				237B249D157D182A00FC288E /* PTBooksParentView.m */,
+				237B249E157D182A00FC288E /* PTBooksScrollView.h */,
+				237B249F157D182A00FC288E /* PTBooksScrollView.m */,
+				237B24A0157D182A00FC288E /* PTBookView.h */,
+				237B24A1157D182A00FC288E /* PTBookView.m */,
+				237B24A2157D182A00FC288E /* PTPagesScrollView.h */,
+				237B24A3157D182A00FC288E /* PTPagesScrollView.m */,
+				237B24A4157D182A00FC288E /* PTPageView.h */,
+				237B24A5157D182A00FC288E /* PTPageView.m */,
 				F4A9D8D01578153E0015D977 /* PTTextField.h */,
 				F4A9D8D11578153E0015D977 /* PTTextField.m */,
 			);
@@ -1828,6 +1874,7 @@
 				F4A9D8D41578157F0015D977 /* form-field-depressed.png in Resources */,
 				F4A9D8D6157815990015D977 /* dual-form-field-depressed.png in Resources */,
 				F4A9D900157A88870015D977 /* profile_default_2.png in Resources */,
+				237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1907,6 +1954,12 @@
 				F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */,
 				F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */,
 				F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */,
+				237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */,
+				237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */,
+				237B24A8157D182A00FC288E /* PTBookView.m in Sources */,
+				237B24A9157D182A00FC288E /* PTPagesScrollView.m in Sources */,
+				237B24AA157D182A00FC288E /* PTPageView.m in Sources */,
+				237B24B0157D191500FC288E /* PTDateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1982,9 +2035,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "playtell-ducati/playtell-ducati.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2005,8 +2057,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2014,9 +2066,8 @@
 		F4A9D5F01576B5950015D977 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "playtell-ducati/playtell-ducati.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
@@ -2032,8 +2083,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2062,7 +2113,6 @@
 		F4A9D8D8157869840015D977 /* Distribution - Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "playtell-ducati/playtell-ducati.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2111,7 +2161,6 @@
 		F4A9D8DA157869930015D977 /* Distribution - Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "playtell-ducati/playtell-ducati.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

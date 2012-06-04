@@ -15,6 +15,7 @@
 #import "PTUser.h"
 #import "PTPusherChannel.h"
 #import "PTViewController.h"
+#import "PTDateViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
 
@@ -38,6 +39,13 @@
 
     [self setupPushNotifications:launchOptions];
 
+    // Show login controller
+    [self performSelector:@selector(handleLogin) withObject:nil afterDelay:0.1]; // Fixes error: Unbalanced calls to begin/end appearance transitions for <PTViewController>.
+
+    return YES;
+}
+
+- (void)handleLogin {
     PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
     loginController.delegate = self;
 
@@ -69,7 +77,18 @@
     [[PTPlayTellPusher sharedPusher] setDelegate:self];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
 }
-                               
+
+- (void)tempLoginControllerDidLogin:(PTLoginViewController*)controller {
+    [self.viewController dismissViewControllerAnimated:YES completion:^{
+        //[[PTPlayTellPusher sharedPusher] setDelegate:self];
+        //[[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+        
+        // Load playdate
+        PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil];
+        [self.viewController presentViewController:dateController animated:YES completion:nil];
+    }];
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
