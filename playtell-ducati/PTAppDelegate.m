@@ -39,16 +39,9 @@
 
     [self setupPushNotifications:launchOptions];
 
-    // Show login controller
-    [self performSelector:@selector(handleLogin) withObject:nil afterDelay:0.1]; // Fixes error: Unbalanced calls to begin/end appearance transitions for <PTViewController>.
-
-    return YES;
-}
-
-- (void)handleLogin {
     PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
     loginController.delegate = self;
-
+    
     [self.viewController presentModalViewController:loginController animated:NO];
     return YES;
 }
