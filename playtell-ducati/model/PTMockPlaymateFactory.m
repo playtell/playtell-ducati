@@ -23,8 +23,16 @@ static NSArray* playmates;
     PTPlaymate* rickyTest = [[PTPlaymate alloc] initWithEmail:@"rickytest@playtell.com"
                                                      username:@"rickytest"
                                                        userID:25];
+    
+    PTPlaymate* dima = [[PTPlaymate alloc] initWithEmail:@"dimitryb@gmail.com"
+                                                 username:@"dima"
+                                                   userID:43];
+    
+    PTPlaymate* dimaTest = [[PTPlaymate alloc] initWithEmail:@"dimitry@playtell.com"
+                                                     username:@"dima"
+                                                       userID:44];
 
-    playmates = [NSArray arrayWithObjects:ricky, rickyTest, nil];
+    playmates = [NSArray arrayWithObjects:ricky, rickyTest, dima, dimaTest, nil];
 }
 
 - (PTPlaymate*)playmateWithId:(NSUInteger)playmateId {

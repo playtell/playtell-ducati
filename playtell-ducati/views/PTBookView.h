@@ -42,7 +42,7 @@
 - (void)hide;
 - (void)show;
 - (void)setFocusLevel:(CGFloat)level;
-- (NSString *)getId;
+- (NSNumber *)getId;
 - (void)setBookPosition:(NSInteger)position;
 - (NSInteger)getBookPosition;
 - (void)setCoverContentsWithImage:(UIImage *)image;
@@ -53,8 +53,8 @@
 // Delegate definition
 @protocol PTBookViewDelegate
 @optional
-- (void)bookFocusedWithId:(NSString *)bookId;
-- (void)bookTouchedWithId:(NSString *)bookId AndView:(PTBookView *)bookView;
-- (void)bookOpenedWithId:(NSString *)bookId AndView:(PTBookView *)bookView;
-- (void)bookClosedWithId:(NSString *)bookId AndView:(PTBookView *)bookView;
+- (void)bookFocusedWithId:(NSNumber *)bookId;
+- (void)bookTouchedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView;
+- (void)bookOpenedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView;
+- (void)bookClosedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView;
 @end

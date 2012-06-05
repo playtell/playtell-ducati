@@ -18,6 +18,7 @@
 #import "PTDateViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
+#import "PTBooksListRequest.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -69,10 +70,23 @@
     [[PTPlayTellPusher sharedPusher] setDelegate:self];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     
-    [self.viewController dismissViewControllerAnimated:YES completion:^{
-        // Load playdate
-        //PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil];
-        //[self.viewController presentViewController:dateController animated:YES completion:nil];
+    // Hide login controller
+    [self.viewController dismissViewControllerAnimated:YES completion:nil];
+    
+    // Load list of books
+    [self getBooksList];
+}
+
+- (void)getBooksList {
+    PTBooksListRequest* booksListRequest = [[PTBooksListRequest alloc] init];
+    [booksListRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
+                                   onSuccess:^(NSDictionary *result)
+    {
+        books = [result objectForKey:@"books"];
+    } 
+                                   onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+    {
+         // TODO: Handle
     }];
 }
 
@@ -113,7 +127,17 @@
 - (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate {
     LOGMETHOD;
     NSLog(@"Playdate -> %@", playdate);
+    
+    // Unsubscribe from rendezvous channel
     [pusher unsubscribeFromRendezvousChannel];
+    
+    // Subscribe to playdate channel
+    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
+    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
+    
+    // Load playdate
+    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+    [self.viewController presentViewController:dateController animated:YES completion:nil];
 }
 
 @end

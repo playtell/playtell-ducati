@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2311E0B4157EA1260084859B /* PTBooksListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2311E0B3157EA1250084859B /* PTBooksListRequest.m */; };
 		232265A5157D4D8800D5A960 /* date_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 232265A4157D4D8800D5A960 /* date_bg.png */; };
 		237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249D157D182A00FC288E /* PTBooksParentView.m */; };
 		237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249F157D182A00FC288E /* PTBooksScrollView.m */; };
@@ -252,6 +253,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2311E0B2157EA1250084859B /* PTBooksListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksListRequest.h; sourceTree = "<group>"; };
+		2311E0B3157EA1250084859B /* PTBooksListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksListRequest.m; sourceTree = "<group>"; };
 		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
 		237B249C157D182A00FC288E /* PTBooksParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksParentView.h; sourceTree = "<group>"; };
 		237B249D157D182A00FC288E /* PTBooksParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksParentView.m; sourceTree = "<group>"; };
@@ -1657,6 +1660,8 @@
 				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
 				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
 				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
+				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
+				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -1963,6 +1968,7 @@
 				237B24A9157D182A00FC288E /* PTPagesScrollView.m in Sources */,
 				237B24AA157D182A00FC288E /* PTPageView.m in Sources */,
 				237B24B0157D191500FC288E /* PTDateViewController.m in Sources */,
+				2311E0B4157EA1260084859B /* PTBooksListRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

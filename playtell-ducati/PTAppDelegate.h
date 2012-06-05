@@ -13,7 +13,9 @@
 #import <UIKit/UIKit.h>
 
 @class PTDialpadViewController;
-@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPLayTellPusherDelegate>
+@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPLayTellPusherDelegate> {
+    NSArray *books;
+}
 
 @property (strong, nonatomic) UIWindow *window;
 

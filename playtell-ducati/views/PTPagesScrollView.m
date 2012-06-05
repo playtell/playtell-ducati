@@ -58,7 +58,7 @@
 
 - (void)setCurrentBook:(NSMutableDictionary *)bookData {
     // Check if current book is already the one set
-    if (book != nil && [[book objectForKey:@"id"] isEqualToString:[bookData objectForKey:@"id"]]) {
+    if (book != nil && [[book objectForKey:@"id"] isEqualToNumber:[bookData objectForKey:@"id"]]) {
         return;
     }
 

@@ -23,6 +23,8 @@
 
 - (void)subscribeToRendezvousChannel;
 - (void)unsubscribeFromRendezvousChannel;
+- (void)subscribeToPlaydateChannel:(NSString *)channelName;
+- (void)unsubscribeFromPlaydateChannel:(NSString *)channelName;
 
 @property (nonatomic, assign) id<PTPLayTellPusherDelegate> delegate;
 @end

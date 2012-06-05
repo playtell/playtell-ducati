@@ -19,6 +19,16 @@
 
 @synthesize closeBookButton;
 
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks {
+    // Parse all books into format we need
+    books = [[NSMutableDictionary alloc] init];
+    for (NSDictionary *book in allBooks) {
+        NSNumber *bookId = [book objectForKey:@"id"];
+        [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+    }
+    return [super initWithNibName:nibName bundle:nibBundle];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -29,39 +39,39 @@
     [self.view addSubview:booksParentView];
     
     // Init temp book
-    books = [[NSMutableDictionary alloc] init];
-    
-    NSMutableDictionary *book1 = [[NSMutableDictionary alloc] init];
-    [book1 setValue:@"bookNumber1" forKey:@"id"];
-    [book1 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
-    [book1 setValue:@"http://pic.iamdimitry.com/book/cover_front2.html" forKey:@"cover_front"];
-    NSArray *pages = [[NSArray alloc] initWithObjects:
-                      @"http://pic.iamdimitry.com/book/page1.html",
-                      @"http://pic.iamdimitry.com/book/page2.html",
-                      @"http://pic.iamdimitry.com/book/page3.html",
-                      @"http://pic.iamdimitry.com/book/page4.html", nil]; 
-    [book1 setObject:[pages copy] forKey:@"pages"];
-    [book1 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
-    [books setObject:book1 forKey:@"bookNumber1"];
-    
-    NSMutableDictionary *book2 = [[NSMutableDictionary alloc] init];
-    [book2 setValue:@"bookNumber2" forKey:@"id"];
-    [book2 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
-    [book2 setValue:@"http://pic.iamdimitry.com/book/cover_front.html" forKey:@"cover_front"];
-    pages = [[NSArray alloc] initWithObjects:
-             @"http://pic.iamdimitry.com/book/page1.html",
-             @"http://pic.iamdimitry.com/book/page2.html",
-             @"http://pic.iamdimitry.com/book/page3.html",
-             @"http://pic.iamdimitry.com/book/page4.html",
-             @"http://pic.iamdimitry.com/book/page5.html",
-             @"http://pic.iamdimitry.com/book/page6.html",
-             @"http://pic.iamdimitry.com/book/page7.html",
-             @"http://pic.iamdimitry.com/book/page8.html",
-             @"http://pic.iamdimitry.com/book/page9.html",
-             @"http://pic.iamdimitry.com/book/page10.html", nil]; 
-    [book2 setObject:[pages copy] forKey:@"pages"];
-    [book2 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
-    [books setObject:book2 forKey:@"bookNumber2"];
+//    books = [[NSMutableDictionary alloc] init];
+//    
+//    NSMutableDictionary *book1 = [[NSMutableDictionary alloc] init];
+//    [book1 setValue:@"bookNumber1" forKey:@"id"];
+//    [book1 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
+//    [book1 setValue:@"http://pic.iamdimitry.com/book/cover_front2.html" forKey:@"cover_front"];
+//    NSArray *pages = [[NSArray alloc] initWithObjects:
+//                      @"http://pic.iamdimitry.com/book/page1.html",
+//                      @"http://pic.iamdimitry.com/book/page2.html",
+//                      @"http://pic.iamdimitry.com/book/page3.html",
+//                      @"http://pic.iamdimitry.com/book/page4.html", nil]; 
+//    [book1 setObject:[pages copy] forKey:@"pages"];
+//    [book1 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
+//    [books setObject:book1 forKey:@"bookNumber1"];
+//    
+//    NSMutableDictionary *book2 = [[NSMutableDictionary alloc] init];
+//    [book2 setValue:@"bookNumber2" forKey:@"id"];
+//    [book2 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
+//    [book2 setValue:@"http://pic.iamdimitry.com/book/cover_front.html" forKey:@"cover_front"];
+//    pages = [[NSArray alloc] initWithObjects:
+//             @"http://pic.iamdimitry.com/book/page1.html",
+//             @"http://pic.iamdimitry.com/book/page2.html",
+//             @"http://pic.iamdimitry.com/book/page3.html",
+//             @"http://pic.iamdimitry.com/book/page4.html",
+//             @"http://pic.iamdimitry.com/book/page5.html",
+//             @"http://pic.iamdimitry.com/book/page6.html",
+//             @"http://pic.iamdimitry.com/book/page7.html",
+//             @"http://pic.iamdimitry.com/book/page8.html",
+//             @"http://pic.iamdimitry.com/book/page9.html",
+//             @"http://pic.iamdimitry.com/book/page10.html", nil]; 
+//    [book2 setObject:[pages copy] forKey:@"pages"];
+//    [book2 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
+//    [books setObject:book2 forKey:@"bookNumber2"];
     
     // Create views for each book
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
@@ -69,7 +79,7 @@
     int i = 0;
     bookList = [[NSMutableArray alloc] initWithCapacity:[books count]];
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
-    for (NSString *bookId in books) {
+    for (NSNumber *bookId in books) {
         if (i == 0) {
             // Set current book id
             currentBookId = [bookId copy];
@@ -118,7 +128,7 @@
     // Find opened book
     PTBookView *bookView = nil;
     for (int i=0, l=[books count]; i<l; i++) {
-        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToString:currentBookId]) {
+        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToNumber:currentBookId]) {
             bookView = (PTBookView *)[bookList objectAtIndex:i];
             break;
         }
@@ -265,7 +275,7 @@
                 
                 // Cache image locally
                 NSMutableDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-                NSString *bookId = [book objectForKey:@"id"];
+                NSNumber *bookId = [book objectForKey:@"id"];
                 NSString *imagePath = [self pageImagePathForBook:bookId AndPageNumber:1];
                 NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
                 [imageData writeToFile:imagePath atomically:YES];
@@ -308,7 +318,7 @@
             
             // Cache image locally
             NSMutableDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-            NSString *bookId = [book objectForKey:@"id"];
+            NSNumber *bookId = [book objectForKey:@"id"];
             NSString *imagePath = [self coverImagePathForBook:bookId];
             NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
             [imageData writeToFile:imagePath atomically:YES];
@@ -324,15 +334,15 @@
     return [documentDirectories objectAtIndex:0];
 }
 
-- (NSString *)coverImagePathForBook:(NSString *)bookId {
+- (NSString *)coverImagePathForBook:(NSNumber *)bookId {
     NSString *documentDirectory = [self getDocumentsPath];
-    return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:bookId] stringByAppendingPathComponent:@"cover_front.jpg"];
+    return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:@"cover_front.jpg"];
 }
 
-- (NSString *)pageImagePathForBook:(NSString *)bookId AndPageNumber:(NSInteger)pageNumber {
+- (NSString *)pageImagePathForBook:(NSNumber *)bookId AndPageNumber:(NSInteger)pageNumber {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
-    return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:bookId] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
+    return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
 }
 
 #pragma mark -
@@ -354,11 +364,11 @@
 #pragma mark -
 #pragma mark Book delegates
 
-- (void)bookFocusedWithId:(NSString *)bookId {
+- (void)bookFocusedWithId:(NSNumber *)bookId {
     currentBookId = [bookId copy];
 }
 
-- (void)bookTouchedWithId:(NSString *)bookId AndView:(PTBookView *)bookView {
+- (void)bookTouchedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
     // Book selected, either focus it or open it
     if ([bookView inFocus] == NO) {
         // Bring book to focus
@@ -378,7 +388,7 @@
     }
 }
 
-- (void)bookOpenedWithId:(NSString *)bookId AndView:(PTBookView *)bookView {
+- (void)bookOpenedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
     currentBookId = [bookId copy];
     [pagesScrollView setHidden:NO];
     [bookView setHidden:YES];
@@ -387,7 +397,7 @@
     [booksParentView setIsBookOpen:YES];
 }
 
-- (void)bookClosedWithId:(NSString *)bookId AndView:(PTBookView *)bookView {
+- (void)bookClosedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
     isBookOpen = NO;
     [booksParentView setIsBookOpen:NO];
     

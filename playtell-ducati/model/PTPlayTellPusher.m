@@ -74,6 +74,10 @@ static PTPlayTellPusher* instance = nil;
     // http://lukeredpath.github.com/libPusher/html/Classes/PTPusher.html#//api/name/subscribeToPrivateChannelNamed:
     channelName = [channelName stringByReplacingOccurrencesOfString:@"private-" withString:@""];
     self.playdateChannel = [self.pusherClient subscribeToPrivateChannelNamed:channelName];
+    
+    [self.playdateChannel bindToEventNamed:@"pusher:subscription_succeeded" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSLog(@"Playdate -> pusher:subscription_succeeded");
+    }];
 
     // Change book
     [self.playdateChannel bindToEventNamed:@"change_book" handleWithBlock:^(PTPusherEvent *channelEvent) {

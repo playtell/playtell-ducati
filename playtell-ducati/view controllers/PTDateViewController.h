@@ -17,7 +17,7 @@
     // Books
     PTBooksParentView *booksParentView;
     PTBooksScrollView *booksScrollView;
-    NSString *currentBookId;
+    NSNumber *currentBookId;
     NSMutableDictionary *books;
     NSMutableArray *bookList;
     BOOL isBookOpen;
@@ -37,6 +37,7 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *closeBookButton;
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks;
 - (IBAction)closeBook;
 
 @end

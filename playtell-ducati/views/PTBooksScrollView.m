@@ -25,18 +25,18 @@
     return self;
 }
 
-- (void)hideAllBooksExcept:(NSString *)bookId {
+- (void)hideAllBooksExcept:(NSNumber *)bookId {
     for (PTBookView *bookView in self.subviews) {
-        if (![bookView isKindOfClass:[PTBookView class]] || [[bookView getId] isEqualToString:bookId]) {
+        if (![bookView isKindOfClass:[PTBookView class]] || [[bookView getId] isEqualToNumber:bookId]) {
             continue;
         }
         [bookView hide];
     }
 }
 
-- (void)showAllBooksExcept:(NSString *)bookId {
+- (void)showAllBooksExcept:(NSNumber *)bookId {
     for (PTBookView *bookView in self.subviews) {
-        if (![bookView isKindOfClass:[PTBookView class]] || [[bookView getId] isEqualToString:bookId]) {
+        if (![bookView isKindOfClass:[PTBookView class]] || [[bookView getId] isEqualToNumber:bookId]) {
             continue;
         }
         [bookView show];

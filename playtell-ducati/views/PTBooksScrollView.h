@@ -12,7 +12,7 @@
     BOOL isBookOpen;
 }
 
-- (void)hideAllBooksExcept:(NSString *)bookId;
-- (void)showAllBooksExcept:(NSString *)bookId;
+- (void)hideAllBooksExcept:(NSNumber *)bookId;
+- (void)showAllBooksExcept:(NSNumber *)bookId;
 
 @end

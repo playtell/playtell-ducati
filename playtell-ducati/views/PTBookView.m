@@ -273,7 +273,7 @@
     return [coverOut hitTest:point] != nil;
 }
 
-- (NSString *)getId {
+- (NSNumber *)getId {
     return [book objectForKey:@"id"];
 }
 
