@@ -36,7 +36,7 @@
     UIWebView *webView;
 }
 
-@property (nonatomic, retain) IBOutlet UIButton *resetButton;
-- (IBAction)resetPages;
+@property (nonatomic, retain) IBOutlet UIButton *closeBookButton;
+- (IBAction)closeBook;
 
 @end

@@ -14,7 +14,6 @@
 
 @protocol PTLoginViewControllerDelegate <NSObject>
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller;
-- (void)tempLoginControllerDidLogin:(PTLoginViewController*)controller;
 @end
 
 @interface PTLoginViewController : UIViewController <UITextFieldDelegate>
@@ -39,6 +38,5 @@
 
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)testShowErrors:(id)sender;
-- (IBAction)tempButtonPressed:(id)sender;
 
 @end

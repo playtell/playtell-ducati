@@ -17,11 +17,10 @@
 
 @implementation PTDateViewController
 
-@synthesize resetButton;
+@synthesize closeBookButton;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@">>>>>>>> View loaded");
     
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 62.0f, 1024.0f, 600.0f)];
@@ -108,7 +107,66 @@
     
     // Start loading book covers
     [self loadBookCovers];
+    
+    // Start listening to pusher notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
 }
+
+- (IBAction)closeBook {
+    // Find opened book
+    PTBookView *bookView = nil;
+    for (int i=0, l=[books count]; i<l; i++) {
+        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToString:currentBookId]) {
+            bookView = (PTBookView *)[bookList objectAtIndex:i];
+            break;
+        }
+    }
+    // Close book, hide pages, show all other books
+    if (bookView != nil) {
+        // TODO: Set current page view to book view
+        [bookView setHidden:NO];
+        [pagesScrollView setHidden:YES];
+        [bookView close];
+        [booksScrollView showAllBooksExcept:currentBookId];
+    }
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+- (void)dealloc {
+    // Clean up notifications
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark -
+#pragma mark Pusher notification handlers
+
+- (void)pusherPlayDateTurnPage:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSLog (@"PlayDateTurnPage -> %@", eventData);
+}
+
+- (void)pusherPlayDateEndPlaydate:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSLog (@"PlayDateEndPlaydate -> %@", eventData);
+}
+
+- (void)pusherPlayDateChangeBook:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSLog (@"PlayDateChangeBook -> %@", eventData);
+}
+
+#pragma mark -
+#pragma mark Covers/pages loading
 
 - (void)loadBookCovers {
     // Create a directory for each book, if needed
@@ -161,35 +219,8 @@
     }
 }
 
-- (IBAction)resetPages {
-    // Find opened book
-    PTBookView *bookView = nil;
-    for (int i=0, l=[books count]; i<l; i++) {
-        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToString:currentBookId]) {
-            bookView = (PTBookView *)[bookList objectAtIndex:i];
-            break;
-        }
-    }
-    // Close book, hide pages, show all other books
-    if (bookView != nil) {
-        // TODO: Set current page view to book view
-        [bookView setHidden:NO];
-        [pagesScrollView setHidden:YES];
-        [bookView close];
-        [booksScrollView showAllBooksExcept:currentBookId];
-    }
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-// Web view helpers/delegates
+#pragma mark -
+#pragma mark Web view helpers/delegates
 
 - (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString *requestString = [[request URL] absoluteString];
@@ -304,7 +335,8 @@
     return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:bookId] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
 }
 
-// Books scroll delegates
+#pragma mark -
+#pragma mark Books scroll delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // Adjust size/opacity of each book as they scroll
@@ -312,14 +344,15 @@
     CGFloat width = booksScrollView.frame.size.width;
     for (int i=0, l=[books count]; i<l; i++) {
         CGFloat pos = ABS(i * width - x);
-        if (pos <= width) { // Ignore all the books out of view
+        if (pos <= (width * 3.0f)) { // Ignore all the books out of view (whole view fits about 3 books)
             CGFloat level = 1.0f - pos / width;
             [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
         }
     }
 }
 
-// Book delegates
+#pragma mark -
+#pragma mark Book delegates
 
 - (void)bookFocusedWithId:(NSString *)bookId {
     currentBookId = [bookId copy];
@@ -407,7 +440,8 @@
     }
 }
 
-// Pages scroll delegates
+#pragma mark -
+#pragma mark Pages scroll delegates
 
 - (void)pageTurnedTo:(NSInteger)number {
     // Reset page loading from new page number

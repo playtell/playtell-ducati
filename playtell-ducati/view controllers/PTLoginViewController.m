@@ -82,12 +82,6 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 @synthesize nicknameError, emailError, firstPasswordError, secondPasswordError;
 @synthesize delegate;
 
-- (IBAction)tempButtonPressed:(id)sender {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(tempLoginControllerDidLogin:)]) {
-        [self.delegate tempLoginControllerDidLogin:self];
-    }
-}
-
 - (IBAction)doneButtonPressed:(id)sender {
     BOOL errorOcurred = NO;
     [self resetErrorIndicators];
@@ -172,7 +166,7 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 - (void)requestSettingsUpdate {
 
     PTUpdateSettingsRequest* updateRequest = [[PTUpdateSettingsRequest alloc] init];
-    [updateRequest udpateSettingsWithEmail:self.emailField.text
+    [updateRequest updateSettingsWithEmail:self.emailField.text
                                   password:self.passwordField.text
                       passwordConfirmation:self.confirmPasswordField.text
                                  authToken:self.tempToken

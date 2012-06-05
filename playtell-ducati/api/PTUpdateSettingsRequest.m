@@ -14,7 +14,7 @@
 @implementation PTUpdateSettingsRequest
 
 
-- (void)udpateSettingsWithEmail:(NSString*)email
+- (void)updateSettingsWithEmail:(NSString*)email
                        password:(NSString*)password
            passwordConfirmation:(NSString*)confirmation
                       authToken:(NSString*)token

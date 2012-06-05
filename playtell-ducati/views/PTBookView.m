@@ -239,6 +239,9 @@
     rightRotation.m34 = 1.0 / -1000;
     rightRotation = CATransform3DTranslate(rightRotation, -200.0f, 0.0f, z);
     right.transform = rightRotation;
+    
+    // Set the z-order of the book
+    self.layer.zPosition = level;
 }
 
 - (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag {

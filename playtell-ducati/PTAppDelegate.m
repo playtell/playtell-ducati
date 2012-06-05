@@ -65,20 +65,14 @@
 }
 
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
-    [self.viewController dismissModalViewControllerAnimated:YES];
-
+    // Connect to pusher
     [[PTPlayTellPusher sharedPusher] setDelegate:self];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
-}
-
-- (void)tempLoginControllerDidLogin:(PTLoginViewController*)controller {
+    
     [self.viewController dismissViewControllerAnimated:YES completion:^{
-        //[[PTPlayTellPusher sharedPusher] setDelegate:self];
-        //[[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
-        
         // Load playdate
-        PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil];
-        [self.viewController presentViewController:dateController animated:YES completion:nil];
+        //PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil];
+        //[self.viewController presentViewController:dateController animated:YES completion:nil];
     }];
 }
 

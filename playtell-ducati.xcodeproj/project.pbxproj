@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		232265A5157D4D8800D5A960 /* date_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 232265A4157D4D8800D5A960 /* date_bg.png */; };
 		237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249D157D182A00FC288E /* PTBooksParentView.m */; };
 		237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249F157D182A00FC288E /* PTBooksScrollView.m */; };
 		237B24A8157D182A00FC288E /* PTBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A1157D182A00FC288E /* PTBookView.m */; };
@@ -14,7 +15,6 @@
 		237B24AA157D182A00FC288E /* PTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A5157D182A00FC288E /* PTPageView.m */; };
 		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
 		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
-		237B24B3157D1AB600FC288E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 237B24B2157D1AB600FC288E /* QuartzCore.framework */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -252,6 +252,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
 		237B249C157D182A00FC288E /* PTBooksParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksParentView.h; sourceTree = "<group>"; };
 		237B249D157D182A00FC288E /* PTBooksParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksParentView.m; sourceTree = "<group>"; };
 		237B249E157D182A00FC288E /* PTBooksScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksScrollView.h; sourceTree = "<group>"; };
@@ -839,6 +840,7 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				232265A4157D4D8800D5A960 /* date_bg.png */,
 				F4A9D61C1576BA370015D977 /* 144.png */,
 				F4A9D61A1576BA330015D977 /* 72.png */,
 				F4A9D8B9157814EF0015D977 /* arrow-error.png */,
@@ -1875,6 +1877,7 @@
 				F4A9D8D6157815990015D977 /* dual-form-field-depressed.png in Resources */,
 				F4A9D900157A88870015D977 /* profile_default_2.png in Resources */,
 				237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */,
+				232265A5157D4D8800D5A960 /* date_bg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
