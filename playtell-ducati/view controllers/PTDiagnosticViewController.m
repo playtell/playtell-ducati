@@ -14,6 +14,8 @@
 #import "PTPlayTellPusher.h"
 #import "PTUser.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 @interface PTDiagnosticViewController ()
 @property (nonatomic, retain) PTPlaydate* playdate;
 @property (nonatomic, assign) BOOL isSubscribedToRendezvous;
@@ -25,6 +27,8 @@
 @synthesize statusLabel;
 @synthesize initiatorLabel;
 @synthesize playmateLabel;
+@synthesize playdateIDLabel;
+@synthesize channelNameLabel;
 @synthesize joinButton;
 @synthesize subscribeButton;
 
@@ -74,20 +78,13 @@
     self.isSubscribedToRendezvous = NO;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.channelStatus.backgroundColor = [UIColor redColor];
     self.initiatorLabel.text = @"";
     self.playmateLabel.text = @"";
+    self.playdateIDLabel.text = @"";
+    self.channelNameLabel.text = @"";
     self.joinButton.enabled = NO;
 }
 
@@ -100,8 +97,11 @@
                                                object:nil];
 
     [self unsunscribeFromRendezvousAndUpdateUI];
-
     [self getBooksList];
+
+    // TODO shouldn't have to do this, but the XIB doesn't seem to be respecting the frame...
+    self.channelStatus.frame = CGRectMake(20, 10, 50, 50);
+    self.channelStatus.layer.cornerRadius = 5.0;
 }
 
 - (void)getBooksList {
@@ -118,10 +118,17 @@
      }];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)pusherDidReceivePlaydRequestNotification:(NSNotification*)note {
     PTPlaydate* aPlaydate = [[note userInfo] valueForKey:PTPlaydateKey];
     self.initiatorLabel.text = aPlaydate.initiator.username;
     self.playmateLabel.text = aPlaydate.playmate.username;
+    self.playdateIDLabel.text = [NSString stringWithFormat:@"%u",aPlaydate.playdateID];
+    self.channelNameLabel.text = aPlaydate.pusherChannelName;
 
     self.playdate = aPlaydate;
     self.joinButton.enabled = YES;

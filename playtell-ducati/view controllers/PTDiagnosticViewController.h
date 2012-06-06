@@ -13,6 +13,8 @@
 @property (nonatomic, retain) IBOutlet UILabel* statusLabel;
 @property (nonatomic, retain) IBOutlet UILabel* initiatorLabel;
 @property (nonatomic, retain) IBOutlet UILabel* playmateLabel;
+@property (nonatomic, retain) IBOutlet UILabel* playdateIDLabel;
+@property (nonatomic, retain) IBOutlet UILabel* channelNameLabel;
 @property (nonatomic, retain) IBOutlet UIButton* joinButton;
 @property (nonatomic, retain) IBOutlet UIButton* subscribeButton;
 
