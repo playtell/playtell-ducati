@@ -12,13 +12,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class PTDialpadViewController;
-@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, PTPLayTellPusherDelegate> {
+@class PTDiagnosticViewController;
+@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
     NSArray *books;
 }
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (strong, nonatomic) PTDialpadViewController *viewController;
+@property (strong, nonatomic) PTDiagnosticViewController *viewController;
 
 @end

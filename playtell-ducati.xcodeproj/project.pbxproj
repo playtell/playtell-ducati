@@ -250,6 +250,8 @@
 		F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D904157AAAC40015D977 /* PTPlaydate.m */; };
 		F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */; };
 		F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */; };
+		F4E3EAE0157F2EE300A218EC /* PTDiagnosticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E3EADE157F2EE300A218EC /* PTDiagnosticViewController.m */; };
+		F4E3EAE1157F2EE300A218EC /* PTDiagnosticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4E3EADF157F2EE300A218EC /* PTDiagnosticViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -721,6 +723,10 @@
 		F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMockPlaymateFactory.m; sourceTree = "<group>"; };
 		F4A9D90A157ABB060015D977 /* PTPlayTellPusher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlayTellPusher.h; sourceTree = "<group>"; };
 		F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlayTellPusher.m; sourceTree = "<group>"; };
+		F4E3EAD7157F11C500A218EC /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
+		F4E3EADD157F2EE300A218EC /* PTDiagnosticViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTDiagnosticViewController.h; sourceTree = "<group>"; };
+		F4E3EADE157F2EE300A218EC /* PTDiagnosticViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDiagnosticViewController.m; sourceTree = "<group>"; };
+		F4E3EADF157F2EE300A218EC /* PTDiagnosticViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDiagnosticViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -819,6 +825,7 @@
 				F4A9D61E1576C1B50015D977 /* urban airship */,
 				F4A9D88C1577FBB40015D977 /* view controllers */,
 				F4A9D8CF1578153E0015D977 /* views */,
+				F4E3EAD7157F11C500A218EC /* Logging.h */,
 				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
 				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
 				F4A9D5E61576B5950015D977 /* PTViewController.h */,
@@ -1577,14 +1584,17 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				237B24AD157D191400FC288E /* PTDateViewController.h */,
+				237B24AE157D191500FC288E /* PTDateViewController.m */,
+				237B24AF157D191500FC288E /* PTDateViewController.xib */,
+				F4E3EADD157F2EE300A218EC /* PTDiagnosticViewController.h */,
+				F4E3EADE157F2EE300A218EC /* PTDiagnosticViewController.m */,
+				F4E3EADF157F2EE300A218EC /* PTDiagnosticViewController.xib */,
 				F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */,
 				F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */,
 				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
 				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
 				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
-				237B24AD157D191400FC288E /* PTDateViewController.h */,
-				237B24AE157D191500FC288E /* PTDateViewController.m */,
-				237B24AF157D191500FC288E /* PTDateViewController.xib */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -1883,6 +1893,7 @@
 				F4A9D900157A88870015D977 /* profile_default_2.png in Resources */,
 				237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */,
 				232265A5157D4D8800D5A960 /* date_bg.png in Resources */,
+				F4E3EAE1157F2EE300A218EC /* PTDiagnosticViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1969,6 +1980,7 @@
 				237B24AA157D182A00FC288E /* PTPageView.m in Sources */,
 				237B24B0157D191500FC288E /* PTDateViewController.m in Sources */,
 				2311E0B4157EA1260084859B /* PTBooksListRequest.m in Sources */,
+				F4E3EAE0157F2EE300A218EC /* PTDiagnosticViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2044,14 +2056,15 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 					"PLAYTELL_STAGING=1",
+					"LOGGING_ENABLED=1",
 				);
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -2066,8 +2079,8 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

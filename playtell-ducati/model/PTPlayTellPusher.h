@@ -10,12 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class PTPlayTellPusher;
-@protocol PTPLayTellPusherDelegate <NSObject>
-@required
-- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateJoinedEvent:(PTPlaydate*)playdate;
-- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate;
-@end
+extern NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent;
+extern NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent;
+
+extern NSString* const PTPlaydateKey;
 
 @interface PTPlayTellPusher : NSObject
 
@@ -26,5 +24,4 @@
 - (void)subscribeToPlaydateChannel:(NSString *)channelName;
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName;
 
-@property (nonatomic, assign) id<PTPLayTellPusherDelegate> delegate;
 @end

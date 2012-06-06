@@ -6,7 +6,9 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTDiagnosticViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTMockPlaymateFactory.h"
 #import "PTPlaydate.h"
@@ -34,7 +36,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.viewController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+    self.viewController = [[PTDiagnosticViewController alloc] initWithNibName:@"PTDiagnosticViewController" bundle:nil];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
 
@@ -44,6 +46,11 @@
     loginController.delegate = self;
     
     [self.viewController presentModalViewController:loginController animated:NO];
+
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(receivedPlaydateJoinedNotification:)
+//                                                 name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
+//                                               object:nil];
     return YES;
 }
 
@@ -67,7 +74,6 @@
 
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Connect to pusher
-    [[PTPlayTellPusher sharedPusher] setDelegate:self];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     
     // Hide login controller
@@ -82,11 +88,12 @@
     [booksListRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
                                    onSuccess:^(NSDictionary *result)
     {
+        LogInfo(@"getBooks result: %@", result);
         books = [result objectForKey:@"books"];
     } 
                                    onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
     {
-         // TODO: Handle
+        LogError(@"Error retrieving book list: %@", error);
     }];
 }
 
@@ -122,6 +129,24 @@
 - (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateJoinedEvent:(PTPlaydate*)playdate {
     LOGMETHOD;
     NSLog(@"Playdate -> %@", playdate);
+}
+
+- (void)receivedPlaydateJoinedNotification:(NSNotification*)note {
+    LOGMETHOD;
+    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+    PTPlayTellPusher* pusher = (PTPlayTellPusher*)[note object];
+    NSLog(@"Playdate -> %@", playdate);
+    
+    // Unsubscribe from rendezvous channel
+    [pusher unsubscribeFromRendezvousChannel];
+    
+    // Subscribe to playdate channel
+    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
+    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
+    
+    // Load playdate
+    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+    [self.viewController presentViewController:dateController animated:YES completion:nil];
 }
 
 - (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate {

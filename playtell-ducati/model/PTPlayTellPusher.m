@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "Logging.h"
 #import "PTPlayTellPusher.h"
 #import "PTPusher.h"
 #import "PTPusherChannel.h"
@@ -14,6 +15,11 @@
 // TODO : Need to remove these dependencies after testing
 #import "PTPlaydate.h"
 #import "PTMockPlaymateFactory.h"
+
+NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent = @"PTPlayTellPusherDidReceivePlaydateJoinedEvent";
+NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent = @"PTPlayTellPusherDidReceivePlaydateRequestedEvent";
+
+NSString* const PTPlaydateKey = @"PTPlaydateKey";
 
 @interface PTPlayTellPusher () <PTPusherDelegate, PTPusherPresenceChannelDelegate>
 @property (nonatomic, retain) PTPusher* pusherClient;
@@ -25,7 +31,6 @@
 static PTPlayTellPusher* instance = nil;
 @synthesize pusherClient;
 @synthesize rendezvousChannel, playdateChannel;
-@synthesize delegate;
 
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
@@ -50,21 +55,31 @@ static PTPlayTellPusher* instance = nil;
 - (void)subscribeToRendezvousChannel {
     self.rendezvousChannel = [self.pusherClient subscribeToPresenceChannelNamed:@"rendezvous-channel" delegate:self];
     [self.rendezvousChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
-        NSLog(@"Playdate joined: %@", channelEvent);
+        LogInfo(@"Playdate joined: %@", channelEvent);
         PTPlaydate* playdate = [[PTPlaydate alloc] initWithPusherEvent:channelEvent
                                                        playmateFactory:[[PTMockPlaymateFactory alloc] init]];
-        [self.delegate playTellPusher:self receivedPlaydateJoinedEvent:playdate];
+
+        NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateJoinedEvent
+                                                            object:self
+                                                          userInfo:info];
     }];
     [self.rendezvousChannel bindToEventNamed:@"playdate_requested" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSLog(@"Playdate requested: %@", channelEvent);
         PTPlaydate* playdate = [[PTPlaydate alloc] initWithPusherEvent:channelEvent
                                                        playmateFactory:[[PTMockPlaymateFactory alloc] init]];
-        [self.delegate playTellPusher:self receivedPlaydateRequestedEvent:playdate];
+
+        NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateRequestedEvent
+                                                            object:self
+                                                          userInfo:info];
     }];
 }
 
 - (void)unsubscribeFromRendezvousChannel {
-    [self.pusherClient unsubscribeFromChannel:self.rendezvousChannel];
+    if (self.rendezvousChannel) {
+        [self.pusherClient unsubscribeFromChannel:self.rendezvousChannel];
+    }
     self.rendezvousChannel = nil;
 }
 
