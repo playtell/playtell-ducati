@@ -97,7 +97,6 @@ static PTPlayTellPusher* instance = nil;
     // Change book
     [self.playdateChannel bindToEventNamed:@"change_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
-        NSLog(@"Playdate -> change_book: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateChangeBook" object:self userInfo:eventData];
     }];
     
@@ -111,7 +110,6 @@ static PTPlayTellPusher* instance = nil;
     // Turn page
     [self.playdateChannel bindToEventNamed:@"turn_page" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
-        NSLog(@"Playdate -> turn_page: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTurnPage" object:self userInfo:eventData];
     }];
     
