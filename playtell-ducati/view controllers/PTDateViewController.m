@@ -10,6 +10,11 @@
 #import "PTDateViewController.h"
 #import "PTBookView.h"
 #import "PTPageView.h"
+#import "PTUser.h"
+#import "PTPageTurnRequest.h"
+#import "PTBookChangeRequest.h"
+#import "PTBookCloseRequest.h"
+#import "PTPlaydateDisconnectRequest.h"
 
 @interface PTDateViewController ()
 
@@ -17,7 +22,7 @@
 
 @implementation PTDateViewController
 
-@synthesize closeBookButton;
+@synthesize closeBookButton, playdate;
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks {
     // Parse all books into format we need
@@ -37,41 +42,6 @@
     booksScrollView = [[PTBooksScrollView alloc] initWithFrame:CGRectMake((1024.0f - 350.0f) / 2.0f, 0.0f, 350.0f, 600.0f)];
     [booksParentView addSubview:booksScrollView];
     [self.view addSubview:booksParentView];
-    
-    // Init temp book
-//    books = [[NSMutableDictionary alloc] init];
-//    
-//    NSMutableDictionary *book1 = [[NSMutableDictionary alloc] init];
-//    [book1 setValue:@"bookNumber1" forKey:@"id"];
-//    [book1 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
-//    [book1 setValue:@"http://pic.iamdimitry.com/book/cover_front2.html" forKey:@"cover_front"];
-//    NSArray *pages = [[NSArray alloc] initWithObjects:
-//                      @"http://pic.iamdimitry.com/book/page1.html",
-//                      @"http://pic.iamdimitry.com/book/page2.html",
-//                      @"http://pic.iamdimitry.com/book/page3.html",
-//                      @"http://pic.iamdimitry.com/book/page4.html", nil]; 
-//    [book1 setObject:[pages copy] forKey:@"pages"];
-//    [book1 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
-//    [books setObject:book1 forKey:@"bookNumber1"];
-//    
-//    NSMutableDictionary *book2 = [[NSMutableDictionary alloc] init];
-//    [book2 setValue:@"bookNumber2" forKey:@"id"];
-//    [book2 setValue:[NSNumber numberWithInteger:1] forKey:@"current_page"];
-//    [book2 setValue:@"http://pic.iamdimitry.com/book/cover_front.html" forKey:@"cover_front"];
-//    pages = [[NSArray alloc] initWithObjects:
-//             @"http://pic.iamdimitry.com/book/page1.html",
-//             @"http://pic.iamdimitry.com/book/page2.html",
-//             @"http://pic.iamdimitry.com/book/page3.html",
-//             @"http://pic.iamdimitry.com/book/page4.html",
-//             @"http://pic.iamdimitry.com/book/page5.html",
-//             @"http://pic.iamdimitry.com/book/page6.html",
-//             @"http://pic.iamdimitry.com/book/page7.html",
-//             @"http://pic.iamdimitry.com/book/page8.html",
-//             @"http://pic.iamdimitry.com/book/page9.html",
-//             @"http://pic.iamdimitry.com/book/page10.html", nil]; 
-//    [book2 setObject:[pages copy] forKey:@"pages"];
-//    [book2 setValue:[NSNumber numberWithInteger:[pages count]] forKey:@"total_pages"];
-//    [books setObject:book2 forKey:@"bookNumber2"];
     
     // Create views for each book
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
@@ -114,6 +84,7 @@
     [webView setDelegate:self];
     webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
     [self.view addSubview:webView];
+    isWebViewLoading = NO;
     
     // Start loading book covers
     [self loadBookCovers];
@@ -124,7 +95,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
 }
 
-- (IBAction)closeBook {
+- (IBAction)closeBook:(id)sender {
     // Find opened book
     PTBookView *bookView = nil;
     for (int i=0, l=[books count]; i<l; i++) {
@@ -133,6 +104,7 @@
             break;
         }
     }
+
     // Close book, hide pages, show all other books
     if (bookView != nil) {
         // TODO: Set current page view to book view
@@ -141,6 +113,25 @@
         [bookView close];
         [booksScrollView showAllBooksExcept:currentBookId];
     }
+    
+    // Notify server of book close
+    PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
+    [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                       bookId:[bookView getId]
+                                    authToken:[[PTUser currentUser] authToken]
+                                    onSuccess:nil
+                                    onFailure:nil
+    ];
+}
+
+- (IBAction)playdateDisconnect:(id)sender {
+    // Notify server of disconnect
+    PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+    [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                      authToken:[[PTUser currentUser] authToken]
+                                                      onSuccess:nil
+                                                      onFailure:nil
+    ];
 }
 
 - (void)viewDidUnload {
@@ -162,7 +153,19 @@
 
 - (void)pusherPlayDateTurnPage:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
-    NSLog (@"PlayDateTurnPage -> %@", eventData);
+    NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    
+    // Check if this user initiated the page turn event
+    if ([[PTUser currentUser] userID] == playerId) {
+        return;
+    }
+    
+    // Perform page turn
+    NSInteger pageNum = [[eventData objectForKey:@"page"] integerValue];
+    [pagesScrollView navigateToPage:pageNum];
+    
+    // Start loading pages
+    [self beginBookPageLoading];
 }
 
 - (void)pusherPlayDateEndPlaydate:(NSNotification *)notification {
@@ -172,7 +175,37 @@
 
 - (void)pusherPlayDateChangeBook:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
-    NSLog (@"PlayDateChangeBook -> %@", eventData);
+    NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    
+    // Check if this user initiated the page turn event
+    if ([[PTUser currentUser] userID] == playerId) {
+        return;
+    }
+    
+    // Perform book change
+    NSNumber *bookId = [eventData objectForKey:@"book"];
+    currentBookId = [bookId copy];
+    [booksScrollView navigateToBook:bookId];
+    [self performSelector:@selector(openBookAfterNavigation) withObject:nil afterDelay:0.35];
+}
+
+- (void)openBookAfterNavigation {
+    // Prepare the pages
+    [pagesScrollView setCurrentBook:[books objectForKey:currentBookId]];
+    
+    // Find the book
+    for (PTBookView *bookView in bookList) {
+        if ([[bookView getId] isEqualToNumber:currentBookId]) {
+            // Open the book
+            [bookView open];
+            [booksScrollView hideAllBooksExcept:(currentBookId)];
+            
+            // Start loading pages
+            [self beginBookPageLoading];
+
+            break;
+        }
+    }
 }
 
 #pragma mark -
@@ -238,18 +271,21 @@
     
     // Check if JavaScript said web page has been loaded and render it to bitmap
     if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
+        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
+        NSInteger pageNum = [(NSString *)[components objectAtIndex:3] intValue];
         // Render page view to bitmap
-        [self convertWebViewPageToBitmap];
+        [self convertWebViewPageToBitmapWithBookId:bookId andPageNumber:pageNum];
         return NO;
     } else if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"coverLoadFinished"]) {
+        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
         // Render cover view to bitmap
-        [self convertWebViewCoverToBitmap];
+        [self convertWebViewCoverToBitmapWithBookId:bookId];
     }
     
     return YES;
 }
 
-- (void)convertWebViewPageToBitmap {
+- (void)convertWebViewPageToBitmapWithBookId:(NSInteger)bookId andPageNumber:(NSInteger)pageNumber {
     // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
         
@@ -262,14 +298,14 @@
         dispatch_async(dispatch_get_main_queue(), ^() {
             
             // Send the image to page
-            NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
+            //NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
             if ([pagesScrollView.subviews count] > 0) {
                 PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pageNumber - 1)];
                 [pageView setPageContentsWithImage:image];
             }
             
             // If first page, also send it to book view
-            if (pageNumber == 0) {
+            if (pageNumber == 1 && coversToLoadIndex < [bookList count]) {
                 PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
                 [bookView setPageContentsWithImage:image];
                 
@@ -282,13 +318,16 @@
             }
             
             // More pages to load? (Or more covers to load?)
-            pagesToLoadIndex += 1;
-            if (pagesToLoadIndex < [pagesToLoad count]) {
+            if ([pagesToLoad count] > 0) {
+                NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+                [pagesToLoad removeObjectAtIndex:0];
                 NSMutableDictionary *book = [books objectForKey:currentBookId];
                 NSArray *pages = [book objectForKey:@"pages"];
-                NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
+                isWebViewLoading = YES;
                 [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber-1)]]]];
             } else {
+                isWebViewLoading = NO;
+
                 // Check for covers
                 coversToLoadIndex += 1;
                 if (coversToLoadIndex < [coversToLoad count]) {
@@ -300,7 +339,7 @@
     });
 }
 
-- (void)convertWebViewCoverToBitmap {
+- (void)convertWebViewCoverToBitmapWithBookId:(NSInteger)bookId {
     // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
         
@@ -385,6 +424,16 @@
         
         // Start loading pages
         [self beginBookPageLoading];
+        
+        // Notify server of book
+        PTBookChangeRequest *bookChangeRequest = [[PTBookChangeRequest alloc] init];
+        [bookChangeRequest changeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                             bookId:currentBookId
+                                         pageNumber:[NSNumber numberWithInt:1]
+                                          authToken:[[PTUser currentUser] authToken]
+                                          onSuccess:nil
+                                          onFailure:nil
+         ];
     }
 }
 
@@ -440,12 +489,14 @@
             }
         }
     }
-    pagesToLoadIndex = 0;
+    //pagesToLoadIndex = 0;
     
     // Start page loading
-    if ([pagesToLoad count] > 0) {
+    if ([pagesToLoad count] > 0 && isWebViewLoading == NO) {
+        NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+        [pagesToLoad removeObjectAtIndex:0];
         NSArray *pages = [book objectForKey:@"pages"];
-        NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
+        isWebViewLoading = YES;
         [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber-1)]]]];
     }
 }
@@ -456,6 +507,17 @@
 - (void)pageTurnedTo:(NSInteger)number {
     // Reset page loading from new page number
     [self beginBookPageLoading];
+    
+    // Notify server of new page turn
+    NSMutableDictionary *book = [books objectForKey:currentBookId];
+    NSNumber *pageNum = [book objectForKey:@"current_page"];
+    PTPageTurnRequest *pageTurnRequest = [[PTPageTurnRequest alloc] init];
+    [pageTurnRequest pageTurnWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                 pageNumber:pageNum
+                                  authToken:[[PTUser currentUser] authToken]
+                                  onSuccess:nil
+                                  onFailure:nil
+    ];
 }
 
 @end

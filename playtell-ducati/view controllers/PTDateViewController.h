@@ -12,8 +12,12 @@
 #import "PTBooksScrollView.h"
 #import "PTBooksParentView.h"
 #import "PTPagesScrollView.h"
+#import "PTPlaydate.h"
 
 @interface PTDateViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
+    // Playdate
+    PTPlaydate *playdate;
+    
     // Books
     PTBooksParentView *booksParentView;
     PTBooksScrollView *booksScrollView;
@@ -34,10 +38,14 @@
     
     // Page loader
     UIWebView *webView;
+    BOOL isWebViewLoading;
 }
 
+@property (nonatomic) PTPlaydate *playdate;
 @property (nonatomic, retain) IBOutlet UIButton *closeBookButton;
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks;
-- (IBAction)closeBook;
+- (IBAction)closeBook:(id)sender;
+- (IBAction)playdateDisconnect:(id)sender;
+- (void)openBookAfterNavigation;
 
 @end

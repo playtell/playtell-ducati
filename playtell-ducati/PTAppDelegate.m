@@ -146,6 +146,7 @@
     
     // Load playdate
     PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+    [dateController setPlaydate:playdate];
     [self.viewController presentViewController:dateController animated:YES completion:nil];
 }
 

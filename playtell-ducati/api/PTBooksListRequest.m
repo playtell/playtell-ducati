@@ -28,9 +28,13 @@
                                                                                NSHTTPURLResponse *response,
                                                                                id JSON)
                       {
-                          success(JSON);
+                          if (success != nil) {
+                              success(JSON);
+                          }
                       } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                          failure(request, response, error, JSON);
+                          if (failure != nil) {
+                              failure(request, response, error, JSON);
+                          }
                       }];
     [booksList start];
 }
