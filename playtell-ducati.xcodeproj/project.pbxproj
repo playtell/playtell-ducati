@@ -21,6 +21,9 @@
 		237B24AA157D182A00FC288E /* PTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A5157D182A00FC288E /* PTPageView.m */; };
 		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
 		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
+		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
+		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
+		F468877615812A060086D351 /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -288,6 +291,11 @@
 		237B24AE157D191500FC288E /* PTDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDateViewController.m; sourceTree = "<group>"; };
 		237B24AF157D191500FC288E /* PTDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDateViewController.xib; sourceTree = "<group>"; };
 		237B24B2157D1AB600FC288E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
+		F468876F158129800086D351 /* PTChatHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDView.m; sourceTree = "<group>"; };
+		F4688772158129C00086D351 /* UIImageView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayTell.h"; sourceTree = "<group>"; };
+		F4688773158129C00086D351 /* UIImageView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayTell.m"; sourceTree = "<group>"; };
+		F468877515812A060086D351 /* logo_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo_loading.gif; sourceTree = "<group>"; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -865,23 +873,24 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
-				232265A4157D4D8800D5A960 /* date_bg.png */,
 				F4A9D61C1576BA370015D977 /* 144.png */,
 				F4A9D61A1576BA330015D977 /* 72.png */,
 				F4A9D8B9157814EF0015D977 /* arrow-error.png */,
 				F4A9D8BA157814EF0015D977 /* border.png */,
 				F4A9D8BB157814EF0015D977 /* contact-info.png */,
 				F4A9D8BC157814EF0015D977 /* create-password.png */,
+				232265A4157D4D8800D5A960 /* date_bg.png */,
 				F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */,
 				F4A9D8BD157814EF0015D977 /* done-press.png */,
 				F4A9D8BE157814EF0015D977 /* done.png */,
-				F4A9D8BF157814EF0015D977 /* dual-form-field.png */,
 				F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */,
+				F4A9D8BF157814EF0015D977 /* dual-form-field.png */,
 				F4A9D8C0157814EF0015D977 /* error-alert.png */,
 				F4A9D8C1157814EF0015D977 /* error-header.png */,
-				F4A9D8C2157814EF0015D977 /* form-field.png */,
 				F4A9D8D31578157F0015D977 /* form-field-depressed.png */,
+				F4A9D8C2157814EF0015D977 /* form-field.png */,
 				F4A9D8C3157814EF0015D977 /* login_bg.png */,
+				F468877515812A060086D351 /* logo_loading.gif */,
 				F4A9D8FF157A88870015D977 /* profile_default_2.png */,
 			);
 			path = artwork;
@@ -1621,6 +1630,8 @@
 				F4A9D8941577FC150015D977 /* NSDictionary+Util.m */,
 				F4A9D8B615780C360015D977 /* NSMutableURLRequest+POSTParameters.h */,
 				F4A9D8B715780C360015D977 /* NSMutableURLRequest+POSTParameters.m */,
+				F4688772158129C00086D351 /* UIImageView+PlayTell.h */,
+				F4688773158129C00086D351 /* UIImageView+PlayTell.m */,
 				F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */,
 				F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */,
 			);
@@ -1666,6 +1677,8 @@
 				237B249F157D182A00FC288E /* PTBooksScrollView.m */,
 				237B24A0157D182A00FC288E /* PTBookView.h */,
 				237B24A1157D182A00FC288E /* PTBookView.m */,
+				F468876E158129800086D351 /* PTChatHUDView.h */,
+				F468876F158129800086D351 /* PTChatHUDView.m */,
 				237B24A2157D182A00FC288E /* PTPagesScrollView.h */,
 				237B24A3157D182A00FC288E /* PTPagesScrollView.m */,
 				237B24A4157D182A00FC288E /* PTPageView.h */,
@@ -1919,6 +1932,7 @@
 				237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */,
 				232265A5157D4D8800D5A960 /* date_bg.png in Resources */,
 				F4E3EAEA157FAAD300A218EC /* PTDiagnosticViewController.xib in Resources */,
+				F468877615812A060086D351 /* logo_loading.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2011,6 +2025,8 @@
 				2311E0C1157F921E0084859B /* PTBookCloseRequest.m in Sources */,
 				2311E0C4157F92A70084859B /* PTPlaydateDisconnectRequest.m in Sources */,
 				F4E3EAE9157FAAD300A218EC /* PTDiagnosticViewController.m in Sources */,
+				F4688770158129800086D351 /* PTChatHUDView.m in Sources */,
+				F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
