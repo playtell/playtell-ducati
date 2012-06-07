@@ -89,7 +89,7 @@ static NSArray* playmates;
 }
 
 - (NSArray*)allPlaymates {
-    return [NSArray array];
+    return playmates;
 }
 
 @end

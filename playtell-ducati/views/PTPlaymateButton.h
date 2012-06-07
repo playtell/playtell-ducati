@@ -16,4 +16,7 @@
 
 +(PTPlaymateButton*)playmateButtonWithPlaymate:(PTPlaymate*)aPlaymate;
 
+- (void)setRequestingPlaydate;
+- (void)resetButton;
+
 @end

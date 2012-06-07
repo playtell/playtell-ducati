@@ -10,6 +10,9 @@
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
 
+// TODO : Remove after testing
+#import "PTMockPlaymateFactory.h"
+
 #import "UIView+PlayTell.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -30,13 +33,12 @@
 }
 
 - (void)viewDidLoad {
-//    self.view.backgroundColor = [UIColor redColor];
 
-    NSUInteger numPlaymates = 8;
-    NSMutableArray* playmates = [NSMutableArray arrayWithCapacity:100];
-    for (int playmateIndex = 0; playmateIndex < numPlaymates; playmateIndex++) {
-        [playmates addObject:[[PTPlaymate alloc] init]];
-    }
+    NSArray* playmates = [[[PTMockPlaymateFactory alloc] init] allPlaymates];
+    NSUInteger numPlaymates = playmates.count;
+//    for (int playmateIndex = 0; playmateIndex < numPlaymates; playmateIndex++) {
+//        [playmates addObject:[[PTPlaymate alloc] init]];
+//    }
 
     CGFloat margin = 70;
     const CGFloat leftMargin = margin;
@@ -63,8 +65,13 @@
             CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
 
             NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
+            if (playmateIndex >= playmates.count) {
+                break;
+            }
+
             PTPlaymate* currentPlaymate = [playmates objectAtIndex:playmateIndex];
             PTPlaymateButton* button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
+            [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
 
             CGRect buttonFrame = button.frame;
             buttonFrame.origin = CGPointMake(cellX, cellY);
@@ -85,9 +92,32 @@
     background.frame = backgroundFrame;
 }
 
-- (void)playmateClicked:(id)sender {
-    PTPlaymateButton* button = (PTPlaymateButton*)sender;
-    NSLog(@"Clicked playmate: %@", button.playmate.username);
+- (void)playmateClicked:(PTPlaymateButton*)sender {
+    static BOOL buttonSelected = NO;
+    static CGRect normalButtonFrame;
+
+    NSLog(@"Clicked playmate: %@", sender.playmate);
+
+    if (!buttonSelected) {
+        UIView* backgroundView = [self.view viewWithTag:666];
+        UIView* transparentView = [[UIView alloc] initWithFrame:backgroundView.frame];
+        transparentView.backgroundColor = [UIColor blackColor];
+        transparentView.alpha = 0.0;
+        transparentView.tag = 667;
+        [self.scrollView addSubview:transparentView];
+        [self.scrollView bringSubviewToFront:sender];
+        normalButtonFrame = sender.frame;
+        buttonSelected = YES;
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            [sender setRequestingPlaydate];
+            transparentView.alpha = 0.7;
+        }];
+    } else {
+        [[self.view viewWithTag:667] removeFromSuperview];
+        [sender resetButton];
+        buttonSelected = NO;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -12,8 +12,13 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+@interface PTPlaymateButton ()
+@property (nonatomic, assign) CGRect originalFrame;
+@end
+
 @implementation PTPlaymateButton
 @synthesize playmate;
+@synthesize originalFrame;
 
 +(PTPlaymateButton*)playmateButtonWithPlaymate:(PTPlaymate*)aPlaymate {
     UIImage* placeholder = [UIImage imageNamed:@"profile_default_2.png"];
@@ -35,18 +40,29 @@
                                                      0, 0);
     playmateButton.playmate = aPlaymate;
 
-    CGRect containerFrame = CGRectMake(0, 0, 100, 30);
-    UIView* container = [[UIView alloc] initWithFrame:containerFrame];
-    container.backgroundColor = [UIColor blueColor];
-
-    [playmateButton addSubviewAndCenter:container];
-    containerFrame = container.frame;
-    containerFrame.origin.y = buttonFrame.size.height-1;
-    container.frame = containerFrame;
+//    CGRect containerFrame = CGRectMake(0, 0, 100, 30);
+//    UIView* container = [[UIView alloc] initWithFrame:containerFrame];
+//    container.backgroundColor = [UIColor blueColor];
+//
+//    [playmateButton addSubviewAndCenter:container];
+//    containerFrame = container.frame;
+//    containerFrame.origin.y = buttonFrame.size.height-1;
+//    container.frame = containerFrame;
     return playmateButton;
 }
 
 + (UIFont*)playmateNameFont {
     return [UIFont fontWithName:@"HelveticaNeue-Bold" size:20];
 }
+
+- (void)setRequestingPlaydate {
+    self.originalFrame = self.frame;
+    CGRect expandedFrame = CGRectInset(self.frame, -10, -10);
+    self.frame = expandedFrame;
+}
+
+- (void)resetButton {
+    self.frame = self.originalFrame;
+}
+
 @end
