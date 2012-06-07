@@ -14,6 +14,9 @@
 #import "PTPlayTellPusher.h"
 #import "PTUser.h"
 
+// TODO : remove this after testing
+#import "PTMockPlaymateFactory.h"
+
 #import <QuartzCore/QuartzCore.h>
 
 @interface PTDiagnosticViewController ()
@@ -31,10 +34,18 @@
 @synthesize channelNameLabel;
 @synthesize joinButton;
 @synthesize subscribeButton;
+@synthesize playmateIDField;
 
 @synthesize playdate;
 @synthesize isSubscribedToRendezvous;
 @synthesize books;
+
+- (IBAction)requestPlaydate:(id)sender {
+    id<PTPlaymateFactory> factory = [[PTMockPlaymateFactory alloc] init];
+    PTPlaymate* playmate = [factory playmateWithUsername:self.playmateIDField.text];
+
+    NSLog(@"Found playmate: %@", playmate);
+}
 
 - (IBAction)joinPressed:(id)sender {
     LOGMETHOD;

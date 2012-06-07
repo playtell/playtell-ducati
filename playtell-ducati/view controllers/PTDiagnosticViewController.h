@@ -17,7 +17,9 @@
 @property (nonatomic, retain) IBOutlet UILabel* channelNameLabel;
 @property (nonatomic, retain) IBOutlet UIButton* joinButton;
 @property (nonatomic, retain) IBOutlet UIButton* subscribeButton;
+@property (nonatomic, retain) IBOutlet UITextField* playmateIDField;
 
 - (IBAction)joinPressed:(id)sender;
 - (IBAction)subscribeToRendezvous:(id)sender;
+- (IBAction)requestPlaydate:(id)sender;
 @end

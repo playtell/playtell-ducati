@@ -12,5 +12,6 @@
 
 @protocol PTPlaymateFactory <NSObject>
 - (PTPlaymate*)playmateWithId:(NSUInteger)playmateId;
+- (PTPlaymate*)playmateWithUsername:(NSString*)username;
 - (NSArray*)allPlaymates;
 @end
