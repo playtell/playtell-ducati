@@ -21,9 +21,17 @@
 @end
 
 static NSString* const kApiKey = @"335312";
+static PTVideoPhone* instance = nil;
 @implementation PTVideoPhone
 @synthesize session, publisher, subscriber;
 @synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock;
+
++ (PTVideoPhone*)sharedPhone {
+    if (!instance) {
+        instance = [[PTVideoPhone alloc] init];
+    }
+    return instance;
+}
 
 - (void)connectToSession:(NSString*)aSession
                withToken:(NSString*)aToken

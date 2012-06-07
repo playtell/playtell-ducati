@@ -16,6 +16,7 @@
 #import "PTBookChangeRequest.h"
 #import "PTBookCloseRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
+#import "PTVideoPhone.h"
 
 @interface PTDateViewController ()
 
@@ -94,11 +95,30 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];
     [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
                              loadingText:self.playdate.initiator.username];
+
+    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
+        NSLog(@"Session connected!");
+    }];
+    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
+                                       withToken:self.playdate.playmateTokboxToken
+                                         success:^(OTPublisher *publisher)
+    {
+        NSLog(@"Inside session connection block");
+        if (publisher.publishVideo) {
+            [chatView setRightView:publisher.view];
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"Inside session failure block");
+    }];
 }
 
 - (IBAction)closeBook:(id)sender {

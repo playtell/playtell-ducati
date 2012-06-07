@@ -15,6 +15,7 @@
 @synthesize pusherChannelName;
 @synthesize initiatorTokboxToken;
 @synthesize playmateTokboxToken;
+@synthesize tokboxSessionID;
 
 - (id)initWithPusherEvent:(PTPusherEvent*)channelEvent playmateFactory:(id<PTPlaymateFactory>)playmateFactory {
 
@@ -27,6 +28,7 @@
         self.pusherChannelName = [playdateData valueForKey:@"pusherChannelName"];
         self.initiatorTokboxToken = [playdateData valueForKey:@"tokboxInitiatorToken"];
         self.playmateTokboxToken = [playdateData valueForKey:@"tokboxPlaymateToken"];
+        self.tokboxSessionID = [playdateData valueForKey:@"tokboxSessionID"];
     }
     return self;
 }

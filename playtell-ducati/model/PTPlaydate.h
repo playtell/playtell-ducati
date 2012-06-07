@@ -19,8 +19,9 @@
 @property (nonatomic, readwrite) PTPlaymate* initiator;
 @property (nonatomic, readwrite) PTPlaymate* playmate;
 @property (nonatomic, assign) NSUInteger playdateID;
-@property (nonatomic, readwrite) NSString* pusherChannelName;
-@property (nonatomic, readwrite) NSString* initiatorTokboxToken;
-@property (nonatomic, readwrite) NSString* playmateTokboxToken;
+@property (nonatomic, copy) NSString* pusherChannelName;
+@property (nonatomic, copy) NSString* initiatorTokboxToken;
+@property (nonatomic, copy) NSString* playmateTokboxToken;
+@property (nonatomic, copy) NSString* tokboxSessionID;
 
 @end

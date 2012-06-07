@@ -8,22 +8,24 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTBooksListRequest.h"
+#import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTMockPlaymateFactory.h"
-#import "PTPlaydate.h"
 #import "PTPlayTellPusher.h"
+#import "PTPlaydate.h"
 #import "PTPusher.h"
-#import "PTUser.h"
 #import "PTPusherChannel.h"
+#import "PTUser.h"
+#import "PTVideoPhone.h"
 #import "PTViewController.h"
-#import "PTDateViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
-#import "PTBooksListRequest.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
+@property (nonatomic, retain) PTVideoPhone* phone;
 @end
 
 @implementation PTAppDelegate
@@ -31,6 +33,7 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize client;
+@synthesize phone;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -46,6 +49,7 @@
     loginController.delegate = self;
     
     [self.viewController presentModalViewController:loginController animated:NO];
+    [PTVideoPhone sharedPhone];
 
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(receivedPlaydateJoinedNotification:)

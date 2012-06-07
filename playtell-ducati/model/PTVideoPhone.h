@@ -17,6 +17,8 @@ typedef void (^PTSessionDroppedStreamBlock) (OTSession* session, OTStream* strea
 
 @interface PTVideoPhone : NSObject <OTSessionDelegate, OTSubscriberDelegate, OTPublisherDelegate>
 
++ (PTVideoPhone*)sharedPhone;
+
 - (void)connectToUser:(NSString*)aUser;
 - (void)disconnect;
 
