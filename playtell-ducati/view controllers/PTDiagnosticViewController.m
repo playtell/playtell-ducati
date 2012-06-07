@@ -13,6 +13,7 @@
 #import "PTPlaydate.h"
 #import "PTPlayTellPusher.h"
 #import "PTUser.h"
+#import "PTPlaydateCreateRequest.h"
 
 // TODO : remove this after testing
 #import "PTMockPlaymateFactory.h"
@@ -42,9 +43,23 @@
 
 - (IBAction)requestPlaydate:(id)sender {
     id<PTPlaymateFactory> factory = [[PTMockPlaymateFactory alloc] init];
+    
+    // Get playmate
     PTPlaymate* playmate = [factory playmateWithUsername:self.playmateIDField.text];
+    NSLog(@"Playmate: %@", playmate);
+    if (playmate == nil) {
+        NSLog(@"Playmate NOT FOUND!");
+        return;
+    }
 
-    NSLog(@"Found playmate: %@", playmate);
+    // Initiate playdate request
+    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithInteger:playmate.userID]
+                                          authToken:[[PTUser currentUser] authToken]
+                                          onSuccess:nil
+                                          onFailure:nil
+    ];
+    NSLog(@"Requesting playdate...");
 }
 
 - (IBAction)joinPressed:(id)sender {
@@ -102,6 +117,11 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
+                                               object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pusherDidReceivePlaydRequestNotification:)
@@ -144,6 +164,11 @@
 
     self.playdate = aPlaydate;
     self.joinButton.enabled = YES;
+}
+
+- (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
+    NSDictionary *userInfo = note.userInfo;
+    NSLog(@"pusherDidReceivePlaydateJoinedNotification: %@", userInfo);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

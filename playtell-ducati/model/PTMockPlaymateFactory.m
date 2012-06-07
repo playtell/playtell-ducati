@@ -29,7 +29,7 @@ static NSArray* playmates;
                                                   userID:43];
     
     PTPlaymate* dimaTest = [[PTPlaymate alloc] initWithEmail:@"dimitry@playtell.com"
-                                                     username:@"dima"
+                                                     username:@"dimatest"
                                                        userID:44];
 
     PTPlaymate* semiratest2 = [[PTPlaymate alloc] initWithEmail:@"srahemtulla@gmail.com"
