@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PTDateViewController.h"
 #import "PTBookView.h"
+#import "PTChatHUDView.h"
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
@@ -93,6 +94,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
+
+    PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:chatView];
+    [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
+                             loadingText:self.playdate.initiator.username];
 }
 
 - (IBAction)closeBook:(id)sender {

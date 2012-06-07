@@ -24,6 +24,12 @@
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
 		F468877615812A060086D351 /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
+		F468877B158138190086D351 /* PTVideoPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = F468877A158138190086D351 /* PTVideoPhone.m */; };
+		F4688780158139D70086D351 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468877F158139D70086D351 /* Opentok.framework */; };
+		F468878215813A890086D351 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878115813A880086D351 /* AVFoundation.framework */; };
+		F468878415813ACF0086D351 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878315813ACF0086D351 /* CoreMedia.framework */; };
+		F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878515813AE20086D351 /* CoreVideo.framework */; };
+		F468878815813B040086D351 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878715813B040086D351 /* OpenGLES.framework */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -219,16 +225,6 @@
 		F4A9D8901577FBB40015D977 /* PTLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */; };
 		F4A9D8911577FBB40015D977 /* PTLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */; };
 		F4A9D8951577FC150015D977 /* NSDictionary+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8941577FC150015D977 /* NSDictionary+Util.m */; };
-		F4A9D8AC1577FCDD0015D977 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8981577FCDD0015D977 /* AFHTTPClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8AD1577FCDD0015D977 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D89A1577FCDD0015D977 /* AFHTTPRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8AE1577FCDD0015D977 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D89C1577FCDD0015D977 /* AFImageRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8AF1577FCDD0015D977 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D89E1577FCDD0015D977 /* AFJSONRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B01577FCDD0015D977 /* AFJSONUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8A01577FCDD0015D977 /* AFJSONUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B11577FCDD0015D977 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8A21577FCDD0015D977 /* AFNetworkActivityIndicatorManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B21577FCDD0015D977 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8A51577FCDD0015D977 /* AFPropertyListRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B31577FCDD0015D977 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8A71577FCDD0015D977 /* AFURLConnectionOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B41577FCDD0015D977 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8A91577FCDD0015D977 /* AFXMLRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		F4A9D8B51577FCDD0015D977 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8AB1577FCDD0015D977 /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F4A9D8B815780C360015D977 /* NSMutableURLRequest+POSTParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8B715780C360015D977 /* NSMutableURLRequest+POSTParameters.m */; };
 		F4A9D8C4157814EF0015D977 /* arrow-error.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8B9157814EF0015D977 /* arrow-error.png */; };
 		F4A9D8C5157814EF0015D977 /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BA157814EF0015D977 /* border.png */; };
@@ -296,6 +292,13 @@
 		F4688772158129C00086D351 /* UIImageView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayTell.h"; sourceTree = "<group>"; };
 		F4688773158129C00086D351 /* UIImageView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayTell.m"; sourceTree = "<group>"; };
 		F468877515812A060086D351 /* logo_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo_loading.gif; sourceTree = "<group>"; };
+		F4688779158138190086D351 /* PTVideoPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTVideoPhone.h; sourceTree = "<group>"; };
+		F468877A158138190086D351 /* PTVideoPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTVideoPhone.m; sourceTree = "<group>"; };
+		F468877F158139D70086D351 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Opentok.framework; sourceTree = "<group>"; };
+		F468878115813A880086D351 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F468878315813ACF0086D351 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		F468878515813AE20086D351 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		F468878715813B040086D351 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -683,26 +686,16 @@
 		F4A9D8931577FC150015D977 /* NSDictionary+Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Util.h"; sourceTree = "<group>"; };
 		F4A9D8941577FC150015D977 /* NSDictionary+Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Util.m"; sourceTree = "<group>"; };
 		F4A9D8971577FCDD0015D977 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
-		F4A9D8981577FCDD0015D977 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		F4A9D8991577FCDD0015D977 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
-		F4A9D89A1577FCDD0015D977 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
 		F4A9D89B1577FCDD0015D977 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
-		F4A9D89C1577FCDD0015D977 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
 		F4A9D89D1577FCDD0015D977 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
-		F4A9D89E1577FCDD0015D977 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
 		F4A9D89F1577FCDD0015D977 /* AFJSONUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONUtilities.h; sourceTree = "<group>"; };
-		F4A9D8A01577FCDD0015D977 /* AFJSONUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONUtilities.m; sourceTree = "<group>"; };
 		F4A9D8A11577FCDD0015D977 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
-		F4A9D8A21577FCDD0015D977 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
 		F4A9D8A31577FCDD0015D977 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
 		F4A9D8A41577FCDD0015D977 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
-		F4A9D8A51577FCDD0015D977 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
 		F4A9D8A61577FCDD0015D977 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
-		F4A9D8A71577FCDD0015D977 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
 		F4A9D8A81577FCDD0015D977 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
-		F4A9D8A91577FCDD0015D977 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		F4A9D8AA1577FCDD0015D977 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
-		F4A9D8AB1577FCDD0015D977 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		F4A9D8B615780C360015D977 /* NSMutableURLRequest+POSTParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+POSTParameters.h"; sourceTree = "<group>"; };
 		F4A9D8B715780C360015D977 /* NSMutableURLRequest+POSTParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+POSTParameters.m"; sourceTree = "<group>"; };
 		F4A9D8B9157814EF0015D977 /* arrow-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-error.png"; sourceTree = "<group>"; };
@@ -757,6 +750,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F468878815813B040086D351 /* OpenGLES.framework in Frameworks */,
+				F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */,
+				F468878415813ACF0086D351 /* CoreMedia.framework in Frameworks */,
+				F468878215813A890086D351 /* AVFoundation.framework in Frameworks */,
 				F4A9D902157A92F90015D977 /* QuartzCore.framework in Frameworks */,
 				F4A9D79C1576C3690015D977 /* SystemConfiguration.framework in Frameworks */,
 				F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */,
@@ -773,10 +770,11 @@
 				F4A9D7941576C32E0015D977 /* MapKit.framework in Frameworks */,
 				F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */,
 				F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */,
-				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
 				F4A9D72B1576C1B50015D977 /* libUAirship-1.2.1.a in Frameworks */,
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
+				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
+				F4688780158139D70086D351 /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,12 +809,14 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
+				F468878115813A880086D351 /* AVFoundation.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
 				F4A9D5D81576B5950015D977 /* CoreGraphics.framework */,
 				F4A9D7A51576C3930015D977 /* CoreLocation.framework */,
+				F468878315813ACF0086D351 /* CoreMedia.framework */,
 				F4A9D7A11576C3850015D977 /* CoreTelephony.framework */,
+				F468878515813AE20086D351 /* CoreVideo.framework */,
 				F4A9D5D61576B5950015D977 /* Foundation.framework */,
 				F4A9D8F415798DBF0015D977 /* libicucore.dylib */,
 				F4A9D79F1576C37C0015D977 /* libsqlite3.dylib */,
@@ -824,6 +824,9 @@
 				F4A9D7931576C32E0015D977 /* MapKit.framework */,
 				F4A9D7A71576C3A70015D977 /* MessageUI.framework */,
 				F4A9D7971576C35A0015D977 /* MobileCoreServices.framework */,
+				F468878715813B040086D351 /* OpenGLES.framework */,
+				F468877F158139D70086D351 /* Opentok.framework */,
+				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D901157A92F80015D977 /* QuartzCore.framework */,
 				F4A9D7991576C3620015D977 /* Security.framework */,
 				F4A9D7A31576C38C0015D977 /* StoreKit.framework */,
@@ -1642,26 +1645,16 @@
 			isa = PBXGroup;
 			children = (
 				F4A9D8971577FCDD0015D977 /* AFHTTPClient.h */,
-				F4A9D8981577FCDD0015D977 /* AFHTTPClient.m */,
 				F4A9D8991577FCDD0015D977 /* AFHTTPRequestOperation.h */,
-				F4A9D89A1577FCDD0015D977 /* AFHTTPRequestOperation.m */,
 				F4A9D89B1577FCDD0015D977 /* AFImageRequestOperation.h */,
-				F4A9D89C1577FCDD0015D977 /* AFImageRequestOperation.m */,
 				F4A9D89D1577FCDD0015D977 /* AFJSONRequestOperation.h */,
-				F4A9D89E1577FCDD0015D977 /* AFJSONRequestOperation.m */,
 				F4A9D89F1577FCDD0015D977 /* AFJSONUtilities.h */,
-				F4A9D8A01577FCDD0015D977 /* AFJSONUtilities.m */,
 				F4A9D8A11577FCDD0015D977 /* AFNetworkActivityIndicatorManager.h */,
-				F4A9D8A21577FCDD0015D977 /* AFNetworkActivityIndicatorManager.m */,
 				F4A9D8A31577FCDD0015D977 /* AFNetworking.h */,
 				F4A9D8A41577FCDD0015D977 /* AFPropertyListRequestOperation.h */,
-				F4A9D8A51577FCDD0015D977 /* AFPropertyListRequestOperation.m */,
 				F4A9D8A61577FCDD0015D977 /* AFURLConnectionOperation.h */,
-				F4A9D8A71577FCDD0015D977 /* AFURLConnectionOperation.m */,
 				F4A9D8A81577FCDD0015D977 /* AFXMLRequestOperation.h */,
-				F4A9D8A91577FCDD0015D977 /* AFXMLRequestOperation.m */,
 				F4A9D8AA1577FCDD0015D977 /* UIImageView+AFNetworking.h */,
-				F4A9D8AB1577FCDD0015D977 /* UIImageView+AFNetworking.m */,
 			);
 			path = AFNetworking;
 			sourceTree = "<group>";
@@ -1728,6 +1721,8 @@
 				F4A9D8EB1579218E0015D977 /* PTUser.m */,
 				F4A9D90A157ABB060015D977 /* PTPlayTellPusher.h */,
 				F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */,
+				F4688779158138190086D351 /* PTVideoPhone.h */,
+				F468877A158138190086D351 /* PTVideoPhone.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1990,16 +1985,6 @@
 				F4A9D7811576C1B50015D977 /* UASubscriptionUIUtil.m in Sources */,
 				F4A9D8901577FBB40015D977 /* PTLoginViewController.m in Sources */,
 				F4A9D8951577FC150015D977 /* NSDictionary+Util.m in Sources */,
-				F4A9D8AC1577FCDD0015D977 /* AFHTTPClient.m in Sources */,
-				F4A9D8AD1577FCDD0015D977 /* AFHTTPRequestOperation.m in Sources */,
-				F4A9D8AE1577FCDD0015D977 /* AFImageRequestOperation.m in Sources */,
-				F4A9D8AF1577FCDD0015D977 /* AFJSONRequestOperation.m in Sources */,
-				F4A9D8B01577FCDD0015D977 /* AFJSONUtilities.m in Sources */,
-				F4A9D8B11577FCDD0015D977 /* AFNetworkActivityIndicatorManager.m in Sources */,
-				F4A9D8B21577FCDD0015D977 /* AFPropertyListRequestOperation.m in Sources */,
-				F4A9D8B31577FCDD0015D977 /* AFURLConnectionOperation.m in Sources */,
-				F4A9D8B41577FCDD0015D977 /* AFXMLRequestOperation.m in Sources */,
-				F4A9D8B51577FCDD0015D977 /* UIImageView+AFNetworking.m in Sources */,
 				F4A9D8B815780C360015D977 /* NSMutableURLRequest+POSTParameters.m in Sources */,
 				F4A9D8D21578153E0015D977 /* PTTextField.m in Sources */,
 				F4A9D8E21579096F0015D977 /* PTRequest.m in Sources */,
@@ -2027,6 +2012,7 @@
 				F4E3EAE9157FAAD300A218EC /* PTDiagnosticViewController.m in Sources */,
 				F4688770158129800086D351 /* PTChatHUDView.m in Sources */,
 				F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */,
+				F468877B158138190086D351 /* PTVideoPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2104,6 +2090,10 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2112,17 +2102,14 @@
 					"PLAYTELL_STAGING=1",
 				);
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
@@ -2135,20 +2122,21 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
@@ -2182,21 +2170,22 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "PLAYTELL_STAGING=1";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
@@ -2230,20 +2219,21 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/playtell-ducati/urban airship\"",
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
