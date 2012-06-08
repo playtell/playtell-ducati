@@ -20,6 +20,7 @@
 #import "PTBookCloseRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTVideoPhone.h"
+#import "PTPlaydateJoinedRequest.h"
 
 #import "PTPlaydate+InitatorChecking.h"
 
@@ -110,6 +111,14 @@
     // TODO need to decide if this is where the subscription should live...
     NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
     [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
+    
+    // Notify server (and thus, the initiator) that we joined the playdate
+    PTPlaydateJoinedRequest *playdateJoinedRequest = [[PTPlaydateJoinedRequest alloc] init];
+    [playdateJoinedRequest playdateJoinedWithPlaydate:[NSNumber numberWithInteger:self.playdate.playdateID]
+                                            authToken:[[PTUser currentUser] authToken]
+                                            onSuccess:nil
+                                            onFailure:nil
+    ];
 
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];

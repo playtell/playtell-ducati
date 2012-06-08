@@ -81,21 +81,10 @@
     // Unsubscribe from rendezvous channel
     [self unsunscribeFromRendezvousAndUpdateUI];
 
-    // Subscribe to playdate channel
-    [pusher subscribeToPlaydateChannel:aPlaydate.pusherChannelName];
-
     // Load playdate
     PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
     [dateController setPlaydate:self.playdate];
     [self presentViewController:dateController animated:YES completion:nil];
-    
-    // Notify server (and thus, the initiator) that we joined the playdate
-    PTPlaydateJoinedRequest *playdateJoinedRequest = [[PTPlaydateJoinedRequest alloc] init];
-    [playdateJoinedRequest playdateJoinedWithPlaydate:[NSNumber numberWithInteger:aPlaydate.playdateID]
-                                            authToken:[[PTUser currentUser] authToken]
-                                            onSuccess:nil
-                                            onFailure:nil
-    ];
 }
 
 - (IBAction)subscribeToRendezvous:(id)sender {
