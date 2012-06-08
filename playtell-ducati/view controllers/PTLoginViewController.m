@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
-//#import "ASIFormDataRequest.h"
 #import "AFNetworking.h"
+#import "Logging.h"
 #import "PTAppDelegate.h"
 #import "PTLoginRequest.h"
 #import "PTLoginViewController.h"
@@ -282,13 +282,13 @@ typedef void (^PTLoginFailureBlock) (NSError *);
     [loginRequest loginWithUsername:aUsername password:aPassword pushToken:[[UAirship shared] deviceToken]
                           onSuccess:^(NSDictionary *result)
     {
-        NSLog(@"Login result: %@", result);
+        LogInfo(@"Login result: %@", result);
         NSString* token = [result valueForKey:@"token"];
         NSNumber* userID = [result valueForKey:@"user_id"];
         [[PTUser currentUser] setUsername:aUsername];
         [[PTUser currentUser] setAuthToken:token];
         [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-        NSLog(@"Current user: %@", [PTUser currentUser]);
+        LogInfo(@"Current user: %@", [PTUser currentUser]);
         success(result);
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {
         failure(error);

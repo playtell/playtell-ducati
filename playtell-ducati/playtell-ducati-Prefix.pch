@@ -25,6 +25,6 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define ROOT_URL @"http://playtell.com"
 #endif
 
-#define LOGMETHOD NSLog((@"%@"),NSStringFromSelector(_cmd))
+#define LOGMETHOD LogTrace(@"%@",NSStringFromSelector(_cmd))
 
 #endif

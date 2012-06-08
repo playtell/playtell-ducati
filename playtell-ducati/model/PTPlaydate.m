@@ -15,18 +15,19 @@
 @synthesize pusherChannelName;
 @synthesize initiatorTokboxToken;
 @synthesize playmateTokboxToken;
+@synthesize tokboxSessionID;
 
-- (id)initWithPusherEvent:(PTPusherEvent*)channelEvent playmateFactory:(id<PTPlaymateFactory>)playmateFactory {
+- (id)initWithDictionary:(NSDictionary*)playdateData playmateFactory:(id<PTPlaymateFactory>)playmateFactory {
 
     if (self = [super init]) {
-        NSAssert([channelEvent.data isKindOfClass:[NSDictionary class]], @"Expecting a dictionary of playdate data!");
-        NSDictionary* playdateData = channelEvent.data;
+        NSAssert([playdateData isKindOfClass:[NSDictionary class]], @"Expecting a dictionary of playdate data!");
         self.initiator = [playmateFactory playmateWithId:[[playdateData valueForKey:@"initiatorID"] unsignedIntValue]];
         self.playmate = [playmateFactory playmateWithId:[[playdateData valueForKey:@"playmateID"] unsignedIntValue]];
         self.playdateID = [[playdateData valueForKey:@"playdateID"] unsignedIntValue];
         self.pusherChannelName = [playdateData valueForKey:@"pusherChannelName"];
         self.initiatorTokboxToken = [playdateData valueForKey:@"tokboxInitiatorToken"];
         self.playmateTokboxToken = [playdateData valueForKey:@"tokboxPlaymateToken"];
+        self.tokboxSessionID = [playdateData valueForKey:@"tokboxSessionID"];
     }
     return self;
 }

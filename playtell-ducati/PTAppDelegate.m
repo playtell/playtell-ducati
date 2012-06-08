@@ -8,22 +8,24 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTBooksListRequest.h"
+#import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTMockPlaymateFactory.h"
-#import "PTPlaydate.h"
 #import "PTPlayTellPusher.h"
+#import "PTPlaydate.h"
 #import "PTPusher.h"
-#import "PTUser.h"
 #import "PTPusherChannel.h"
+#import "PTUser.h"
+#import "PTVideoPhone.h"
 #import "PTViewController.h"
-#import "PTDateViewController.h"
 #import "UAPush.h"
 #import "UAirship.h"
-#import "PTBooksListRequest.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
+@property (nonatomic, retain) PTVideoPhone* phone;
 @end
 
 @implementation PTAppDelegate
@@ -31,6 +33,7 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize client;
+@synthesize phone;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -46,6 +49,7 @@
     loginController.delegate = self;
     
     [self.viewController presentModalViewController:loginController animated:NO];
+    [PTVideoPhone sharedPhone];
 
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(receivedPlaydateJoinedNotification:)
@@ -88,7 +92,7 @@
     [booksListRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
                                    onSuccess:^(NSDictionary *result)
     {
-        LogInfo(@"getBooks result: %@", result);
+        LogTrace(@"getBooks result: %@", result);
         books = [result objectForKey:@"books"];
     } 
                                    onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
@@ -126,44 +130,44 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateJoinedEvent:(PTPlaydate*)playdate {
-    LOGMETHOD;
-    NSLog(@"Playdate -> %@", playdate);
-}
-
-- (void)receivedPlaydateJoinedNotification:(NSNotification*)note {
-    LOGMETHOD;
-    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
-    PTPlayTellPusher* pusher = (PTPlayTellPusher*)[note object];
-    NSLog(@"Playdate -> %@", playdate);
-    
-    // Unsubscribe from rendezvous channel
-    [pusher unsubscribeFromRendezvousChannel];
-    
-    // Subscribe to playdate channel
-    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
-    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
-    
-    // Load playdate
-    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
-    [dateController setPlaydate:playdate];
-    [self.viewController presentViewController:dateController animated:YES completion:nil];
-}
-
-- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate {
-    LOGMETHOD;
-    NSLog(@"Playdate -> %@", playdate);
-    
-    // Unsubscribe from rendezvous channel
-    [pusher unsubscribeFromRendezvousChannel];
-    
-    // Subscribe to playdate channel
-    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
-    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
-    
-    // Load playdate
-    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
-    [self.viewController presentViewController:dateController animated:YES completion:nil];
-}
+//- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateJoinedEvent:(PTPlaydate*)playdate {
+//    LOGMETHOD;
+//    NSLog(@"Playdate -> %@", playdate);
+//}
+//
+//- (void)receivedPlaydateJoinedNotification:(NSNotification*)note {
+//    LOGMETHOD;
+//    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+//    PTPlayTellPusher* pusher = (PTPlayTellPusher*)[note object];
+//    NSLog(@"Playdate -> %@", playdate);
+//    
+//    // Unsubscribe from rendezvous channel
+//    [pusher unsubscribeFromRendezvousChannel];
+//    
+//    // Subscribe to playdate channel
+//    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
+//    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
+//    
+//    // Load playdate
+//    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+//    [dateController setPlaydate:playdate];
+//    [self.viewController presentViewController:dateController animated:YES completion:nil];
+//}
+//
+//- (void)playTellPusher:(PTPlayTellPusher*)pusher receivedPlaydateRequestedEvent:(PTPlaydate*)playdate {
+//    LOGMETHOD;
+//    NSLog(@"Playdate -> %@", playdate);
+//    
+//    // Unsubscribe from rendezvous channel
+//    [pusher unsubscribeFromRendezvousChannel];
+//    
+//    // Subscribe to playdate channel
+//    NSLog(@"Subscribing to channel: %@", playdate.pusherChannelName);
+//    [pusher subscribeToPlaydateChannel:playdate.pusherChannelName];
+//    
+//    // Load playdate
+//    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+//    [self.viewController presentViewController:dateController animated:YES completion:nil];
+//}
 
 @end

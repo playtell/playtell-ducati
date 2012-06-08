@@ -57,27 +57,36 @@
     PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
     [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithInteger:playmate.userID]
                                           authToken:[[PTUser currentUser] authToken]
-                                          onSuccess:nil
-                                          onFailure:nil
+                                          onSuccess:^(NSDictionary *result)
+     {
+         LogInfo(@"playdateCreateWithFriend response: %@", result);
+         self.playdate = [[PTPlaydate alloc] initWithDictionary:result
+                                                playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+         [self joinPlaydate];
+     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"playdateCreateWithFriend failed: %@", error);
+     }
     ];
-    NSLog(@"Requesting playdate...");
+    LogInfo(@"Requesting playdate...");
 }
 
 - (IBAction)joinPressed:(id)sender {
     LOGMETHOD;
-    PTPlaydate* aPlaydate = self.playdate;
-    PTPlayTellPusher* pusher = [PTPlayTellPusher sharedPusher];
+    [self joinPlaydate];
+}
+
+- (void)joinPlaydate {
     NSLog(@"Playdate -> %@", self.playdate);
-    
+
     // Unsubscribe from rendezvous channel
     [self unsunscribeFromRendezvousAndUpdateUI];
-    
+
     // Subscribe to playdate channel
     [pusher subscribeToPlaydateChannel:aPlaydate.pusherChannelName];
-    
+
     // Load playdate
     PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
-    [dateController setPlaydate:aPlaydate];
+    [dateController setPlaydate:self.playdate];
     [self presentViewController:dateController animated:YES completion:nil];
     
     // Notify server (and thus, the initiator) that we joined the playdate
@@ -149,7 +158,7 @@
     [booksListRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
                                    onSuccess:^(NSDictionary *result)
      {
-         LogInfo(@"getBooks result: %@", result);
+         LogTrace(@"getBooks result: %@", result);
          books = [result objectForKey:@"books"];
      } 
                                    onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
