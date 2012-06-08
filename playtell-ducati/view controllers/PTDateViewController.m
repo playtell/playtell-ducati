@@ -92,7 +92,6 @@
     [webView setDelegate:self];
     webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
     [self.view addSubview:webView];
-    isWebViewLoading = NO;
     
     // Start loading book covers
     [self loadBookCovers];
@@ -155,6 +154,9 @@
             [chatView setLeftView:subscriber.view];
         }
     }];
+    
+    // Reset webview loading status
+    isWebViewLoading = NO;
 }
 
 - (IBAction)closeBook:(id)sender {
@@ -237,6 +239,10 @@
     // Perform page turn
     NSInteger pageNum = [[eventData objectForKey:@"page"] integerValue];
     [pagesScrollView navigateToPage:pageNum];
+    
+    // Save current page in book config
+    NSMutableDictionary *book = [books objectForKey:currentBookId];
+    [book setObject:[NSNumber numberWithInt:pageNum] forKey:@"current_page"];
     
     // Start loading pages
     [self beginBookPageLoading];
@@ -394,7 +400,7 @@
         UIGraphicsEndImageContext();
         
         dispatch_async(dispatch_get_main_queue(), ^() {
-            
+
             // Send the image to page
             //NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
             if ([pagesScrollView.subviews count] > 0) {
@@ -417,12 +423,12 @@
             
             // More pages to load? (Or more covers to load?)
             if ([pagesToLoad count] > 0) {
-                NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+                NSInteger nextPageNumber = [[pagesToLoad objectAtIndex:0] intValue];
                 [pagesToLoad removeObjectAtIndex:0];
                 NSMutableDictionary *book = [books objectForKey:currentBookId];
                 NSArray *pages = [book objectForKey:@"pages"];
                 isWebViewLoading = YES;
-                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber-1)]]]];
+                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(nextPageNumber-1)]]]];
             } else {
                 isWebViewLoading = NO;
 

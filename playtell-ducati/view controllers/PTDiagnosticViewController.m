@@ -174,19 +174,8 @@
 
 - (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
     PTPlaydate* aPlaydate = [[note userInfo] valueForKey:PTPlaydateKey];
-    PTPlayTellPusher* pusher = [PTPlayTellPusher sharedPusher];
-    NSLog(@"Playdate -> %@", self.playdate);
-    
-    // Unsubscribe from rendezvous channel
-    [self unsunscribeFromRendezvousAndUpdateUI];
-    
-    // Subscribe to playdate channel
-    [pusher subscribeToPlaydateChannel:aPlaydate.pusherChannelName];
-    
-    // Load playdate
-    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
-    [dateController setPlaydate:aPlaydate];
-    [self presentViewController:dateController animated:YES completion:nil];
+    self.playdate = aPlaydate;
+    NSLog(@"Playdate received: %i", self.playdate.playdateID);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -34,7 +34,7 @@
     // Make sure to keep all pages from scrolling (keep them centered)
     CGFloat x = self.contentOffset.x;
     CGFloat page = x / pageSize.width + 1.0f;
-    NSLog(@"X: %.2f        Page: %.2f", x, page);
+    //NSLog(@"X: %.2f        Page: %.2f", x, page);
     for (PTPageView *pageView in self.subviews) {
         if ([pageView isKindOfClass:[UIImageView class]]) { // Skip the image view that's inside the scroll view by default
             continue;
@@ -55,7 +55,7 @@
     currentPage = page;
 
     // Navigate scrollview to right page
-    NSLog(@"Navigating to: %.2f", self.frame.size.width * (currentPage - 1));
+    //NSLog(@"Navigating to: %.2f", self.frame.size.width * (currentPage - 1));
     [self setContentOffset:CGPointMake(self.frame.size.width * (currentPage - 1), 0.0f) animated:![self isHidden]];
 }
 
@@ -89,7 +89,7 @@
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidEndScrollingAnimation, pos: %.2f", self.bounds.origin.x);
+    //NSLog(@"scrollViewDidEndScrollingAnimation, pos: %.2f", self.bounds.origin.x);
     [self layoutSubviews];
 }
 
