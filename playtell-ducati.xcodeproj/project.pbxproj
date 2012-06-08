@@ -21,6 +21,7 @@
 		237B24AA157D182A00FC288E /* PTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A5157D182A00FC288E /* PTPageView.m */; };
 		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
 		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
+		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
 		F468877615812A060086D351 /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
@@ -291,6 +292,8 @@
 		237B24AE157D191500FC288E /* PTDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDateViewController.m; sourceTree = "<group>"; };
 		237B24AF157D191500FC288E /* PTDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDateViewController.xib; sourceTree = "<group>"; };
 		237B24B2157D1AB600FC288E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateJoinedRequest.h; sourceTree = "<group>"; };
+		23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateJoinedRequest.m; sourceTree = "<group>"; };
 		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
 		F468876F158129800086D351 /* PTChatHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDView.m; sourceTree = "<group>"; };
 		F4688772158129C00086D351 /* UIImageView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayTell.h"; sourceTree = "<group>"; };
@@ -1710,6 +1713,8 @@
 				2311E0C0157F921E0084859B /* PTBookCloseRequest.m */,
 				2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */,
 				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
+				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
+				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2027,6 +2032,7 @@
 				F4E3EAE9157FAAD300A218EC /* PTDiagnosticViewController.m in Sources */,
 				F4688770158129800086D351 /* PTChatHUDView.m in Sources */,
 				F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */,
+				23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

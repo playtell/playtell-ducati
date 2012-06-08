@@ -10,7 +10,7 @@
 
 @protocol PTPagesScrollViewDelegate;
 
-@interface PTPagesScrollView : UIScrollView {
+@interface PTPagesScrollView : UIScrollView <UIScrollViewDelegate> {
     NSInteger currentPage;
     CGSize pageSize;
     id<PTPagesScrollViewDelegate> pagesScrollDelegate;

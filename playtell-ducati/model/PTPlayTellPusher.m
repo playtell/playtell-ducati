@@ -103,7 +103,6 @@ static PTPlayTellPusher* instance = nil;
     // Close book
     [self.playdateChannel bindToEventNamed:@"close_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
-        NSLog(@"Playdate -> close_book: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateCloseBook" object:self userInfo:eventData];
     }];
     

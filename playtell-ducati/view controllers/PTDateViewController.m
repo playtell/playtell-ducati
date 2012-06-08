@@ -93,6 +93,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
 }
 
 - (IBAction)closeBook:(id)sender {
@@ -105,15 +106,6 @@
         }
     }
 
-    // Close book, hide pages, show all other books
-    if (bookView != nil) {
-        // TODO: Set current page view to book view
-        [bookView setHidden:NO];
-        [pagesScrollView setHidden:YES];
-        [bookView close];
-        [booksScrollView showAllBooksExcept:currentBookId];
-    }
-    
     // Notify server of book close
     PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
     [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
@@ -122,6 +114,20 @@
                                     onSuccess:nil
                                     onFailure:nil
     ];
+    
+    // Reset the views
+    [self closeBookUsingBookView:bookView];
+}
+
+- (void)closeBookUsingBookView:(PTBookView*)bookView {
+    // Close book, hide pages, show all other books
+    if (bookView != nil) {
+        // TODO: Set current page view to book view
+        [bookView setHidden:NO];
+        [pagesScrollView setHidden:YES];
+        [bookView close];
+        [booksScrollView showAllBooksExcept:currentBookId];
+    }
 }
 
 - (IBAction)playdateDisconnect:(id)sender {
@@ -173,11 +179,33 @@
     NSLog (@"PlayDateEndPlaydate -> %@", eventData);
 }
 
+- (void)pusherPlayDateCloseBook:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    
+    // Check if this user initiated the book close
+    if ([[PTUser currentUser] userID] == playerId) {
+        return;
+    }
+    
+    // Find appropriate book view
+    PTBookView *bookView = nil;
+    for (int i=0, l=[books count]; i<l; i++) {
+        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToNumber:currentBookId]) {
+            bookView = (PTBookView *)[bookList objectAtIndex:i];
+            break;
+        }
+    }
+
+    // Perform book close
+    [self closeBookUsingBookView:bookView];
+}
+
 - (void)pusherPlayDateChangeBook:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
     
-    // Check if this user initiated the page turn event
+    // Check if this user initiated the change book event
     if ([[PTUser currentUser] userID] == playerId) {
         return;
     }
