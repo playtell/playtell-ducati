@@ -183,6 +183,12 @@
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {
+    // Stop page loading
+    [webView stopLoading];
+    isWebViewLoading = NO;
+    pagesToLoad = nil;
+    //NSLog(@"Closed book, resetting isWebViewLoading");
+    
     // Close book, hide pages, show all other books
     if (bookView != nil) {
         // TODO: Set current page view to book view
@@ -400,7 +406,8 @@
         UIGraphicsEndImageContext();
         
         dispatch_async(dispatch_get_main_queue(), ^() {
-
+            //NSLog(@"Page loaded: %i", pageNumber);
+            
             // Send the image to page
             //NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
             if ([pagesScrollView.subviews count] > 0) {
@@ -424,6 +431,7 @@
             // More pages to load? (Or more covers to load?)
             if ([pagesToLoad count] > 0) {
                 NSInteger nextPageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+                //NSLog(@"More pages found! Loading page: %i", nextPageNumber);
                 [pagesToLoad removeObjectAtIndex:0];
                 NSMutableDictionary *book = [books objectForKey:currentBookId];
                 NSArray *pages = [book objectForKey:@"pages"];
@@ -431,6 +439,7 @@
                 [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(nextPageNumber-1)]]]];
             } else {
                 isWebViewLoading = NO;
+                //NSLog(@"Loaded all pages, resetting isWebViewLoading");
 
                 // Check for covers
                 coversToLoadIndex += 1;
@@ -559,6 +568,7 @@
 }
 
 - (void)beginBookPageLoading {
+    //NSLog(@"beginBookPageLoading");
     // Stop any current page loads
     [webView stopLoading];
     
@@ -597,12 +607,16 @@
     
     // Start page loading
     if ([pagesToLoad count] > 0 && isWebViewLoading == NO) {
+        //NSLog(@"Loading more pages: %@", pagesToLoad);
         NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
         [pagesToLoad removeObjectAtIndex:0];
         NSArray *pages = [book objectForKey:@"pages"];
         isWebViewLoading = YES;
         [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber-1)]]]];
     }
+//    if ([pagesToLoad count] > 0 && isWebViewLoading == YES) {
+//        NSLog(@"Not loading more pages, another process already doing it");
+//    }
 }
 
 #pragma mark -
