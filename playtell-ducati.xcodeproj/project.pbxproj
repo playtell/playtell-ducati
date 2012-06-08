@@ -2117,6 +2117,7 @@
 					"$(inherited)",
 					"PLAYTELL_STAGING=1",
 					"LOGGING_ENABLED=1",
+					"LOGGING_LEVEL_TRACE=1",
 				);
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;

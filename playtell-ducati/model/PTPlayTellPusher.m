@@ -146,6 +146,7 @@ static PTPlayTellPusher* instance = nil;
 
 - (void)pusher:(PTPusher *)pusher didFailToSubscribeToChannel:(PTPusherChannel *)channel withError:(NSError *)error {
     LOGMETHOD;
+    LogError(@"%@", error);
 }
 
 - (void)pusher:(PTPusher *)pusher didReceiveErrorEvent:(PTPusherErrorEvent *)errorEvent {
