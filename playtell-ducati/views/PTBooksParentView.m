@@ -22,7 +22,7 @@
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    if (isBookOpen) {
+    if (isBookOpen || !CGRectContainsPoint(self.bounds, point)) {
         return nil;
     }
 
