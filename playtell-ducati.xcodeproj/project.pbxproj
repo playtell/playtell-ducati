@@ -259,6 +259,7 @@
 		F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */; };
 		F4E3EAE9157FAAD300A218EC /* PTDiagnosticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */; };
 		F4E3EAEA157FAAD300A218EC /* PTDiagnosticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */; };
+		F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -751,6 +752,8 @@
 		F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDiagnosticViewController.m; sourceTree = "<group>"; };
 		F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDiagnosticViewController.xib; sourceTree = "<group>"; };
 		F4E3EAEC157FAAF000A218EC /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
+		F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTAllFriendsRequest.h; sourceTree = "<group>"; };
+		F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllFriendsRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1716,6 +1719,8 @@
 				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
 				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
 				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
+				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
+				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2029,6 +2034,7 @@
 				23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */,
 				F468877B158138190086D351 /* PTVideoPhone.m in Sources */,
 				F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */,
+				F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2104,8 +2110,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2129,8 +2135,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
