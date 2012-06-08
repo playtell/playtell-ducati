@@ -38,7 +38,10 @@ static PTVideoPhone* instance = nil;
                withToken:(NSString*)aToken
                  success:(PTVideoConnectionSuccessBlock)onSuccess
                  failure:(PTVideoConnectionFailureBlock)onFailure {
-
+    LOGMETHOD;
+    LogTrace(@"%@ -> session ID: %@", NSStringFromSelector(_cmd), aSession);
+    LogTrace(@"%@ -> token: %@", NSStringFromSelector(_cmd), aToken);
+    
     self.session = [[OTSession alloc] initWithSessionId:aSession
                                                delegate:self];
     [self.session connectWithApiKey:kApiKey
@@ -62,7 +65,7 @@ static PTVideoPhone* instance = nil;
 
 - (void)connectToUser:(NSString*)aUser {}
 - (void)disconnect {
-    NSLog(@"OpenTok disconnecting");
+    LogInfo(@"OpenTok disconnecting");
     [self.session disconnect];
     self.session = nil;
     self.publisher = nil;
@@ -73,7 +76,7 @@ static PTVideoPhone* instance = nil;
 
 #pragma mark - OTSessionDelegate methods
 - (void)sessionDidConnect:(OTSession*)aSession {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    LOGMETHOD;
     NSLog(@"Session connection id: %@", aSession.connection.connectionId);
 
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
@@ -89,6 +92,7 @@ static PTVideoPhone* instance = nil;
 }
 
 - (void)session:(OTSession*)session didFailWithError:(OTError*)error {
+    LOGMETHOD;
     if (self.failureBlock) {
         self.failureBlock(error);
     }
