@@ -8,13 +8,12 @@
 
 #import "PTPlaymate.h"
 #import "PTPlaymateFactory.h"
-#import "PTPusherEvent.h"
 
 #import <Foundation/Foundation.h>
 
 @interface PTPlaydate : NSObject
 
-- (id)initWithPusherEvent:(PTPusherEvent*)channelEvent playmateFactory:(id<PTPlaymateFactory>)playmateFactory;
+- (id)initWithDictionary:(NSDictionary*)playdateData playmateFactory:(id<PTPlaymateFactory>)playmateFactory;
 
 @property (nonatomic, readwrite) PTPlaymate* initiator;
 @property (nonatomic, readwrite) PTPlaymate* playmate;

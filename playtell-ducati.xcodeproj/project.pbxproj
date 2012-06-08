@@ -31,6 +31,7 @@
 		F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878515813AE20086D351 /* CoreVideo.framework */; };
 		F468878815813B040086D351 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878715813B040086D351 /* OpenGLES.framework */; };
 		F468878A15814AE50086D351 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F468878915814AE50086D351 /* opentok.bundle */; };
+		F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -301,6 +302,8 @@
 		F468878515813AE20086D351 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		F468878715813B040086D351 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		F468878915814AE50086D351 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
+		F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PTPlaydate+InitatorChecking.h"; sourceTree = "<group>"; };
+		F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PTPlaydate+InitatorChecking.m"; sourceTree = "<group>"; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1640,6 +1643,8 @@
 				F4688773158129C00086D351 /* UIImageView+PlayTell.m */,
 				F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */,
 				F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */,
+				F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */,
+				F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -2017,6 +2022,7 @@
 				F4688770158129800086D351 /* PTChatHUDView.m in Sources */,
 				F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */,
 				F468877B158138190086D351 /* PTVideoPhone.m in Sources */,
+				F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2104,6 +2110,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 					"PLAYTELL_STAGING=1",
+					"LOGGING_ENABLED=1",
 				);
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "Logging.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
 
@@ -84,7 +85,7 @@ static PTVideoPhone* instance = nil;
 }
 
 - (void)sessionDidDisconnect:(OTSession*)session {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    LOGMETHOD;
 }
 
 - (void)session:(OTSession*)session didFailWithError:(OTError*)error {
@@ -94,7 +95,7 @@ static PTVideoPhone* instance = nil;
 }
 
 - (void)session:(OTSession*)aSession didReceiveStream:(OTStream*)aStream {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    LOGMETHOD;
     NSLog(@"Stream connection id: %@", aStream.connection.connectionId);
     NSLog(@"Local connection id: %@", aSession.connection.connectionId);
 
@@ -115,7 +116,7 @@ static PTVideoPhone* instance = nil;
 }
 
 - (void)session:(OTSession*)aSession didDropStream:(OTStream*)stream {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    LOGMETHOD;
     if (self.sessionDroppedBlock) {
         self.sessionDroppedBlock(aSession, stream);
     }
@@ -124,7 +125,7 @@ static PTVideoPhone* instance = nil;
 
 #pragma mark - OTSubscriberDelegate methods
 - (void)subscriberDidConnectToStream:(OTSubscriber*)aSubscriber {
-    NSLog(@"%@", NSStringFromSelector(_cmd));
+    LOGMETHOD;
     if (self.subscribedBlock) {
         self.subscribedBlock(aSubscriber);
     }

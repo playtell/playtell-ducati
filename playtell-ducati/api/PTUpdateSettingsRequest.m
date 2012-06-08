@@ -7,6 +7,7 @@
 //
 
 #import "AFNetworking.h"
+#import "Logging.h"
 #import "PTUpdateSettingsRequest.h"
 
 #import "NSMutableURLRequest+POSTParameters.h"
@@ -37,10 +38,10 @@
                                                                                NSHTTPURLResponse *response,
                                                                                id JSON)
                       {
-                          NSLog(@"Update settings success: %@", JSON);
+                          LogTrace(@"Update settings success: %@", JSON);
                           success(JSON);
                       } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                          NSLog(@"Update settings failure: %@", error);
+                          LogError(@"Update settings failure: %@", error);
                           failure(request, response, error, JSON);
                       }];
     [updateSettings start];

@@ -10,6 +10,7 @@
 #import "PTPlayTellPusher.h"
 #import "PTPusher.h"
 #import "PTPusherChannel.h"
+#import "PTPusherEvent.h"
 #import "PTUser.h"
 
 // TODO : Need to remove these dependencies after testing
@@ -24,13 +25,12 @@ NSString* const PTPlaydateKey = @"PTPlaydateKey";
 @interface PTPlayTellPusher () <PTPusherDelegate, PTPusherPresenceChannelDelegate>
 @property (nonatomic, retain) PTPusher* pusherClient;
 @property (nonatomic, retain) PTPusherPresenceChannel* rendezvousChannel;
-@property (nonatomic, retain) PTPusherPrivateChannel* playdateChannel;
 @end
 
 @implementation PTPlayTellPusher
 static PTPlayTellPusher* instance = nil;
 @synthesize pusherClient;
-@synthesize rendezvousChannel, playdateChannel;
+@synthesize rendezvousChannel;
 
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
@@ -56,8 +56,8 @@ static PTPlayTellPusher* instance = nil;
     self.rendezvousChannel = [self.pusherClient subscribeToPresenceChannelNamed:@"rendezvous-channel" delegate:self];
     [self.rendezvousChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
         LogInfo(@"Playdate joined: %@", channelEvent);
-        PTPlaydate* playdate = [[PTPlaydate alloc] initWithPusherEvent:channelEvent
-                                                       playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+        PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
+                                                      playmateFactory:[[PTMockPlaymateFactory alloc] init]];
 
         NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateJoinedEvent
@@ -65,9 +65,9 @@ static PTPlayTellPusher* instance = nil;
                                                           userInfo:info];
     }];
     [self.rendezvousChannel bindToEventNamed:@"playdate_requested" handleWithBlock:^(PTPusherEvent *channelEvent) {
-        NSLog(@"Playdate requested: %@", channelEvent);
-        PTPlaydate* playdate = [[PTPlaydate alloc] initWithPusherEvent:channelEvent
-                                                       playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+        LogInfo(@"Playdate requested: %@", channelEvent);
+        PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
+                                                      playmateFactory:[[PTMockPlaymateFactory alloc] init]];
 
         NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateRequestedEvent
@@ -88,44 +88,44 @@ static PTPlayTellPusher* instance = nil;
     // As per libPusher API - The "private-" prefix should be excluded from the name; it will be added automatically.
     // http://lukeredpath.github.com/libPusher/html/Classes/PTPusher.html#//api/name/subscribeToPrivateChannelNamed:
     channelName = [channelName stringByReplacingOccurrencesOfString:@"private-" withString:@""];
-    self.playdateChannel = [self.pusherClient subscribeToPrivateChannelNamed:channelName];
+    PTPusherChannel* aPlaydateChannel = [self.pusherClient subscribeToPrivateChannelNamed:channelName];
     
-    [self.playdateChannel bindToEventNamed:@"pusher:subscription_succeeded" handleWithBlock:^(PTPusherEvent *channelEvent) {
-        NSLog(@"Playdate -> pusher:subscription_succeeded");
+    [aPlaydateChannel bindToEventNamed:@"pusher:subscription_succeeded" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        LogInfo(@"Playdate -> pusher:subscription_succeeded");
     }];
 
     // Change book
-    [self.playdateChannel bindToEventNamed:@"change_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
+    [aPlaydateChannel bindToEventNamed:@"change_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateChangeBook" object:self userInfo:eventData];
     }];
     
     // Close book
-    [self.playdateChannel bindToEventNamed:@"close_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
+    [aPlaydateChannel bindToEventNamed:@"close_book" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
-        NSLog(@"Playdate -> close_book: %@", eventData);
+        LogInfo(@"Playdate -> close_book: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateCloseBook" object:self userInfo:eventData];
     }];
     
     // Turn page
-    [self.playdateChannel bindToEventNamed:@"turn_page" handleWithBlock:^(PTPusherEvent *channelEvent) {
+    [aPlaydateChannel bindToEventNamed:@"turn_page" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTurnPage" object:self userInfo:eventData];
     }];
     
     // End playdate
-    [self.playdateChannel bindToEventNamed:@"end_playdate" handleWithBlock:^(PTPusherEvent *channelEvent) {
+    [aPlaydateChannel bindToEventNamed:@"end_playdate" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
-        NSLog(@"Playdate -> end_playdate: %@", eventData);
+        LogInfo(@"Playdate -> end_playdate: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateEndPlaydate" object:self userInfo:eventData];
-        // Unsubscribe from this channel
-        [self unsubscribeFromPlaydateChannel:channelEvent.channel];
     }];
 }
 
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName {
-    [self.pusherClient unsubscribeFromChannel:self.playdateChannel];
-    self.playdateChannel = nil;
+    PTPusherChannel* channel = [self.pusherClient channelNamed:channelName];
+    LogDebug(@"Attempting to unsubscribe from channel: %@", channelName);
+    NSAssert(channel != nil, @"Trying to unsubscribe from a nil channel");
+    [self.pusherClient unsubscribeFromChannel:channel];
 }
 
 #pragma mark PTPusherDelegate methods
@@ -133,8 +133,8 @@ static PTPlayTellPusher* instance = nil;
     NSString* headers = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
     NSString* appendedParameters = [headers stringByAppendingFormat:@"&authentication_token=%@", [[PTUser currentUser] authToken]];
     request.HTTPBody = [appendedParameters dataUsingEncoding:NSUTF8StringEncoding];
-    NSLog(@"Pusher auth request: %@", request.URL);
-    NSLog(@"Pusher auth parameters: %@", appendedParameters);
+    LogTrace(@"Pusher auth request: %@", request.URL);
+    LogTrace(@"Pusher auth parameters: %@", appendedParameters);
 }
 
 - (void)pusher:(PTPusher *)pusher didSubscribeToChannel:(PTPusherChannel *)channel {

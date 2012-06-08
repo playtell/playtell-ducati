@@ -7,16 +7,21 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+
+#import "Logging.h"
 #import "PTDateViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h"
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
+#import "PTPlayTellPusher.h"
 #import "PTBookChangeRequest.h"
 #import "PTBookCloseRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTVideoPhone.h"
+
+#import "PTPlaydate+InitatorChecking.h"
 
 @interface PTDateViewController ()
 
@@ -100,6 +105,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    // Subscribe to playdate channel
+    // TODO need to decide if this is where the subscription should live...
+    NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
+    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
+
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];
     [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
@@ -108,8 +118,18 @@
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
         NSLog(@"Session connected!");
     }];
+
+    NSString* myToken;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        LogInfo(@"Current user is initator");
+        myToken = playdate.initiatorTokboxToken;
+    } else {
+        LogInfo(@"Current user is NOT initiator");
+        myToken = playdate.playmateTokboxToken;
+    }
+
     [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
-                                       withToken:self.playdate.playmateTokboxToken
+                                       withToken:myToken
                                          success:^(OTPublisher *publisher)
     {
         NSLog(@"Inside session connection block");
@@ -118,6 +138,12 @@
         }
     } failure:^(NSError *error) {
         NSLog(@"Inside session failure block");
+    }];
+
+    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
+        if (subscriber.stream.hasVideo) {
+            [chatView setLeftView:subscriber.view];
+        }
     }];
 }
 
@@ -151,6 +177,8 @@
 }
 
 - (IBAction)playdateDisconnect:(id)sender {
+    [self disconnectPuhserAndChat];
+    
     // Notify server of disconnect
     PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
     [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
@@ -158,6 +186,16 @@
                                                       onSuccess:nil
                                                       onFailure:nil
     ];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)disconnectPuhserAndChat {
+    // Unsubscribe from playdate channel
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
+    [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
+    
+    [[PTVideoPhone sharedPhone] disconnect];
 }
 
 - (void)viewDidUnload {
@@ -167,11 +205,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (void)dealloc {
-    // Clean up notifications
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark -
@@ -197,6 +230,8 @@
 - (void)pusherPlayDateEndPlaydate:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSLog (@"PlayDateEndPlaydate -> %@", eventData);
+    [self disconnectPuhserAndChat];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)pusherPlayDateChangeBook:(NSNotification *)notification {

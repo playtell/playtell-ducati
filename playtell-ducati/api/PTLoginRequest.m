@@ -7,6 +7,7 @@
 //
 
 #import "AFNetworking.h"
+#import "Logging.h"
 #import "PTLoginRequest.h"
 
 #import "NSDictionary+Util.h"
@@ -34,7 +35,7 @@
                                                                                NSHTTPURLResponse *response,
                                                                                id JSON)
       {
-          NSLog(@"Login success: %@", JSON);
+          LogTrace(@"Login success: %@", JSON);
           if (![JSON containsKey:@"token"]) {
 
               // TODO: Need to figure out the right information to pass around into the
