@@ -7,6 +7,7 @@
 //
 
 #import "Logging.h"
+#import "PTConcretePlaymateFactory.h"
 #import "PTPlayTellPusher.h"
 #import "PTPusher.h"
 #import "PTPusherChannel.h"
@@ -15,7 +16,6 @@
 
 // TODO : Need to remove these dependencies after testing
 #import "PTPlaydate.h"
-#import "PTMockPlaymateFactory.h"
 
 NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent = @"PTPlayTellPusherDidReceivePlaydateJoinedEvent";
 NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent = @"PTPlayTellPusherDidReceivePlaydateRequestedEvent";
@@ -57,7 +57,7 @@ static PTPlayTellPusher* instance = nil;
     [self.rendezvousChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
         LogInfo(@"Playdate joined: %@", channelEvent);
         PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
-                                                      playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+                                                      playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
 
         NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateJoinedEvent
@@ -67,7 +67,7 @@ static PTPlayTellPusher* instance = nil;
     [self.rendezvousChannel bindToEventNamed:@"playdate_requested" handleWithBlock:^(PTPusherEvent *channelEvent) {
         LogInfo(@"Playdate requested: %@", channelEvent);
         PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
-                                                      playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+                                                      playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
 
         NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateRequestedEvent

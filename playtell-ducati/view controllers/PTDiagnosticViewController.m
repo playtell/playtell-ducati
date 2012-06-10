@@ -17,9 +17,6 @@
 #import "PTPlaydateCreateRequest.h"
 #import "PTPlaydateJoinedRequest.h"
 
-// TODO : remove this after testing
-#import "PTMockPlaymateFactory.h"
-
 #import <QuartzCore/QuartzCore.h>
 
 @interface PTDiagnosticViewController ()
@@ -44,10 +41,8 @@
 @synthesize books;
 
 - (IBAction)requestPlaydate:(id)sender {
-    id<PTPlaymateFactory> factory = [[PTMockPlaymateFactory alloc] init];
-    
     // Get playmate
-    PTPlaymate* playmate = [factory playmateWithUsername:self.playmateIDField.text];
+    PTPlaymate* playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithUsername:self.playmateIDField.text];
     NSLog(@"Playmate: %@", playmate);
     if (playmate == nil) {
         NSLog(@"Playmate NOT FOUND!");
@@ -62,7 +57,7 @@
      {
          LogInfo(@"playdateCreateWithFriend response: %@", result);
          self.playdate = [[PTPlaydate alloc] initWithDictionary:result
-                                                playmateFactory:[[PTMockPlaymateFactory alloc] init]];
+                                                playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
          [self joinPlaydate];
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          LogError(@"playdateCreateWithFriend failed: %@", error);

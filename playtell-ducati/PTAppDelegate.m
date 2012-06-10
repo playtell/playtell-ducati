@@ -12,7 +12,6 @@
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
 #import "PTDialpadViewController.h"
-#import "PTMockPlaymateFactory.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate.h"
 #import "PTPusher.h"
