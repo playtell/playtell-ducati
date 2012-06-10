@@ -384,6 +384,7 @@
     
     aView.frame = [[self class] rectForLeftView];
     self.leftVideoView = aView;
+    [aView removeAllGestureRecognizers];
 
     UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
                                                      byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft
@@ -405,6 +406,7 @@
 
     aView.frame = viewFrame;
     self.rightVideoView = aView;
+    [aView removeAllGestureRecognizers];
 
     UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
                                                      byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight
