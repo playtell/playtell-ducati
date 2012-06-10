@@ -63,8 +63,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.frame = CGRectMake(0, 0, PTCHATVIEW_WIDTH, PTCHATVIEW_HEIGHT);
-        self.backgroundColor = [UIColor purpleColor];
+        self.frame = CGRectMake(512.0-PTCHATVIEW_WIDTH/2.0, 0, PTCHATVIEW_WIDTH, PTCHATVIEW_HEIGHT);
 
         self.leftImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         self.rightImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
