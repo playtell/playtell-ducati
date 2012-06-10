@@ -9,6 +9,7 @@
 #import "AFNetworking.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTConcretePlaymateFactory.h"
 #import "PTLoginRequest.h"
 #import "PTLoginViewController.h"
 #import "PTUpdateSettingsRequest.h"
@@ -173,13 +174,25 @@ typedef void (^PTLoginFailureBlock) (NSError *);
                                  onSuccess:^(NSDictionary *result)
     {
         [[PTUser currentUser] setAuthToken:[result valueForKey:@"token"]];
-
-        if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
-            [self.delegate loginControllerDidLogin:self];
-        }
+        [self fetchPlaymatesAndNotifyDelegate];
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [self showError:@"Unable to update settings"];
     }];
+}
+
+- (void)fetchPlaymatesAndNotifyDelegate {
+    PTUser* currentUser = [PTUser currentUser];
+    [[PTConcretePlaymateFactory sharedFactory] refreshPlaymatesForUserID:currentUser.userID
+                                                                   token:currentUser.authToken
+                                                                 success:^
+     {
+         if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
+             [self.delegate loginControllerDidLogin:self];
+         }
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         NSAssert(NO, @"Failed to load playmates");
+     }];
 }
 
 - (NSString*)loginSettingsURL {

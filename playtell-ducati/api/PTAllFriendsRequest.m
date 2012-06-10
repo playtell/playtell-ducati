@@ -15,7 +15,9 @@
 @implementation PTAllFriendsRequest
 
 - (void)allFriendsWithUserID:(NSUInteger)userID
-                   authToken:(NSString*)token {
+                   authToken:(NSString*)token
+                     success:(PTAllFriendsRequestSuccessBlock)success
+                     failure:(PTAllFriendsRequestFailureBlock)failure {
     LOGMETHOD;
 
     NSString* allFriendsEndpoint = [NSString stringWithFormat:@"%@/api/users/all_friends.json", ROOT_URL];
@@ -32,14 +34,14 @@
                                                                 success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
     {
         LogTrace(@"%@ response: %@", NSStringFromSelector(_cmd), JSON);
-        NSArray* friends = [JSON valueForKey:@"friends"];
-        for (NSDictionary* playmate in friends) {
-            LogTrace(@"id: %@, email: %@, displayName: %@, profilePhoto: %@",
-                    [playmate valueForKey:@"id"], [playmate valueForKey:@"email"],
-                    [playmate valueForKey:@"displayName"], [playmate valueForKey:@"profilePhoto"]);
+        if (success) {
+            success(JSON);
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         LogError(@"%@ error :%@", NSStringFromSelector(_cmd), error);
+        if (failure) {
+            failure(request, response, error, JSON);
+        }
     }];
     [operation start];
 }

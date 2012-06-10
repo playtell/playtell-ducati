@@ -260,6 +260,7 @@
 		F4E3EAE9157FAAD300A218EC /* PTDiagnosticViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */; };
 		F4E3EAEA157FAAD300A218EC /* PTDiagnosticViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */; };
 		F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */; };
+		F4E6DA1115850B1700BDEF0A /* PTConcretePlaymateFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -754,6 +755,8 @@
 		F4E3EAEC157FAAF000A218EC /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logging.h; sourceTree = "<group>"; };
 		F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTAllFriendsRequest.h; sourceTree = "<group>"; };
 		F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllFriendsRequest.m; sourceTree = "<group>"; };
+		F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTConcretePlaymateFactory.h; sourceTree = "<group>"; };
+		F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTConcretePlaymateFactory.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1741,6 +1744,8 @@
 				F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */,
 				F4688779158138190086D351 /* PTVideoPhone.h */,
 				F468877A158138190086D351 /* PTVideoPhone.m */,
+				F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */,
+				F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -2035,6 +2040,7 @@
 				F468877B158138190086D351 /* PTVideoPhone.m in Sources */,
 				F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */,
 				F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */,
+				F4E6DA1115850B1700BDEF0A /* PTConcretePlaymateFactory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

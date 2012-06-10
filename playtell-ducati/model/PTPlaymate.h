@@ -11,6 +11,7 @@
 @interface PTPlaymate : NSObject
 
 - (id)initWithEmail:(NSString*)email username:(NSString*)name userID:(NSUInteger)userID;
+- (id)initWithDictionary:(NSDictionary*)playmateDictionary;
 
 @property (nonatomic, readwrite) NSString* email;
 @property (nonatomic, readwrite) NSString* username;

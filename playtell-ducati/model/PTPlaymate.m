@@ -14,6 +14,7 @@
 @synthesize userID;
 @synthesize photoURL;
 
+// TODO: Need to route this through the dictionary initializer
 - (id)initWithEmail:(NSString*)anEmail username:(NSString*)aName userID:(NSUInteger)aUserID {
     if (self = [super init]) {
         email = [anEmail copy];
@@ -21,6 +22,18 @@
         userID = aUserID;
     }
     return self;
+}
+
+- (id)initWithDictionary:(NSDictionary*)playmateDictionary {
+    if (self = [super init]) {
+        self.email = [playmateDictionary valueForKey:@"email"];
+        self.username = [playmateDictionary valueForKey:@"displayName"];
+        self.userID = [[playmateDictionary valueForKey:@"id"] unsignedIntValue];
+
+        NSURL* url = [NSURL URLWithString:[playmateDictionary valueForKey:@"profilePhoto"]];
+        self.photoURL = url;
+    }
+    return  self;
 }
 
 - (NSString*)description {

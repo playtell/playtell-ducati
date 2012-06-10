@@ -22,4 +22,5 @@
 - (IBAction)joinPressed:(id)sender;
 - (IBAction)subscribeToRendezvous:(id)sender;
 - (IBAction)requestPlaydate:(id)sender;
+- (void)refreshUI;
 @end

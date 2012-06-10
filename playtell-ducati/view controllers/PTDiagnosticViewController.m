@@ -8,6 +8,7 @@
 
 #import "Logging.h"
 #import "PTBooksListRequest.h"
+#import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
 #import "PTPlaydate.h"
@@ -140,6 +141,11 @@
     // TODO shouldn't have to do this, but the XIB doesn't seem to be respecting the frame...
     self.channelStatus.frame = CGRectMake(20, 10, 50, 50);
     self.channelStatus.layer.cornerRadius = 5.0;
+}
+
+- (void)refreshUI {
+    LOGMETHOD;
+    LogDebug(@"%@", [[PTConcretePlaymateFactory sharedFactory] allPlaymates]);
 }
 
 - (void)getBooksList {

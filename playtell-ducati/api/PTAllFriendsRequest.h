@@ -8,9 +8,14 @@
 
 #import "PTRequest.h"
 
+typedef void (^PTAllFriendsRequestSuccessBlock) (NSDictionary* result);
+typedef void (^PTAllFriendsRequestFailureBlock) (NSURLRequest* request, NSHTTPURLResponse* response, NSError* error, id JSON);
+
 @interface PTAllFriendsRequest : PTRequest
 
 - (void)allFriendsWithUserID:(NSUInteger)userID
-                   authToken:(NSString*)token;
+                   authToken:(NSString*)token
+                     success:(PTAllFriendsRequestSuccessBlock)success
+                     failure:(PTAllFriendsRequestFailureBlock)failure;
 
 @end

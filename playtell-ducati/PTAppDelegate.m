@@ -80,6 +80,9 @@
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Connect to pusher
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+
+    // Tell the dialpad to redraw (with the list of playmates)
+    [self.viewController refreshUI];
     
     // Hide login controller
     [self.viewController dismissViewControllerAnimated:YES completion:nil];
