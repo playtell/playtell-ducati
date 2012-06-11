@@ -18,6 +18,7 @@
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
 #import "PTUser.h"
+#import "TransitionController.h"
 
 #import "UIView+PlayTell.h"
 
@@ -49,7 +50,6 @@
     backgroundFrame.origin = CGPointZero;
     background.frame = backgroundFrame;
     
-    [self drawPlaymates];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(pusherDidReceivePlaydateRequestNotification:)
                                                  name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
@@ -150,8 +150,10 @@
                                                                                   andBookList:[result valueForKey:@"books"]];
          [dateController setPlaydate:self.requestedPlaydate];
          self.requestedPlaydate = nil;
-         
-         [self presentViewController:dateController animated:YES completion:nil];
+
+         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+         [appDelegate.transitionController transitionToViewController:dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+//         [self presentViewController:dateController animated:YES completion:nil];
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
      }];
@@ -196,10 +198,6 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
-    for (UIButton* button in buttons) {
-        [button removeFromSuperview];
-    }
     self.userButtonHash = nil;
 }
 
@@ -242,6 +240,17 @@
     [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
+
+    [self drawPlaymates];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+
+    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
+    for (UIButton* button in buttons) {
+        [button removeFromSuperview];
+    }
 }
 
 - (UIFont*)welcomeTextFont {

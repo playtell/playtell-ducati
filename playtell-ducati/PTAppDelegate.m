@@ -20,6 +20,7 @@
 #import "PTUser.h"
 #import "PTVideoPhone.h"
 #import "PTViewController.h"
+#import "TransitionController.h"
 #import "UAPush.h"
 #import "UAirship.h"
 
@@ -32,6 +33,8 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize transitionController = _transitionController;
+@synthesize dialpadController = _dialpadController;
 @synthesize client;
 @synthesize phone;
 
@@ -42,8 +45,9 @@
     // Override point for customization after application launch.
     PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
     loginController.delegate = self;
-    self.viewController = loginController;
-    self.window.rootViewController = self.viewController;
+    TransitionController* transitionController = [[TransitionController alloc] initWithViewController:loginController];
+    self.transitionController = transitionController;
+    self.window.rootViewController = self.transitionController;
     [self.window makeKeyAndVisible];
 
     [self setupPushNotifications:launchOptions];
@@ -72,26 +76,10 @@
 
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Transition to the Dialpad
-    PTDialpadViewController* dialpad = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
-    dialpad.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-    [self transitionToViewController:dialpad withTransition:UIViewAnimationOptionTransitionNone];
-    
-    // Load list of books
-    [self getBooksList];
-}
-
-- (void)getBooksList {
-    PTBooksListRequest* booksListRequest = [[PTBooksListRequest alloc] init];
-    [booksListRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
-                                   onSuccess:^(NSDictionary *result)
-    {
-        LogTrace(@"getBooks result: %@", result);
-        books = [result objectForKey:@"books"];
-    } 
-                                   onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
-    {
-        LogError(@"Error retrieving book list: %@", error);
-    }];
+    self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+    self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+    [self.transitionController transitionToViewController:self.dialpadController
+                                              withOptions:UIViewAnimationOptionTransitionNone];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -121,17 +109,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
-- (void)transitionToViewController:(UIViewController *)viewController
-                    withTransition:(UIViewAnimationOptions)transition {
-    [UIView transitionFromView:self.window.rootViewController.view
-                        toView:viewController.view
-                      duration:0.65f
-                       options:transition
-                    completion:^(BOOL finished){
-                        self.window.rootViewController = viewController;
-                    }];
 }
 
 @end

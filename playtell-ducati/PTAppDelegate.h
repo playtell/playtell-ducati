@@ -14,6 +14,7 @@
 
 @class PTDiagnosticViewController;
 @class PTDialpadViewController;
+@class TransitionController;
 @interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
     NSArray *books;
 }
@@ -21,6 +22,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) PTLoginViewController *viewController;
+@property (strong, nonatomic) TransitionController *transitionController;
+@property (strong, nonatomic) PTDialpadViewController *dialpadController;
 
 - (void)transitionToViewController:(UIViewController *)viewController
                     withTransition:(UIViewAnimationOptions)transition;

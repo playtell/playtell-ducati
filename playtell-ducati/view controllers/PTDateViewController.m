@@ -9,7 +9,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Logging.h"
+#import "PTAppDelegate.h"
 #import "PTDateViewController.h"
+#import "PTDialpadViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h"
 #import "PTPageView.h"
@@ -21,6 +23,7 @@
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTVideoPhone.h"
 #import "PTPlaydateJoinedRequest.h"
+#import "TransitionController.h"
 
 #import "PTPlaydate+InitatorChecking.h"
 
@@ -209,7 +212,10 @@
                                                       onSuccess:nil
                                                       onFailure:nil
     ];
-    [self dismissViewControllerAnimated:YES completion:nil];
+
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)disconnectPuhserAndChat {
@@ -218,7 +224,7 @@
     LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
     [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     
-    [[PTVideoPhone sharedPhone] disconnect];
+//    [[PTVideoPhone sharedPhone] disconnect];
 }
 
 - (void)viewDidUnload {
@@ -258,7 +264,10 @@
     NSDictionary *eventData = notification.userInfo;
     NSLog (@"PlayDateEndPlaydate -> %@", eventData);
     [self disconnectPuhserAndChat];
-    [self dismissViewControllerAnimated:YES completion:nil];
+
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)pusherPlayDateCloseBook:(NSNotification *)notification {
