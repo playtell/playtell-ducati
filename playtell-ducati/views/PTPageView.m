@@ -156,11 +156,14 @@
     CGPoint point = CGPointMake(x, z);
     CGFloat offset_degree = radiansToDegrees(atanf(ABS(z_default) / (pagelet.width - x_default)));
     CGFloat offset_size = pagelet.width - sqrtf(powf(pagelet.width - x_default, 2.0f) + powf(z_default, 2.0f));
-    
-    if (pos < 0.0f) { // Left side
+
+    if (pos <= 0.0f) { // Left side
         CGFloat degree_right = MIN(0.0f, 180.0f * pos - offset_degree * pos);
         
         // Left
+        if (pos == 0.0f) {
+            left.opacity = 1.0f;
+        }
         left.frame = CGRectMake(pagelet.width, 0.0f, pagelet.width, pagelet.height); // Reset width. Fix for fast page scrolls.
         left_front.frame = CGRectMake(0.0f, 0.0f, pagelet.width, pagelet.height); // Reset width. Fix for fast page scrolls.
         left_back.frame = CGRectMake(0.0f, 0.0f, pagelet.width, pagelet.height); // Reset width. Fix for fast page scrolls.
@@ -230,6 +233,10 @@
         CGFloat z = -50.0f + 40.0f * pos; // 50 - 90
 
         // Left
+        if (pos == 0.0f) {
+            left.opacity = 1.0f;
+        }
+
         CATransform3D leftRotation = CATransform3DIdentity;
         leftRotation.m34 = 1.0 / -1000;
         leftRotation = CATransform3DTranslate(leftRotation, x, 0.0f, z);
@@ -259,6 +266,10 @@
         left.transform = leftRotation;
         
         // Right
+        if (pos == 0.0f) {
+            right.opacity = 1.0f;
+        }
+        
         CATransform3D rightRotation = CATransform3DIdentity;
         rightRotation.m34 = 1.0 / -1000;
         rightRotation = CATransform3DTranslate(rightRotation, x, 0.0f, z);
@@ -274,6 +285,8 @@
         CGFloat z = -90.0f + 40.0f * pos; // 90 - 130
         
         // Left
+        left.opacity = 1.0f;
+
         CATransform3D leftRotation = CATransform3DIdentity;
         leftRotation.m34 = 1.0 / -1000;
         leftRotation = CATransform3DTranslate(leftRotation, x, 0.0f, z);
@@ -303,6 +316,8 @@
         left.transform = leftRotation;
         
         // Right
+        right.opacity = 1.0f;
+
         CATransform3D rightRotation = CATransform3DIdentity;
         rightRotation.m34 = 1.0 / -1000;
         rightRotation = CATransform3DTranslate(rightRotation, x, 0.0f, z);
