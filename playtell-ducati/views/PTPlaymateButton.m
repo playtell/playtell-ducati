@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
+#import "Logging.h"
 #import "PTPlaymateButton.h"
 
 #import "UIView+PlayTell.h"
@@ -19,6 +21,7 @@
 @implementation PTPlaymateButton
 @synthesize playmate;
 @synthesize originalFrame;
+@synthesize isActivated;
 
 +(PTPlaymateButton*)playmateButtonWithPlaymate:(PTPlaymate*)aPlaymate {
     UIImage* placeholder = [UIImage imageNamed:@"profile_default_2.png"];
@@ -28,6 +31,8 @@
     [playmateButton setTitle:aPlaymate.username forState:UIControlStateNormal];
     playmateButton.titleLabel.font = [self playmateNameFont];
     playmateButton.layer.cornerRadius = 10.0;
+    playmateButton.clipsToBounds = YES;
+    playmateButton.isActivated = NO;
 
     CGRect buttonFrame = CGRectZero;
     buttonFrame.size = placeholder.size;
@@ -39,6 +44,18 @@
                                                      0,
                                                      0, 0);
     playmateButton.playmate = aPlaymate;
+
+    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:aPlaymate.photoURL];
+    AFImageRequestOperation* reqeust;
+    reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                success:^(UIImage *image)
+    {
+        LogTrace(@"Setting button image for %@", aPlaymate.username);
+        [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
+        playmateButton.layer.cornerRadius = 10.0;
+        playmateButton.clipsToBounds = YES;
+    }];
+    [reqeust start];
 
 //    CGRect containerFrame = CGRectMake(0, 0, 100, 30);
 //    UIView* container = [[UIView alloc] initWithFrame:containerFrame];

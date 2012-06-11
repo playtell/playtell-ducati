@@ -182,9 +182,10 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 
 - (void)fetchPlaymatesAndNotifyDelegate {
     PTUser* currentUser = [PTUser currentUser];
-    [[PTConcretePlaymateFactory sharedFactory] refreshPlaymatesForUserID:currentUser.userID
-                                                                   token:currentUser.authToken
-                                                                 success:^
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:currentUser.userID
+                                         token:currentUser.authToken
+                                       success:^
      {
          if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
              [self.delegate loginControllerDidLogin:self];
@@ -299,6 +300,7 @@ typedef void (^PTLoginFailureBlock) (NSError *);
         NSString* token = [result valueForKey:@"token"];
         NSNumber* userID = [result valueForKey:@"user_id"];
         [[PTUser currentUser] setUsername:aUsername];
+        [[PTUser currentUser] setEmail:aUsername];
         [[PTUser currentUser] setAuthToken:token];
         [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
         LogInfo(@"Current user: %@", [PTUser currentUser]);

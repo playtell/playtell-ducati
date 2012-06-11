@@ -13,6 +13,7 @@
 @interface PTPlaymateButton : UIButton
 
 @property (nonatomic, strong) PTPlaymate* playmate;
+@property (nonatomic, assign) BOOL isActivated;
 
 +(PTPlaymateButton*)playmateButtonWithPlaymate:(PTPlaymate*)aPlaymate;
 

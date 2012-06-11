@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PTDialpadViewController : UIViewController
+@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) UIScrollView* scrollView;
+@property (nonatomic, strong) NSArray* playmates;
 
 @end

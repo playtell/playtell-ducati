@@ -6,40 +6,41 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "Logging.h"
+#import "PTAppDelegate.h"
+#import "PTBooksListRequest.h"
+#import "PTConcretePlaymateFactory.h"
+#import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTPlaydateCreateRequest.h"
+#import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaymate.h"
+#import "PTPlayTellPusher.h"
 #import "PTPlaymateButton.h"
-
-// TODO : Remove after testing
-#import "PTMockPlaymateFactory.h"
+#import "PTUser.h"
 
 #import "UIView+PlayTell.h"
 
 #import <QuartzCore/QuartzCore.h>
 
+#define kAnimationRotateDeg 1.0
+
+@interface PTDialpadViewController ()
+@property (nonatomic, retain) PTPlaymateButton* selectedButton;
+@property (nonatomic, retain) NSDictionary* userButtonHash;
+@property (nonatomic, retain) PTPlaydate* requestedPlaydate;
+@end
+
 @implementation PTDialpadViewController
 @synthesize scrollView;
+@synthesize playmates;
+@synthesize selectedButton;
+@synthesize userButtonHash;
+@synthesize requestedPlaydate;
 
-- (void)loadView {
-    [super loadView];
-
-    UIImage* backgroundImage = [UIImage imageNamed:@"login_bg.png"];
-    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
-    background.tag = 666;
-    [self.view addSubview:background];
-
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
-    [self.view addSubview:self.scrollView];
-}
-
-- (void)viewDidLoad {
-
-    NSArray* playmates = [[[PTMockPlaymateFactory alloc] init] allPlaymates];
-    NSUInteger numPlaymates = playmates.count;
-//    for (int playmateIndex = 0; playmateIndex < numPlaymates; playmateIndex++) {
-//        [playmates addObject:[[PTPlaymate alloc] init]];
-//    }
-
+- (void)drawPlaymates {
+    NSUInteger numPlaymates = self.playmates.count + 1;
+    
     CGFloat margin = 70;
     const CGFloat leftMargin = margin;
     const CGFloat rightMargin = margin;
@@ -47,81 +48,250 @@
     CGFloat rowSpacing = 10;
     const NSUInteger itemsPerRow = 4;
     const CGSize buttonSize = CGSizeMake(201, 151);
-
+    
     CGFloat W = 1024;
     CGFloat interCellPadding = (W - leftMargin - rightMargin - ((CGFloat)itemsPerRow)*buttonSize.width)/(CGFloat)(itemsPerRow - 1);
-
+    
     // Testing...
     rowSpacing = interCellPadding;
     NSUInteger numRows = numPlaymates/itemsPerRow + MIN(numPlaymates%itemsPerRow, 1);
 
+    NSMutableDictionary* playmatesAndButtons = [NSMutableDictionary dictionary];
     for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
         for (int cellIndex = 0; cellIndex < itemsPerRow; cellIndex++) {
-            if (rowIndex*itemsPerRow + cellIndex >= numPlaymates) {
+            NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
+            if (playmateIndex >= numPlaymates) {
                 continue;
             }
-
+            
             CGFloat cellX = leftMargin + ((CGFloat)cellIndex)*(buttonSize.width + interCellPadding);
             CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
-
-            NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
-            if (playmateIndex >= playmates.count) {
-                break;
+            
+            UIButton* button;
+            if (playmateIndex == numPlaymates - 1) {
+                button = [UIButton buttonWithType:UIButtonTypeCustom];
+                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+                [button setImage:[UIImage imageNamed:@"add-family.png"] forState:UIControlStateNormal];
+                [playmatesAndButtons setObject:button
+                                        forKey:@"AddUserButton"];
+            } else {
+                PTPlaymate* currentPlaymate = [self.playmates objectAtIndex:playmateIndex];
+                button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
+                [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [playmatesAndButtons setObject:button
+                                        forKey:[self stringFromUInt:currentPlaymate.userID]];
             }
-
-            PTPlaymate* currentPlaymate = [playmates objectAtIndex:playmateIndex];
-            PTPlaymateButton* button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
-            [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-
+            
             CGRect buttonFrame = button.frame;
             buttonFrame.origin = CGPointMake(cellX, cellY);
             button.frame = buttonFrame;
             [self.scrollView addSubview:button];
         }
     }
+    self.userButtonHash = [NSDictionary dictionaryWithDictionary:playmatesAndButtons];
 
     self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
     NSLog(@"Number of rows: %u", numRows);
 }
 
+- (NSString*)stringFromUInt:(NSUInteger)number {
+    return [NSString stringWithFormat:@"%u", number];
+}
+
+- (void)playmateClicked:(PTPlaymateButton*)sender {
+    // Initiate playdate request
+    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
+                                          authToken:[[PTUser currentUser] authToken]
+                                          onSuccess:^(NSDictionary *result)
+     {
+         LogInfo(@"playdateCreateWithFriend response: %@", result);
+         self.requestedPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+         [self joinPlaydate];
+     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"playdateCreateWithFriend failed: %@", error);
+     }
+     ];
+    LogInfo(@"Requesting playdate...");
+}
+
+- (void)deactivatePlaymateButton:(PTPlaymateButton*)button {
+    [button resetButton];
+    [button.layer removeAllAnimations];
+    button.isActivated = NO;
+    button.transform = CGAffineTransformIdentity;
+    [[self.view.gestureRecognizers objectAtIndex:0] setEnabled:NO];
+    self.selectedButton = nil;
+}
+
+- (void)loadView {
+    [super loadView];
+    self.view.frame = CGRectMake(0, 0, 1024, 748);
+
+    UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
+    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
+    background.tag = 666;
+    [self.view addSubview:background];
+
+    NSString* welcomeText = @"WHO WILL YOU PLAY WITH TODAY?";
+    CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
+                               constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
+    CGRect welcomeLabelRect;
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 0,
+                                  labelSize.width, labelSize.height);
+    UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
+    welcomeLabel.text = welcomeText;
+    welcomeLabel.font = [self welcomeTextFont];
+    welcomeLabel.textColor = [UIColor redColor];
+    welcomeLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:welcomeLabel];
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
+    [self.view addSubview:self.scrollView];
+
+    UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
+    [self.view addGestureRecognizer:recognizer];
+    recognizer.enabled = NO;
+    recognizer.delegate = self;
+}
+
+- (UIFont*)welcomeTextFont {
+    return [UIFont fontWithName:@"TeluguSangamMN" size:26.0];
+}
+
+- (void)viewTapped:(UIGestureRecognizer*)recognizers {
+    LOGMETHOD;
+    [self deactivatePlaymateButton:self.selectedButton];
+    PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+    [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:self.requestedPlaydate.playdateID]
+                                                      authToken:[[PTUser currentUser] authToken]
+                                                      onSuccess:nil
+                                                      onFailure:nil
+     ];
+    self.requestedPlaydate = nil;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+
     UIView* background = [self.view viewWithTag:666];
     CGRect backgroundFrame = self.view.frame;
     backgroundFrame.origin = CGPointZero;
     background.frame = backgroundFrame;
+
+    [self drawPlaymates];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateRequestNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
+                                               object:nil];
+    if (self.selectedButton) {
+        [self deactivatePlaymateButton:self.selectedButton];
+    }
 }
 
-- (void)playmateClicked:(PTPlaymateButton*)sender {
-    static BOOL buttonSelected = NO;
-    static CGRect normalButtonFrame;
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    NSLog(@"Clicked playmate: %@", sender.playmate);
-
-    if (!buttonSelected) {
-        UIView* backgroundView = [self.view viewWithTag:666];
-        UIView* transparentView = [[UIView alloc] initWithFrame:backgroundView.frame];
-        transparentView.backgroundColor = [UIColor blackColor];
-        transparentView.alpha = 0.0;
-        transparentView.tag = 667;
-        [self.scrollView addSubview:transparentView];
-        [self.scrollView bringSubviewToFront:sender];
-        normalButtonFrame = sender.frame;
-        buttonSelected = YES;
-        
-        [UIView animateWithDuration:0.5 animations:^{
-            [sender setRequestingPlaydate];
-            transparentView.alpha = 0.7;
-        }];
-    } else {
-        [[self.view viewWithTag:667] removeFromSuperview];
-        [sender resetButton];
-        buttonSelected = NO;
+    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
+    for (UIButton* button in buttons) {
+        [button removeFromSuperview];
     }
+    self.userButtonHash = nil;
+}
+
+- (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
+    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+    LogDebug(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
+
+    if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
+        self.requestedPlaydate = playdate;
+        [self notifyUserOfPlaydate:playdate];
+    }
+}
+
+- (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
+    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:playdate.initiator.userID]];
+    [self activatePlaymateButton:button];
+}
+
+- (void)activatePlaymateButton:(PTPlaymateButton*)button {
+    [[self.view.gestureRecognizers objectAtIndex:0] setEnabled:YES];
+    UIView* backgroundView = [self.view viewWithTag:666];
+    UIView* transparentView = [[UIView alloc] initWithFrame:backgroundView.frame];
+    transparentView.backgroundColor = [UIColor blackColor];
+    transparentView.alpha = 0.0;
+    transparentView.tag = 667;
+    //        [self.scrollView addSubview:transparentView];
+    [self.scrollView bringSubviewToFront:button];
+    self.selectedButton = button;
+    button.isActivated = YES;
+    [button removeTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
+
+    [UIView animateWithDuration:0.5 animations:^{
+        [button setRequestingPlaydate];
+        transparentView.alpha = 0.7;
+    }];
+
+    [self shakeButton:button];
+}
+
+- (void)joinPlaydate {
+    LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
+    // Unsubscribe from rendezvous channel
+    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    
+    // Load playdate
+    PTBooksListRequest* request = [[PTBooksListRequest alloc] init];
+    [request booksListWithAuthToken:[[PTUser currentUser] authToken]
+                          onSuccess:^(NSDictionary *result)
+    {
+        // TODO : I don't like diving into the results object here, this needs refactored
+        PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                                      bundle:nil
+                                                                                 andBookList:[result valueForKey:@"books"]];
+        [dateController setPlaydate:self.requestedPlaydate];
+        self.requestedPlaydate = nil;
+
+        [self presentViewController:dateController animated:YES completion:nil];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
+    }];
+}
+
+- (void)shakeButton:(PTPlaymateButton *)sender {
+    // Begin snip
+    NSInteger randomInt = arc4random()%500;
+    float r = (randomInt/500.0)+0.5;
+
+    CGAffineTransform leftWobble = CGAffineTransformMakeRotation(degreesToRadians( (kAnimationRotateDeg * -1.0) - r ));
+    CGAffineTransform rightWobble = CGAffineTransformMakeRotation(degreesToRadians( kAnimationRotateDeg + r ));
+
+    sender.transform = leftWobble;  // starting point
+
+    [[sender layer] setAnchorPoint:CGPointMake(0.5, 0.5)];
+
+    [UIView animateWithDuration:0.1
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
+                     animations:^{
+                         [UIView setAnimationRepeatCount:NSNotFound];
+                         sender.transform = rightWobble; }
+                     completion:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+#pragma mark - UIGestureRecognizerDelegate methods
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    CGPoint touchLocation = [touch locationInView:self.scrollView];
+
+    return !CGRectContainsPoint(self.selectedButton.frame, touchLocation);
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "Logging.h"
 #import "PTAllFriendsRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTUser.h"
 
 @interface PTConcretePlaymateFactory ()
 @property (nonatomic, retain) NSArray* playmates;
@@ -27,6 +28,11 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
 }
 
 - (PTPlaymate*)playmateWithId:(NSUInteger)playmateId {
+    PTUser* currentUser = [PTUser currentUser];
+    if (playmateId == currentUser.userID) {
+        return currentUser;
+    }
+
     PTPlaymate* returnPlaymate = nil;
     for (PTPlaymate* playmate in self.playmates) {
         if (playmate.userID == playmateId) {
@@ -37,6 +43,11 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
 }
 
 - (PTPlaymate*)playmateWithUsername:(NSString*)username {
+    PTUser* currentUser = [PTUser currentUser];
+    if ([[username lowercaseString] isEqualToString:[currentUser username]]) {
+        return currentUser;
+    }
+
     PTPlaymate* returnPlaymate = nil;
     for (PTPlaymate* playmate in self.playmates) {
         if ([[playmate.username lowercaseString] isEqualToString:[username lowercaseString]]) {
