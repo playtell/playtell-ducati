@@ -268,6 +268,7 @@
 		F4E6DA141585346600BDEF0A /* add-family.png in Resources */ = {isa = PBXBuildFile; fileRef = F4E6DA131585346600BDEF0A /* add-family.png */; };
 		F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC41415866DE200BE086B /* PTLoadingViewController.m */; };
 		F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */; };
+		F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -775,6 +776,8 @@
 		F4EAC41315866DE200BE086B /* PTLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoadingViewController.h; sourceTree = "<group>"; };
 		F4EAC41415866DE200BE086B /* PTLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTLoadingViewController.m; sourceTree = "<group>"; };
 		F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoadingViewController.xib; sourceTree = "<group>"; };
+		F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTCheckForPlaydateRequest.h; sourceTree = "<group>"; };
+		F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCheckForPlaydateRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1753,6 +1756,8 @@
 				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
 				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
 				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
+				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
+				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2077,6 +2082,7 @@
 				23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */,
 				23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */,
 				F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */,
+				F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
