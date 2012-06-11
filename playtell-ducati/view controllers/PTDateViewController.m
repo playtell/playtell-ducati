@@ -759,7 +759,7 @@
     ];
     
     // Add finger
-    [self addFingerAtPoint:point];
+    //[self addFingerAtPoint:point];
 }
 
 - (void)fingerTouchEndedAtPoint:(CGPoint)point {
@@ -773,7 +773,7 @@
     ];
     
     // Remove finger
-    [self removeFingerAtPoint:point];
+    //[self removeFingerAtPoint:point];
 }
 
 #pragma mark -
