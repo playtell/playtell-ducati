@@ -33,6 +33,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @property (nonatomic, retain) NSDictionary* userButtonHash;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
+@property (nonatomic, retain) NSArray* books;
 @end
 
 @implementation PTDialpadViewController
@@ -42,6 +43,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @synthesize userButtonHash;
 @synthesize requestedPlaydate;
 @synthesize cancelPlaydateRecognizer;
+@synthesize books;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -150,25 +152,16 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
     // Unsubscribe from rendezvous channel
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    
-    // Load playdate
-    PTBooksListRequest* request = [[PTBooksListRequest alloc] init];
-    [request booksListWithAuthToken:[[PTUser currentUser] authToken]
-                          onSuccess:^(NSDictionary *result)
-     {
-         // TODO : I don't like diving into the results object here, this needs refactored
-         PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                                       bundle:nil
-                                                                                  andBookList:[result valueForKey:@"books"]];
-         [dateController setPlaydate:self.requestedPlaydate];
-         self.requestedPlaydate = nil;
 
-         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-         [appDelegate.transitionController transitionToViewController:dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-//         [self presentViewController:dateController animated:YES completion:nil];
-     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
-     }];
+    NSAssert(self.books, @"Book list cannot be nil before transitioning to dateController");
+    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                                  bundle:nil
+                                                                             andBookList:self.books];
+    [dateController setPlaydate:self.requestedPlaydate];
+    self.requestedPlaydate = nil;
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (NSString*)stringFromUInt:(NSUInteger)number {
@@ -259,6 +252,17 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     self.cancelPlaydateRecognizer.delegate = self;
 
     [self drawPlaymates];
+
+    self.books = nil;
+    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
+    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
+                               onSuccess:^(NSDictionary *result)
+    {
+        // TODO : I don't like diving into the results object here, this needs refactored
+        self.books = [result valueForKey:@"books"];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        LogError(@"Failed to fetch books list: %@", error);
+    }];
 }
 
 - (void)viewDidUnload {
