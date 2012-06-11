@@ -62,21 +62,22 @@
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];
 
-    // Retreive the photos for the playmates
-    UIImage* otherUserPhoto;
+    // Pick out the other user
+    PTPlaymate* otherUser;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        otherUserPhoto = self.playdate.playmate.userPhoto;
+        otherUser = self.playdate.playmate;
     } else {
-        otherUserPhoto = self.playdate.initiator.userPhoto;
+        otherUser = self.playdate.initiator;
     }
+
     UIImage* myPhoto = [[PTUser currentUser] userPhoto];
 
     // If either photo is nil, use the default placeholder
     myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    otherUserPhoto = (otherUserPhoto) ? otherUserPhoto : [self placeholderImage];
+    UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
 
     [chatView setLoadingImageForLeftView:otherUserPhoto
-                             loadingText:self.playdate.initiator.username];
+                             loadingText:otherUser.username];
     [chatView setLoadingImageForRightView:myPhoto];
 
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
