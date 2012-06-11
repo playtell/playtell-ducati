@@ -38,6 +38,7 @@
 @property (nonatomic, strong) UIView* leftVideoView;
 @property (nonatomic, strong) UIView* rightVideoView;
 
+@property (nonatomic, strong) UIView* innerView;
 @property (nonatomic, strong) UIView* theLeftView;
 @property (nonatomic, strong) UIView* theRightView;
 
@@ -51,7 +52,7 @@
 @end
 
 @implementation PTChatHUDView
-@synthesize theLeftView, theRightView;
+@synthesize innerView, theLeftView, theRightView;
 @synthesize leftImageView, rightImageView;
 @synthesize leftVideoView, rightVideoView;
 @synthesize reconnectButton;
@@ -72,15 +73,35 @@
         self.theRightView = [[UIView alloc] initWithFrame:[[self class] rectForRightView]];
 
         self.theLeftView.backgroundColor = [UIColor clearColor];
-        self.theLeftView.layer.shadowOffset = CGSizeMake(0, 3);
+//        self.theLeftView.layer.shadowOffset = CGSizeMake(0, 3);
 //        self.theLeftView.layer.shadowOpacity = 0.5;
         self.theRightView.backgroundColor = [UIColor clearColor];
-        self.theRightView.layer.shadowOffset = CGSizeMake(0, 3);
-        self.theRightView.layer.shadowOpacity = 0.5;
+//        self.theRightView.layer.shadowOffset = CGSizeMake(0, 3);
+//        self.theRightView.layer.shadowOpacity = 0.5;
+        
+        
+        // Set shadow to the parent layer
+        self.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.layer.shadowOffset = CGSizeMake(0, 0);
+        self.layer.shadowOpacity = 0.5;
+        self.layer.shadowRadius = 6.0f;
+        self.layer.masksToBounds = NO;
+        
+        // Add inner view (since we're rounding corners, parent view can't mask to bounds b/c of shadow - need extra view)
+        innerView = [[UIView alloc] initWithFrame:self.bounds];
+        UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
+                                                         byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight
+                                                               cornerRadii:CGSizeMake(6.0, 6.0)];
+        CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
+        shapeLayer.path = cornerPath.CGPath;
+        innerView.layer.mask = shapeLayer;
+        innerView.layer.masksToBounds = YES;
+        [self addSubview:innerView];
 
-        [self addSubview:self.theLeftView];
-        [self addSubview:self.theRightView];
-        [self bringSubviewToFront:self.theRightView];
+        [innerView addSubview:self.theLeftView];
+        [innerView addSubview:self.theRightView];
+        //[innerView bringSubviewToFront:self.theRightView]; // TODO: needed?
+        //[self bringSubviewToFront:innerView]; // TODO: needed?
     }
     return self;
 }
@@ -97,40 +118,22 @@
     [self.theLeftView removeFromSuperview];
 
     CGRect imageViewFrame = [[self class] rectForLeftView];
-    imageViewFrame.size.height -= 2.0;
     self.leftImageView.frame = imageViewFrame;
-    self.leftImageView.layer.borderColor = [UIColor blackColor].CGColor;
-    self.leftImageView.layer.borderWidth = 3.0;
+    [self.leftImageView setImage:anImage];
 
-    CGRect ghostFrame = CGRectZero;
-    ghostFrame.size = self.leftImageView.frame.size;
-    self.ghostView.frame = ghostFrame;
-    [self.leftImageView addSubview:self.ghostView];
-
-    UIView* spinningCrank = [self createWaitingView];
-    spinningCrank.tag = SPINNER_VIEW_TAG;
-    spinningCrank.center = self.leftImageView.center;
-    [self.leftImageView addSubview:spinningCrank];
-
-    CGSize maxTextSize = CGSizeMake(PTCHATVIEW_SUBVIEW_WIDTH, PTCHATVIEW_SUBVIEW_HEIGHT/4.0);
-    CGSize computedLabelSize = [text sizeWithFont:[[self class] nameFont]
-                                constrainedToSize:maxTextSize];
-
-    CGFloat labelOriginX = CGRectGetMidX(self.leftImageView.bounds) - computedLabelSize.width/2.0;
-    CGFloat labelOriginY = PTCHATVIEW_SUBVIEW_HEIGHT - computedLabelSize.height - 5.0;
-    UILabel* nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelOriginX, labelOriginY,
-                                                                   computedLabelSize.width, computedLabelSize.height)];
-    nameLabel.font = [[self class] nameFont];
-    nameLabel.text = text;
-    nameLabel.backgroundColor = [UIColor clearColor];
-    nameLabel.textColor = [UIColor blackColor];
-    nameLabel.tag = NAME_VIEW_TAG;
-    [self.leftImageView addSubview:nameLabel];
-
-//    self.theLeftView = self.leftImageView;
     [self.theLeftView addSubview:self.leftImageView];
+    [innerView addSubview:self.theLeftView];
 }
 
+- (void)setLoadingImageForRightView:(UIImage*)anImage {
+    [self.theRightView removeFromSuperview];
+    
+    self.rightImageView.frame = self.theRightView.bounds;
+    [self.rightImageView setImage:anImage];
+    
+    [self.theRightView addSubview:self.rightImageView];
+    [innerView addSubview:self.theRightView];
+}
 
 - (UIColor*)loadingBorderColor {
     return [UIColor blackColor];
@@ -364,7 +367,6 @@
     self.ghostView = nil;
 }
 
-
 - (UIColor*)photoBorderColor {
     return [UIColor whiteColor];
 }
@@ -391,16 +393,13 @@
     CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
     shapeLayer.path = cornerPath.CGPath;
     [self.theLeftView removeFromSuperview];
-    self.theLeftView.layer.mask = shapeLayer;
 
     [self.leftImageView removeFromSuperview];
     [self.theLeftView addSubview:aView];
-    [self addSubview:self.theLeftView];
-    [self bringSubviewToFront:self.theLeftView];
+    [innerView addSubview:self.theLeftView];
 }
 
 - (void)setRightView:(UIView*)aView {
-
     CGRect viewFrame = [[self class] rectForLeftView];
 
     aView.frame = viewFrame;
@@ -413,11 +412,11 @@
     CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
     shapeLayer.path = cornerPath.CGPath;
     [self.theRightView removeFromSuperview];
-    self.theRightView.layer.mask = shapeLayer;
+    //self.theRightView.layer.mask = shapeLayer;
 
     [self.rightImageView removeFromSuperview];
     [self.theRightView addSubview:aView];
-    [self addSubview:self.theRightView];
+    [innerView addSubview:self.theRightView];
 }
 
 - (void)setLeftImagePlaceholderWithURL:(NSString*)aURL {

@@ -11,7 +11,7 @@
 
 @implementation PTPagesScrollView
 
-@synthesize pagesScrollDelegate;
+@synthesize pagesScrollDelegate, currentPage;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -22,7 +22,7 @@
         [self setDelaysContentTouches:YES];
         [self setShowsHorizontalScrollIndicator:NO];
         [self setPagingEnabled:YES];
-        [self setBounces:YES];
+        [self setBounces:NO];
         [self setDelegate:self];
         pageSize = frame.size;
         currentPage = 1;

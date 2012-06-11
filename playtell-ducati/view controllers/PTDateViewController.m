@@ -49,7 +49,7 @@
     [super viewDidLoad];
     
     // Init books scroll view
-    booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 62.0f, 1024.0f, 600.0f)];
+    booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
     booksScrollView = [[PTBooksScrollView alloc] initWithFrame:CGRectMake((1024.0f - 350.0f) / 2.0f, 0.0f, 350.0f, 600.0f)];
     [booksParentView addSubview:booksScrollView];
     [self.view addSubview:booksParentView];
@@ -85,7 +85,7 @@
     isBookOpen = NO;
     
     // Init page scroll view and its pages
-    pagesScrollView = [[PTPagesScrollView alloc] initWithFrame:CGRectMake(112.0f, 62.0f, 800.0f, 600.0f)];
+    pagesScrollView = [[PTPagesScrollView alloc] initWithFrame:CGRectMake(112.0f, 126.0f, 800.0f, 600.0f)];
     [pagesScrollView setHidden:YES];
     [pagesScrollView setPagesScrollDelegate:self];
     [self.view addSubview:pagesScrollView];
@@ -126,6 +126,7 @@
     [self.view addSubview:chatView];
     [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
                              loadingText:self.playdate.initiator.username];
+    [chatView setLoadingImageForRightView:[UIImage imageNamed:@"144.png"]];
 
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
         NSLog(@"Session connected!");
@@ -190,11 +191,14 @@
     [webView stopLoading];
     isWebViewLoading = NO;
     pagesToLoad = nil;
-    //NSLog(@"Closed book, resetting isWebViewLoading");
+    NSLog(@"Closed book, resetting isWebViewLoading");
     
     // Close book, hide pages, show all other books
     if (bookView != nil) {
-        // TODO: Set current page view to book view
+        // Set current page view to book view
+        PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pagesScrollView.currentPage - 1)];
+        [bookView setPageContentsWithLeftContent:[pageView getLeftContent]
+                                 andRightContent:[pageView getRightContent]];
         [bookView setHidden:NO];
         [pagesScrollView setHidden:YES];
         [bookView close];
@@ -354,30 +358,52 @@
         [bookView setCoverContentsWithImage:coverImage];
         
         // Before loading next cover, load first page of this book
-        [self loadCurrentFirstPageFromFileOrURL];
+        [self loadPageFromFileOrURLWithPageNumber:1];
     } else {
         NSString *cover_url = [[books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]] objectForKey:@"cover_front"];
         [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:cover_url]]];
     }
 }
 
-- (void)loadCurrentFirstPageFromFileOrURL {
-    NSString *imagePath = [self pageImagePathForBook:[coversToLoad objectAtIndex:coversToLoadIndex] AndPageNumber:1];
+- (void)loadPageFromFileOrURLWithPageNumber:(NSInteger)pageNumber {
+    NSLog(@"loadPageFromFileOrURLWithPageNumber: %i", pageNumber);
+    
+    // Find proper book ID
+    NSNumber *bookId;
+    if ([coversToLoad count] > 0 && coversToLoadIndex < [coversToLoad count]) {
+        // Loading covers, get proper book ID
+        bookId = [coversToLoad objectAtIndex:coversToLoadIndex];
+    } else {
+        // Loadings pages for an opened book, book ID is the currentBookId
+        bookId = currentBookId;
+    }
+
+    NSString *imagePath = [self pageImagePathForBook:bookId AndPageNumber:pageNumber];
+    NSLog(@"looking for image: %@", imagePath);
     UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
     if (image) {
-        // Send the image to book view
-        PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-        [bookView setPageContentsWithImage:image];
-        
-        // Check for more covers to load
-        coversToLoadIndex += 1;
-        if (coversToLoadIndex < [coversToLoad count]) {
-            [self loadCurrentBookCoverFromFileOrURL];
+        NSLog(@"FOUND FILE");
+        // Send the image to page
+        if ([pagesScrollView.subviews count] > 0) {
+            PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pageNumber - 1)];
+            [pageView setPageContentsWithImage:image];
         }
+        
+        // If first page, also send it to book view
+        if (pageNumber == 1 && coversToLoadIndex < [bookList count]) {
+            PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+            [bookView setPageContentsWithImage:image];
+        }
+        
+        // Continue page loading
+        [self loadNextPage];
     } else {
-        NSMutableDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
+        NSLog(@"FILE NOT FOUND... (page: %i)", pageNumber);
+        NSMutableDictionary *book = [books objectForKey:bookId];
         NSMutableArray *pages = [book objectForKey:@"pages"];
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:0]]]];
+        isWebViewLoading = YES;
+        NSLog(@"Trying to load URL: %@", [pages objectAtIndex:(pageNumber - 1)]);
+        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber - 1)]]]];
     }
 }
 
@@ -393,6 +419,7 @@
         NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
         NSInteger pageNum = [(NSString *)[components objectAtIndex:3] intValue];
         // Render page view to bitmap
+        NSLog(@"WebView - book: %i page: %i", bookId, pageNum);
         [self convertWebViewPageToBitmapWithBookId:bookId andPageNumber:pageNum];
         return NO;
     } else if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"coverLoadFinished"]) {
@@ -415,10 +442,10 @@
         UIGraphicsEndImageContext();
         
         dispatch_async(dispatch_get_main_queue(), ^() {
-            //NSLog(@"Page loaded: %i", pageNumber);
+
+            NSLog(@"Page loaded: %i", pageNumber);
             
             // Send the image to page
-            //NSInteger pageNumber = [[pagesToLoad objectAtIndex:pagesToLoadIndex] intValue];
             if ([pagesScrollView.subviews count] > 0) {
                 PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pageNumber - 1)];
                 [pageView setPageContentsWithImage:image];
@@ -428,34 +455,18 @@
             if (pageNumber == 1 && coversToLoadIndex < [bookList count]) {
                 PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
                 [bookView setPageContentsWithImage:image];
-                
-                // Cache image locally
-                NSMutableDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-                NSNumber *bookId = [book objectForKey:@"id"];
-                NSString *imagePath = [self pageImagePathForBook:bookId AndPageNumber:1];
-                NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-                [imageData writeToFile:imagePath atomically:YES];
             }
             
-            // More pages to load? (Or more covers to load?)
-            if ([pagesToLoad count] > 0) {
-                NSInteger nextPageNumber = [[pagesToLoad objectAtIndex:0] intValue];
-                //NSLog(@"More pages found! Loading page: %i", nextPageNumber);
-                [pagesToLoad removeObjectAtIndex:0];
-                NSMutableDictionary *book = [books objectForKey:currentBookId];
-                NSArray *pages = [book objectForKey:@"pages"];
-                isWebViewLoading = YES;
-                [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(nextPageNumber-1)]]]];
-            } else {
-                isWebViewLoading = NO;
-                //NSLog(@"Loaded all pages, resetting isWebViewLoading");
-
-                // Check for covers
-                coversToLoadIndex += 1;
-                if (coversToLoadIndex < [coversToLoad count]) {
-                    [self loadCurrentBookCoverFromFileOrURL];
-                }
-            }
+            // Cache image locally
+            NSMutableDictionary *book = [books objectForKey:[NSNumber numberWithInteger:bookId]];
+            NSNumber *bookId = [book objectForKey:@"id"];
+            NSString *imagePath = [self pageImagePathForBook:bookId AndPageNumber:pageNumber];
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+            [imageData writeToFile:imagePath atomically:YES];
+            NSLog(@"Wrote filename: %@", imagePath);
+            
+            // Continue page loading
+            [self loadNextPage];
             
         });
     });
@@ -485,9 +496,29 @@
             [imageData writeToFile:imagePath atomically:YES];
             
             // Before loading next cover, load first page of this book
-            [self loadCurrentFirstPageFromFileOrURL];
+            [self loadPageFromFileOrURLWithPageNumber:1];
         });
     });
+}
+
+- (void)loadNextPage {
+    if ([pagesToLoad count] > 0) {
+        NSInteger nextPageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+        [pagesToLoad removeObjectAtIndex:0];
+        NSLog(@"More pages found! Loading page: %i", nextPageNumber);
+        
+        // Load page either from file or url
+        [self loadPageFromFileOrURLWithPageNumber:nextPageNumber];
+    } else {
+        isWebViewLoading = NO;
+        NSLog(@"Loaded all pages, resetting isWebViewLoading");
+        
+        // Check for covers
+        coversToLoadIndex += 1;
+        if (coversToLoadIndex < [coversToLoad count]) {
+            [self loadCurrentBookCoverFromFileOrURL];
+        }
+    }
 }
 
 - (NSString *)getDocumentsPath {
@@ -563,7 +594,6 @@
     currentBookId = [bookId copy];
     [pagesScrollView setHidden:NO];
     [bookView setHidden:YES];
-    //[pageView showPages]; // TODO: Implement page fade-in?
     isBookOpen = YES;
     [booksParentView setIsBookOpen:YES];
 }
@@ -577,7 +607,7 @@
 }
 
 - (void)beginBookPageLoading {
-    //NSLog(@"beginBookPageLoading");
+    NSLog(@"beginBookPageLoading");
     // Stop any current page loads
     [webView stopLoading];
     
@@ -612,20 +642,14 @@
             }
         }
     }
-    //pagesToLoadIndex = 0;
     
     // Start page loading
     if ([pagesToLoad count] > 0 && isWebViewLoading == NO) {
-        //NSLog(@"Loading more pages: %@", pagesToLoad);
+        NSLog(@"Loading more pages: %@", pagesToLoad);
         NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
         [pagesToLoad removeObjectAtIndex:0];
-        NSArray *pages = [book objectForKey:@"pages"];
-        isWebViewLoading = YES;
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber-1)]]]];
+        [self loadPageFromFileOrURLWithPageNumber:pageNumber];
     }
-//    if ([pagesToLoad count] > 0 && isWebViewLoading == YES) {
-//        NSLog(@"Not loading more pages, another process already doing it");
-//    }
 }
 
 #pragma mark -

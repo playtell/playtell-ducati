@@ -28,6 +28,9 @@
     id<PTBookViewDelegate> delegate;
     NSMutableDictionary *book;
     NSInteger bookPosition;
+    
+    UIImage *firstPageImage;
+    BOOL firstPageNeedsReset;
 }
 
 @property (nonatomic, retain) id<PTBookViewDelegate> delegate;
@@ -47,6 +50,7 @@
 - (NSInteger)getBookPosition;
 - (void)setCoverContentsWithImage:(UIImage *)image;
 - (void)setPageContentsWithImage:(UIImage *)image;
+- (void)setPageContentsWithLeftContent:(id)leftContent andRightContent:(id)rightContent;
 
 @end
 

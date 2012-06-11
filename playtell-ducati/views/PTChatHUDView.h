@@ -14,7 +14,7 @@ typedef void (^PTChatHUDViewReconnectBlock) (void);
 
 - (void)setLoadingImageForLeftView:(UIImage*)anImage loadingText:(NSString*)text;
 - (void)setLoadingImageForLeftViewWithURL:(NSURL*)aURL loadingText:(NSString*)text;
-   
+- (void)setLoadingImageForRightView:(UIImage*)anImage;
 - (void)transitionLeftImage;
 - (void)setImageForRightView:(UIImage*)anImage;
 - (void)setLeftView:(UIView*)aView;

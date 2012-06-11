@@ -18,6 +18,7 @@
 }
 
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> pagesScrollDelegate;
+@property (nonatomic) NSInteger currentPage;
 
 - (void)navigateToPage:(NSInteger)page;
 - (void)setCurrentBook:(NSMutableDictionary *)bookData;

@@ -29,5 +29,7 @@
 - (void)setCurrentPage:(CGFloat)page andForceOpen:(BOOL)forceOpen;
 - (void)open;
 - (void)setPageContentsWithImage:(UIImage *)image;
+- (id)getLeftContent;
+- (id)getRightContent;
 
 @end

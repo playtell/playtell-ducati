@@ -389,4 +389,12 @@
     left_back.contents = (id)flipped.CGImage;
 }
 
+- (id)getLeftContent {
+    return left_back.contents;
+}
+
+- (id)getRightContent {
+    return right.contents;
+}
+
 @end

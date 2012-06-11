@@ -130,6 +130,11 @@
         return;
     }
     
+    // Check if first page has been reset with something else
+//    if (firstPageNeedsReset) {
+//        [self setPageContentsWithImage:firstPageImage];
+//    }
+    
     animating = YES;
     isOpen = YES;
     
@@ -342,6 +347,18 @@
     
     // Set left-side contents of page
     coverIn.contents = (id)flipped.CGImage;
+    
+    // Save first page image
+    if (firstPageImage == nil) {
+        firstPageImage = image;
+        firstPageNeedsReset = NO;
+    }
+}
+
+- (void)setPageContentsWithLeftContent:(id)leftContent andRightContent:(id)rightContent {
+    firstPageNeedsReset = YES;
+    coverIn.contents = leftContent;
+    right.contents = rightContent;
 }
 
 @end
