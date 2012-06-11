@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
 #import "PTBooksListRequest.h"
@@ -13,6 +14,7 @@
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTLoadingViewController.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate.h"
 #import "PTPusher.h"
@@ -43,17 +45,54 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-    loginController.delegate = self;
-    TransitionController* transitionController = [[TransitionController alloc] initWithViewController:loginController];
-    self.transitionController = transitionController;
-    self.window.rootViewController = self.transitionController;
-    [self.window makeKeyAndVisible];
 
     [self setupPushNotifications:launchOptions];
     [PTVideoPhone sharedPhone];
 
+    TransitionController* transitionController;
+    if ([[PTUser currentUser] isLoggedIn]) {
+        PTLoadingViewController* loadingView = [[PTLoadingViewController alloc] initWithNibName:@"PTLoadingViewController" bundle:nil];
+        transitionController = [[TransitionController alloc] initWithViewController:loadingView];
+        [self runLoggedInWorkflow];
+    } else {
+        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
+        loginController.delegate = self;
+        transitionController = [[TransitionController alloc] initWithViewController:loginController];
+    }
+    self.transitionController = transitionController;
+    self.window.rootViewController = self.transitionController;
+    [self.window makeKeyAndVisible];
+
     return YES;
+}
+
+- (void)runLoggedInWorkflow {
+    PTUser* currentUser = [PTUser currentUser];
+
+    // Fetch the current users's photo
+    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:currentUser.photoURL];
+    AFImageRequestOperation* reqeust;
+    reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                success:^(UIImage *image)
+               {
+                   [[PTUser currentUser] setUserPhoto:image];
+               }];
+    [reqeust start];
+
+    
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:currentUser.userID
+                                         token:currentUser.authToken
+                                       success:^
+     {
+         self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+         self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         [self.transitionController transitionToViewController:self.dialpadController
+                                                   withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         NSAssert(NO, @"Failed to load playmates");
+     }];
 }
 
 - (void)setupPushNotifications:(NSDictionary*)theLaunchOptions {
@@ -76,10 +115,7 @@
 
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Transition to the Dialpad
-    self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
-    self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-    [self.transitionController transitionToViewController:self.dialpadController
-                                              withOptions:UIViewAnimationOptionTransitionNone];
+    [self runLoggedInWorkflow];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

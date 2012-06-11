@@ -174,26 +174,12 @@ typedef void (^PTLoginFailureBlock) (NSError *);
                                  onSuccess:^(NSDictionary *result)
     {
         [[PTUser currentUser] setAuthToken:[result valueForKey:@"token"]];
-        [self fetchPlaymatesAndNotifyDelegate];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
+            [self.delegate loginControllerDidLogin:self];
+        }
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         [self showError:@"Unable to update settings"];
     }];
-}
-
-- (void)fetchPlaymatesAndNotifyDelegate {
-    PTUser* currentUser = [PTUser currentUser];
-    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
-    [playmateFactory refreshPlaymatesForUserID:currentUser.userID
-                                         token:currentUser.authToken
-                                       success:^
-     {
-         if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
-             [self.delegate loginControllerDidLogin:self];
-         }
-     } failure:^(NSError *error) {
-         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
-         NSAssert(NO, @"Failed to load playmates");
-     }];
 }
 
 - (NSString*)loginSettingsURL {
@@ -299,10 +285,12 @@ typedef void (^PTLoginFailureBlock) (NSError *);
         LogInfo(@"Login result: %@", result);
         NSString* token = [result valueForKey:@"token"];
         NSNumber* userID = [result valueForKey:@"user_id"];
+        NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
         [[PTUser currentUser] setUsername:aUsername];
         [[PTUser currentUser] setEmail:aUsername];
         [[PTUser currentUser] setAuthToken:token];
         [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
+        [[PTUser currentUser] setPhotoURL:photoURL];
         LogInfo(@"Current user: %@", [PTUser currentUser]);
         success(result);
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {

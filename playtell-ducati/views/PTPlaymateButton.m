@@ -54,6 +54,7 @@
         [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
         playmateButton.layer.cornerRadius = 10.0;
         playmateButton.clipsToBounds = YES;
+        aPlaymate.userPhoto = image;
     }];
     [reqeust start];
 
@@ -74,7 +75,9 @@
 
 - (void)setRequestingPlaydate {
     self.originalFrame = self.frame;
-    CGRect expandedFrame = CGRectInset(self.frame, -10, -10);
+    CGFloat expandedWidth = -0.2*CGRectGetWidth(self.frame);
+    CGFloat expandedHeight = -0.2*CGRectGetHeight(self.frame);
+    CGRect expandedFrame = CGRectInset(self.frame, expandedWidth, expandedHeight);
     self.frame = expandedFrame;
 }
 

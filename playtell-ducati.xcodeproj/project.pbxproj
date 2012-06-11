@@ -266,6 +266,8 @@
 		F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */; };
 		F4E6DA1115850B1700BDEF0A /* PTConcretePlaymateFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */; };
 		F4E6DA141585346600BDEF0A /* add-family.png in Resources */ = {isa = PBXBuildFile; fileRef = F4E6DA131585346600BDEF0A /* add-family.png */; };
+		F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC41415866DE200BE086B /* PTLoadingViewController.m */; };
+		F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -770,6 +772,9 @@
 		F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTConcretePlaymateFactory.h; sourceTree = "<group>"; };
 		F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTConcretePlaymateFactory.m; sourceTree = "<group>"; };
 		F4E6DA131585346600BDEF0A /* add-family.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-family.png"; sourceTree = "<group>"; };
+		F4EAC41315866DE200BE086B /* PTLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoadingViewController.h; sourceTree = "<group>"; };
+		F4EAC41415866DE200BE086B /* PTLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTLoadingViewController.m; sourceTree = "<group>"; };
+		F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoadingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1654,6 +1659,9 @@
 				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
 				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
 				F420B7401585BA1800DCAF10 /* TransitionController.m */,
+				F4EAC41315866DE200BE086B /* PTLoadingViewController.h */,
+				F4EAC41415866DE200BE086B /* PTLoadingViewController.m */,
+				F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -1975,6 +1983,7 @@
 				F468878A15814AE50086D351 /* opentok.bundle in Resources */,
 				F4E6DA141585346600BDEF0A /* add-family.png in Resources */,
 				23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */,
+				F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2067,6 +2076,7 @@
 				F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */,
 				23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */,
 				23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */,
+				F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2142,8 +2152,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2167,8 +2177,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
