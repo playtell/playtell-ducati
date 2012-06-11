@@ -39,12 +39,13 @@
     // Page loader
     UIWebView *webView;
     BOOL isWebViewLoading;
+    
+    // Fingers
+    NSMutableDictionary *fingerViews;
 }
 
 @property (nonatomic) PTPlaydate *playdate;
-@property (nonatomic, retain) IBOutlet UIButton *closeBookButton;
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks;
-- (IBAction)closeBook:(id)sender;
 - (IBAction)playdateDisconnect:(id)sender;
 - (void)openBookAfterNavigation;
 

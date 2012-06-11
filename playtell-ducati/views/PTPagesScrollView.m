@@ -79,6 +79,7 @@
     int totalPages = [[book objectForKey:@"total_pages"] intValue];;
     for (int i=0; i<totalPages; i++) {
         PTPageView *page = [[PTPageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 800.0f, 600.0f) andPageNumber:(i + 1)];
+        [page setDelegate:pagesScrollDelegate]; // Pass the PTDateViewController as a delegate to page view
         [self addSubview:page];
     }
     [self setContentSize:CGSizeMake(totalPages * 800.0f, 0.0f)];

@@ -22,6 +22,8 @@
 		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
 		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
 		23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
+		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
+		23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
@@ -296,6 +298,10 @@
 		237B24AF157D191500FC288E /* PTDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDateViewController.xib; sourceTree = "<group>"; };
 		237B24B2157D1AB600FC288E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
+		23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerTapRequest.h; sourceTree = "<group>"; };
+		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
+		23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerEndRequest.h; sourceTree = "<group>"; };
+		23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerEndRequest.m; sourceTree = "<group>"; };
 		23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateJoinedRequest.h; sourceTree = "<group>"; };
 		23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateJoinedRequest.m; sourceTree = "<group>"; };
 		F420B73F1585BA1800DCAF10 /* TransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionController.h; sourceTree = "<group>"; };
@@ -1735,6 +1741,10 @@
 				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
 				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
 				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
+				23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */,
+				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
+				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
+				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2055,6 +2065,8 @@
 				F4E6DA0115825EC900BDEF0A /* PTAllFriendsRequest.m in Sources */,
 				F4E6DA1115850B1700BDEF0A /* PTConcretePlaymateFactory.m in Sources */,
 				F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */,
+				23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */,
+				23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

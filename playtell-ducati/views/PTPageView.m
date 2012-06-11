@@ -10,7 +10,7 @@
 
 @implementation PTPageView
 
-@synthesize hasContent;
+@synthesize delegate, hasContent;
 
 - (id)initWithFrame:(CGRect)frame andPageNumber:(NSInteger)number {
     self = [super initWithFrame:frame];
@@ -19,6 +19,16 @@
         pageNumber = number;
         self.layer.zPosition = currentPage - (pageNumber - 1);
         hasContent = NO;
+        
+        // Enable pinching
+        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
+        [pinchRecognizer setDelegate:self];
+        [self addGestureRecognizer:pinchRecognizer];
+        
+        // Enable long press
+        UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTouched:)];
+        [longPressRecognizer setDelegate:self];
+        [self addGestureRecognizer:longPressRecognizer];
     }
     return self;
 }
@@ -410,6 +420,26 @@
 
 - (id)getRightContent {
     return right.contents;
+}
+
+- (void)pinched:(id)sender {
+    UIPinchGestureRecognizer *pinchRecognizer = (UIPinchGestureRecognizer *)sender;
+    if (pinchRecognizer.state == UIGestureRecognizerStateChanged) {
+        CGFloat factor = [pinchRecognizer scale];
+        if (factor <= 0.4f) {
+            [delegate bookPinchClose];
+        }
+    }
+}
+
+- (void)longTouched:(id)sender {
+    UILongPressGestureRecognizer *longPressRecognizer = (UILongPressGestureRecognizer *)sender;
+    if (longPressRecognizer.state == UIGestureRecognizerStateBegan) {
+        fingerPoint = [longPressRecognizer locationInView:longPressRecognizer.view];
+        [delegate fingerTouchStartedAtPoint:fingerPoint];
+    } else if (longPressRecognizer.state == UIGestureRecognizerStateEnded) {
+        [delegate fingerTouchEndedAtPoint:fingerPoint];
+    }
 }
 
 @end

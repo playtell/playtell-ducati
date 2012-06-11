@@ -118,6 +118,18 @@ static PTPlayTellPusher* instance = nil;
         LogInfo(@"Playdate -> end_playdate: %@", eventData);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateEndPlaydate" object:self userInfo:eventData];
     }];
+    
+    // Finger tap
+    [aPlaydateChannel bindToEventNamed:@"finger_tap" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateFingerStart" object:self userInfo:eventData];
+    }];
+    
+    // Finger end
+    [aPlaydateChannel bindToEventNamed:@"finger_end" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateFingerEnd" object:self userInfo:eventData];
+    }];
 }
 
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName {
@@ -125,6 +137,13 @@ static PTPlayTellPusher* instance = nil;
     LogDebug(@"Attempting to unsubscribe from channel: %@", channelName);
     NSAssert(channel != nil, @"Trying to unsubscribe from a nil channel");
     [self.pusherClient unsubscribeFromChannel:channel];
+}
+
+- (void)emitEventNamed:(NSString *)name data:(id)data channel:(NSString *)channel {
+    [self.pusherClient sendEventNamed:name
+                                 data:data
+                              channel:channel
+     ];
 }
 
 #pragma mark PTPusherDelegate methods

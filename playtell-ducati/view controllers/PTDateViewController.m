@@ -24,8 +24,10 @@
 #import "PTVideoPhone.h"
 #import "PTPlaydateJoinedRequest.h"
 #import "TransitionController.h"
-
+#import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
+#import "PTPlaydateFingerTapRequest.h"
+#import "PTPlaydateFingerEndRequest.h"
 
 @interface PTDateViewController ()
 
@@ -33,7 +35,7 @@
 
 @implementation PTDateViewController
 
-@synthesize closeBookButton, playdate;
+@synthesize playdate;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
@@ -156,6 +158,9 @@
     webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
     [self.view addSubview:webView];
     
+    // Create dictionary that will hold finger views
+    fingerViews = [[NSMutableDictionary alloc] init];
+    
     // Start loading book covers
     [self loadBookCovers];
     
@@ -164,6 +169,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -171,31 +178,6 @@
 
     // Reset webview loading status
     isWebViewLoading = NO;
-}
-
-- (IBAction)closeBook:(id)sender {
-    // Find opened book
-    PTBookView *bookView = nil;
-    for (int i=0, l=[books count]; i<l; i++) {
-        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToNumber:currentBookId]) {
-            bookView = (PTBookView *)[bookList objectAtIndex:i];
-            break;
-        }
-    }
-
-    // Notify server of book close
-    if (self.playdate) {
-        PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
-        [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                           bookId:[bookView getId]
-                                        authToken:[[PTUser currentUser] authToken]
-                                        onSuccess:nil
-                                        onFailure:nil
-         ];
-    }
-    
-    // Reset the views
-    [self closeBookUsingBookView:bookView];
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {
@@ -345,6 +327,38 @@
             break;
         }
     }
+}
+
+- (void)pusherPlayDateFingerStart:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    
+    // Check if this user initiated the finger action
+    if ([[PTUser currentUser] userID] == playerId) {
+        return;
+    }
+    
+    // Add finger
+    NSInteger x = [[eventData objectForKey:@"x"] integerValue];
+    NSInteger y = [[eventData objectForKey:@"y"] integerValue];
+    CGPoint point = CGPointMake(x, y);
+    [self addFingerAtPoint:point];
+}
+
+- (void)pusherPlayDateFingerEnd:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    
+    // Check if this user initiated the finger action
+    if ([[PTUser currentUser] userID] == playerId) {
+        return;
+    }
+    
+    // Remove finger
+    NSInteger x = [[eventData objectForKey:@"x"] integerValue];
+    NSInteger y = [[eventData objectForKey:@"y"] integerValue];
+    CGPoint point = CGPointMake(x, y);
+    [self removeFingerAtPoint:point];
 }
 
 #pragma mark -
@@ -690,5 +704,82 @@
          ];
     }
 }
+
+- (void)bookPinchClose {
+    // Find opened book view
+    PTBookView *bookView = nil;
+    for (int i=0, l=[books count]; i<l; i++) {
+        if ([[(PTBookView *)[bookList objectAtIndex:i] getId] isEqualToNumber:currentBookId]) {
+            bookView = (PTBookView *)[bookList objectAtIndex:i];
+            break;
+        }
+    }
+    
+    // Notify server of book close
+    if (self.playdate) {
+        PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
+        [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                           bookId:[bookView getId]
+                                        authToken:[[PTUser currentUser] authToken]
+                                        onSuccess:nil
+                                        onFailure:nil
+        ];
+    }
+    
+    // Reset the views
+    [self closeBookUsingBookView:bookView];
+}
+
+- (void)fingerTouchStartedAtPoint:(CGPoint)point {
+    // Notify server
+    PTPlaydateFingerTapRequest *playdateFingerTapRequest = [[PTPlaydateFingerTapRequest alloc] init];
+    [playdateFingerTapRequest playdateFingerTapWithPlaydateId:[NSNumber numberWithInteger:self.playdate.playdateID]
+                                                        point:point
+                                                    authToken:[[PTUser currentUser] authToken]
+                                                    onSuccess:nil
+                                                    onFailure:nil
+    ];
+    
+    // Add finger
+    [self addFingerAtPoint:point];
+}
+
+- (void)fingerTouchEndedAtPoint:(CGPoint)point {
+    // Notify server
+    PTPlaydateFingerEndRequest *playdateFingerEndRequest = [[PTPlaydateFingerEndRequest alloc] init];
+    [playdateFingerEndRequest playdateFingerEndWithPlaydateId:[NSNumber numberWithInteger:self.playdate.playdateID]
+                                                        point:point
+                                                    authToken:[[PTUser currentUser] authToken]
+                                                    onSuccess:nil
+                                                    onFailure:nil
+    ];
+    
+    // Remove finger
+    [self removeFingerAtPoint:point];
+}
+
+#pragma mark -
+#pragma mark Grandma Finger
+
+- (void)addFingerAtPoint:(CGPoint)point {
+    // Create finger view
+    UIView *fingerView = [[UIView alloc] initWithFrame:CGRectMake(point.x-20.0f+pagesScrollView.frame.origin.x, point.y-20.0f+pagesScrollView.frame.origin.y, 40.0f, 40.0f)];
+    fingerView.layer.cornerRadius = 20.0f;
+    fingerView.layer.masksToBounds = YES;
+    fingerView.backgroundColor = [UIColor colorWithRed:0.0f green:(162.0f / 255.0f) blue:(206.0f / 255.0f) alpha:1.0f];
+    [fingerViews setObject:fingerView forKey:[NSValue valueWithCGPoint:point]];
+    
+    [self.view addSubview:fingerView];
+}
+
+- (void)removeFingerAtPoint:(CGPoint)point {
+    // Remove finger view
+    UIView *fingerView = [fingerViews objectForKey:[NSValue valueWithCGPoint:point]];
+    [fingerView removeFromSuperview];
+    
+    // Clear from memory
+    fingerView = nil;
+}
+
 
 @end

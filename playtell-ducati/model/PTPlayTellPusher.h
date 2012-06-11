@@ -23,5 +23,6 @@ extern NSString* const PTPlaydateKey;
 - (void)unsubscribeFromRendezvousChannel;
 - (void)subscribeToPlaydateChannel:(NSString *)channelName;
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName;
+- (void)emitEventNamed:(NSString *)name data:(id)data channel:(NSString *)channel;
 
 @end
