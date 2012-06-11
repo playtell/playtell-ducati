@@ -17,5 +17,6 @@
 @property (nonatomic, readwrite) NSString* username;
 @property (nonatomic, readwrite) NSURL* photoURL;
 @property (nonatomic, assign) NSUInteger userID;
+@property (nonatomic, retain) UIImage* userPhoto;
 
 @end

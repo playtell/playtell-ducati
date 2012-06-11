@@ -59,9 +59,23 @@
     // TODO need to decide if this is where the subscription should live...
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];
-    [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
+
+    // Retreive the photos for the playmates
+    UIImage* otherUserPhoto;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        otherUserPhoto = self.playdate.playmate.userPhoto;
+    } else {
+        otherUserPhoto = self.playdate.initiator.userPhoto;
+    }
+    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
+
+    // If either photo is nil, use the default placeholder
+    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+    otherUserPhoto = (otherUserPhoto) ? otherUserPhoto : [self placeholderImage];
+
+    [chatView setLoadingImageForLeftView:otherUserPhoto
                              loadingText:self.playdate.initiator.username];
-    [chatView setLoadingImageForRightView:[UIImage imageNamed:@"144.png"]];
+    [chatView setLoadingImageForRightView:myPhoto];
 
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
         NSLog(@"Session connected!");
@@ -93,6 +107,10 @@
             [chatView setLeftView:subscriber.view];
         }
     }];
+}
+
+- (UIImage*)placeholderImage {
+    return [UIImage imageNamed:@"profile_default_2.png"];
 }
 
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks {

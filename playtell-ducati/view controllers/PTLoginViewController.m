@@ -285,10 +285,12 @@ typedef void (^PTLoginFailureBlock) (NSError *);
         LogInfo(@"Login result: %@", result);
         NSString* token = [result valueForKey:@"token"];
         NSNumber* userID = [result valueForKey:@"user_id"];
+        NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
         [[PTUser currentUser] setUsername:aUsername];
         [[PTUser currentUser] setEmail:aUsername];
         [[PTUser currentUser] setAuthToken:token];
         [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
+        [[PTUser currentUser] setPhotoURL:photoURL];
         LogInfo(@"Current user: %@", [PTUser currentUser]);
         success(result);
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {

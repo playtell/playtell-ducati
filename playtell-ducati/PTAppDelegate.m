@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
 #import "PTBooksListRequest.h"
@@ -67,6 +68,18 @@
 
 - (void)runLoggedInWorkflow {
     PTUser* currentUser = [PTUser currentUser];
+
+    // Fetch the current users's photo
+    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:currentUser.photoURL];
+    AFImageRequestOperation* reqeust;
+    reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                success:^(UIImage *image)
+               {
+                   [[PTUser currentUser] setUserPhoto:image];
+               }];
+    [reqeust start];
+
+    
     PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
     [playmateFactory refreshPlaymatesForUserID:currentUser.userID
                                          token:currentUser.authToken

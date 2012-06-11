@@ -11,6 +11,7 @@
 #define PT_USERNAME_KEY @"kPTUsernameKey"
 #define PT_TOKEN_KEY    @"kPTTokenKey"
 #define PT_USER_ID_KEY  @"kPTUserIdKey"
+#define PT_PHOTO_URL_KEY @"kPTUserPhotoURLKey"
 
 @implementation PTUser
 
@@ -56,6 +57,16 @@ static PTUser* instance = nil;
 - (NSUInteger)userID {
     return [[NSUserDefaults standardUserDefaults] integerForKey:PT_USER_ID_KEY];
 }
+
+- (void)setPhotoURL:(NSURL *)photoURL {
+    [[NSUserDefaults standardUserDefaults] setURL:photoURL forKey:PT_PHOTO_URL_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSURL*)photoURL {
+    return [[NSUserDefaults standardUserDefaults] URLForKey:PT_PHOTO_URL_KEY];
+}
+
 
 - (NSString*)description {
     NSString* description = [super description];

@@ -54,6 +54,7 @@
         [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
         playmateButton.layer.cornerRadius = 10.0;
         playmateButton.clipsToBounds = YES;
+        aPlaymate.userPhoto = image;
     }];
     [reqeust start];
 

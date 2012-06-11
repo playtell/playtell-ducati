@@ -13,6 +13,7 @@
 @synthesize username;
 @synthesize userID;
 @synthesize photoURL;
+@synthesize userPhoto;
 
 // TODO: Need to route this through the dictionary initializer
 - (id)initWithEmail:(NSString*)anEmail username:(NSString*)aName userID:(NSUInteger)aUserID {
