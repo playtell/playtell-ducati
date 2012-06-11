@@ -20,8 +20,8 @@
     
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     playdateId, @"playdate_id",
-                                    point.x, @"x",
-                                    point.y, @"y",
+                                    [NSNumber numberWithFloat:point.x], @"x",
+                                    [NSNumber numberWithFloat:point.y], @"y",
                                     token, @"authentication_token",
                                     nil];
     
