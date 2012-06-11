@@ -34,6 +34,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @property (nonatomic, retain) NSArray* books;
+@property (nonatomic, retain) PTDateViewController* dateController;
 @end
 
 @implementation PTDialpadViewController
@@ -44,6 +45,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @synthesize requestedPlaydate;
 @synthesize cancelPlaydateRecognizer;
 @synthesize books;
+@synthesize dateController;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -132,15 +134,18 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
     // Initiate playdate request
+    [self joinPlaydate];
+
     PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
     [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
                                           authToken:[[PTUser currentUser] authToken]
                                           onSuccess:^(NSDictionary *result)
      {
          LogInfo(@"playdateCreateWithFriend response: %@", result);
-         self.requestedPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-         [self joinPlaydate];
+         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+         [self.dateController setPlaydate:aPlaydate];
+         self.dateController = nil;
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          LogError(@"playdateCreateWithFriend failed: %@", error);
      }
@@ -154,14 +159,17 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
 
     NSAssert(self.books, @"Book list cannot be nil before transitioning to dateController");
-    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                                  bundle:nil
-                                                                             andBookList:self.books];
-    [dateController setPlaydate:self.requestedPlaydate];
-    self.requestedPlaydate = nil;
-    
+    self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                 bundle:nil
+                                                            andBookList:self.books];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+
+    if (self.requestedPlaydate) {
+        [self.dateController setPlaydate:self.requestedPlaydate];
+        self.requestedPlaydate = nil;
+        self.dateController = nil;
+    }
 }
 
 - (NSString*)stringFromUInt:(NSUInteger)number {
