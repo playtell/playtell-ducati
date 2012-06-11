@@ -74,7 +74,9 @@
 
 - (void)setRequestingPlaydate {
     self.originalFrame = self.frame;
-    CGRect expandedFrame = CGRectInset(self.frame, -10, -10);
+    CGFloat expandedWidth = -0.2*CGRectGetWidth(self.frame);
+    CGFloat expandedHeight = -0.2*CGRectGetHeight(self.frame);
+    CGRect expandedFrame = CGRectInset(self.frame, expandedWidth, expandedHeight);
     self.frame = expandedFrame;
 }
 

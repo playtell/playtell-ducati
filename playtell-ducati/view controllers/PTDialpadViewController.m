@@ -192,7 +192,21 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 }
 
 - (void)activatePlaymateButton:(PTPlaymateButton*)button {
-    [self.scrollView bringSubviewToFront:button];
+    CGRect newFrame = [self.view convertRect:button.frame fromView:button.superview];
+    button.frame = newFrame;
+    [self.view addSubview:button];
+
+    UIView* backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
+    backgroundView.backgroundColor = [UIColor blackColor];
+    backgroundView.alpha = 0.0;
+    backgroundView.tag = 669;
+
+    [self.view insertSubview:backgroundView belowSubview:button];
+    [UIView animateWithDuration:0.7 animations:^{
+        backgroundView.alpha = 0.7;
+    }];
+
+//    [self.scrollView bringSubviewToFront:button];
     self.selectedButton = button;
     button.isActivated = YES;
 
@@ -224,7 +238,15 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     [self.selectedButton.layer removeAllAnimations];
     self.selectedButton.isActivated = NO;
     [self.selectedButton resetButton];
+
+    CGRect newFrame = [self.scrollView convertRect:self.selectedButton.frame fromView:self.view];
+    self.selectedButton.frame = newFrame;
+    [self.scrollView addSubview:self.selectedButton];
+    
     self.selectedButton = nil;
+
+    UIView* backgroundView = [self.view viewWithTag:669];
+    [backgroundView removeFromSuperview];
 
     self.cancelPlaydateRecognizer.enabled = NO;
 }
@@ -320,7 +342,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
 #pragma mark - UIGestureRecognizerDelegate methods
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    CGPoint touchLocation = [touch locationInView:self.scrollView];
+    CGPoint touchLocation = [touch locationInView:self.view];
 
     return !CGRectContainsPoint(self.selectedButton.frame, touchLocation);
 }
