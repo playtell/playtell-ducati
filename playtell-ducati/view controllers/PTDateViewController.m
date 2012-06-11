@@ -224,7 +224,7 @@
     LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
     [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     
-//    [[PTVideoPhone sharedPhone] disconnect];
+    [[PTVideoPhone sharedPhone] disconnect];
 }
 
 - (void)viewDidUnload {
