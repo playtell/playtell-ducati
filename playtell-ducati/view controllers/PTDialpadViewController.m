@@ -12,10 +12,10 @@
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaymate.h"
-#import "PTPlayTellPusher.h"
 #import "PTPlaymateButton.h"
 #import "PTUser.h"
 
@@ -29,6 +29,7 @@
 @property (nonatomic, retain) PTPlaymateButton* selectedButton;
 @property (nonatomic, retain) NSDictionary* userButtonHash;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
+@property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @end
 
 @implementation PTDialpadViewController
@@ -37,8 +38,29 @@
 @synthesize selectedButton;
 @synthesize userButtonHash;
 @synthesize requestedPlaydate;
+@synthesize cancelPlaydateRecognizer;
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    
+    UIView* background = [self.view viewWithTag:666];
+    CGRect backgroundFrame = self.view.frame;
+    backgroundFrame.origin = CGPointZero;
+    background.frame = backgroundFrame;
+    
+    [self drawPlaymates];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateRequestNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
+                                               object:nil];
+    if (self.selectedButton) {
+        [self deactivatePlaymateButton];
+    }
+}
 
 - (void)drawPlaymates {
+    // TODO : revist the naming of these variables...
     NSUInteger numPlaymates = self.playmates.count + 1;
     
     CGFloat margin = 70;
@@ -94,10 +116,6 @@
     NSLog(@"Number of rows: %u", numRows);
 }
 
-- (NSString*)stringFromUInt:(NSUInteger)number {
-    return [NSString stringWithFormat:@"%u", number];
-}
-
 - (void)playmateClicked:(PTPlaymateButton*)sender {
     // Initiate playdate request
     PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
@@ -116,13 +134,83 @@
     LogInfo(@"Requesting playdate...");
 }
 
-- (void)deactivatePlaymateButton:(PTPlaymateButton*)button {
-    [button resetButton];
-    [button.layer removeAllAnimations];
-    button.isActivated = NO;
-    button.transform = CGAffineTransformIdentity;
-    [[self.view.gestureRecognizers objectAtIndex:0] setEnabled:NO];
+- (void)joinPlaydate {
+    LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
+    // Unsubscribe from rendezvous channel
+    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    
+    // Load playdate
+    PTBooksListRequest* request = [[PTBooksListRequest alloc] init];
+    [request booksListWithAuthToken:[[PTUser currentUser] authToken]
+                          onSuccess:^(NSDictionary *result)
+     {
+         // TODO : I don't like diving into the results object here, this needs refactored
+         PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                                       bundle:nil
+                                                                                  andBookList:[result valueForKey:@"books"]];
+         [dateController setPlaydate:self.requestedPlaydate];
+         self.requestedPlaydate = nil;
+         
+         [self presentViewController:dateController animated:YES completion:nil];
+     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
+     }];
+}
+
+- (NSString*)stringFromUInt:(NSUInteger)number {
+    return [NSString stringWithFormat:@"%u", number];
+}
+
+- (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
+    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+    LogDebug(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
+    
+    if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
+        self.requestedPlaydate = playdate;
+        [self notifyUserOfPlaydate:playdate];
+    }
+}
+
+- (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
+    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:playdate.initiator.userID]];
+    [self activatePlaymateButton:button];
+}
+
+- (void)activatePlaymateButton:(PTPlaymateButton*)button {
+    [self.scrollView bringSubviewToFront:button];
+    self.selectedButton = button;
+    button.isActivated = YES;
+
+    [button removeTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        [button setRequestingPlaydate];
+    }];
+    [self shakeButton:button];
+
+    self.cancelPlaydateRecognizer.enabled = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
+    for (UIButton* button in buttons) {
+        [button removeFromSuperview];
+    }
+    self.userButtonHash = nil;
+}
+
+- (void)deactivatePlaymateButton {
+    self.selectedButton.transform = CGAffineTransformIdentity;
+    [self.selectedButton.layer removeAllAnimations];
+    self.selectedButton.isActivated = NO;
+    [self.selectedButton resetButton];
     self.selectedButton = nil;
+
+    self.cancelPlaydateRecognizer.enabled = NO;
 }
 
 - (void)loadView {
@@ -150,10 +238,10 @@
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
     [self.view addSubview:self.scrollView];
 
-    UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
-    [self.view addGestureRecognizer:recognizer];
-    recognizer.enabled = NO;
-    recognizer.delegate = self;
+    self.cancelPlaydateRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
+    [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
+    self.cancelPlaydateRecognizer.enabled = NO;
+    self.cancelPlaydateRecognizer.delegate = self;
 }
 
 - (UIFont*)welcomeTextFont {
@@ -162,7 +250,7 @@
 
 - (void)viewTapped:(UIGestureRecognizer*)recognizers {
     LOGMETHOD;
-    [self deactivatePlaymateButton:self.selectedButton];
+    [self deactivatePlaymateButton];
     PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
     [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:self.requestedPlaydate.playdateID]
                                                       authToken:[[PTUser currentUser] authToken]
@@ -170,96 +258,6 @@
                                                       onFailure:nil
      ];
     self.requestedPlaydate = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
-
-    UIView* background = [self.view viewWithTag:666];
-    CGRect backgroundFrame = self.view.frame;
-    backgroundFrame.origin = CGPointZero;
-    background.frame = backgroundFrame;
-
-    [self drawPlaymates];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(pusherDidReceivePlaydateRequestNotification:)
-                                                 name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
-                                               object:nil];
-    if (self.selectedButton) {
-        [self deactivatePlaymateButton:self.selectedButton];
-    }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
-    for (UIButton* button in buttons) {
-        [button removeFromSuperview];
-    }
-    self.userButtonHash = nil;
-}
-
-- (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
-    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
-    LogDebug(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
-
-    if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
-        self.requestedPlaydate = playdate;
-        [self notifyUserOfPlaydate:playdate];
-    }
-}
-
-- (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
-    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:playdate.initiator.userID]];
-    [self activatePlaymateButton:button];
-}
-
-- (void)activatePlaymateButton:(PTPlaymateButton*)button {
-    [[self.view.gestureRecognizers objectAtIndex:0] setEnabled:YES];
-    UIView* backgroundView = [self.view viewWithTag:666];
-    UIView* transparentView = [[UIView alloc] initWithFrame:backgroundView.frame];
-    transparentView.backgroundColor = [UIColor blackColor];
-    transparentView.alpha = 0.0;
-    transparentView.tag = 667;
-    //        [self.scrollView addSubview:transparentView];
-    [self.scrollView bringSubviewToFront:button];
-    self.selectedButton = button;
-    button.isActivated = YES;
-    [button removeTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [button addTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
-
-    [UIView animateWithDuration:0.5 animations:^{
-        [button setRequestingPlaydate];
-        transparentView.alpha = 0.7;
-    }];
-
-    [self shakeButton:button];
-}
-
-- (void)joinPlaydate {
-    LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
-    // Unsubscribe from rendezvous channel
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    
-    // Load playdate
-    PTBooksListRequest* request = [[PTBooksListRequest alloc] init];
-    [request booksListWithAuthToken:[[PTUser currentUser] authToken]
-                          onSuccess:^(NSDictionary *result)
-    {
-        // TODO : I don't like diving into the results object here, this needs refactored
-        PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                                      bundle:nil
-                                                                                 andBookList:[result valueForKey:@"books"]];
-        [dateController setPlaydate:self.requestedPlaydate];
-        self.requestedPlaydate = nil;
-
-        [self presentViewController:dateController animated:YES completion:nil];
-    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
-    }];
 }
 
 - (void)shakeButton:(PTPlaymateButton *)sender {
