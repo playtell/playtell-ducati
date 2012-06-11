@@ -372,12 +372,9 @@ typedef void (^PTLoginFailureBlock) (NSError *);
     self.scrollView.contentInset = contentInsets;
     self.scrollView.scrollIndicatorInsets = contentInsets;
 
-    CGRect aRect = self.view.frame;
-    aRect.size.height -= kbSize.height;
-    CGPoint origin = self.activeTextField.frame.origin;
-    origin.y -= scrollView.contentOffset.y;
-    CGPoint scrollPoint = CGPointMake(0.0, self.nicknameField.frame.origin.y-(aRect.size.height));
-    [scrollView setContentOffset:scrollPoint animated:YES];
+    // TODO : this is hardcoded to 180 pixels at the moment. Does it need to be more
+    // dynamic
+    [self.scrollView setContentOffset:CGPointMake(0, 180.0) animated:YES];
 }
 
 - (void)keyboardWillHide:(NSNotification*)keyboardNotification {

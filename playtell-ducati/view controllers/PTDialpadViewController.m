@@ -26,11 +26,15 @@
 
 #define kAnimationRotateDeg 1.0
 
+static BOOL viewHasAppearedAtLeastOnce = NO;
+
 @interface PTDialpadViewController ()
 @property (nonatomic, retain) PTPlaymateButton* selectedButton;
 @property (nonatomic, retain) NSDictionary* userButtonHash;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
+@property (nonatomic, retain) NSArray* books;
+@property (nonatomic, retain) PTDateViewController* dateController;
 @end
 
 @implementation PTDialpadViewController
@@ -40,6 +44,8 @@
 @synthesize userButtonHash;
 @synthesize requestedPlaydate;
 @synthesize cancelPlaydateRecognizer;
+@synthesize books;
+@synthesize dateController;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -56,6 +62,16 @@
                                                object:nil];
     if (self.selectedButton) {
         [self deactivatePlaymateButton];
+    }
+
+    // TODO this is a hack to get around the buttons animating in due to a detected
+    // rotation. Ultimately, I shouldn't be adding and removing buttons from the view every
+    // time it appears and disappears. It should be done at load only, since we don't have to
+    // worry about new playmates being added, for the time being.
+    if (viewHasAppearedAtLeastOnce) {
+        [self drawPlaymates];
+    } else {
+        viewHasAppearedAtLeastOnce = YES;
     }
 }
 
@@ -118,15 +134,18 @@
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
     // Initiate playdate request
+    [self joinPlaydate];
+
     PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
     [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
                                           authToken:[[PTUser currentUser] authToken]
                                           onSuccess:^(NSDictionary *result)
      {
          LogInfo(@"playdateCreateWithFriend response: %@", result);
-         self.requestedPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-         [self joinPlaydate];
+         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+         [self.dateController setPlaydate:aPlaydate];
+         self.dateController = nil;
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          LogError(@"playdateCreateWithFriend failed: %@", error);
      }
@@ -138,25 +157,19 @@
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
     // Unsubscribe from rendezvous channel
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    
-    // Load playdate
-    PTBooksListRequest* request = [[PTBooksListRequest alloc] init];
-    [request booksListWithAuthToken:[[PTUser currentUser] authToken]
-                          onSuccess:^(NSDictionary *result)
-     {
-         // TODO : I don't like diving into the results object here, this needs refactored
-         PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                                       bundle:nil
-                                                                                  andBookList:[result valueForKey:@"books"]];
-         [dateController setPlaydate:self.requestedPlaydate];
-         self.requestedPlaydate = nil;
 
-         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-         [appDelegate.transitionController transitionToViewController:dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-//         [self presentViewController:dateController animated:YES completion:nil];
-     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         LogError(@"%@ error:%@", NSStringFromSelector(_cmd), error);
-     }];
+    NSAssert(self.books, @"Book list cannot be nil before transitioning to dateController");
+    self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                 bundle:nil
+                                                            andBookList:self.books];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+
+    if (self.requestedPlaydate) {
+        [self.dateController setPlaydate:self.requestedPlaydate];
+        self.requestedPlaydate = nil;
+        self.dateController = nil;
+    }
 }
 
 - (NSString*)stringFromUInt:(NSUInteger)number {
@@ -198,6 +211,11 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
+    for (UIButton* button in buttons) {
+        [button removeFromSuperview];
+    }
+
     self.userButtonHash = nil;
 }
 
@@ -242,15 +260,21 @@
     self.cancelPlaydateRecognizer.delegate = self;
 
     [self drawPlaymates];
+
+    self.books = nil;
+    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
+    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
+                               onSuccess:^(NSDictionary *result)
+    {
+        // TODO : I don't like diving into the results object here, this needs refactored
+        self.books = [result valueForKey:@"books"];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        LogError(@"Failed to fetch books list: %@", error);
+    }];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-
-    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
-    for (UIButton* button in buttons) {
-        [button removeFromSuperview];
-    }
 }
 
 - (UIFont*)welcomeTextFont {

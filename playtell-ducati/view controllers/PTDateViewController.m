@@ -35,6 +35,66 @@
 
 @synthesize closeBookButton, playdate;
 
+- (void)setPlaydate:(PTPlaydate *)aPlaydate {
+    LogDebug(@"Setting playdate");
+    NSAssert(playdate == nil, @"Playdate already set");
+
+    playdate = aPlaydate;
+    [self wireUpwireUpPlaydateConnections];
+}
+
+- (void)wireUpwireUpPlaydateConnections {
+    NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
+    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
+    
+    // Notify server (and thus, the initiator) that we joined the playdate
+    PTPlaydateJoinedRequest *playdateJoinedRequest = [[PTPlaydateJoinedRequest alloc] init];
+    [playdateJoinedRequest playdateJoinedWithPlaydate:[NSNumber numberWithInteger:self.playdate.playdateID]
+                                            authToken:[[PTUser currentUser] authToken]
+                                            onSuccess:nil
+                                            onFailure:nil
+     ];
+    
+    // Subscribe to playdate channel
+    // TODO need to decide if this is where the subscription should live...
+    PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:chatView];
+    [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
+                             loadingText:self.playdate.initiator.username];
+    [chatView setLoadingImageForRightView:[UIImage imageNamed:@"144.png"]];
+
+    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
+        NSLog(@"Session connected!");
+    }];
+    
+    NSString* myToken;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        LogInfo(@"Current user is initator");
+        myToken = playdate.initiatorTokboxToken;
+    } else {
+        LogInfo(@"Current user is NOT initiator");
+        myToken = playdate.playmateTokboxToken;
+    }
+    
+    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
+                                       withToken:myToken
+                                         success:^(OTPublisher *publisher)
+     {
+         NSLog(@"Inside session connection block");
+         if (publisher.publishVideo) {
+             [chatView setRightView:publisher.view];
+         }
+     } failure:^(NSError *error) {
+         NSLog(@"Inside session failure block");
+     }];
+    
+    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
+        if (subscriber.stream.hasVideo) {
+            [chatView setLeftView:subscriber.view];
+        }
+    }];
+}
+
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks {
     // Parse all books into format we need
     books = [[NSMutableDictionary alloc] init];
@@ -109,56 +169,6 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    // Subscribe to playdate channel
-    // TODO need to decide if this is where the subscription should live...
-    NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
-    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
-    
-    // Notify server (and thus, the initiator) that we joined the playdate
-    PTPlaydateJoinedRequest *playdateJoinedRequest = [[PTPlaydateJoinedRequest alloc] init];
-    [playdateJoinedRequest playdateJoinedWithPlaydate:[NSNumber numberWithInteger:self.playdate.playdateID]
-                                            authToken:[[PTUser currentUser] authToken]
-                                            onSuccess:nil
-                                            onFailure:nil
-    ];
-
-    PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:chatView];
-    [chatView setLoadingImageForLeftView:[UIImage imageNamed:@"144.png"]
-                             loadingText:self.playdate.initiator.username];
-    [chatView setLoadingImageForRightView:[UIImage imageNamed:@"144.png"]];
-
-    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
-        NSLog(@"Session connected!");
-    }];
-
-    NSString* myToken;
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator");
-        myToken = playdate.initiatorTokboxToken;
-    } else {
-        LogInfo(@"Current user is NOT initiator");
-        myToken = playdate.playmateTokboxToken;
-    }
-
-    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
-                                       withToken:myToken
-                                         success:^(OTPublisher *publisher)
-    {
-        NSLog(@"Inside session connection block");
-        if (publisher.publishVideo) {
-            [chatView setRightView:publisher.view];
-        }
-    } failure:^(NSError *error) {
-        NSLog(@"Inside session failure block");
-    }];
-
-    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
-        if (subscriber.stream.hasVideo) {
-            [chatView setLeftView:subscriber.view];
-        }
-    }];
-    
     // Reset webview loading status
     isWebViewLoading = NO;
 }
@@ -174,13 +184,15 @@
     }
 
     // Notify server of book close
-    PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
-    [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                       bookId:[bookView getId]
-                                    authToken:[[PTUser currentUser] authToken]
-                                    onSuccess:nil
-                                    onFailure:nil
-    ];
+    if (self.playdate) {
+        PTBookCloseRequest *bookCloseRequest = [[PTBookCloseRequest alloc] init];
+        [bookCloseRequest closeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                           bookId:[bookView getId]
+                                        authToken:[[PTUser currentUser] authToken]
+                                        onSuccess:nil
+                                        onFailure:nil
+         ];
+    }
     
     // Reset the views
     [self closeBookUsingBookView:bookView];
@@ -210,12 +222,14 @@
     [self disconnectPuhserAndChat];
     
     // Notify server of disconnect
-    PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
-    [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                                      authToken:[[PTUser currentUser] authToken]
-                                                      onSuccess:nil
-                                                      onFailure:nil
-    ];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:nil
+                                                          onFailure:nil
+         ];
+    }
 
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
@@ -225,10 +239,12 @@
 - (void)disconnectPuhserAndChat {
     // Unsubscribe from playdate channel
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
+    if (self.playdate) {
+        LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
+    }
     
-//    [[PTVideoPhone sharedPhone] disconnect];
+    [[PTVideoPhone sharedPhone] disconnect];
 }
 
 - (void)viewDidUnload {
@@ -579,14 +595,16 @@
         [self beginBookPageLoading];
         
         // Notify server of book
-        PTBookChangeRequest *bookChangeRequest = [[PTBookChangeRequest alloc] init];
-        [bookChangeRequest changeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                             bookId:currentBookId
-                                         pageNumber:[NSNumber numberWithInt:1]
-                                          authToken:[[PTUser currentUser] authToken]
-                                          onSuccess:nil
-                                          onFailure:nil
-         ];
+        if (self.playdate) {
+            PTBookChangeRequest *bookChangeRequest = [[PTBookChangeRequest alloc] init];
+            [bookChangeRequest changeBookWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                 bookId:currentBookId
+                                             pageNumber:[NSNumber numberWithInt:1]
+                                              authToken:[[PTUser currentUser] authToken]
+                                              onSuccess:nil
+                                              onFailure:nil
+             ];
+        }
     }
 }
 
@@ -660,15 +678,17 @@
     [self beginBookPageLoading];
     
     // Notify server of new page turn
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    NSNumber *pageNum = [book objectForKey:@"current_page"];
-    PTPageTurnRequest *pageTurnRequest = [[PTPageTurnRequest alloc] init];
-    [pageTurnRequest pageTurnWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                 pageNumber:pageNum
-                                  authToken:[[PTUser currentUser] authToken]
-                                  onSuccess:nil
-                                  onFailure:nil
-    ];
+    if (self.playdate) {
+        NSMutableDictionary *book = [books objectForKey:currentBookId];
+        NSNumber *pageNum = [book objectForKey:@"current_page"];
+        PTPageTurnRequest *pageTurnRequest = [[PTPageTurnRequest alloc] init];
+        [pageTurnRequest pageTurnWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                     pageNumber:pageNum
+                                      authToken:[[PTUser currentUser] authToken]
+                                      onSuccess:nil
+                                      onFailure:nil
+         ];
+    }
 }
 
 @end
