@@ -57,6 +57,9 @@
     if (self.selectedButton) {
         [self deactivatePlaymateButton];
     }
+
+    
+    [self drawPlaymates];
 }
 
 - (void)drawPlaymates {
@@ -198,6 +201,11 @@
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
+    for (UIButton* button in buttons) {
+        [button removeFromSuperview];
+    }
+
     self.userButtonHash = nil;
 }
 
@@ -240,17 +248,10 @@
     [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
-
-    [self drawPlaymates];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-
-    NSArray* buttons = [NSArray arrayWithArray:[self.userButtonHash allValues]];
-    for (UIButton* button in buttons) {
-        [button removeFromSuperview];
-    }
 }
 
 - (UIFont*)welcomeTextFont {

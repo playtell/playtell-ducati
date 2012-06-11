@@ -25,7 +25,4 @@
 @property (strong, nonatomic) TransitionController *transitionController;
 @property (strong, nonatomic) PTDialpadViewController *dialpadController;
 
-- (void)transitionToViewController:(UIViewController *)viewController
-                    withTransition:(UIViewAnimationOptions)transition;
-
 @end
