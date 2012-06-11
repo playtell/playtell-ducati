@@ -26,6 +26,8 @@
 
 #define kAnimationRotateDeg 1.0
 
+static BOOL viewHasAppearedAtLeastOnce = NO;
+
 @interface PTDialpadViewController ()
 @property (nonatomic, retain) PTPlaymateButton* selectedButton;
 @property (nonatomic, retain) NSDictionary* userButtonHash;
@@ -58,8 +60,15 @@
         [self deactivatePlaymateButton];
     }
 
-    
-    [self drawPlaymates];
+    // TODO this is a hack to get around the buttons animating in due to a detected
+    // rotation. Ultimately, I shouldn't be adding and removing buttons from the view every
+    // time it appears and disappears. It should be done at load only, since we don't have to
+    // worry about new playmates being added, for the time being.
+    if (viewHasAppearedAtLeastOnce) {
+        [self drawPlaymates];
+    } else {
+        viewHasAppearedAtLeastOnce = YES;
+    }
 }
 
 - (void)drawPlaymates {
@@ -248,6 +257,8 @@
     [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
+
+    [self drawPlaymates];
 }
 
 - (void)viewDidUnload {
