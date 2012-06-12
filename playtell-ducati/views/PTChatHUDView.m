@@ -121,6 +121,30 @@
     self.leftImageView.frame = imageViewFrame;
     [self.leftImageView setImage:anImage];
 
+    UIView* alphaView = [[UIView alloc] initWithFrame:self.leftImageView.bounds];
+    alphaView.backgroundColor = [UIColor whiteColor];
+    alphaView.alpha = 0.7;
+    [self.leftImageView addSubview:alphaView];
+
+    UIView* spinningCrank = [self createWaitingView];
+    spinningCrank.tag = SPINNER_VIEW_TAG;
+    spinningCrank.center = self.leftImageView.center;
+    [self.leftImageView addSubview:spinningCrank];
+    CGSize maxTextSize = CGSizeMake(PTCHATVIEW_SUBVIEW_WIDTH, PTCHATVIEW_SUBVIEW_HEIGHT/4.0);
+    CGSize computedLabelSize = [text sizeWithFont:[[self class] nameFont]
+                                constrainedToSize:maxTextSize];
+    
+    CGFloat labelOriginX = CGRectGetMidX(self.leftImageView.bounds) - computedLabelSize.width/2.0;
+    CGFloat labelOriginY = CGRectGetHeight(self.leftImageView.bounds) - computedLabelSize.height;
+    UILabel* nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(labelOriginX, labelOriginY,
+                                                                   computedLabelSize.width, computedLabelSize.height)];
+    nameLabel.font = [[self class] nameFont];
+    nameLabel.text = text;
+    nameLabel.backgroundColor = [UIColor clearColor];
+    nameLabel.textColor = [UIColor blackColor];
+    nameLabel.tag = NAME_VIEW_TAG;
+    [self.leftImageView addSubview:nameLabel];
+    
     [self.theLeftView addSubview:self.leftImageView];
     [innerView addSubview:self.theLeftView];
 }

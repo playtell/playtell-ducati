@@ -9,6 +9,7 @@
 #import "Logging.h"
 #import "PTAppDelegate.h"
 #import "PTBooksListRequest.h"
+#import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
@@ -73,6 +74,36 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     } else {
         viewHasAppearedAtLeastOnce = YES;
     }
+
+    // Check now for any pending playdates, and register to be notified
+    // when we come back to life if any were received while sleeping
+    [self checkForPendingPlaydatesAndNotifyUser];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
+}
+
+- (void)checkForPendingPlaydatesAndNotifyUser {
+    // Check for any existing playdates
+    PTUser* currentUser = [PTUser currentUser];
+    PTCheckForPlaydateRequest* request = [[PTCheckForPlaydateRequest alloc] init];
+    [request checkForExistingPlaydateForUser:currentUser.userID
+                                   authToken:currentUser.authToken
+                             playmateFactory:[PTConcretePlaymateFactory sharedFactory]
+                                     success:^(PTPlaydate *playdate)
+     {
+         // TODO : need to refactor this and pusherDidReceivePlaydateRequestNotification: into
+         // the same methods
+         LogDebug(@"%@ received playdate on check: %@", NSStringFromSelector(_cmd), playdate);
+         self.requestedPlaydate = playdate;
+         [self notifyUserOfPlaydate:playdate];
+     } failure:nil];
+}
+
+- (void)checkForPendingPlaydateOnForegrounding:(NSNotification*)note {
+    [self checkForPendingPlaydatesAndNotifyUser];
 }
 
 - (void)drawPlaymates {
@@ -231,6 +262,10 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     }
 
     self.userButtonHash = nil;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationWillEnterForegroundNotification
+                                                  object:nil];
 }
 
 - (void)deactivatePlaymateButton {

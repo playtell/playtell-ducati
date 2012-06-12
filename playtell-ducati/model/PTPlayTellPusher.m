@@ -35,6 +35,10 @@ static PTPlayTellPusher* instance = nil;
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
         instance = [[PTPlayTellPusher alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:instance
+                                                 selector:@selector(disconnectPusherWhenEnteringBackground:)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
     }
     return instance;
 }
@@ -146,6 +150,25 @@ static PTPlayTellPusher* instance = nil;
      ];
 }
 
+- (void)disconnectPusherWhenEnteringBackground:(NSNotification*)note {
+    __block UIBackgroundTaskIdentifier taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:taskID];
+    }];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reconnectPusherWhenEnteringForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    [self.pusherClient disconnect];
+}
+
+- (void)reconnectPusherWhenEnteringForeground:(NSNotificationCenter*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationWillEnterForegroundNotification
+                                                  object:nil];
+    [self.pusherClient connect];
+}
+
 #pragma mark PTPusherDelegate methods
 - (void)pusher:(PTPusher *)pusher willAuthorizeChannelWithRequest:(NSMutableURLRequest *)request {
     NSString* headers = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
@@ -170,6 +193,26 @@ static PTPlayTellPusher* instance = nil;
 
 - (void)pusher:(PTPusher *)pusher didReceiveErrorEvent:(PTPusherErrorEvent *)errorEvent {
     LOGMETHOD;
+}
+
+- (void)pusher:(PTPusher *)pusher connectionDidConnect:(PTPusherConnection *)connection {
+    LOGMETHOD;
+}
+
+- (void)pusher:(PTPusher *)pusher connectionDidDisconnect:(PTPusherConnection *)connection {
+    LOGMETHOD;
+}
+
+- (void)pusher:(PTPusher *)pusher connection:(PTPusherConnection *)connection didDisconnectWithError:(NSError *)error {
+    LOGMETHOD;
+    if (error) {
+        LogError(@"%@", error);
+    }
+}
+
+- (void)pusher:(PTPusher *)pusher connection:(PTPusherConnection *)connection failedWithError:(NSError *)error {
+    LOGMETHOD;
+    LogError(@"%@", error);
 }
 
 #pragma mark PTPusherPresenceChannelDelegate methods
