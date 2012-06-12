@@ -72,6 +72,7 @@
     [coverOut setActions:layerActions];
     [coverOut setShouldRasterize:YES];
     [cover addSublayer:coverOut];
+    coverOut.contents = (id)[UIImage imageNamed:@"cover_loading.png"].CGImage;
 
     // Cover - in
     coverIn = [CALayer layer];

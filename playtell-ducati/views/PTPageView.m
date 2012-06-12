@@ -78,10 +78,6 @@
     left_back.zPosition = -0.1;
     [left_back setMasksToBounds:NO];
     [left_back setActions:layerActions];
-//    left_back.shadowColor = [UIColor blackColor].CGColor;
-//    left_back.shadowOpacity = 0.1f;
-//    left_back.shadowOffset = CGSizeMake(0.0f, 0.0f);
-//    left_back.shadowRadius = 1.0f;
     [left_back setShouldRasterize:YES];
     [left addSublayer:left_back];
     
@@ -93,15 +89,15 @@
     right.zPosition = -50;
     [right setMasksToBounds:NO];
     [right setActions:layerActions];
-//    right.shadowColor = [UIColor blackColor].CGColor;
-//    right.shadowOpacity = 0.1f;
-//    right.shadowOffset = CGSizeMake(0.0f, 0.0f);
-//    right.shadowRadius = 1.0f;
     [right setShouldRasterize:YES];
     
     // Add sublayers
     [rootLayer addSublayer:left];
     [rootLayer addSublayer:right];
+    
+    // Set initial 'loading' view
+    UIImage *loadingImage = [UIImage imageNamed:@"page_loading.png"];
+    [self setPageContentsWithImage:loadingImage];
 }
 
 - (void)open {

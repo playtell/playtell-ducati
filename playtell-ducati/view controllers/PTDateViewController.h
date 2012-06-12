@@ -27,13 +27,10 @@
     BOOL isBookOpen;
     NSMutableArray *coversToLoad;
     NSInteger coversToLoadIndex;
-    NSMutableArray *firstPagesToLoad;
-    NSInteger firstPagesToLoadIndex;
     
     // Pages
     PTPagesScrollView *pagesScrollView;
     NSMutableArray *pagesToLoad;
-    NSInteger pagesToLoadIndex;
     NSInteger currentPage;
     
     // Page loader
