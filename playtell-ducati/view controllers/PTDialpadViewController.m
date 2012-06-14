@@ -164,6 +164,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 }
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
+    LOGMETHOD;
     // Initiate playdate request
     [self joinPlaydate];
 
@@ -277,7 +278,10 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     CGRect newFrame = [self.scrollView convertRect:self.selectedButton.frame fromView:self.view];
     self.selectedButton.frame = newFrame;
     [self.scrollView addSubview:self.selectedButton];
-    
+
+    [self.selectedButton removeTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
+    [self.selectedButton addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
+
     self.selectedButton = nil;
 
     UIView* backgroundView = [self.view viewWithTag:669];
