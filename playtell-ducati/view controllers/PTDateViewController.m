@@ -10,6 +10,8 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTCheckForPlaydateRequest.h"
+#import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
@@ -198,24 +200,55 @@
     // Reset webview loading status
     isWebViewLoading = NO;
 
+    // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
+    // notifications at the time of backgrounding.
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didEnterBackground:)
+                                             selector:@selector(dateControllerDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
-    LOGMETHOD;
 }
 
-- (void)didEnterBackground:(NSNotification*)note {
+- (void)dateControllerDidEnterBackground:(NSNotification*)note {
+    
+    // Subscribe to foregrounding changes. The date controller will need to check the validity
+    // of the current playdate any time it re-enters the foreground (as the playmate may have
+    // terminated the playdate in the interim).
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(willEnterForeground:)
+                                             selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
 }
 
-- (void)willEnterForeground:(NSNotification*)note {
+- (void)dateControllerWillEnterForeground:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationWillEnterForegroundNotification
                                                   object:nil];
+
+    // When the view controller enters the foreground, the playdate is checked
+    // for existence. It's possible the other end hung up while the application
+    // was in the background. This call is to ensure the playdate is still valid.
+    PTCheckForPlaydateRequest *request = [[PTCheckForPlaydateRequest alloc] init];
+    [request checkForExistingPlaydateForUser:[[PTUser currentUser] userID]
+                                   authToken:[[PTUser currentUser] authToken]
+                             playmateFactory:[PTConcretePlaymateFactory sharedFactory]
+                                     success:nil
+                                     failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+    {
+        // TODO : This is a temporary solution. The server is currently only returning
+        // a status code of 0 when there isn't an active playdate. Commenting this out
+        // until the issue is fixed.
+//        if (response.statusCode == 100 || response.statusCode == 101) {
+//            LogInfo(@"Playdate terminated by user, going back to dialpad");
+//            [self disconnectPuhserAndChat];
+//            
+//            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//            [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
+//                                                             withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+//        } else {
+//            LogDebug(@"Received status code %i from server", response.statusCode);
+//        }
+        [self disconnectAndTransitionToDialpad];
+    }];
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {
@@ -238,9 +271,7 @@
     }
 }
 
-- (IBAction)playdateDisconnect:(id)sender {
-    [self disconnectPuhserAndChat];
-    
+- (IBAction)playdateDisconnect:(id)sender {    
     // Notify server of disconnect
     if (self.playdate) {
         PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
@@ -251,12 +282,18 @@
          ];
     }
 
+    [self disconnectAndTransitionToDialpad];
+}
+
+- (void)disconnectAndTransitionToDialpad {
+    [self disconnectPusherAndChat];
+    
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
-- (void)disconnectPuhserAndChat {
+- (void)disconnectPusherAndChat {
     // Unsubscribe from playdate channel
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (self.playdate) {
@@ -303,11 +340,7 @@
 - (void)pusherPlayDateEndPlaydate:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSLog (@"PlayDateEndPlaydate -> %@", eventData);
-    [self disconnectPuhserAndChat];
-
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    [self disconnectAndTransitionToDialpad];
 }
 
 - (void)pusherPlayDateCloseBook:(NSNotification *)notification {
