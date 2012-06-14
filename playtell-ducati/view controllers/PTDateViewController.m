@@ -184,6 +184,7 @@
     
     // Start loading book covers
     [self loadBookCovers];
+    isPageViewLoading = NO;
     
     // Start listening to pusher notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
@@ -711,11 +712,6 @@
 }
 
 - (void)beginBookPageLoading {
-    //NSLog(@"beginBookPageLoading");
-    // Stop any current page loads
-    [webView stopLoading];
-    isWebViewLoading = NO;
-    
     // Setup loading of pages for book
     NSMutableDictionary *book = [books objectForKey:currentBookId];
     currentPage = [[book objectForKey:@"current_page"] intValue];
@@ -725,7 +721,7 @@
     pagesToLoad = nil;
     pagesToLoad = [[NSMutableArray alloc] initWithCapacity:7];
     // Check if the page already has content
-    PTPageView *pageView = (PTPageView *)[pagesScrollView.subviews objectAtIndex:(currentPage-1)];
+    PTPageView *pageView = [pagesScrollView getPageViewAtPageNumber:currentPage];
     if (!pageView.hasContent) {
         [pagesToLoad addObject:[NSNumber numberWithInt:currentPage]];
     }
@@ -733,7 +729,7 @@
         // Go X pages forward
         if ((currentPage+i) <= totalPages) {
             // Check if the page already has content
-            pageView = (PTPageView *)[pagesScrollView.subviews objectAtIndex:(currentPage+i-1)];
+            pageView = [pagesScrollView getPageViewAtPageNumber:(currentPage+i)];
             if (!pageView.hasContent) {
                 [pagesToLoad addObject:[NSNumber numberWithInt:(currentPage+i)]];
             }
@@ -741,7 +737,7 @@
         // Go X pages backward
         if ((currentPage-i) > 0) {
             // Check if the page already has content
-            pageView = (PTPageView *)[pagesScrollView.subviews objectAtIndex:(currentPage-i-1)];
+            pageView = [pagesScrollView getPageViewAtPageNumber:(currentPage-i)];
             if (!pageView.hasContent) {
                 [pagesToLoad addObject:[NSNumber numberWithInt:(currentPage-i)]];
             }
@@ -749,11 +745,12 @@
     }
     
     // Start page loading
-    if ([pagesToLoad count] > 0 && isWebViewLoading == NO) {
-        //NSLog(@"Loading more pages: %@", pagesToLoad);
+    if ([pagesToLoad count] > 0 && isPageViewLoading == NO) {
+        isPageViewLoading = YES;
         NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
         [pagesToLoad removeObjectAtIndex:0];
-        [self loadPageFromFileOrURLWithPageNumber:pageNumber];
+        pageView = [pagesScrollView getPageViewAtPageNumber:pageNumber];
+        [pageView loadPage];
     }
 }
 
@@ -776,6 +773,17 @@
                                       onSuccess:nil
                                       onFailure:nil
          ];
+    }
+}
+
+- (void)pageLoaded:(NSInteger)number {
+    isPageViewLoading = NO;
+    if ([pagesToLoad count] > 0) {
+        isPageViewLoading = YES;
+        NSInteger pageNumber = [[pagesToLoad objectAtIndex:0] intValue];
+        [pagesToLoad removeObjectAtIndex:0];
+        PTPageView *pageView = [pagesScrollView getPageViewAtPageNumber:pageNumber];
+        [pageView loadPage];
     }
 }
 
@@ -837,6 +845,7 @@
     // Remove finger
     //[self removeFingerAtPoint:point];
 }
+
 
 #pragma mark -
 #pragma mark Grandma Finger

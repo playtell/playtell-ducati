@@ -34,7 +34,6 @@
     // Make sure to keep all pages from scrolling (keep them centered)
     CGFloat x = self.contentOffset.x;
     CGFloat page = x / pageSize.width + 1.0f;
-    //NSLog(@"X: %.2f        Page: %.2f", x, page);
     for (PTPageView *pageView in self.subviews) {
         if ([pageView isKindOfClass:[UIImageView class]]) { // Skip the image view that's inside the scroll view by default
             continue;
@@ -55,7 +54,6 @@
     currentPage = page;
 
     // Navigate scrollview to right page
-    //NSLog(@"Navigating to: %.2f", self.frame.size.width * (currentPage - 1));
     [self setContentOffset:CGPointMake(self.frame.size.width * (currentPage - 1), 0.0f) animated:![self isHidden]];
 }
 
@@ -70,17 +68,19 @@
 
     // Get book's current page
     currentPage = [[book objectForKey:@"current_page"] intValue];
-    //currentPage = 1; // Currently, always starting from first page
 
     // Delete all current page views
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // Create new pages
-    int totalPages = [[book objectForKey:@"total_pages"] intValue];;
+    int totalPages = [[book objectForKey:@"total_pages"] intValue];
+    pages = [[NSMutableArray alloc] initWithCapacity:totalPages];
+    
     for (int i=0; i<totalPages; i++) {
-        PTPageView *page = [[PTPageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 800.0f, 600.0f) andPageNumber:(i + 1)];
+        PTPageView *page = [[PTPageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 800.0f, 600.0f) book:book pageNumber:(i + 1)];
         [page setDelegate:pagesScrollDelegate]; // Pass the PTDateViewController as a delegate to page view
         [self addSubview:page];
+        [pages addObject:page];
     }
     [self setContentSize:CGSizeMake(totalPages * 800.0f, 0.0f)];
     [self setContentOffset:CGPointMake(0.0f, 0.0f)];
@@ -90,8 +90,16 @@
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    //NSLog(@"scrollViewDidEndScrollingAnimation, pos: %.2f", self.bounds.origin.x);
     [self layoutSubviews];
+}
+
+- (PTPageView *)getPageViewAtPageNumber:(NSInteger)pageNumber {
+    NSInteger index = pageNumber - 1;
+    if (index > [pages count]) {
+        return nil;
+    }
+    
+    return [pages objectAtIndex:index];
 }
 
 @end

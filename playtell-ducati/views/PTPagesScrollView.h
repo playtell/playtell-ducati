@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@protocol PTPagesScrollViewDelegate;
+#import "PTPageView.h"
+#import "PTPagesScrollViewDelegate.h"
 
 @interface PTPagesScrollView : UIScrollView <UIScrollViewDelegate> {
     NSInteger currentPage;
     CGSize pageSize;
     id<PTPagesScrollViewDelegate> pagesScrollDelegate;
     NSMutableDictionary *book;
+    NSMutableArray *pages;
 }
 
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> pagesScrollDelegate;
@@ -22,14 +23,6 @@
 
 - (void)navigateToPage:(NSInteger)page;
 - (void)setCurrentBook:(NSMutableDictionary *)bookData;
+- (PTPageView *)getPageViewAtPageNumber:(NSInteger)pageNumber;
 
-@end
-
-// Delegate definition
-@protocol PTPagesScrollViewDelegate
-@optional
-- (void)pageTurnedTo:(NSInteger)number;
-- (void)bookPinchClose;
-- (void)fingerTouchStartedAtPoint:(CGPoint)point;
-- (void)fingerTouchEndedAtPoint:(CGPoint)point;
 @end

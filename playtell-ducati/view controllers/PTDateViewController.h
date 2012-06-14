@@ -36,6 +36,7 @@
     // Page loader
     UIWebView *webView;
     BOOL isWebViewLoading;
+    BOOL isPageViewLoading;
     
     // Fingers
     NSMutableDictionary *fingerViews;
