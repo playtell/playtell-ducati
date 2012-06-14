@@ -12,10 +12,11 @@
 
 @synthesize delegate, hasContent;
 
-- (id)initWithFrame:(CGRect)frame andPageNumber:(NSInteger)number {
+- (id)initWithFrame:(CGRect)frame book:(NSMutableDictionary *)bookData pageNumber:(NSInteger)number {
     self = [super initWithFrame:frame];
     if (self) {
         [self initLayers];
+        book = bookData;
         pageNumber = number;
         self.layer.zPosition = currentPage - (pageNumber - 1);
         hasContent = NO;
@@ -436,6 +437,81 @@
     } else if (longPressRecognizer.state == UIGestureRecognizerStateEnded) {
         [delegate fingerTouchEndedAtPoint:fingerPoint];
     }
+}
+
+#pragma -
+#pragma mark Webview handlers/delegates
+
+- (void)loadPage {
+    NSString *imagePath = [self imagePathForBook];
+    UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+    if (image) {
+        // Send the image to page
+        [self setPageContentsWithImage:image];
+
+        // Notify delegate of page load
+        [delegate pageLoaded:pageNumber];
+    } else {
+        NSMutableArray *pages = [book objectForKey:@"pages"];
+
+        // Webview
+        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0f, 1024.0f, 800.0f, 600.0f)]; // Load off screen
+        webView.delegate = self;
+        [self addSubview:webView];
+        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber - 1)]]]];
+    }
+}
+
+- (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSString *requestString = [[request URL] absoluteString];
+    NSArray *components = [requestString componentsSeparatedByString:@":"];
+    
+    // Check if JavaScript said web page has been loaded and render it to bitmap
+    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
+        // Render page view to bitmap
+        [self convertWebViewToBitmap];
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (void)convertWebViewToBitmap {
+    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
+        
+        // Generate bitmaps
+        UIGraphicsBeginImageContext(webView.bounds.size);
+        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
+            // Cache image locally
+            NSString *imagePath = [self imagePathForBook];
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+            [imageData writeToFile:imagePath atomically:YES];
+        });
+        
+        dispatch_async(dispatch_get_main_queue(), ^() {
+            // Clear webview instance
+            [webView removeFromSuperview];
+            webView = nil;
+            
+            // Send the image to page
+            [self setPageContentsWithImage:image];
+            
+            // Notify delegate of page load
+            [delegate pageLoaded:pageNumber];
+        });
+    });
+}
+
+- (NSString *)imagePathForBook {
+    NSNumber *bookId = [book objectForKey:@"id"];
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [documentDirectories objectAtIndex:0];
+    return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
 }
 
 @end

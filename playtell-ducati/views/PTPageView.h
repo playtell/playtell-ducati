@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-#import "PTPagesScrollView.h"
+#import "PTPagesScrollViewDelegate.h"
 
-@interface PTPageView : UIView <UIGestureRecognizerDelegate> {
+@interface PTPageView : UIView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
+    NSMutableDictionary *book;
     NSInteger pageNumber;
     NSMutableDictionary *layerActions;
     CALayer *rootLayer;
@@ -26,16 +27,19 @@
     
     id<PTPagesScrollViewDelegate> delegate;
     CGPoint fingerPoint;
+    
+    UIWebView *webView;
 }
 
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> delegate;
 @property (nonatomic) BOOL hasContent;
 
-- (id)initWithFrame:(CGRect)frame andPageNumber:(NSInteger)number;
+- (id)initWithFrame:(CGRect)frame book:(NSMutableDictionary *)bookData pageNumber:(NSInteger)number;
 - (void)setCurrentPage:(CGFloat)page andForceOpen:(BOOL)forceOpen;
 - (void)open;
 - (void)setPageContentsWithImage:(UIImage *)image;
 - (id)getLeftContent;
 - (id)getRightContent;
+- (void)loadPage;
 
 @end

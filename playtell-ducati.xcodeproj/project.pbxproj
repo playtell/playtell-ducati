@@ -287,6 +287,7 @@
 		2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDisconnectRequest.h; sourceTree = "<group>"; };
 		2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDisconnectRequest.m; sourceTree = "<group>"; };
 		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
+		232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPagesScrollViewDelegate.h; sourceTree = "<group>"; };
 		237B249C157D182A00FC288E /* PTBooksParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksParentView.h; sourceTree = "<group>"; };
 		237B249D157D182A00FC288E /* PTBooksParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksParentView.m; sourceTree = "<group>"; };
 		237B249E157D182A00FC288E /* PTBooksScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksScrollView.h; sourceTree = "<group>"; };
@@ -1723,6 +1724,7 @@
 				237B24A1157D182A00FC288E /* PTBookView.m */,
 				F468876E158129800086D351 /* PTChatHUDView.h */,
 				F468876F158129800086D351 /* PTChatHUDView.m */,
+				232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */,
 				237B24A2157D182A00FC288E /* PTPagesScrollView.h */,
 				237B24A3157D182A00FC288E /* PTPagesScrollView.m */,
 				237B24A4157D182A00FC288E /* PTPageView.h */,
