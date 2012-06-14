@@ -197,6 +197,25 @@
 
     // Reset webview loading status
     isWebViewLoading = NO;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    LOGMETHOD;
+}
+
+- (void)didEnterBackground:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willEnterForeground:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+- (void)willEnterForeground:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationWillEnterForegroundNotification
+                                                  object:nil];
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {

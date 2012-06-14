@@ -19,6 +19,10 @@
 @property (nonatomic, copy) PTStreamConnectedToSessionBlock connectedBlock;
 @property (nonatomic, copy) PTVideoSubscriberSubscribedBlock subscribedBlock;
 @property (nonatomic, copy) PTSessionDroppedStreamBlock sessionDroppedBlock;
+
+@property (nonatomic, copy) NSString* currentSessionToken;
+@property (nonatomic, copy) NSString* currentUserToken;
+@property (nonatomic, assign) BOOL isHibernating;
 @end
 
 static NSString* const kApiKey = @"335312";
@@ -26,12 +30,50 @@ static PTVideoPhone* instance = nil;
 @implementation PTVideoPhone
 @synthesize session, publisher, subscriber;
 @synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock;
+@synthesize currentSessionToken, currentUserToken;
+@synthesize isHibernating;
 
 + (PTVideoPhone*)sharedPhone {
     if (!instance) {
         instance = [[PTVideoPhone alloc] init];
     }
     return instance;
+}
+
+- (id)init {
+    if (self = [super init]) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(phoneDidEnterBackground:)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(phoneWillEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+        self.isHibernating = NO;
+    }
+    return self;
+}
+
+- (void)phoneDidEnterBackground:(NSNotification*)note {
+    LOGMETHOD;
+    if (!self.session || self.session.sessionConnectionStatus != OTSessionConnectionStatusConnected) {
+        return;
+    }
+
+    LogInfo(@"Hibernating video phone");
+    __block UIBackgroundTaskIdentifier taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [[UIApplication sharedApplication] endBackgroundTask:taskID];
+    }];
+    [self hibernate];
+}
+
+- (void)phoneWillEnterForeground:(NSNotification*)note {
+    LOGMETHOD;
+    if (self.isHibernating) {
+        [self wakeUp];
+    }
 }
 
 - (void)connectToSession:(NSString*)aSession
@@ -41,6 +83,8 @@ static PTVideoPhone* instance = nil;
     LOGMETHOD;
     LogTrace(@"%@ -> session ID: %@", NSStringFromSelector(_cmd), aSession);
     LogTrace(@"%@ -> token: %@", NSStringFromSelector(_cmd), aToken);
+    self.currentSessionToken = aSession;
+    self.currentUserToken = aToken;
     
     self.session = [[OTSession alloc] initWithSessionId:aSession
                                                delegate:self];
@@ -70,6 +114,21 @@ static PTVideoPhone* instance = nil;
     self.session = nil;
     self.publisher = nil;
     self.subscriber = nil;
+    self.currentUserToken = nil;
+    self.currentSessionToken = nil;
+}
+
+- (void)hibernate {
+    LOGMETHOD;
+    [self.session disconnect];
+    self.isHibernating = YES;
+}
+
+- (void)wakeUp {
+    LOGMETHOD;
+    [self.session connectWithApiKey:kApiKey
+                              token:self.currentUserToken];
+    self.isHibernating = NO;
 }
 
 - (void)registerWithUserId:(NSString*)username {}
@@ -78,6 +137,15 @@ static PTVideoPhone* instance = nil;
 - (void)sessionDidConnect:(OTSession*)aSession {
     LOGMETHOD;
     NSLog(@"Session connection id: %@", aSession.connection.connectionId);
+    
+    // TODO this is a hack until I can figure out why this method gets
+    // called twice after a wakeUp: call. The first time it is called
+    // with a null connectionID. If the connectionID is null, then we
+    // bail
+    if (!aSession.connection.connectionId) {
+        LogError(@"Connection ID is null");
+        return;
+    }
 
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
     [self.session publish:self.publisher];
