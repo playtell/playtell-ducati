@@ -32,12 +32,15 @@
 #import "PTPlaydateFingerEndRequest.h"
 
 @interface PTDateViewController ()
-
+@property (nonatomic, weak) OTSubscriber* playmateSubscriber;
+@property (nonatomic, weak) OTPublisher* myPublisher;
 @end
 
 @implementation PTDateViewController
 
 @synthesize playdate;
+@synthesize playmateSubscriber;
+@synthesize myPublisher;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
@@ -48,9 +51,18 @@
 }
 
 - (void)wireUpwireUpPlaydateConnections {
-    NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
-    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
-    
+
+    // The dialpad may already be subscribed to the playdate channel. When a playdate request
+    // comes in on the dialpad, it subscribes to the playdate channel to catch end_playdate
+    // messages. That way, it can deactivate the playmate button if the playmate ends the
+    // playdate before the user accepts. In the instance where the user is not the initiator,
+    // the playdate channel will already be subscribed by the time the PTDateViewController is
+    // loaded. The check below is used to ensure the playdate channel is not yet subscribed to.
+    if (![[PTPlayTellPusher sharedPusher] isSubscribedToPlaydateChannel]) {
+        NSLog(@"Subscribing to channel: %@", self.playdate.pusherChannelName);
+        [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.playdate.pusherChannelName];
+    }
+
     // Notify server (and thus, the initiator) that we joined the playdate
     PTPlaydateJoinedRequest *playdateJoinedRequest = [[PTPlaydateJoinedRequest alloc] init];
     [playdateJoinedRequest playdateJoinedWithPlaydate:[NSNumber numberWithInteger:self.playdate.playdateID]
@@ -59,7 +71,6 @@
                                             onFailure:nil
      ];
     
-    // Subscribe to playdate channel
     // TODO need to decide if this is where the subscription should live...
     PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:chatView];
@@ -94,22 +105,25 @@
         LogInfo(@"Current user is NOT initiator");
         myToken = playdate.playmateTokboxToken;
     }
-    
+
     [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
                                        withToken:myToken
                                          success:^(OTPublisher *publisher)
      {
-         NSLog(@"Inside session connection block");
          if (publisher.publishVideo) {
+             self.myPublisher = publisher;
              [chatView setRightView:publisher.view];
          }
      } failure:^(NSError *error) {
-         NSLog(@"Inside session failure block");
+         LogError(@"Error connecting to video phone session: %@", error);
      }];
     
     [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
         if (subscriber.stream.hasVideo) {
+            self.playmateSubscriber = subscriber;
             [chatView setLeftView:subscriber.view];
+        } else {
+            [chatView transitionLeftImage];
         }
     }];
 }
@@ -207,6 +221,11 @@
                                              selector:@selector(dateControllerDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dateControllerWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
 }
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
@@ -218,6 +237,21 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+}
+
+- (void)dateControllerWillResignActive:(NSNotification*)note {
+    if (self.playmateSubscriber) {
+        [self.playmateSubscriber.view removeFromSuperview];
+        self.playmateSubscriber = nil;
+    }
+
+    // TODO : Publisher subscription should probably be moved into PTVideoPhone
+    // prior to disconnect
+    if (self.myPublisher) {
+        [self.myPublisher.view removeFromSuperview];
+        [self.myPublisher.session unpublish:self.myPublisher];
+        self.myPublisher = nil;
+    }
 }
 
 - (void)dateControllerWillEnterForeground:(NSNotification*)note {
@@ -252,46 +286,9 @@
     }];
 }
 
-- (void)closeBookUsingBookView:(PTBookView*)bookView {
-    // Stop page loading
-    [webView stopLoading];
-    isWebViewLoading = NO;
-    pagesToLoad = nil;
-    //NSLog(@"Closed book, resetting isWebViewLoading");
-    
-    // Close book, hide pages, show all other books
-    if (bookView != nil) {
-        // Set current page view to book view
-        PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pagesScrollView.currentPage - 1)];
-        [bookView setPageContentsWithLeftContent:[pageView getLeftContent]
-                                 andRightContent:[pageView getRightContent]];
-        [bookView setHidden:NO];
-        [pagesScrollView setHidden:YES];
-        [bookView close];
-        [booksScrollView showAllBooksExcept:currentBookId];
-    }
-}
-
-- (IBAction)playdateDisconnect:(id)sender {    
-    // Notify server of disconnect
-    if (self.playdate) {
-        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
-        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                                          authToken:[[PTUser currentUser] authToken]
-                                                          onSuccess:nil
-                                                          onFailure:nil
-         ];
-    }
-
-    [self disconnectAndTransitionToDialpad];
-}
-
 - (void)disconnectAndTransitionToDialpad {
     [self disconnectPusherAndChat];
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    [self transitionToDialpad];
 }
 
 - (void)disconnectPusherAndChat {
@@ -303,6 +300,29 @@
     }
     
     [[PTVideoPhone sharedPhone] disconnect];
+}
+
+- (void)transitionToDialpad {
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)playdateDisconnect:(id)sender {    
+    // Notify server of disconnect
+    [self disconnectPusherAndChat];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:^(NSDictionary* result)
+        {
+            // We delay moving to the dialpad because it will be checking for
+            // playdates when it appears
+            [self transitionToDialpad];
+        }
+                                                          onFailure:nil];
+    }
 }
 
 - (void)viewDidUnload {
@@ -364,6 +384,26 @@
 
     // Perform book close
     [self closeBookUsingBookView:bookView];
+}
+
+- (void)closeBookUsingBookView:(PTBookView*)bookView {
+    // Stop page loading
+    [webView stopLoading];
+    isWebViewLoading = NO;
+    pagesToLoad = nil;
+    //NSLog(@"Closed book, resetting isWebViewLoading");
+    
+    // Close book, hide pages, show all other books
+    if (bookView != nil) {
+        // Set current page view to book view
+        PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pagesScrollView.currentPage - 1)];
+        [bookView setPageContentsWithLeftContent:[pageView getLeftContent]
+                                 andRightContent:[pageView getRightContent]];
+        [bookView setHidden:NO];
+        [pagesScrollView setHidden:YES];
+        [bookView close];
+        [booksScrollView showAllBooksExcept:currentBookId];
+    }
 }
 
 - (void)pusherPlayDateChangeBook:(NSNotification *)notification {

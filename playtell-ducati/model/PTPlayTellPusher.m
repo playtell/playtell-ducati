@@ -31,6 +31,7 @@ NSString* const PTPlaydateKey = @"PTPlaydateKey";
 static PTPlayTellPusher* instance = nil;
 @synthesize pusherClient;
 @synthesize rendezvousChannel;
+@synthesize isSubscribedToPlaydateChannel;
 
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
@@ -134,13 +135,20 @@ static PTPlayTellPusher* instance = nil;
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateFingerEnd" object:self userInfo:eventData];
     }];
+
+    self.isSubscribedToPlaydateChannel = YES;
 }
 
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName {
     PTPusherChannel* channel = [self.pusherClient channelNamed:channelName];
     LogDebug(@"Attempting to unsubscribe from channel: %@", channelName);
-    NSAssert(channel != nil, @"Trying to unsubscribe from a nil channel");
-    [self.pusherClient unsubscribeFromChannel:channel];
+    if (!channel) {
+        LogError(@"Attempting to unsubscribe from nil channel");
+    } else {
+        [self.pusherClient unsubscribeFromChannel:channel];
+    }
+
+    self.isSubscribedToPlaydateChannel = NO;
 }
 
 - (void)emitEventNamed:(NSString *)name data:(id)data channel:(NSString *)channel {
@@ -167,6 +175,10 @@ static PTPlayTellPusher* instance = nil;
                                                     name:UIApplicationWillEnterForegroundNotification
                                                   object:nil];
     [self.pusherClient connect];
+}
+
+- (void)setIsSubscribedToPlaydateChannel:(BOOL)anIsSubscribedToPlaydateChannel {
+    isSubscribedToPlaydateChannel = anIsSubscribedToPlaydateChannel;
 }
 
 #pragma mark PTPusherDelegate methods

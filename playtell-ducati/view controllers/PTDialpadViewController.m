@@ -216,6 +216,14 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
         self.requestedPlaydate = playdate;
         [self notifyUserOfPlaydate:playdate];
     }
+
+    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playmateEndedPlaydate:)
+                                                 name:@"PlayDateEndPlaydate"
+                                               object:nil];
 }
 
 - (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
@@ -253,6 +261,15 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     self.cancelPlaydateRecognizer.enabled = YES;
 }
 
+- (void)playmateEndedPlaydate:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"playmateEndedPlaydate"
+                                                  object:nil];
+    [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.requestedPlaydate.pusherChannelName];
+    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    [self deactivatePlaymateButton];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -263,10 +280,6 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     }
 
     self.userButtonHash = nil;
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationWillEnterForegroundNotification
-                                                  object:nil];
 }
 
 - (void)deactivatePlaymateButton {

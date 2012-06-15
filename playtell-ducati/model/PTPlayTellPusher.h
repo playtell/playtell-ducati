@@ -25,4 +25,6 @@ extern NSString* const PTPlaydateKey;
 - (void)unsubscribeFromPlaydateChannel:(NSString *)channelName;
 - (void)emitEventNamed:(NSString *)name data:(id)data channel:(NSString *)channel;
 
+@property (nonatomic, readonly) BOOL isSubscribedToPlaydateChannel;
+
 @end

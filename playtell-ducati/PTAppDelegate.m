@@ -7,6 +7,7 @@
 //
 
 #import "AFImageRequestOperation.h"
+#import "Crittercism.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
 #import "PTBooksListRequest.h"
@@ -44,8 +45,12 @@
 {
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
 
+    // Override point for customization after application launch.
+    [Crittercism initWithAppID:@"4fbd111eaf4b487832000083"
+                        andKey:@"suhjzchbzrertmd8yud6oma1lvqc"
+                     andSecret:@"0mjxkxof9n45k3tzgzqylapf1c62naep"];
+    
     [self setupPushNotifications:launchOptions];
     [PTVideoPhone sharedPhone];
 
