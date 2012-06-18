@@ -423,7 +423,7 @@
     UIPinchGestureRecognizer *pinchRecognizer = (UIPinchGestureRecognizer *)sender;
     if (pinchRecognizer.state == UIGestureRecognizerStateChanged) {
         CGFloat factor = [pinchRecognizer scale];
-        if (factor <= 0.4f) {
+        if (factor <= 0.6f) {
             [delegate bookPinchClose];
         }
     }

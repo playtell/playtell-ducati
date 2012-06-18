@@ -35,7 +35,7 @@
     
     // Page loader
     UIWebView *webView;
-    BOOL isWebViewLoading;
+    //BOOL isWebViewLoading;
     BOOL isPageViewLoading;
     
     // Fingers

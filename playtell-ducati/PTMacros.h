@@ -26,7 +26,7 @@
 #define radiansToDegrees( radians ) ( ( radians ) * ( 180.0 / M_PI ) )
 
 /** Animation: Speed **/
-#define BOOK_OPEN_CLOSE_ANIMATION_SPEED 1.0f
+#define BOOK_OPEN_CLOSE_ANIMATION_SPEED 0.5f
 #define BOOK_HIDE_SHOW_ANIMATION_SPEED 0.5f
 #define PAGE_TURN_ANIMATION_SPEED 0.3f
 
