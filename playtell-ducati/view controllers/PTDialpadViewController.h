@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UAPushNotificationHandler.h"
 
-@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate>
+@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate> {
+    BOOL playdateRequestedViaPush;
+}
 
 @property (nonatomic, strong) UIScrollView* scrollView;
 @property (nonatomic, strong) NSArray* playmates;
+
+- (void)setAwaitingPlaydateRequest:(NSInteger)playdateId;
 
 @end

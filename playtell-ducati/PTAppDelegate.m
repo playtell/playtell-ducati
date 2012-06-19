@@ -10,7 +10,6 @@
 #import "Crittercism.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
-#import "PTBooksListRequest.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
@@ -45,6 +44,16 @@
 {
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    // Check if app was opened because of a remote notification
+    NSDictionary *notificationData = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+    if (notificationData != nil) {
+        // Get playdate id and store it
+        playdateRequestedViaPush = YES;
+        playdateRequestedViaPushId = [[[notificationData objectForKey:@"aps"] objectForKey:@"playdate_id"] integerValue];
+    } else {
+        playdateRequestedViaPush = NO;
+    }
 
     // Override point for customization after application launch.
     [Crittercism initWithAppID:@"4fbd111eaf4b487832000083"
@@ -92,6 +101,10 @@
      {
          self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
          self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         // Check if push notification came in with playdate
+         if (playdateRequestedViaPush) {
+             [self.dialpadController setAwaitingPlaydateRequest:playdateRequestedViaPushId];
+         }
          [self.transitionController transitionToViewController:self.dialpadController
                                                    withOptions:UIViewAnimationOptionTransitionCrossDissolve];
      } failure:^(NSError *error) {
@@ -147,9 +160,17 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [UAirship land];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Updates the device token and registers the token with UA
+    [[UAirship shared] registerDeviceToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"didReceiveRemoteNotification: %@", userInfo);
 }
 
 @end

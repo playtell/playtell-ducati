@@ -19,6 +19,7 @@
 #import "NSMutableURLRequest+POSTParameters.h"
 
 #import "UAirship.h"
+#import "UAPush.h"
 
 typedef void (^PTLoginSuccessBlock) (NSDictionary*);
 typedef void (^PTLoginFailureBlock) (NSError *);
@@ -292,6 +293,8 @@ typedef void (^PTLoginFailureBlock) (NSError *);
         [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
         [[PTUser currentUser] setPhotoURL:photoURL];
         LogInfo(@"Current user: %@", [PTUser currentUser]);
+        // Update UA token with this user's id
+        [[UAPush shared] updateAlias:[userID stringValue]];
         success(result);
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {
         failure(error);

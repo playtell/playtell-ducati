@@ -16,7 +16,8 @@
 @class PTDialpadViewController;
 @class TransitionController;
 @interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
-    NSArray *books;
+    BOOL playdateRequestedViaPush;
+    NSInteger playdateRequestedViaPushId;
 }
 
 @property (strong, nonatomic) UIWindow *window;

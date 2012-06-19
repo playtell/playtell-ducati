@@ -20,6 +20,7 @@
 #import "PTPlaymateButton.h"
 #import "PTUser.h"
 #import "TransitionController.h"
+#import "PTPlaydateDetailsRequest.h"
 
 #import "UIView+PlayTell.h"
 
@@ -77,12 +78,38 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
     // Check now for any pending playdates, and register to be notified
     // when we come back to life if any were received while sleeping
-    [self checkForPendingPlaydatesAndNotifyUser];
+    if (playdateRequestedViaPush != YES) {
+        // Only check for pending playdates if one didn't come via push notification
+        // Otherwise there's playdata collision!
+        // More than likely, this will return the same playdate
+        // BUT loading playdate id passed via push to be safe
+        [self checkForPendingPlaydatesAndNotifyUser];
+    }
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(checkForPendingPlaydateOnForegrounding:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
+}
+
+- (void)setAwaitingPlaydateRequest:(NSInteger)playdateId {
+    playdateRequestedViaPush = YES;
+    
+    // Request playdata details from server
+    PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
+    [playdateDetailsRequest playdateDetailsForPlaydateId:playdateId
+                                               authToken:[[PTUser currentUser] authToken]
+                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]
+                                                 success:^(PTPlaydate *playdate) {
+                                                     // TODO : need to refactor this and pusherDidReceivePlaydateRequestNotification: into
+                                                     // the same methods
+                                                     LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
+                                                     
+                                                     self.requestedPlaydate = playdate;
+                                                     [self notifyUserOfPlaydate:playdate];
+                                                 }
+                                                 failure:nil
+    ];
 }
 
 - (void)checkForPendingPlaydatesAndNotifyUser {
