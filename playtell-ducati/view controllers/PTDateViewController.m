@@ -73,26 +73,7 @@
                                             onFailure:nil
      ];
     
-    // TODO need to decide if this is where the subscription should live...
-    PTChatHUDView* aChatView = self.chatView;
-
-    // Pick out the other user
-    PTPlaymate* otherUser;
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        otherUser = self.playdate.playmate;
-    } else {
-        otherUser = self.playdate.initiator;
-    }
-
-//    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
-
-    // If either photo is nil, use the default placeholder
-//    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
-
-    [aChatView setLoadingImageForLeftView:otherUserPhoto
-                             loadingText:otherUser.username];
-//    [aChatView setLoadingImageForRightView:myPhoto];
+    [self setPlaymatePhoto];
 
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
         NSLog(@"Session connected!");
@@ -113,7 +94,7 @@
      {
          if (publisher.publishVideo) {
              self.myPublisher = publisher;
-             [aChatView setRightView:publisher.view];
+             [self.chatView setRightView:publisher.view];
          }
      } failure:^(NSError *error) {
          LogError(@"Error connecting to video phone session: %@", error);
@@ -122,11 +103,34 @@
     [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
         if (subscriber.stream.hasVideo) {
             self.playmateSubscriber = subscriber;
-            [aChatView setLeftView:subscriber.view];
+            [self.chatView setLeftView:subscriber.view];
         } else {
-            [aChatView transitionLeftImage];
+            [self.chatView transitionLeftImage];
         }
     }];
+
+    [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
+        [self setPlaymatePhoto];
+    }];
+}
+
+- (void)setPlaymatePhoto {
+    // Pick out the other user
+    if (self.playdate) {
+        PTPlaymate* otherUser;
+        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+            otherUser = self.playdate.playmate;
+        } else {
+            otherUser = self.playdate.initiator;
+        }
+        
+        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
+        [self.chatView setLoadingImageForLeftView:otherUserPhoto
+                                      loadingText:otherUser.username];
+    } else {
+        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
+                                      loadingText:@""];
+    }
 }
 
 - (UIImage*)placeholderImage {
@@ -149,11 +153,7 @@
     // Add the ChatHUD view to the top of the screen
     self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.chatView];
-    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
-    
-    // If either photo is nil, use the default placeholder
-    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    [self.chatView setLoadingImageForRightView:myPhoto];
+    [self setCurrentUserPhoto];
 
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
@@ -230,6 +230,18 @@
     endPlaydatePopup.hidden = YES;
 }
 
+- (void)setCurrentUserPhoto {
+    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
+    
+    // If user photo is nil user the placeholder
+    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+    [self.chatView setLoadingImageForRightView:myPhoto];
+    
+    // We don't have the playdate yet, so set the other user's image to a placeholder
+    [self.chatView setLoadingImageForLeftView:[self placeholderImage]
+                                  loadingText:@""];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -296,6 +308,9 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
+
+    [self setCurrentUserPhoto];
+    [self setPlaymatePhoto];
 }
 
 - (void)disconnectAndTransitionToDialpad {
