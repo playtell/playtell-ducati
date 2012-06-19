@@ -55,10 +55,12 @@
         playdateRequestedViaPush = NO;
     }
 
+#ifndef DEBUG
     // Override point for customization after application launch.
     [Crittercism initWithAppID:@"4fbd111eaf4b487832000083"
                         andKey:@"suhjzchbzrertmd8yud6oma1lvqc"
                      andSecret:@"0mjxkxof9n45k3tzgzqylapf1c62naep"];
+#endif
     
     [self setupPushNotifications:launchOptions];
     [PTVideoPhone sharedPhone];

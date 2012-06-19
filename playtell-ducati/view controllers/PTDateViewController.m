@@ -32,12 +32,13 @@
 #import "PTPlaydateFingerEndRequest.h"
 
 @interface PTDateViewController ()
+@property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
 @end
 
 @implementation PTDateViewController
-
+@synthesize chatView;
 @synthesize playdate;
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
@@ -73,8 +74,7 @@
      ];
     
     // TODO need to decide if this is where the subscription should live...
-    PTChatHUDView* chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:chatView];
+    PTChatHUDView* aChatView = self.chatView;
 
     // Pick out the other user
     PTPlaymate* otherUser;
@@ -84,15 +84,15 @@
         otherUser = self.playdate.initiator;
     }
 
-    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
+//    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
 
     // If either photo is nil, use the default placeholder
-    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+//    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
     UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
 
-    [chatView setLoadingImageForLeftView:otherUserPhoto
+    [aChatView setLoadingImageForLeftView:otherUserPhoto
                              loadingText:otherUser.username];
-    [chatView setLoadingImageForRightView:myPhoto];
+//    [aChatView setLoadingImageForRightView:myPhoto];
 
     [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
         NSLog(@"Session connected!");
@@ -113,7 +113,7 @@
      {
          if (publisher.publishVideo) {
              self.myPublisher = publisher;
-             [chatView setRightView:publisher.view];
+             [aChatView setRightView:publisher.view];
          }
      } failure:^(NSError *error) {
          LogError(@"Error connecting to video phone session: %@", error);
@@ -122,9 +122,9 @@
     [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
         if (subscriber.stream.hasVideo) {
             self.playmateSubscriber = subscriber;
-            [chatView setLeftView:subscriber.view];
+            [aChatView setLeftView:subscriber.view];
         } else {
-            [chatView transitionLeftImage];
+            [aChatView transitionLeftImage];
         }
     }];
 }
@@ -145,7 +145,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    // Add the ChatHUD view to the top of the screen
+    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.chatView];
+    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
     
+    // If either photo is nil, use the default placeholder
+    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+    [self.chatView setLoadingImageForRightView:myPhoto];
+
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
     booksScrollView = [[PTBooksScrollView alloc] initWithFrame:CGRectMake((1024.0f - 350.0f) / 2.0f, 0.0f, 350.0f, 600.0f)];
@@ -230,12 +239,7 @@
                                              selector:@selector(dateControllerDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dateControllerWillResignActive:)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:nil];
-}
+    }
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
     
@@ -246,19 +250,18 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+
+    [self removePlaymateFromChatHUD];
 }
 
-- (void)dateControllerWillResignActive:(NSNotification*)note {
+- (void)removePlaymateFromChatHUD {
     if (self.playmateSubscriber) {
         [self.playmateSubscriber.view removeFromSuperview];
         self.playmateSubscriber = nil;
     }
 
-    // TODO : Publisher subscription should probably be moved into PTVideoPhone
-    // prior to disconnect
     if (self.myPublisher) {
         [self.myPublisher.view removeFromSuperview];
-        [self.myPublisher.session unpublish:self.myPublisher];
         self.myPublisher = nil;
     }
 }
@@ -344,7 +347,8 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    [self.chatView removeFromSuperview];
+    self.chatView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

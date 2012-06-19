@@ -43,7 +43,7 @@ static PTVideoPhone* instance = nil;
 - (id)init {
     if (self = [super init]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(phoneDidEnterBackground:)
+                                                 selector:@selector(phoneWillResignActive:)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
 
@@ -56,7 +56,7 @@ static PTVideoPhone* instance = nil;
     return self;
 }
 
-- (void)phoneDidEnterBackground:(NSNotification*)note {
+- (void)phoneWillResignActive:(NSNotification*)note {
     LOGMETHOD;
     if (!self.session || self.session.sessionConnectionStatus != OTSessionConnectionStatusConnected) {
         return;
@@ -120,6 +120,21 @@ static PTVideoPhone* instance = nil;
 
 - (void)hibernate {
     LOGMETHOD;
+    if (self.publisher) {
+        [self.session unpublish:self.publisher];
+        [self.publisher.view removeFromSuperview];
+        self.publisher = nil;
+    } else {
+        LogError(@"Publisher is nil!");
+    }
+
+    if (self.subscriber) {
+        [self.subscriber.view removeFromSuperview];
+        self.subscriber =  nil;
+    } else {
+        LogError(@"Subscriber is nil!");
+    }
+
     [self.session disconnect];
     self.isHibernating = YES;
 }
@@ -148,6 +163,7 @@ static PTVideoPhone* instance = nil;
     }
 
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
+    self.publisher.delegate = self;
     [self.session publish:self.publisher];
 
     if (self.successBlock) {
@@ -206,8 +222,17 @@ static PTVideoPhone* instance = nil;
 - (void)subscriberVideoDataReceived:(OTSubscriber*)subscriber {}
 
 #pragma mark - OTPublisherDelegate methods
-- (void)publisher:(OTPublisher*)publisher didFailWithError:(OTError*) error {}
-- (void)publisherDidStartStreaming:(OTPublisher*)publisher {}
-- (void)publisherDidStopStreaming:(OTPublisher*)publisher {}
+- (void)publisher:(OTPublisher*)publisher didFailWithError:(OTError*) error {
+    LOGMETHOD;
+    LogError(@"Error: %@", error);
+}
+
+- (void)publisherDidStartStreaming:(OTPublisher*)publisher {
+    LOGMETHOD;
+}
+
+- (void)publisherDidStopStreaming:(OTPublisher*)publisher {
+    LOGMETHOD;
+}
 
 @end
