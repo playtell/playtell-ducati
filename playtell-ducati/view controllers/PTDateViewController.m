@@ -154,6 +154,7 @@
     self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.chatView];
     [self setCurrentUserPhoto];
+    [self setPlaymatePhoto];
 
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
@@ -236,10 +237,6 @@
     // If user photo is nil user the placeholder
     myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
     [self.chatView setLoadingImageForRightView:myPhoto];
-    
-    // We don't have the playdate yet, so set the other user's image to a placeholder
-    [self.chatView setLoadingImageForLeftView:[self placeholderImage]
-                                  loadingText:@""];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

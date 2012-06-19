@@ -120,6 +120,7 @@
     CGRect imageViewFrame = [[self class] rectForLeftView];
     self.leftImageView.frame = imageViewFrame;
     [self.leftImageView setImage:anImage];
+    [self.leftImageView removeAllSubviews];
 
     UIView* alphaView = [[UIView alloc] initWithFrame:self.leftImageView.bounds];
     alphaView.backgroundColor = [UIColor whiteColor];

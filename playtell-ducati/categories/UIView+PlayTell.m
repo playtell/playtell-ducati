@@ -21,6 +21,13 @@
     [self addSubview:aView];
 }
 
+- (void)removeAllSubviews {
+    NSArray* subviews = [self.subviews copy];
+    for (UIView* subview in subviews) {
+        [subview removeFromSuperview];
+    }
+}
+
 - (void)removeAllGestureRecognizers {
     NSArray* allRecognizers = [NSArray arrayWithArray:self.gestureRecognizers];
     [allRecognizers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

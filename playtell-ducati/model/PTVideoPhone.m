@@ -64,6 +64,7 @@ static PTVideoPhone* instance = nil;
 
     LogInfo(@"Hibernating video phone");
     __block UIBackgroundTaskIdentifier taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        LogTrace(@"Video phone will resign active termination handler being called");
         [[UIApplication sharedApplication] endBackgroundTask:taskID];
     }];
     [self hibernate];
@@ -121,7 +122,7 @@ static PTVideoPhone* instance = nil;
 - (void)hibernate {
     LOGMETHOD;
     if (self.publisher) {
-        [self.session unpublish:self.publisher];
+        [self.publisher.session unpublish:self.publisher];
         [self.publisher.view removeFromSuperview];
         self.publisher = nil;
     } else {

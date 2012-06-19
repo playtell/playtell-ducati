@@ -11,8 +11,9 @@
 @interface UIView (PlayTell)
 
 - (void)addSubviewAndCenter:(UIView*)aView;
-
+- (void)removeAllSubviews;
 - (void)removeAllGestureRecognizers;
 - (UIImage*)screenshot;
+
 
 @end

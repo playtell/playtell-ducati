@@ -328,7 +328,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
                                constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
     CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 0,
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 55,
                                   labelSize.width, labelSize.height);
     UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
     welcomeLabel.text = welcomeText;
