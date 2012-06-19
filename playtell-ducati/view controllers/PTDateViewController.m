@@ -150,12 +150,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // Add the ChatHUD view to the top of the screen
-    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.chatView];
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
-
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
     booksScrollView = [[PTBooksScrollView alloc] initWithFrame:CGRectMake((1024.0f - 350.0f) / 2.0f, 0.0f, 350.0f, 600.0f)];
@@ -210,7 +204,13 @@
     // Start loading book covers
     [self loadBookCovers];
     isPageViewLoading = NO;
-    
+
+    // Add the ChatHUD view to the top of the screen
+    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.chatView];
+    [self setCurrentUserPhoto];
+    [self setPlaymatePhoto];
+
     // Start listening to pusher notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
