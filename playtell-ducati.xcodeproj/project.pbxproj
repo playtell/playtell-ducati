@@ -21,6 +21,12 @@
 		237B24AA157D182A00FC288E /* PTPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A5157D182A00FC288E /* PTPageView.m */; };
 		237B24B0157D191500FC288E /* PTDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AE157D191500FC288E /* PTDateViewController.m */; };
 		237B24B1157D191500FC288E /* PTDateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 237B24AF157D191500FC288E /* PTDateViewController.xib */; };
+		23866FDC1592338100525588 /* EndCallCrankPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDA1592338100525588 /* EndCallCrankPressed.png */; };
+		23866FDD1592338100525588 /* EndCallCrankNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDB1592338100525588 /* EndCallCrankNormal.png */; };
+		23866FE1159234FE00525588 /* CloseBookPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDF159234FE00525588 /* CloseBookPressed.png */; };
+		23866FE2159234FE00525588 /* CloseBookNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE0159234FE00525588 /* CloseBookNormal.png */; };
+		23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE31592393100525588 /* EndPlaydatePopupButton.png */; };
+		23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE41592393100525588 /* EndPlaydatePopupBg.png */; };
 		2387FCE11590FCF500B1FB55 /* PTPlaydateDetailsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */; };
 		23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
 		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
@@ -304,6 +310,12 @@
 		237B24AE157D191500FC288E /* PTDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDateViewController.m; sourceTree = "<group>"; };
 		237B24AF157D191500FC288E /* PTDateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTDateViewController.xib; sourceTree = "<group>"; };
 		237B24B2157D1AB600FC288E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		23866FDA1592338100525588 /* EndCallCrankPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndCallCrankPressed.png; sourceTree = "<group>"; };
+		23866FDB1592338100525588 /* EndCallCrankNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndCallCrankNormal.png; sourceTree = "<group>"; };
+		23866FDF159234FE00525588 /* CloseBookPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseBookPressed.png; sourceTree = "<group>"; };
+		23866FE0159234FE00525588 /* CloseBookNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseBookNormal.png; sourceTree = "<group>"; };
+		23866FE31592393100525588 /* EndPlaydatePopupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupButton.png; sourceTree = "<group>"; };
+		23866FE41592393100525588 /* EndPlaydatePopupBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupBg.png; sourceTree = "<group>"; };
 		2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDetailsRequest.h; sourceTree = "<group>"; };
 		2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDetailsRequest.m; sourceTree = "<group>"; };
 		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
@@ -920,6 +932,12 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				23866FE31592393100525588 /* EndPlaydatePopupButton.png */,
+				23866FE41592393100525588 /* EndPlaydatePopupBg.png */,
+				23866FDF159234FE00525588 /* CloseBookPressed.png */,
+				23866FE0159234FE00525588 /* CloseBookNormal.png */,
+				23866FDA1592338100525588 /* EndCallCrankPressed.png */,
+				23866FDB1592338100525588 /* EndCallCrankNormal.png */,
 				23F199381586BB7200DC2E16 /* page_loading.png */,
 				23F199361586B9F000DC2E16 /* cover_loading.png */,
 				23C7314315862C7D00B9A9E6 /* crank-nav.png */,
@@ -2004,6 +2022,12 @@
 				F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */,
 				23F199371586B9F000DC2E16 /* cover_loading.png in Resources */,
 				23F199391586BB7200DC2E16 /* page_loading.png in Resources */,
+				23866FDC1592338100525588 /* EndCallCrankPressed.png in Resources */,
+				23866FDD1592338100525588 /* EndCallCrankNormal.png in Resources */,
+				23866FE1159234FE00525588 /* CloseBookPressed.png in Resources */,
+				23866FE2159234FE00525588 /* CloseBookNormal.png in Resources */,
+				23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */,
+				23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

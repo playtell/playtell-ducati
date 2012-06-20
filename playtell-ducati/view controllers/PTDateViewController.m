@@ -41,6 +41,7 @@
 @synthesize playdate;
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
+@synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
@@ -207,6 +208,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
+    
+    // Setup end playdate & close book buttons
+    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
+    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateSelected];
+    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateHighlighted];
+    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateSelected];
+    closeBook.alpha = 0.0f;
+    
+    // Setup end playdate popup
+    endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
+    endPlaydatePopup.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -322,6 +334,15 @@
     }
 }
 
+- (IBAction)endPlaydatePopupToggle:(id)sender {
+    NSLog(@"Is it hidden? %i", endPlaydatePopup.hidden);
+    if (endPlaydatePopup.hidden) {
+        endPlaydatePopup.hidden = NO;
+    } else {
+        endPlaydatePopup.hidden = YES;
+    }
+}
+
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -384,6 +405,15 @@
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {
+    // Reset page loading
+    [pagesToLoad removeAllObjects];
+    isPageViewLoading = NO;
+    
+    // Hide close book button
+    [UIView animateWithDuration:BOOK_OPEN_CLOSE_ANIMATION_SPEED animations:^{
+        closeBook.alpha = 0.0f;
+    }];
+
     // Close book, hide pages, show all other books
     if (bookView != nil) {
         // Set current page view to book view
@@ -672,6 +702,11 @@
                                               onFailure:nil
              ];
         }
+        
+        // Show close book button
+        [UIView animateWithDuration:(BOOK_OPEN_CLOSE_ANIMATION_SPEED + 0.25f) animations:^{
+            closeBook.alpha = 1.0f;
+        }];
     }
 }
 
@@ -762,6 +797,12 @@
     }
 }
 
+- (IBAction)closeBookButtonPressed:(id)sender {
+    if (closeBook.alpha == 1.0f) {
+        [self bookPinchClose];
+    }
+}
+
 - (void)bookPinchClose {
     // Check if any books are even open
     if (isBookOpen == NO) {
@@ -820,7 +861,6 @@
     // Remove finger
     //[self removeFingerAtPoint:point];
 }
-
 
 #pragma mark -
 #pragma mark Grandma Finger

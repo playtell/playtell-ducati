@@ -17,6 +17,10 @@
 @interface PTDateViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     // Playdate
     PTPlaydate *playdate;
+    IBOutlet UIButton *endPlaydate;
+    IBOutlet UIButton *closeBook;
+    IBOutlet UIButton *endPlaydateForreal;
+    IBOutlet UIView *endPlaydatePopup;
     
     // Books
     PTBooksParentView *booksParentView;
@@ -43,8 +47,14 @@
 }
 
 @property (nonatomic) PTPlaydate *playdate;
+@property (nonatomic, retain) IBOutlet UIButton *endPlaydate;
+@property (nonatomic, retain) IBOutlet UIButton *endPlaydateForreal;
+@property (nonatomic, retain) IBOutlet UIButton *closeBook;
+@property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
 - (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks;
 - (IBAction)playdateDisconnect:(id)sender;
+- (IBAction)closeBookButtonPressed:(id)sender;
+- (IBAction)endPlaydatePopupToggle:(id)sender;
 - (void)openBookAfterNavigation;
 
 @end
