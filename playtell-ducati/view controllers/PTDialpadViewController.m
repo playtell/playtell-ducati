@@ -94,22 +94,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
 - (void)setAwaitingPlaydateRequest:(NSInteger)playdateId {
     playdateRequestedViaPush = YES;
-    
-    // Request playdata details from server
-    PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
-    [playdateDetailsRequest playdateDetailsForPlaydateId:playdateId
-                                               authToken:[[PTUser currentUser] authToken]
-                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]
-                                                 success:^(PTPlaydate *playdate) {
-                                                     // TODO : need to refactor this and pusherDidReceivePlaydateRequestNotification: into
-                                                     // the same methods
-                                                     LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
-                                                     
-                                                     self.requestedPlaydate = playdate;
-                                                     [self notifyUserOfPlaydate:playdate];
-                                                 }
-                                                 failure:nil
-    ];
+    playdateRequestedViaPushId = playdateId;
 }
 
 - (void)checkForPendingPlaydatesAndNotifyUser {
@@ -369,6 +354,24 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     {
         // TODO : I don't like diving into the results object here, this needs refactored
         self.books = [result valueForKey:@"books"];
+        
+        // Now that we have the list of books, load playdate requested by push notification
+        if (playdateRequestedViaPush) {
+            // Request playdata details from server
+            PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
+            [playdateDetailsRequest playdateDetailsForPlaydateId:playdateRequestedViaPushId
+                                                       authToken:[[PTUser currentUser] authToken]
+                                                 playmateFactory:[PTConcretePlaymateFactory sharedFactory]
+                                                         success:^(PTPlaydate *playdate) {
+                                                             LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
+                                                             self.requestedPlaydate = playdate;
+                                                             dispatch_async(dispatch_get_main_queue(), ^() {
+                                                                 [self joinPlaydate];
+                                                             });
+                                                         }
+                                                         failure:nil
+             ];
+        }
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         LogError(@"Failed to fetch books list: %@", error);
     }];

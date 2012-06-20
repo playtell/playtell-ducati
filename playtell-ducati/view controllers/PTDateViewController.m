@@ -335,7 +335,6 @@
 }
 
 - (IBAction)endPlaydatePopupToggle:(id)sender {
-    NSLog(@"Is it hidden? %i", endPlaydatePopup.hidden);
     if (endPlaydatePopup.hidden) {
         endPlaydatePopup.hidden = NO;
     } else {

@@ -11,6 +11,7 @@
 
 @interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate> {
     BOOL playdateRequestedViaPush;
+    NSInteger playdateRequestedViaPushId;
 }
 
 @property (nonatomic, strong) UIScrollView* scrollView;
