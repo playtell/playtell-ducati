@@ -39,13 +39,13 @@
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
 		F468877615812A060086D351 /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
 		F468877B158138190086D351 /* PTVideoPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = F468877A158138190086D351 /* PTVideoPhone.m */; };
-		F4688780158139D70086D351 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468877F158139D70086D351 /* Opentok.framework */; };
 		F468878215813A890086D351 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878115813A880086D351 /* AVFoundation.framework */; };
 		F468878415813ACF0086D351 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878315813ACF0086D351 /* CoreMedia.framework */; };
 		F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878515813AE20086D351 /* CoreVideo.framework */; };
 		F468878815813B040086D351 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878715813B040086D351 /* OpenGLES.framework */; };
-		F468878A15814AE50086D351 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F468878915814AE50086D351 /* opentok.bundle */; };
 		F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */; };
+		F4A123E41592631E00FC7A24 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A123E31592631E00FC7A24 /* Opentok.framework */; };
+		F4A123E71592633C00FC7A24 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F4A123E61592633C00FC7A24 /* opentok.bundle */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -336,14 +336,14 @@
 		F468877515812A060086D351 /* logo_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo_loading.gif; sourceTree = "<group>"; };
 		F4688779158138190086D351 /* PTVideoPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTVideoPhone.h; sourceTree = "<group>"; };
 		F468877A158138190086D351 /* PTVideoPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTVideoPhone.m; sourceTree = "<group>"; };
-		F468877F158139D70086D351 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Opentok.framework; sourceTree = "<group>"; };
 		F468878115813A880086D351 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		F468878315813ACF0086D351 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		F468878515813AE20086D351 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		F468878715813B040086D351 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		F468878915814AE50086D351 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PTPlaydate+InitatorChecking.h"; sourceTree = "<group>"; };
 		F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PTPlaydate+InitatorChecking.m"; sourceTree = "<group>"; };
+		F4A123E31592631E00FC7A24 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Opentok.framework; sourceTree = "<group>"; };
+		F4A123E61592633C00FC7A24 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -829,7 +829,7 @@
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
-				F4688780158139D70086D351 /* Opentok.framework in Frameworks */,
+				F4A123E41592631E00FC7A24 /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -864,7 +864,8 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F468878915814AE50086D351 /* opentok.bundle */,
+				F4A123E61592633C00FC7A24 /* opentok.bundle */,
+				F4A123E31592631E00FC7A24 /* Opentok.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F468878115813A880086D351 /* AVFoundation.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
@@ -881,7 +882,6 @@
 				F4A9D7A71576C3A70015D977 /* MessageUI.framework */,
 				F4A9D7971576C35A0015D977 /* MobileCoreServices.framework */,
 				F468878715813B040086D351 /* OpenGLES.framework */,
-				F468877F158139D70086D351 /* Opentok.framework */,
 				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D901157A92F80015D977 /* QuartzCore.framework */,
 				F4A9D7991576C3620015D977 /* Security.framework */,
@@ -2016,7 +2016,6 @@
 				232265A5157D4D8800D5A960 /* date_bg.png in Resources */,
 				F4E3EAEA157FAAD300A218EC /* PTDiagnosticViewController.xib in Resources */,
 				F468877615812A060086D351 /* logo_loading.gif in Resources */,
-				F468878A15814AE50086D351 /* opentok.bundle in Resources */,
 				F4E6DA141585346600BDEF0A /* add-family.png in Resources */,
 				23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */,
 				F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */,
@@ -2028,6 +2027,7 @@
 				23866FE2159234FE00525588 /* CloseBookNormal.png in Resources */,
 				23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */,
 				23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */,
+				F4A123E71592633C00FC7A24 /* opentok.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2198,11 +2198,12 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/submodules/opentok\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -2223,8 +2224,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0AAEC36C-E9EC-4A8E-9DBF-74F8599F3D56";
+				PROVISIONING_PROFILE = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "51ABA170-FBBA-4CB0-BEB8-5652838260A4";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2237,6 +2238,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/submodules/opentok\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -2285,6 +2287,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/submodules/opentok\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -2338,9 +2341,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/submodules/opentok\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"LOGGING_ENABLED=1",
+					"LOGGING_LEVEL_TRACE=1",
+				);
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (

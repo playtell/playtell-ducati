@@ -22,7 +22,6 @@
 
 @property (nonatomic, copy) NSString* currentSessionToken;
 @property (nonatomic, copy) NSString* currentUserToken;
-@property (nonatomic, assign) BOOL isHibernating;
 @end
 
 static NSString* const kApiKey = @"335312";
@@ -31,7 +30,6 @@ static PTVideoPhone* instance = nil;
 @synthesize session, publisher, subscriber;
 @synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock;
 @synthesize currentSessionToken, currentUserToken;
-@synthesize isHibernating;
 
 + (PTVideoPhone*)sharedPhone {
     if (!instance) {
@@ -43,38 +41,16 @@ static PTVideoPhone* instance = nil;
 - (id)init {
     if (self = [super init]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(phoneWillResignActive:)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(phoneWillEnterForeground:)
                                                      name:UIApplicationWillEnterForegroundNotification
                                                    object:nil];
-        self.isHibernating = NO;
     }
     return self;
 }
 
-- (void)phoneWillResignActive:(NSNotification*)note {
-    LOGMETHOD;
-    if (!self.session || self.session.sessionConnectionStatus != OTSessionConnectionStatusConnected) {
-        return;
-    }
-
-    LogInfo(@"Hibernating video phone");
-    __block UIBackgroundTaskIdentifier taskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        LogTrace(@"Video phone will resign active termination handler being called");
-        [[UIApplication sharedApplication] endBackgroundTask:taskID];
-    }];
-    [self hibernate];
-}
-
 - (void)phoneWillEnterForeground:(NSNotification*)note {
     LOGMETHOD;
-    if (self.isHibernating) {
-        [self wakeUp];
-    }
+    [self wakeUp];
 }
 
 - (void)connectToSession:(NSString*)aSession
@@ -119,32 +95,14 @@ static PTVideoPhone* instance = nil;
     self.currentSessionToken = nil;
 }
 
-- (void)hibernate {
-    LOGMETHOD;
-    if (self.publisher) {
-        [self.publisher.session unpublish:self.publisher];
-        [self.publisher.view removeFromSuperview];
-        self.publisher = nil;
-    } else {
-        LogError(@"Publisher is nil!");
-    }
-
-    if (self.subscriber) {
-        [self.subscriber.view removeFromSuperview];
-        self.subscriber =  nil;
-    } else {
-        LogError(@"Subscriber is nil!");
-    }
-
-    [self.session disconnect];
-    self.isHibernating = YES;
-}
-
 - (void)wakeUp {
     LOGMETHOD;
-    [self.session connectWithApiKey:kApiKey
-                              token:self.currentUserToken];
-    self.isHibernating = NO;
+    if (self.currentSessionToken && self.currentUserToken) {
+        [self connectToSession:self.currentSessionToken
+                     withToken:self.currentUserToken
+                       success:self.successBlock
+                       failure:self.failureBlock];
+    }
 }
 
 - (void)registerWithUserId:(NSString*)username {}
