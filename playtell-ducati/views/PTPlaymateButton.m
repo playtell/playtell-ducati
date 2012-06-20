@@ -79,10 +79,12 @@
     CGFloat expandedHeight = -0.2*CGRectGetHeight(self.frame);
     CGRect expandedFrame = CGRectInset(self.frame, expandedWidth, expandedHeight);
     self.frame = expandedFrame;
+    self.titleLabel.alpha = 0.0;
 }
 
 - (void)resetButton {
     self.frame = self.originalFrame;
+    self.titleLabel.alpha = 1.0;
 }
 
 @end
