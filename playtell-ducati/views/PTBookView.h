@@ -42,8 +42,10 @@
 - (void)resetLayerPosition;
 - (void)open;
 - (void)close;
+- (void)closeImmediately;
 - (void)hide;
 - (void)show;
+- (void)showImmediately;
 - (void)setFocusLevel:(CGFloat)level;
 - (NSNumber *)getId;
 - (void)setBookPosition:(NSInteger)position;

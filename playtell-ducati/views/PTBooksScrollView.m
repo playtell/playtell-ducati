@@ -43,6 +43,15 @@
     }
 }
 
+- (void)showAllBooksImmediatelyExcept:(NSNumber *)bookId {
+    for (PTBookView *bookView in self.subviews) {
+        if (![bookView isKindOfClass:[PTBookView class]] || [[bookView getId] isEqualToNumber:bookId]) {
+            continue;
+        }
+        [bookView showImmediately];
+    }
+}
+
 - (void)navigateToBook:(NSNumber *)bookId {
     // Go through all the books and find the one we need
     int index = 0;

@@ -219,6 +219,30 @@
     [right addAnimation:rightAnim forKey:nil];
 }
 
+- (void)closeImmediately {
+    animating = NO;
+    isOpen = NO;
+    
+    [cover removeAllAnimations];
+    [right removeAllAnimations];
+    
+    // Cover
+    CATransform3D coverRotation = CATransform3DIdentity;
+    coverRotation.m34 = 1.0 / -1000;
+    coverRotation = CATransform3DTranslate(coverRotation, -200.0f, 0.0f, -300.0f);
+    coverRotation = CATransform3DRotate(coverRotation, degreesToRadians(0.0f), 0.0f, 1.0f, 0.0f);
+    cover.transform = coverRotation;
+    
+    // Right
+    CATransform3D rightRotation = CATransform3DIdentity;
+    rightRotation.m34 = 1.0 / -1000;
+    rightRotation = CATransform3DTranslate(rightRotation, -200.0f, 0.0f, -300.0f);
+    right.transform = rightRotation;
+    
+    coverIn.opacity = 0.0f;
+    right.opacity = 0.0f;
+}
+
 - (void)setFocusLevel:(CGFloat)level {
     // In focus?
     inFocus = (level == 1.0f);
@@ -312,6 +336,11 @@
     coverAnim.removedOnCompletion = NO;
     coverOut.opacity = 0.6f;
     [coverOut addAnimation:coverAnim forKey:nil];
+}
+
+- (void)showImmediately {
+    [coverOut removeAllAnimations];
+    coverOut.opacity = 0.6f;
 }
 
 - (NSInteger)getBookPosition {
