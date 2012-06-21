@@ -345,7 +345,10 @@
             // playdates when it appears
             [self transitionToDialpad];
         }
-                                                          onFailure:nil];
+                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+        {
+            [self transitionToDialpad];
+        }];
     }
 }
 
