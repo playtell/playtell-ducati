@@ -432,9 +432,11 @@
     // Close book, hide pages, show all other books
     if (bookView != nil) {
         // Set current page view to book view
-        PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pagesScrollView.currentPage - 1)];
-        [bookView setPageContentsWithLeftContent:[pageView getLeftContent]
-                                 andRightContent:[pageView getRightContent]];
+        if ([pagesScrollView.subviews count] > 0 && (pagesScrollView.currentPage - 1) < [pagesScrollView.subviews count]) {
+            PTPageView *pageView = [pagesScrollView.subviews objectAtIndex:(pagesScrollView.currentPage - 1)];
+            [bookView setPageContentsWithLeftContent:[pageView getLeftContent]
+                                     andRightContent:[pageView getRightContent]];
+        }
         [bookView setHidden:NO];
         [pagesScrollView setHidden:YES];
         [bookView close];
@@ -445,14 +447,37 @@
 - (void)pusherPlayDateChangeBook:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSInteger playerId = [[eventData objectForKey:@"player"] integerValue];
+    NSNumber *bookId = [eventData objectForKey:@"book"];
     
     // Check if this user initiated the change book event
     if ([[PTUser currentUser] userID] == playerId) {
         return;
     }
     
+    // Check if a book is already open
+    if (isBookOpen && ![currentBookId isEqualToNumber:bookId]) {
+        // Close current book immediately & show all others immediately immediately (aka. no animations)
+        for (PTBookView *bookView in bookList) {
+            if ([[bookView getId] isEqualToNumber:currentBookId]) {
+                [bookView closeImmediately];
+                [booksScrollView showAllBooksImmediatelyExcept:currentBookId];
+                break;
+            }
+        }
+
+        // Hide pages view
+        [pagesScrollView setHidden:YES];
+        
+        // Hide closeBook button (immediately)
+        [closeBook.layer removeAllAnimations];
+        closeBook.alpha = 0.0f;
+    }
+    
+    // Update status values
+    isBookOpen = YES;
+    [booksParentView setIsBookOpen:YES];
+    
     // Perform book change
-    NSNumber *bookId = [eventData objectForKey:@"book"];
     currentBookId = [bookId copy];
     [booksScrollView navigateToBook:bookId];
     [self performSelector:@selector(openBookAfterNavigation) withObject:nil afterDelay:0.35];
@@ -475,6 +500,11 @@
             break;
         }
     }
+    
+    // Show close book button
+    [UIView animateWithDuration:(BOOK_OPEN_CLOSE_ANIMATION_SPEED + 0.25f) animations:^{
+        closeBook.alpha = 1.0f;
+    }];
 }
 
 - (void)pusherPlayDateFingerStart:(NSNotification *)notification {

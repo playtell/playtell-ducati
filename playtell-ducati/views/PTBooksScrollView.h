@@ -14,6 +14,7 @@
 
 - (void)hideAllBooksExcept:(NSNumber *)bookId;
 - (void)showAllBooksExcept:(NSNumber *)bookId;
+- (void)showAllBooksImmediatelyExcept:(NSNumber *)bookId;
 - (void)navigateToBook:(NSNumber *)bookId;
 
 @end
