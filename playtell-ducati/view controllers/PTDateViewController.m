@@ -462,6 +462,7 @@
         // Close current book immediately & show all others immediately immediately (aka. no animations)
         for (PTBookView *bookView in bookList) {
             if ([[bookView getId] isEqualToNumber:currentBookId]) {
+                [bookView setHidden:NO];
                 [bookView closeImmediately];
                 [booksScrollView showAllBooksImmediatelyExcept:currentBookId];
                 break;
