@@ -136,7 +136,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
          // the same methods
          LogDebug(@"%@ received playdate on check: %@", NSStringFromSelector(_cmd), playdate);
          self.requestedPlaydate = playdate;
-         [self notifyUserOfPlaydate:playdate];
+         [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
      } failure:nil];
 }
 
@@ -251,24 +251,28 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 - (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
     LogDebug(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
-    
+
+    // If the pusher event is intended for the current user,
+    // notify the user of the event and subscribe to the playdate channel
+    // for updates (potentially end playdate)
     if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
         self.requestedPlaydate = playdate;
-        [self notifyUserOfPlaydate:playdate];
+        [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
     }
+
+}
+
+- (void)notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel {
+    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:self.requestedPlaydate.initiator.userID]];
+    [self activatePlaymateButton:button];
 
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playmateEndedPlaydate:)
                                                  name:@"PlayDateEndPlaydate"
                                                object:nil];
-}
-
-- (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
-    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:playdate.initiator.userID]];
-    [self activatePlaymateButton:button];
 }
 
 - (void)activatePlaymateButton:(PTPlaymateButton*)button {
