@@ -32,6 +32,7 @@ static PTPlayTellPusher* instance = nil;
 @synthesize pusherClient;
 @synthesize rendezvousChannel;
 @synthesize isSubscribedToPlaydateChannel;
+@synthesize isSubscribedToRendezvousChannel;
 
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
@@ -79,6 +80,8 @@ static PTPlayTellPusher* instance = nil;
                                                             object:self
                                                           userInfo:info];
     }];
+
+    self.isSubscribedToRendezvousChannel = YES;
 }
 
 - (void)unsubscribeFromRendezvousChannel {
@@ -86,6 +89,7 @@ static PTPlayTellPusher* instance = nil;
         [self.pusherClient unsubscribeFromChannel:self.rendezvousChannel];
     }
     self.rendezvousChannel = nil;
+    self.isSubscribedToRendezvousChannel = NO;
 }
 
 - (void)subscribeToPlaydateChannel:(NSString *)channelName {

@@ -30,6 +30,7 @@
 #import "PTPlaydate+InitatorChecking.h"
 #import "PTPlaydateFingerTapRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
+#import "PTBooksListRequest.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
@@ -137,16 +138,6 @@
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks {
-    // Parse all books into format we need
-    books = [[NSMutableDictionary alloc] init];
-    for (NSDictionary *book in allBooks) {
-        NSNumber *bookId = [book objectForKey:@"id"];
-        [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
-    }
-    return [super initWithNibName:nibName bundle:nibBundle];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -156,6 +147,157 @@
     [booksParentView addSubview:booksScrollView];
     [self.view addSubview:booksParentView];
     
+    // Init books list
+    [self loadBooks];
+    
+    // Init page scroll view and its pages
+    pagesScrollView = [[PTPagesScrollView alloc] initWithFrame:CGRectMake(112.0f, 126.0f, 800.0f, 600.0f)];
+    [pagesScrollView setHidden:YES];
+    [pagesScrollView setPagesScrollDelegate:self];
+    [self.view addSubview:pagesScrollView];
+    
+    // Cleate web view that will load our pages (hidden)
+    webView = [[UIWebView alloc] init];
+    [webView setDelegate:self];
+    webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
+    [self.view addSubview:webView];
+    
+    // Create dictionary that will hold finger views
+    fingerViews = [[NSMutableDictionary alloc] init];
+    
+    // Add the ChatHUD view to the top of the screen
+    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.chatView];
+    [self setCurrentUserPhoto];
+    [self setPlaymatePhoto];
+
+    // Start listening to pusher notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
+    
+    // Setup end playdate & close book buttons
+    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
+    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateSelected];
+    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateHighlighted];
+    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateSelected];
+    closeBook.alpha = 0.0f;
+    
+    // Setup end playdate popup
+    endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
+    endPlaydatePopup.hidden = YES;
+}
+
+- (void)loadBooks {
+    // Load books from plist file
+    boolListLoadedFromPlist = NO;
+    NSString *documentsDirectory = [self getDocumentsPath];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:@"books.plist"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath: path]) {
+        // File does not exist! Load from API
+        [self loadBooksFromAPIWithWritePath:path];
+        return;
+    }
+    
+    // Populate books dictionary
+    boolListLoadedFromPlist = YES;
+    books = [[NSMutableDictionary alloc] init];
+    NSArray *fileData = [[NSArray alloc] initWithContentsOfFile:path];
+    for (NSDictionary *book in fileData) {
+        NSNumber *bookId = [book objectForKey:@"id"];
+        [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+    }
+    
+    // Load the actual views
+    [self loadBookViewsFromDictionary];
+    
+    // Get the updated list from API
+    [self loadBooksFromAPIWithWritePath:path];
+}
+
+- (void)loadBooksFromAPIWithWritePath:(NSString *)path {
+    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
+    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
+                               onSuccess:^(NSDictionary *result)
+    {
+        NSDictionary *allBooks = [result valueForKey:@"books"];
+        if (boolListLoadedFromPlist == NO) {
+            // Parse all books into format we need
+            books = [[NSMutableDictionary alloc] init];
+            for (NSDictionary *book in allBooks) {
+                NSNumber *bookId = [book objectForKey:@"id"];
+                [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+            }
+            
+            // Write book list to plist file
+            NSMutableArray *writeData = [[NSMutableArray alloc] init];
+            for (NSNumber *bookId in books) {
+                [writeData addObject:[books objectForKey:bookId]];
+            }
+            [writeData writeToFile:path atomically:YES];
+            
+            // Load the actual views
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                 [self loadBookViewsFromDictionary];
+            });
+        } else {
+            // Figure out which books are new
+            NSMutableArray *newBooks = [[NSMutableArray alloc] init];
+            NSInteger oldTotalForBooks = [[books allKeys] count];
+            for (NSDictionary *book in allBooks) {
+                NSNumber *bookId = [book objectForKey:@"id"];
+                if ([books objectForKey:bookId] == nil) {
+                    [newBooks addObject:bookId];
+                    [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+                }
+            }
+            
+            // If there are new books, create views for them and load their covers
+            if ([newBooks count] > 0) {
+                // Create new book views
+                BOOL restartCoversLoad = (coversToLoadIndex == [coversToLoad count]); // This means original covers load has finished
+                CGFloat xPos = (booksScrollView.frame.size.width * oldTotalForBooks) + (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
+                PTBookView *bookView;
+                for (int i=0; i<[newBooks count]; i++) {
+                    NSNumber *bookId = [newBooks objectAtIndex:i];
+                    NSMutableDictionary *book = [books objectForKey:bookId];
+                    bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+                    [bookView setBookPosition:(oldTotalForBooks + i)];
+                    [bookView setDelegate:self];
+                    [booksScrollView addSubview:bookView];
+                    xPos += booksScrollView.frame.size.width;
+                    i++;
+                    [bookList addObject:bookView];
+                    
+                    // Book cover pages load
+                    [coversToLoad addObject:bookId];
+                }
+                
+                // Update scroll view width (based on # of books)
+                CGFloat scroll_width = booksScrollView.frame.size.width * [books count];
+                [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
+                
+                // Start loading book covers
+                if (restartCoversLoad) {
+                    [self loadBookCoverFromFileOrURL];
+                }
+                
+                // Write book list to plist file
+                NSMutableArray *writeData = [[NSMutableArray alloc] init];
+                for (NSNumber *bookId in books) {
+                    [writeData addObject:[books objectForKey:bookId]];
+                }
+                [writeData writeToFile:path atomically:YES];
+            }
+        }
+    } onFailure:nil];
+}
+
+- (void)loadBookViewsFromDictionary {
     // Create views for each book
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
     PTBookView *bookView;
@@ -186,49 +328,9 @@
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
     
-    // Init page scroll view and its pages
-    pagesScrollView = [[PTPagesScrollView alloc] initWithFrame:CGRectMake(112.0f, 126.0f, 800.0f, 600.0f)];
-    [pagesScrollView setHidden:YES];
-    [pagesScrollView setPagesScrollDelegate:self];
-    [self.view addSubview:pagesScrollView];
-    
-    // Cleate web view that will load our pages (hidden)
-    webView = [[UIWebView alloc] init];
-    [webView setDelegate:self];
-    webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
-    [self.view addSubview:webView];
-    
-    // Create dictionary that will hold finger views
-    fingerViews = [[NSMutableDictionary alloc] init];
-    
     // Start loading book covers
     [self loadBookCovers];
     isPageViewLoading = NO;
-
-    // Add the ChatHUD view to the top of the screen
-    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.chatView];
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
-
-    // Start listening to pusher notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateEndPlaydate:) name:@"PlayDateEndPlaydate" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateChangeBook:) name:@"PlayDateChangeBook" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
-    
-    // Setup end playdate & close book buttons
-    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
-    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateSelected];
-    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateHighlighted];
-    [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateSelected];
-    closeBook.alpha = 0.0f;
-    
-    // Setup end playdate popup
-    endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
-    endPlaydatePopup.hidden = YES;
 }
 
 - (void)setCurrentUserPhoto {
@@ -328,6 +430,9 @@
 
 - (void)transitionToDialpad {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (appDelegate.dialpadController.loadingView != nil) {
+        [appDelegate.dialpadController.loadingView removeFromSuperview];
+    }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
@@ -619,6 +724,7 @@
         NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
         // Render cover view to bitmap
         [self convertWebViewCoverToBitmapWithBookId:bookId];
+        return NO;
     }
     
     return YES;

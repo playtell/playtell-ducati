@@ -8,7 +8,6 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
-#import "PTBooksListRequest.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
@@ -35,7 +34,6 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @property (nonatomic, retain) NSDictionary* userButtonHash;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
-@property (nonatomic, retain) NSArray* books;
 @property (nonatomic, retain) PTDateViewController* dateController;
 @end
 
@@ -46,8 +44,8 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @synthesize userButtonHash;
 @synthesize requestedPlaydate;
 @synthesize cancelPlaydateRecognizer;
-@synthesize books;
 @synthesize dateController;
+@synthesize loadingView;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -75,21 +73,49 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     } else {
         viewHasAppearedAtLeastOnce = YES;
     }
-
+    
     // Check now for any pending playdates, and register to be notified
     // when we come back to life if any were received while sleeping
     if (playdateRequestedViaPush != YES) {
         // Only check for pending playdates if one didn't come via push notification
-        // Otherwise there's playdata collision!
+        // Otherwise there's playdate collision!
         // More than likely, this will return the same playdate
         // BUT loading playdate id passed via push to be safe
         [self checkForPendingPlaydatesAndNotifyUser];
+    } else {
+        [self loadPlaydateDataFromPushNotification];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
+//                                                 name:UIApplicationWillEnterForegroundNotification
+//                                               object:nil];
     
+}
+
+- (void)loadPlaydateDataFromPushNotification {
+    // Request playdate details from server (using playdate id passed in via push notification)
+    PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
+    [playdateDetailsRequest playdateDetailsForPlaydateId:playdateRequestedViaPushId
+                                               authToken:[[PTUser currentUser] authToken]
+                                         playmateFactory:[PTConcretePlaymateFactory sharedFactory]
+                                                 success:^(PTPlaydate *playdate) {
+                                                     LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
+                                                     self.requestedPlaydate = playdate;
+                                                     dispatch_async(dispatch_get_main_queue(), ^() {
+                                                         [self joinPlaydate];
+                                                     });
+                                                 }
+                                                 failure:nil
+     ];
+    
+    // Add a loading view to hide dialpad controls
+    loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
+    UIImageView* loadingBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"date_bg.png"]];
+    [loadingView addSubview:loadingBG];
+    [self.view addSubview:loadingView];
+    
+    // Clean up for next dialpad view load (after playdate ends)
+    playdateRequestedViaPush = NO;
 }
 
 - (void)setAwaitingPlaydateRequest:(NSInteger)playdateId {
@@ -115,7 +141,9 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 }
 
 - (void)checkForPendingPlaydateOnForegrounding:(NSNotification*)note {
-    [self checkForPendingPlaydatesAndNotifyUser];
+    if (playdateRequestedViaPush != YES) {
+        [self checkForPendingPlaydatesAndNotifyUser];
+    }
 }
 
 - (void)drawPlaymates {
@@ -200,12 +228,12 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 - (void)joinPlaydate {
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
     // Unsubscribe from rendezvous channel
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    }
 
-    NSAssert(self.books, @"Book list cannot be nil before transitioning to dateController");
     self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                 bundle:nil
-                                                            andBookList:self.books];
+                                                                 bundle:nil];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 
@@ -346,35 +374,6 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     self.cancelPlaydateRecognizer.delegate = self;
 
     [self drawPlaymates];
-
-    self.books = nil;
-    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
-    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
-                               onSuccess:^(NSDictionary *result)
-    {
-        // TODO : I don't like diving into the results object here, this needs refactored
-        self.books = [result valueForKey:@"books"];
-        
-        // Now that we have the list of books, load playdate requested by push notification
-        if (playdateRequestedViaPush) {
-            // Request playdata details from server
-            PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
-            [playdateDetailsRequest playdateDetailsForPlaydateId:playdateRequestedViaPushId
-                                                       authToken:[[PTUser currentUser] authToken]
-                                                 playmateFactory:[PTConcretePlaymateFactory sharedFactory]
-                                                         success:^(PTPlaydate *playdate) {
-                                                             LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
-                                                             self.requestedPlaydate = playdate;
-                                                             dispatch_async(dispatch_get_main_queue(), ^() {
-                                                                 [self joinPlaydate];
-                                                             });
-                                                         }
-                                                         failure:nil
-             ];
-        }
-    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        LogError(@"Failed to fetch books list: %@", error);
-    }];
 }
 
 - (void)viewDidUnload {

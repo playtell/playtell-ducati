@@ -31,6 +31,7 @@
     BOOL isBookOpen;
     NSMutableArray *coversToLoad;
     NSInteger coversToLoadIndex;
+    BOOL boolListLoadedFromPlist;
     
     // Pages
     PTPagesScrollView *pagesScrollView;
@@ -51,7 +52,6 @@
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydateForreal;
 @property (nonatomic, retain) IBOutlet UIButton *closeBook;
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle andBookList:(NSArray *)allBooks;
 - (IBAction)playdateDisconnect:(id)sender;
 - (IBAction)closeBookButtonPressed:(id)sender;
 - (IBAction)endPlaydatePopupToggle:(id)sender;

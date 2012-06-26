@@ -78,7 +78,7 @@
     [self unsunscribeFromRendezvousAndUpdateUI];
 
     // Load playdate
-    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil andBookList:books];
+    PTDateViewController *dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController" bundle:nil];
     [dateController setPlaydate:self.playdate];
     [self presentViewController:dateController animated:YES completion:nil];
 }
