@@ -12,6 +12,7 @@
 
 extern NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent;
 extern NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent;
+extern NSString* const PTPlayTellPusherDidReceivePlaydateEndedEvent;
 
 extern NSString* const PTPlaydateKey;
 

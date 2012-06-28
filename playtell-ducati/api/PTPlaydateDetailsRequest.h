@@ -8,7 +8,6 @@
 
 #import "PTRequest.h"
 #import "PTPlaydate.h"
-#import "PTRequest.h"
 
 typedef void (^PTPlaydateDetailsRequestSuccessBlock) (PTPlaydate* result);
 typedef void (^PTPlaydateDetailsRequestFailureBlock) (NSURLRequest* request, NSHTTPURLResponse* response, NSError* error, id JSON);

@@ -22,6 +22,7 @@
 @synthesize playmate;
 @synthesize originalFrame;
 @synthesize isActivated;
+@synthesize isPending;
 
 +(PTPlaymateButton*)playmateButtonWithPlaymate:(PTPlaymate*)aPlaymate {
     UIImage* placeholder = [UIImage imageNamed:@"profile_default_2.png"];
@@ -51,9 +52,12 @@
                                                                 success:^(UIImage *image)
     {
         LogTrace(@"Setting button image for %@", aPlaymate.username);
-        [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
-        playmateButton.layer.cornerRadius = 10.0;
-        playmateButton.clipsToBounds = YES;
+        // Set the loaded photo only if the user doesn't have a 'pending' status (aka. they haven't installed the app yet)
+        if (!playmateButton.isPending) {
+            [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
+            playmateButton.layer.cornerRadius = 10.0;
+            playmateButton.clipsToBounds = YES;
+        }
         aPlaymate.userPhoto = image;
     }];
     [reqeust start];
@@ -66,6 +70,7 @@
 //    containerFrame = container.frame;
 //    containerFrame.origin.y = buttonFrame.size.height-1;
 //    container.frame = containerFrame;
+    playmateButton.isPending = NO;
     return playmateButton;
 }
 
@@ -94,6 +99,20 @@
     self.titleEdgeInsets = UIEdgeInsetsMake(CGRectGetHeight(self.bounds) - buttonLabelFrame.size.height - 2.0,
                                             0,
                                             0, 0);
+}
+
+- (void)setPending {
+    isPending = YES;
+    [self setBackgroundImage:[UIImage imageNamed:@"dialpad-pending"] forState:UIControlStateNormal];
+}
+
+- (void)setPlaydating {
+    [self setBackgroundImage:[UIImage imageNamed:@"dialad-live"] forState:UIControlStateDisabled];    
+    [self setEnabled:NO];
+}
+
+- (void)setNormal {
+    [self setEnabled:YES];
 }
 
 @end

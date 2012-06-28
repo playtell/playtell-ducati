@@ -477,34 +477,72 @@
 }
 
 - (void)convertWebViewToBitmap {
-    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-        
-        // Generate bitmaps
+    // Generate bitmaps
+    dispatch_async(dispatch_get_main_queue(), ^() {
         UIGraphicsBeginImageContext(webView.bounds.size);
-        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-            // Cache image locally
-            NSString *imagePath = [self imagePathForBook];
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-        });
-        
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            // Clear webview instance
-            [webView removeFromSuperview];
-            webView = nil;
+            [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
             
-            // Send the image to page
-            [self setPageContentsWithImage:image];
-            
-            // Notify delegate of page load
-            [delegate pageLoaded:pageNumber];
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                [self setPageContentsWithImage:image];
+                
+                [delegate pageLoaded:pageNumber];
+                
+                [webView removeFromSuperview];
+                webView = nil;
+            });
         });
     });
+    
+    //UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+
+    // Cache image locally
+//    NSString *imagePath = [self imagePathForBook];
+//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+//    [imageData writeToFile:imagePath atomically:YES];
+
+    // Clear webview instance
+//    [webView removeFromSuperview];
+//    webView = nil;
+    
+    // Send the image to page
+    //[self setPageContentsWithImage:image];
+    
+    // Notify delegate of page load
+//    [delegate pageLoaded:pageNumber];
+
+//    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
+//        
+//        // Generate bitmaps
+//        UIGraphicsBeginImageContext(webView.bounds.size);
+//        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//        UIGraphicsEndImageContext();
+//        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
+//            // Cache image locally
+//            NSString *imagePath = [self imagePathForBook];
+//            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+//            [imageData writeToFile:imagePath atomically:YES];
+//        });
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^() {
+//            // Clear webview instance
+//            [webView removeFromSuperview];
+//            webView = nil;
+//            
+//            // Send the image to page
+//            [self setPageContentsWithImage:image];
+//            
+//            // Notify delegate of page load
+//            [delegate pageLoaded:pageNumber];
+//        });
+//    });
 }
 
 - (NSString *)imagePathForBook {

@@ -20,7 +20,7 @@
 #import "PTUser.h"
 #import "TransitionController.h"
 #import "PTPlaydateDetailsRequest.h"
-
+#import "PTUsersGetStatusRequest.h"
 #import "UIView+PlayTell.h"
 
 #import <QuartzCore/QuartzCore.h>
@@ -60,6 +60,16 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
                                              selector:@selector(pusherDidReceivePlaydateRequestNotification:)
                                                  name:PTPlayTellPusherDidReceivePlaydateRequestedEvent
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateEndNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateEndedEvent
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
+                                               object:nil];
     if (self.selectedButton) {
         [self deactivatePlaymateButton];
     }
@@ -89,7 +99,6 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 //                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
 //                                                 name:UIApplicationWillEnterForegroundNotification
 //                                               object:nil];
-    
 }
 
 - (void)loadPlaydateDataFromPushNotification {
@@ -201,6 +210,35 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
     self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
     NSLog(@"Number of rows: %u", numRows);
+    
+    // Get a list of all playmate ids and get their current status
+    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    for (NSString *key in [self.userButtonHash allKeys]) {
+        if (![key isEqualToString:@"AddUserButton"]) {
+            [ids addObject:key];
+        }
+    }
+    PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
+    [usersGetStatusRequest usersGetStatusForUserIds:ids
+                                          authToken:[[PTUser currentUser] authToken]
+                                            success:^(NSDictionary *result) {
+                                                NSArray *statuses = [result objectForKey:@"status"];
+                                                for (NSDictionary *userStatus in statuses) {
+                                                    NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
+                                                    NSString *user_status = [userStatus objectForKey:@"status"];
+                                                    PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
+                                                    if (button == nil) {
+                                                        return;
+                                                    }
+                                                    if ([user_status isEqualToString:@"pending"]) {
+                                                        [button setPending];
+                                                    } else if ([user_status isEqualToString:@"playdate"]) {
+                                                        [button setPlaydating];
+                                                    }
+                                                }
+                                            }
+                                            failure:nil
+     ];
 }
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
@@ -255,15 +293,67 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
         self.requestedPlaydate = playdate;
         [self notifyUserOfPlaydate:playdate];
+
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+        [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playmateEndedPlaydate:)
+                                                     name:@"PlayDateEndPlaydate"
+                                                   object:nil];
+    } else {
+        // Mark players in this playdate as 'pending' in dialpad
+
+        // Find appropriate playmate buttons
+        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
+        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
+        if (button_player1) {
+            [button_player1 setPlaydating];
+        }
+        if (button_player2) {
+            [button_player2 setPlaydating];
+        }
     }
+}
 
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
+- (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
+    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+    LogDebug(@"%@ Playdate Joined: %@", NSStringFromSelector(_cmd), playdate);
+    
+    // Make sure current user didn't participate in this playdate
+    if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
+        // Mark players in this playdate as 'in playdate' in dialpad
+        
+        // Find appropriate playmate buttons
+        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
+        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
+        if (button_player1) {
+            [button_player1 setPlaydating];
+        }
+        if (button_player2) {
+            [button_player2 setPlaydating];
+        }
+    }
+}
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playmateEndedPlaydate:)
-                                                 name:@"PlayDateEndPlaydate"
-                                               object:nil];
+- (void)pusherDidReceivePlaydateEndNotification:(NSNotification*)note {
+    PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
+    LogDebug(@"%@ Playdate Ended: %@", NSStringFromSelector(_cmd), playdate);
+    
+    // Make sure current user didn't participate in this playdate
+    if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
+        // Mark players in this playdate as active in dialpad
+        
+        // Find appropriate playmate buttons
+        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
+        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
+        if (button_player1) {
+            [button_player1 setNormal];
+        }
+        if (button_player2) {
+            [button_player2 setNormal];
+        }
+    }
 }
 
 - (void)notifyUserOfPlaydate:(PTPlaydate*)playdate {
@@ -303,7 +393,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 
 - (void)playmateEndedPlaydate:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"playmateEndedPlaydate"
+                                                    name:@"PlayDateEndPlaydate"
                                                   object:nil];
     [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.requestedPlaydate.pusherChannelName];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];

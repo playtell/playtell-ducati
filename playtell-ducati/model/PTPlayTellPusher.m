@@ -19,6 +19,7 @@
 
 NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent = @"PTPlayTellPusherDidReceivePlaydateJoinedEvent";
 NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent = @"PTPlayTellPusherDidReceivePlaydateRequestedEvent";
+NSString* const PTPlayTellPusherDidReceivePlaydateEndedEvent = @"PTPlayTellPusherDidReceivePlaydateEndedEvent";
 
 NSString* const PTPlaydateKey = @"PTPlaydateKey";
 
@@ -77,6 +78,16 @@ static PTPlayTellPusher* instance = nil;
 
         NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateRequestedEvent
+                                                            object:self
+                                                          userInfo:info];
+    }];
+    [self.rendezvousChannel bindToEventNamed:@"playdate_ended" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        LogInfo(@"Playdate ended: %@", channelEvent);
+        PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
+                                                      playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+        
+        NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateEndedEvent
                                                             object:self
                                                           userInfo:info];
     }];

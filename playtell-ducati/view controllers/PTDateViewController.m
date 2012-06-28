@@ -731,58 +731,46 @@
 }
 
 - (void)convertWebViewPageToBitmapWithBookId:(NSInteger)bookId andPageNumber:(NSInteger)pageNumber {
-    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-        // Generate bitmaps
-        UIGraphicsBeginImageContext(webView.bounds.size);
-        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            // Send the image to book
-            PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-            [bookView setPageContentsWithImage:image];
-            
-            // Cache image locally
-            NSString *imagePath = [self pageImagePathForBook:[NSNumber numberWithInteger:bookId] AndPageNumber:pageNumber];
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-            
-            // Load next cover
-            coversToLoadIndex++;
-            if (coversToLoadIndex < [coversToLoad count]) {
-                [self loadBookCoverFromFileOrURL];
-            }
-        });
-    });
+    // Generate bitmaps
+    UIGraphicsBeginImageContext(webView.bounds.size);
+    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    // Send the image to book
+    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+    [bookView setPageContentsWithImage:image];
+    
+    // Cache image locally
+    NSString *imagePath = [self pageImagePathForBook:[NSNumber numberWithInteger:bookId] AndPageNumber:pageNumber];
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+    [imageData writeToFile:imagePath atomically:YES];
+    
+    // Load next cover
+    coversToLoadIndex++;
+    if (coversToLoadIndex < [coversToLoad count]) {
+        [self loadBookCoverFromFileOrURL];
+    }
 }
 
 - (void)convertWebViewCoverToBitmapWithBookId:(NSInteger)bookId {
-    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-        // Generate bitmaps
-        UIGraphicsBeginImageContext(CGSizeMake(webView.bounds.size.width / 2.0f, webView.bounds.size.height));
-        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        dispatch_async(dispatch_get_main_queue(), ^() {
-            // Send the image to book
-            PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-            [bookView setCoverContentsWithImage:image];
-            
-            // Cache image locally
-            NSMutableDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-            NSNumber *bookId = [book objectForKey:@"id"];
-            NSString *imagePath = [self coverImagePathForBook:bookId];
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-            
-            // Before loading next cover, load first page of this book
-            [self loadFirstPageFromFileOrURL];
-        });
-    });
+    // Generate bitmaps
+    UIGraphicsBeginImageContext(CGSizeMake(webView.bounds.size.width / 2.0f, webView.bounds.size.height));
+    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    // Send the image to book
+    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+    [bookView setCoverContentsWithImage:image];
+    
+    // Cache image locally
+    NSString *imagePath = [self coverImagePathForBook:[NSNumber numberWithInteger:bookId]];
+    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+    [imageData writeToFile:imagePath atomically:YES];
+    
+    // Before loading next cover, load first page of this book
+    [self loadFirstPageFromFileOrURL];
 }
 
 - (NSString *)getDocumentsPath {
@@ -877,6 +865,7 @@
 }
 
 - (void)beginBookPageLoading {
+    return;
     // Setup loading of pages for book
     NSMutableDictionary *book = [books objectForKey:currentBookId];
     currentPage = [[book objectForKey:@"current_page"] intValue];
@@ -923,7 +912,6 @@
 #pragma mark Pages scroll delegates
 
 - (void)pageTurnedTo:(NSInteger)number {
-    //NSLog(@"Turned to page: %i", number);
     // Reset page loading from new page number
     [self beginBookPageLoading];
     
