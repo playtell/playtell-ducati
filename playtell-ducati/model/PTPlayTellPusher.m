@@ -26,6 +26,8 @@ NSString* const PTPlaydateKey = @"PTPlaydateKey";
 @interface PTPlayTellPusher () <PTPusherDelegate, PTPusherPresenceChannelDelegate>
 @property (nonatomic, retain) PTPusher* pusherClient;
 @property (nonatomic, retain) PTPusherPresenceChannel* rendezvousChannel;
+
+@property (nonatomic, assign) BOOL shouldUnsubscribeFromRendezvous;
 @end
 
 @implementation PTPlayTellPusher
@@ -34,6 +36,7 @@ static PTPlayTellPusher* instance = nil;
 @synthesize rendezvousChannel;
 @synthesize isSubscribedToPlaydateChannel;
 @synthesize isSubscribedToRendezvousChannel;
+@synthesize shouldUnsubscribeFromRendezvous;
 
 + (PTPlayTellPusher*)sharedPusher {
     if (instance == nil) {
@@ -96,11 +99,27 @@ static PTPlayTellPusher* instance = nil;
 }
 
 - (void)unsubscribeFromRendezvousChannel {
-    if (self.rendezvousChannel) {
-        [self.pusherClient unsubscribeFromChannel:self.rendezvousChannel];
+
+    // Trying to protect against a race condiction here where unsubscribe
+    // is called on the rendezvous channel before the server acknowledges that
+    // the channel is actually subscribed to (presenceChannel:didSubscribeWithMemberList:)
+    //
+    // If asked to unsubscribe from a channel that has not yet called the delegate method,
+    // the shouldUnsubscribeFromRendezvousChannel flag is set, which the delegate method
+    // presenceChannel:didSubscribeWithMemberList: will check when called, at which point
+    // the delegate method will unsubscribe if the flag is set.
+    
+    if (self.isSubscribedToRendezvousChannel) {
+        if (self.rendezvousChannel) {
+            [self.pusherClient unsubscribeFromChannel:self.rendezvousChannel];
+        }
+        self.rendezvousChannel = nil;
+        self.shouldUnsubscribeFromRendezvous = NO;
+        self.isSubscribedToRendezvousChannel = NO;
+    } else {
+        self.shouldUnsubscribeFromRendezvous = YES;
+        LogInfo(@"Asked to unsubscribe from a not-yet-fully-subscribed rendezvous channel");
     }
-    self.rendezvousChannel = nil;
-    self.isSubscribedToRendezvousChannel = NO;
 }
 
 - (void)subscribeToPlaydateChannel:(NSString *)channelName {
@@ -245,6 +264,14 @@ static PTPlayTellPusher* instance = nil;
 #pragma mark PTPusherPresenceChannelDelegate methods
 - (void)presenceChannel:(PTPusherPresenceChannel *)channel didSubscribeWithMemberList:(NSArray *)members {
     LOGMETHOD;
+
+    // TODO : should check that this channel is the rendezvous channel, rather than
+    // blindly assuming that it is
+    self.isSubscribedToRendezvousChannel = YES;
+    if (self.shouldUnsubscribeFromRendezvous) {
+        [self unsubscribeFromRendezvousChannel];
+        LogInfo(@"Now unsubscribing from a now-fully-subscribed rendezvous channel");
+    }
 }
 
 - (void)presenceChannel:(PTPusherPresenceChannel *)channel memberAddedWithID:(NSString *)memberID memberInfo:(NSDictionary *)memberInfo {
