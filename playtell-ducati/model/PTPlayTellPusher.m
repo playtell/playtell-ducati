@@ -94,8 +94,6 @@ static PTPlayTellPusher* instance = nil;
                                                             object:self
                                                           userInfo:info];
     }];
-
-    self.isSubscribedToRendezvousChannel = YES;
 }
 
 - (void)unsubscribeFromRendezvousChannel {
