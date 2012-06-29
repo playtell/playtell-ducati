@@ -23,6 +23,7 @@
 #import "PTUsersGetStatusRequest.h"
 #import "UIView+PlayTell.h"
 
+#import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
 #define kAnimationRotateDeg 1.0
@@ -35,6 +36,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @property (nonatomic, retain) PTDateViewController* dateController;
+@property (nonatomic, retain) AVAudioPlayer* audioPlayer;
 @end
 
 @implementation PTDialpadViewController
@@ -46,6 +48,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 @synthesize cancelPlaydateRecognizer;
 @synthesize dateController;
 @synthesize loadingView;
+@synthesize audioPlayer;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -280,6 +283,12 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
         self.requestedPlaydate = nil;
         self.dateController = nil;
     }
+
+    [self endRinging];
+}
+
+- (void)endRinging {
+    [self.audioPlayer stop];
 }
 
 - (NSString*)stringFromUInt:(NSUInteger)number {
@@ -354,6 +363,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 - (void)notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel {
     PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:self.requestedPlaydate.initiator.userID]];
     [self activatePlaymateButton:button];
+    [self beginRinging];
 
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
@@ -394,6 +404,10 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     self.cancelPlaydateRecognizer.enabled = YES;
 }
 
+- (void)beginRinging {
+    [self.audioPlayer play];
+}
+
 - (void)playmateEndedPlaydate:(NSNotification*)note {
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"PlayDateEndPlaydate"
@@ -401,6 +415,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.requestedPlaydate.pusherChannelName];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     [self deactivatePlaymateButton];
+    [self endRinging];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -469,6 +484,20 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
     [self drawPlaymates];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupRinger];
+}
+
+- (void)setupRinger {
+    NSError *playerError;
+    NSURL *ringtone = [[NSBundle mainBundle] URLForResource:@"ringtone-connecting" withExtension:@"mp3"];
+    AVAudioPlayer *thePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:ringtone error:&playerError];
+    thePlayer.volume = 0.25;
+    thePlayer.numberOfLoops = 4;
+    self.audioPlayer = thePlayer;
+}
+
 - (void)viewDidUnload {
     [super viewDidUnload];
 }
@@ -480,6 +509,7 @@ static BOOL viewHasAppearedAtLeastOnce = NO;
 - (void)viewTapped:(UIGestureRecognizer*)recognizers {
     LOGMETHOD;
     [self deactivatePlaymateButton];
+    [self endRinging];
     PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
     [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:self.requestedPlaydate.playdateID]
                                                       authToken:[[PTUser currentUser] authToken]
