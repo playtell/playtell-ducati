@@ -47,8 +47,8 @@
 		F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878515813AE20086D351 /* CoreVideo.framework */; };
 		F468878815813B040086D351 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878715813B040086D351 /* OpenGLES.framework */; };
 		F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */; };
-		F4A123E41592631E00FC7A24 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A123E31592631E00FC7A24 /* Opentok.framework */; };
-		F4A123E71592633C00FC7A24 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F4A123E61592633C00FC7A24 /* opentok.bundle */; };
+		F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46B3FC215A4B0790023C82B /* Opentok.framework */; };
+		F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F46B3FC415A4B2220023C82B /* opentok.bundle */; };
 		F4A123F01592777600FC7A24 /* music-box.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EE1592777600FC7A24 /* music-box.wav */; };
 		F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
@@ -351,8 +351,8 @@
 		F468878715813B040086D351 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PTPlaydate+InitatorChecking.h"; sourceTree = "<group>"; };
 		F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PTPlaydate+InitatorChecking.m"; sourceTree = "<group>"; };
-		F4A123E31592631E00FC7A24 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Opentok.framework; sourceTree = "<group>"; };
-		F4A123E61592633C00FC7A24 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
+		F46B3FC215A4B0790023C82B /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/opentok/Opentok.framework; sourceTree = "<group>"; };
+		F46B3FC415A4B2220023C82B /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/opentok/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		F4A123EE1592777600FC7A24 /* music-box.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "music-box.wav"; path = "audio/music-box.wav"; sourceTree = "<group>"; };
 		F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "ringtone-connecting.mp3"; path = "audio/ringtone-connecting.mp3"; sourceTree = "<group>"; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -816,6 +816,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */,
 				F468878815813B040086D351 /* OpenGLES.framework in Frameworks */,
 				F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */,
 				F468878415813ACF0086D351 /* CoreMedia.framework in Frameworks */,
@@ -840,7 +841,6 @@
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
-				F4A123E41592631E00FC7A24 /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,8 +884,8 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F4A123E61592633C00FC7A24 /* opentok.bundle */,
-				F4A123E31592631E00FC7A24 /* Opentok.framework */,
+				F46B3FC415A4B2220023C82B /* opentok.bundle */,
+				F46B3FC215A4B0790023C82B /* Opentok.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F468878115813A880086D351 /* AVFoundation.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
@@ -2052,11 +2052,11 @@
 				23866FE2159234FE00525588 /* CloseBookNormal.png in Resources */,
 				23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */,
 				23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */,
-				F4A123E71592633C00FC7A24 /* opentok.bundle in Resources */,
 				F4A123F01592777600FC7A24 /* music-box.wav in Resources */,
 				F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */,
 				23D41A8E159CAEF900677E03 /* dialad-live.png in Resources */,
 				23D41A91159CB09800677E03 /* dialpad-pending.png in Resources */,
+				F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
