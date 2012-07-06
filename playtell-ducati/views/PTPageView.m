@@ -439,9 +439,6 @@
     }
 }
 
-#pragma -
-#pragma mark Webview handlers/delegates
-
 - (void)loadPage {
     NSString *imagePath = [self imagePathForBook];
     UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
@@ -453,96 +450,31 @@
         [delegate pageLoaded:pageNumber];
     } else {
         NSMutableArray *pages = [book objectForKey:@"pages"];
-
-        // Webview
-        webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0f, 1024.0f, 800.0f, 600.0f)]; // Load off screen
-        webView.delegate = self;
-        [self addSubview:webView];
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:(pageNumber - 1)]]]];
-    }
-}
-
-- (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSString *requestString = [[request URL] absoluteString];
-    NSArray *components = [requestString componentsSeparatedByString:@":"];
-    
-    // Check if JavaScript said web page has been loaded and render it to bitmap
-    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
-        // Render page view to bitmap
-        [self convertWebViewToBitmap];
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)convertWebViewToBitmap {
-    // Generate bitmaps
-    dispatch_async(dispatch_get_main_queue(), ^() {
-        UIGraphicsBeginImageContext(webView.bounds.size);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-            [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        NSDictionary *page = [pages objectAtIndex:(pageNumber - 1)];
+        NSString *page_bitmap_url = [page objectForKey:@"bitmap"];
+        
+        // Load from URL (using the background thread)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+            NSURL *url = [NSURL URLWithString:page_bitmap_url];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            if (image == nil) {
+                // TODO: Page not loaded right
+            }
             
+            // Cache image locally
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+            [imageData writeToFile:imagePath atomically:YES];
+            
+            // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
-                UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
+                // Send the image to page
                 [self setPageContentsWithImage:image];
                 
+                // Notify delegate of page load
                 [delegate pageLoaded:pageNumber];
-                
-                [webView removeFromSuperview];
-                webView = nil;
             });
         });
-    });
-    
-    //UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-
-    // Cache image locally
-//    NSString *imagePath = [self imagePathForBook];
-//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-//    [imageData writeToFile:imagePath atomically:YES];
-
-    // Clear webview instance
-//    [webView removeFromSuperview];
-//    webView = nil;
-    
-    // Send the image to page
-    //[self setPageContentsWithImage:image];
-    
-    // Notify delegate of page load
-//    [delegate pageLoaded:pageNumber];
-
-//    // Delay conversion until iOS deems it convenient (throws UI lag otherwise)
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-//        
-//        // Generate bitmaps
-//        UIGraphicsBeginImageContext(webView.bounds.size);
-//        [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-//        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//        UIGraphicsEndImageContext();
-//        
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^() {
-//            // Cache image locally
-//            NSString *imagePath = [self imagePathForBook];
-//            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-//            [imageData writeToFile:imagePath atomically:YES];
-//        });
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^() {
-//            // Clear webview instance
-//            [webView removeFromSuperview];
-//            webView = nil;
-//            
-//            // Send the image to page
-//            [self setPageContentsWithImage:image];
-//            
-//            // Notify delegate of page load
-//            [delegate pageLoaded:pageNumber];
-//        });
-//    });
+    }
 }
 
 - (NSString *)imagePathForBook {

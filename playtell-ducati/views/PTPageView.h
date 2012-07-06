@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "PTPagesScrollViewDelegate.h"
 
-@interface PTPageView : UIView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
+@interface PTPageView : UIView <UIGestureRecognizerDelegate> {
     NSMutableDictionary *book;
     NSInteger pageNumber;
     NSMutableDictionary *layerActions;
@@ -27,8 +27,6 @@
     
     id<PTPagesScrollViewDelegate> delegate;
     CGPoint fingerPoint;
-    
-    UIWebView *webView;
 }
 
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> delegate;

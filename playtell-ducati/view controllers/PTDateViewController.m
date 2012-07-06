@@ -156,11 +156,11 @@
     [pagesScrollView setPagesScrollDelegate:self];
     [self.view addSubview:pagesScrollView];
     
-    // Cleate web view that will load our pages (hidden)
-    webView = [[UIWebView alloc] init];
-    [webView setDelegate:self];
-    webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
-    [self.view addSubview:webView];
+//    // Cleate web view that will load our pages (hidden)
+//    webView = [[UIWebView alloc] init];
+//    [webView setDelegate:self];
+//    webView.frame = CGRectMake(112.0f, 800.0f, 800.0f, 600.0f); // Needs to be on main view to render pages right! Position off-screen (TODO: Better solution?)
+//    [self.view addSubview:webView];
     
     // Create dictionary that will hold finger views
     fingerViews = [[NSMutableDictionary alloc] init];
@@ -677,8 +677,32 @@
         // Before loading next cover, load first page of this book
         [self loadFirstPageFromFileOrURL];
     } else {
-        NSString *cover_url = [[books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]] objectForKey:@"cover_front"];
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:cover_url]]];
+        NSDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
+        NSDictionary *cover = [book objectForKey:@"cover"];
+        NSString *cover_bitmap_url = [[cover objectForKey:@"front"] objectForKey:@"bitmap"];
+        
+        // Load from URL (using the background thread)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+            NSURL *url = [NSURL URLWithString:cover_bitmap_url];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            if (image == nil) {
+                // TODO: Cover not loaded properly
+            }
+            
+            // Cache image locally
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+            [imageData writeToFile:imagePath atomically:YES];
+            
+            // Apply to the book (in main thread)
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                // Send the image to book
+                PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+                [bookView setCoverContentsWithImage:image];
+
+                // Before loading next cover, load first page of this book
+                [self loadFirstPageFromFileOrURL];
+            });
+        });
     }
 }
 
@@ -702,76 +726,103 @@
     } else {
         NSMutableDictionary *book = [books objectForKey:bookId];
         NSMutableArray *pages = [book objectForKey:@"pages"];
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[pages objectAtIndex:0]]]];
+        NSDictionary *page = [pages objectAtIndex:0];
+        NSString *page_bitmap_url = [page objectForKey:@"bitmap"];
+        
+        // Load from URL (using the background thread)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
+            NSURL *url = [NSURL URLWithString:page_bitmap_url];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+            if (image == nil) {
+                // TODO: Page not loaded properly
+            }            
+
+            // Cache image locally
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+            [imageData writeToFile:imagePath atomically:YES];
+            
+            // Apply to the book (in main thread)
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                // Send the image to book
+                PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+                [bookView setPageContentsWithImage:image];
+                
+                // Load next cover
+                coversToLoadIndex++;
+                if (coversToLoadIndex < [coversToLoad count]) {
+                    [self loadBookCoverFromFileOrURL];
+                }
+            });
+        });
     }
 }
 
 #pragma mark -
 #pragma mark Web view helpers/delegates
 
-- (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSString *requestString = [[request URL] absoluteString];
-    NSArray *components = [requestString componentsSeparatedByString:@":"];
-    
-    // Check if JavaScript said web page has been loaded and render it to bitmap
-    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
-        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
-        NSInteger pageNum = [(NSString *)[components objectAtIndex:3] intValue];
-        // Render page view to bitmap
-        [self convertWebViewPageToBitmapWithBookId:bookId andPageNumber:pageNum];
-        return NO;
-    } else if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"coverLoadFinished"]) {
-        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
-        // Render cover view to bitmap
-        [self convertWebViewCoverToBitmapWithBookId:bookId];
-        return NO;
-    }
-    
-    return YES;
-}
+//- (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+//    NSString *requestString = [[request URL] absoluteString];
+//    NSArray *components = [requestString componentsSeparatedByString:@":"];
+//    
+//    // Check if JavaScript said web page has been loaded and render it to bitmap
+//    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
+//        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
+//        NSInteger pageNum = [(NSString *)[components objectAtIndex:3] intValue];
+//        // Render page view to bitmap
+//        [self convertWebViewPageToBitmapWithBookId:bookId andPageNumber:pageNum];
+//        return NO;
+//    } else if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"coverLoadFinished"]) {
+//        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
+//        // Render cover view to bitmap
+//        [self convertWebViewCoverToBitmapWithBookId:bookId];
+//        return NO;
+//    }
+//    
+//    return YES;
+//}
 
-- (void)convertWebViewPageToBitmapWithBookId:(NSInteger)bookId andPageNumber:(NSInteger)pageNumber {
-    // Generate bitmaps
-    UIGraphicsBeginImageContext(webView.bounds.size);
-    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    // Send the image to book
-    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-    [bookView setPageContentsWithImage:image];
-    
-    // Cache image locally
-    NSString *imagePath = [self pageImagePathForBook:[NSNumber numberWithInteger:bookId] AndPageNumber:pageNumber];
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-    [imageData writeToFile:imagePath atomically:YES];
-    
-    // Load next cover
-    coversToLoadIndex++;
-    if (coversToLoadIndex < [coversToLoad count]) {
-        [self loadBookCoverFromFileOrURL];
-    }
-}
-
-- (void)convertWebViewCoverToBitmapWithBookId:(NSInteger)bookId {
-    // Generate bitmaps
-    UIGraphicsBeginImageContext(CGSizeMake(webView.bounds.size.width / 2.0f, webView.bounds.size.height));
-    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    // Send the image to book
-    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-    [bookView setCoverContentsWithImage:image];
-    
-    // Cache image locally
-    NSString *imagePath = [self coverImagePathForBook:[NSNumber numberWithInteger:bookId]];
-    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-    [imageData writeToFile:imagePath atomically:YES];
-    
-    // Before loading next cover, load first page of this book
-    [self loadFirstPageFromFileOrURL];
-}
+//- (void)convertWebViewPageToBitmapWithBookId:(NSInteger)bookId andPageNumber:(NSInteger)pageNumber {
+//    // Generate bitmaps
+//    UIGraphicsBeginImageContext(webView.bounds.size);
+//    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//    // Send the image to book
+//    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+//    [bookView setPageContentsWithImage:image];
+//    
+//    // Cache image locally
+//    NSString *imagePath = [self pageImagePathForBook:[NSNumber numberWithInteger:bookId] AndPageNumber:pageNumber];
+//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+//    [imageData writeToFile:imagePath atomically:YES];
+//    
+//    // Load next cover
+//    coversToLoadIndex++;
+//    if (coversToLoadIndex < [coversToLoad count]) {
+//        [self loadBookCoverFromFileOrURL];
+//    }
+//}
+//
+//- (void)convertWebViewCoverToBitmapWithBookId:(NSInteger)bookId {
+//    // Generate bitmaps
+//    UIGraphicsBeginImageContext(CGSizeMake(webView.bounds.size.width / 2.0f, webView.bounds.size.height));
+//    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//    // Send the image to book
+//    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
+//    [bookView setCoverContentsWithImage:image];
+//    
+//    // Cache image locally
+//    NSString *imagePath = [self coverImagePathForBook:[NSNumber numberWithInteger:bookId]];
+//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+//    [imageData writeToFile:imagePath atomically:YES];
+//    
+//    // Before loading next cover, load first page of this book
+//    [self loadFirstPageFromFileOrURL];
+//}
 
 - (NSString *)getDocumentsPath {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -865,7 +916,6 @@
 }
 
 - (void)beginBookPageLoading {
-    return;
     // Setup loading of pages for book
     NSMutableDictionary *book = [books objectForKey:currentBookId];
     currentPage = [[book objectForKey:@"current_page"] intValue];

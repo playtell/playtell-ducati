@@ -14,7 +14,7 @@
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
 
-@interface PTDateViewController : UIViewController <UIWebViewDelegate, UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
+@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     // Playdate
     PTPlaydate *playdate;
     IBOutlet UIButton *endPlaydate;
@@ -39,7 +39,7 @@
     NSInteger currentPage;
     
     // Page loader
-    UIWebView *webView;
+//    UIWebView *webView;
     //BOOL isWebViewLoading;
     BOOL isPageViewLoading;
     
