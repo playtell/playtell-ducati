@@ -22,7 +22,7 @@
 #import "PTPlaydateDetailsRequest.h"
 #import "PTUsersGetStatusRequest.h"
 #import "UIView+PlayTell.h"
-
+#import "PTContactImportViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -464,6 +464,21 @@
     self.cancelPlaydateRecognizer.delegate = self;
 
     [self drawPlaymates];
+    
+     // TEMP
+     UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+     [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
+     contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
+     [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
+     [self.view addSubview:contactButton];
+ }
+
+- (void)loadContactImportController:(id)sender {
+     PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+     
+     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+     [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)viewDidLoad {
