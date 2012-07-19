@@ -14,6 +14,8 @@
 		2311E0C1157F921E0084859B /* PTBookCloseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2311E0C0157F921E0084859B /* PTBookCloseRequest.m */; };
 		2311E0C4157F92A70084859B /* PTPlaydateDisconnectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */; };
 		232265A5157D4D8800D5A960 /* date_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 232265A4157D4D8800D5A960 /* date_bg.png */; };
+		23391EB615B759E300761268 /* PTContactSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23391EB415B759E300761268 /* PTContactSelectViewController.m */; };
+		23391EB715B759E300761268 /* PTContactSelectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23391EB515B759E300761268 /* PTContactSelectViewController.xib */; };
 		2371A5CA15B59C64007CEFEE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2371A5C915B59C64007CEFEE /* AddressBook.framework */; };
 		2371A5D015B59C8B007CEFEE /* PTContactsCreateListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2371A5CD15B59C8B007CEFEE /* PTContactsCreateListRequest.m */; };
 		2371A5D115B59C8B007CEFEE /* PTContactsGetListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2371A5CF15B59C8B007CEFEE /* PTContactsGetListRequest.m */; };
@@ -319,6 +321,9 @@
 		2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDisconnectRequest.m; sourceTree = "<group>"; };
 		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
 		232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPagesScrollViewDelegate.h; sourceTree = "<group>"; };
+		23391EB315B759E300761268 /* PTContactSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactSelectViewController.h; sourceTree = "<group>"; };
+		23391EB415B759E300761268 /* PTContactSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactSelectViewController.m; sourceTree = "<group>"; };
+		23391EB515B759E300761268 /* PTContactSelectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTContactSelectViewController.xib; sourceTree = "<group>"; };
 		2371A5C915B59C64007CEFEE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		2371A5CC15B59C8B007CEFEE /* PTContactsCreateListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsCreateListRequest.h; sourceTree = "<group>"; };
 		2371A5CD15B59C8B007CEFEE /* PTContactsCreateListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsCreateListRequest.m; sourceTree = "<group>"; };
@@ -900,6 +905,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		23391EA815B7535800761268 /* contact import */ = {
+			isa = PBXGroup;
+			children = (
+				2371A60A15B59D03007CEFEE /* PTContactImportViewController.h */,
+				2371A60B15B59D03007CEFEE /* PTContactImportViewController.m */,
+				2371A60C15B59D03007CEFEE /* PTContactImportViewController.xib */,
+				23391EB315B759E300761268 /* PTContactSelectViewController.h */,
+				23391EB415B759E300761268 /* PTContactSelectViewController.m */,
+				23391EB515B759E300761268 /* PTContactSelectViewController.xib */,
+			);
+			name = "contact import";
+			sourceTree = "<group>";
+		};
 		2371A5D215B59CAC007CEFEE /* google-auth */ = {
 			isa = PBXGroup;
 			children = (
@@ -1827,9 +1845,7 @@
 				F4EAC41315866DE200BE086B /* PTLoadingViewController.h */,
 				F4EAC41415866DE200BE086B /* PTLoadingViewController.m */,
 				F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */,
-				2371A60A15B59D03007CEFEE /* PTContactImportViewController.h */,
-				2371A60B15B59D03007CEFEE /* PTContactImportViewController.m */,
-				2371A60C15B59D03007CEFEE /* PTContactImportViewController.xib */,
+				23391EA815B7535800761268 /* contact import */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -2179,6 +2195,7 @@
 				2371A60815B59CDD007CEFEE /* ReleaseNotes.txt in Resources */,
 				2371A60915B59CDD007CEFEE /* UnitTests-Info.plist in Resources */,
 				2371A60E15B59D03007CEFEE /* PTContactImportViewController.xib in Resources */,
+				23391EB715B759E300761268 /* PTContactSelectViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2289,6 +2306,7 @@
 				2371A60615B59CDD007CEFEE /* GTMMIMEDocument.m in Sources */,
 				2371A60715B59CDD007CEFEE /* GTMReadMonitorInputStream.m in Sources */,
 				2371A60D15B59D03007CEFEE /* PTContactImportViewController.m in Sources */,
+				23391EB615B759E300761268 /* PTContactSelectViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,6 +7,7 @@
 //
 
 #import "PTContactImportViewController.h"
+#import "PTContactSelectViewController.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
@@ -33,14 +34,14 @@
             googleAuth = auth;
         }
         
-        // Load current contacts
-        PTContactsGetListRequest *contactsGetListRequest = [[PTContactsGetListRequest alloc] init];
-        [contactsGetListRequest getListWithAuthToken:[PTUser currentUser].authToken
-                                             success:^(NSArray *contacts, NSInteger total) {
-                                                 NSLog(@"Contacts: %@", contacts);
-                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                 NSLog(@"Contacts error: %@, %@", error, JSON);
-                                             }];
+//        // Load current contacts
+//        PTContactsGetListRequest *contactsGetListRequest = [[PTContactsGetListRequest alloc] init];
+//        [contactsGetListRequest getListWithAuthToken:[PTUser currentUser].authToken
+//                                             success:^(NSArray *contacts, NSInteger total) {
+//                                                 NSLog(@"Contacts: %@", contacts);
+//                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                                 NSLog(@"Contacts error: %@, %@", error, JSON);
+//                                             }];
     }
     return self;
 }
@@ -50,6 +51,22 @@
 
     // Background
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
+    
+    // Navigation controller setup
+    self.title = @"Add Contacts";
+    self.navigationController.navigationBar.alpha = 0.0f;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [UIView animateWithDuration:0.2f animations:^{
+        self.navigationController.navigationBar.alpha = 0.0f;
+    }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [UIView animateWithDuration:0.2f animations:^{
+        self.navigationController.navigationBar.alpha = 1.0f;
+    }];
 }
 
 - (void)viewDidUnload {
@@ -189,15 +206,19 @@
 
     NSLog(@"---> Saving contacts: %i", [contacts count]);
     
-    // Save contacts to server
-    PTContactsCreateListRequest *contactsCreateListRequest = [[PTContactsCreateListRequest alloc] init];
-    [contactsCreateListRequest createList:contacts
-                                authToken:[PTUser currentUser].authToken
-                                  success:^(NSDictionary *result) {
-                                      NSLog(@"Contacts result: %@", result);
-                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                      NSLog(@"Contacts error: %@, %@", error, JSON);
-                                  }];
+//    // Save contacts to server
+//    PTContactsCreateListRequest *contactsCreateListRequest = [[PTContactsCreateListRequest alloc] init];
+//    [contactsCreateListRequest createList:contacts
+//                                authToken:[PTUser currentUser].authToken
+//                                  success:^(NSDictionary *result) {
+//                                      NSLog(@"Contacts result: %@", result);
+//                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                      NSLog(@"Contacts error: %@, %@", error, JSON);
+//                                  }];
+    
+    // Load select controller
+    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController" bundle:nil];
+    [self.navigationController pushViewController:contactSelectViewController animated:YES];
 }
 
 @end
