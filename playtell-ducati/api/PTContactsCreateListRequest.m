@@ -9,6 +9,7 @@
 #import "PTContactsCreateListRequest.h"
 #import "AFNetworking.h"
 #import "NSMutableURLRequest+POSTParameters.h"
+#import "NSString+UrlEncode.h"
 
 @implementation PTContactsCreateListRequest
 
@@ -21,7 +22,7 @@
     NSData *jsonContactsData = [NSJSONSerialization dataWithJSONObject:contacts options:0 error:&jsonError];
     NSString *jsonContacts = [[NSString alloc] initWithData:jsonContactsData encoding:NSUTF8StringEncoding];
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    jsonContacts, @"contacts",
+                                    [jsonContacts urlEncodedString], @"contacts",
                                     token, @"authentication_token",
                                     nil];
     

@@ -16,5 +16,6 @@
 - (IBAction)googleContactsStart:(id)sender;
 - (IBAction)googleLogout:(id)sender;
 - (IBAction)localAddressBook:(id)sender;
+- (IBAction)manualInvite:(id)sender;
 
 @end
