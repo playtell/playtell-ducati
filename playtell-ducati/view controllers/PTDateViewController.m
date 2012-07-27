@@ -89,6 +89,7 @@
         myToken = playdate.playmateTokboxToken;
     }
 
+#ifndef TARGET_IPHONE_SIMULATOR
     [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
                                        withToken:myToken
                                          success:^(OTPublisher *publisher)
@@ -113,6 +114,7 @@
     [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
         [self setPlaymatePhoto];
     }];
+#endif
 }
 
 - (void)setPlaymatePhoto {
