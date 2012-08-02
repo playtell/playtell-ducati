@@ -37,6 +37,41 @@
 		23F199371586B9F000DC2E16 /* cover_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199361586B9F000DC2E16 /* cover_loading.png */; };
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
+		8A0EC49915C4C79A00ADE616 /* tictactoe-board.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A0EC49815C4C79A00ADE616 /* tictactoe-board.png */; };
+		8A0EC49C15C4C7F200ADE616 /* tictactoe-board2.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A0EC49B15C4C7F200ADE616 /* tictactoe-board2.png */; };
+		8A70C44715C9F81700FB1B81 /* tic-O_00000.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43915C9F81500FB1B81 /* tic-O_00000.png */; };
+		8A70C44815C9F81700FB1B81 /* tic-O_00001.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43A15C9F81500FB1B81 /* tic-O_00001.png */; };
+		8A70C44915C9F81700FB1B81 /* tic-O_00002.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43B15C9F81500FB1B81 /* tic-O_00002.png */; };
+		8A70C44A15C9F81700FB1B81 /* tic-O_00003.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43C15C9F81600FB1B81 /* tic-O_00003.png */; };
+		8A70C44B15C9F81700FB1B81 /* tic-O_00004.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43D15C9F81600FB1B81 /* tic-O_00004.png */; };
+		8A70C44C15C9F81700FB1B81 /* tic-O_00005.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43E15C9F81600FB1B81 /* tic-O_00005.png */; };
+		8A70C44D15C9F81700FB1B81 /* tic-O_00006.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C43F15C9F81600FB1B81 /* tic-O_00006.png */; };
+		8A70C44E15C9F81700FB1B81 /* tic-O_00007.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44015C9F81600FB1B81 /* tic-O_00007.png */; };
+		8A70C44F15C9F81700FB1B81 /* tic-O_00008.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44115C9F81600FB1B81 /* tic-O_00008.png */; };
+		8A70C45015C9F81700FB1B81 /* tic-O_00009.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44215C9F81600FB1B81 /* tic-O_00009.png */; };
+		8A70C45115C9F81700FB1B81 /* tic-O_00010.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44315C9F81600FB1B81 /* tic-O_00010.png */; };
+		8A70C45215C9F81700FB1B81 /* tic-O_00011.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44415C9F81600FB1B81 /* tic-O_00011.png */; };
+		8A70C45315C9F81700FB1B81 /* tic-O_00012.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44515C9F81700FB1B81 /* tic-O_00012.png */; };
+		8A70C45415C9F81700FB1B81 /* tic-O_00013.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A70C44615C9F81700FB1B81 /* tic-O_00013.png */; };
+		8ABA6C9D15C48C90009D4D1D /* TictactoeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA6C9C15C48C90009D4D1D /* TictactoeView.m */; };
+		8ABA6CA115C4A386009D4D1D /* TictactoeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA6CA015C4A386009D4D1D /* TictactoeViewController.m */; };
+		8ABA6CA315C4BCF0009D4D1D /* TictactoeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ABA6CA215C4BCF0009D4D1D /* TictactoeViewController.xib */; };
+		8ABF321815C98D8B00129F33 /* Comp 1_00000.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320A15C98D8A00129F33 /* Comp 1_00000.png */; };
+		8ABF321915C98D8B00129F33 /* Comp 1_00001.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320B15C98D8A00129F33 /* Comp 1_00001.png */; };
+		8ABF321A15C98D8B00129F33 /* Comp 1_00002.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320C15C98D8A00129F33 /* Comp 1_00002.png */; };
+		8ABF321B15C98D8B00129F33 /* Comp 1_00003.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320D15C98D8B00129F33 /* Comp 1_00003.png */; };
+		8ABF321C15C98D8B00129F33 /* Comp 1_00004.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320E15C98D8B00129F33 /* Comp 1_00004.png */; };
+		8ABF321D15C98D8B00129F33 /* Comp 1_00005.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF320F15C98D8B00129F33 /* Comp 1_00005.png */; };
+		8ABF321E15C98D8B00129F33 /* Comp 1_00006.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321015C98D8B00129F33 /* Comp 1_00006.png */; };
+		8ABF321F15C98D8B00129F33 /* Comp 1_00007.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321115C98D8B00129F33 /* Comp 1_00007.png */; };
+		8ABF322015C98D8B00129F33 /* Comp 1_00008.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321215C98D8B00129F33 /* Comp 1_00008.png */; };
+		8ABF322115C98D8B00129F33 /* Comp 1_00009.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321315C98D8B00129F33 /* Comp 1_00009.png */; };
+		8ABF322215C98D8B00129F33 /* Comp 1_00010.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321415C98D8B00129F33 /* Comp 1_00010.png */; };
+		8ABF322315C98D8B00129F33 /* Comp 1_00011.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321515C98D8B00129F33 /* Comp 1_00011.png */; };
+		8ABF322415C98D8B00129F33 /* Comp 1_00012.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321615C98D8B00129F33 /* Comp 1_00012.png */; };
+		8ABF322515C98D8B00129F33 /* Comp 1_00013.png in Resources */ = {isa = PBXBuildFile; fileRef = 8ABF321715C98D8B00129F33 /* Comp 1_00013.png */; };
+		8AF4D00615C7E6E900DB665E /* PTTictactoeNewGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */; };
+		8AF4D00D15C7EEA000DB665E /* PTTictactoePlacePieceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
@@ -336,6 +371,45 @@
 		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateJoinedRequest.h; sourceTree = "<group>"; };
 		23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateJoinedRequest.m; sourceTree = "<group>"; };
+		8A0EC49815C4C79A00ADE616 /* tictactoe-board.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tictactoe-board.png"; path = "playtell-ducati/artwork/tictactoe-board.png"; sourceTree = SOURCE_ROOT; };
+		8A0EC49B15C4C7F200ADE616 /* tictactoe-board2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tictactoe-board2.png"; path = "playtell-ducati/artwork/tictactoe-board2.png"; sourceTree = SOURCE_ROOT; };
+		8A70C43915C9F81500FB1B81 /* tic-O_00000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00000.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00000.png"; sourceTree = "<group>"; };
+		8A70C43A15C9F81500FB1B81 /* tic-O_00001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00001.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00001.png"; sourceTree = "<group>"; };
+		8A70C43B15C9F81500FB1B81 /* tic-O_00002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00002.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00002.png"; sourceTree = "<group>"; };
+		8A70C43C15C9F81600FB1B81 /* tic-O_00003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00003.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00003.png"; sourceTree = "<group>"; };
+		8A70C43D15C9F81600FB1B81 /* tic-O_00004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00004.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00004.png"; sourceTree = "<group>"; };
+		8A70C43E15C9F81600FB1B81 /* tic-O_00005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00005.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00005.png"; sourceTree = "<group>"; };
+		8A70C43F15C9F81600FB1B81 /* tic-O_00006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00006.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00006.png"; sourceTree = "<group>"; };
+		8A70C44015C9F81600FB1B81 /* tic-O_00007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00007.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00007.png"; sourceTree = "<group>"; };
+		8A70C44115C9F81600FB1B81 /* tic-O_00008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00008.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00008.png"; sourceTree = "<group>"; };
+		8A70C44215C9F81600FB1B81 /* tic-O_00009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00009.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00009.png"; sourceTree = "<group>"; };
+		8A70C44315C9F81600FB1B81 /* tic-O_00010.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00010.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00010.png"; sourceTree = "<group>"; };
+		8A70C44415C9F81600FB1B81 /* tic-O_00011.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00011.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00011.png"; sourceTree = "<group>"; };
+		8A70C44515C9F81700FB1B81 /* tic-O_00012.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00012.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00012.png"; sourceTree = "<group>"; };
+		8A70C44615C9F81700FB1B81 /* tic-O_00013.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tic-O_00013.png"; path = "../../../../Dropbox/tic-tac-toe (1)/O/tic-O_00013.png"; sourceTree = "<group>"; };
+		8ABA6C9B15C48C90009D4D1D /* TictactoeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TictactoeView.h; sourceTree = "<group>"; };
+		8ABA6C9C15C48C90009D4D1D /* TictactoeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TictactoeView.m; sourceTree = "<group>"; };
+		8ABA6C9F15C4A386009D4D1D /* TictactoeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TictactoeViewController.h; sourceTree = "<group>"; };
+		8ABA6CA015C4A386009D4D1D /* TictactoeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TictactoeViewController.m; sourceTree = "<group>"; };
+		8ABA6CA215C4BCF0009D4D1D /* TictactoeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TictactoeViewController.xib; sourceTree = "<group>"; };
+		8ABF320A15C98D8A00129F33 /* Comp 1_00000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00000.png"; path = "Images/Comp 1_00000.png"; sourceTree = SOURCE_ROOT; };
+		8ABF320B15C98D8A00129F33 /* Comp 1_00001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00001.png"; path = "Images/Comp 1_00001.png"; sourceTree = SOURCE_ROOT; };
+		8ABF320C15C98D8A00129F33 /* Comp 1_00002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00002.png"; path = "Images/Comp 1_00002.png"; sourceTree = SOURCE_ROOT; };
+		8ABF320D15C98D8B00129F33 /* Comp 1_00003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00003.png"; path = "Images/Comp 1_00003.png"; sourceTree = SOURCE_ROOT; };
+		8ABF320E15C98D8B00129F33 /* Comp 1_00004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00004.png"; path = "Images/Comp 1_00004.png"; sourceTree = SOURCE_ROOT; };
+		8ABF320F15C98D8B00129F33 /* Comp 1_00005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00005.png"; path = "Images/Comp 1_00005.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321015C98D8B00129F33 /* Comp 1_00006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00006.png"; path = "Images/Comp 1_00006.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321115C98D8B00129F33 /* Comp 1_00007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00007.png"; path = "Images/Comp 1_00007.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321215C98D8B00129F33 /* Comp 1_00008.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00008.png"; path = "Images/Comp 1_00008.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321315C98D8B00129F33 /* Comp 1_00009.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00009.png"; path = "Images/Comp 1_00009.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321415C98D8B00129F33 /* Comp 1_00010.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00010.png"; path = "Images/Comp 1_00010.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321515C98D8B00129F33 /* Comp 1_00011.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00011.png"; path = "Images/Comp 1_00011.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321615C98D8B00129F33 /* Comp 1_00012.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00012.png"; path = "Images/Comp 1_00012.png"; sourceTree = SOURCE_ROOT; };
+		8ABF321715C98D8B00129F33 /* Comp 1_00013.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Comp 1_00013.png"; path = "Images/Comp 1_00013.png"; sourceTree = SOURCE_ROOT; };
+		8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeNewGameRequest.h; sourceTree = "<group>"; };
+		8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeNewGameRequest.m; sourceTree = "<group>"; };
+		8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoePlacePieceRequest.h; sourceTree = "<group>"; };
+		8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoePlacePieceRequest.m; sourceTree = "<group>"; };
 		F420B73F1585BA1800DCAF10 /* TransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionController.h; sourceTree = "<group>"; };
 		F420B7401585BA1800DCAF10 /* TransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionController.m; sourceTree = "<group>"; };
 		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
@@ -1700,9 +1774,44 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				8ABA6CA215C4BCF0009D4D1D /* TictactoeViewController.xib */,
+				8ABF320A15C98D8A00129F33 /* Comp 1_00000.png */,
+				8ABF320B15C98D8A00129F33 /* Comp 1_00001.png */,
+				8ABF320C15C98D8A00129F33 /* Comp 1_00002.png */,
+				8ABF320D15C98D8B00129F33 /* Comp 1_00003.png */,
+				8ABF320E15C98D8B00129F33 /* Comp 1_00004.png */,
+				8ABF320F15C98D8B00129F33 /* Comp 1_00005.png */,
+				8ABF321015C98D8B00129F33 /* Comp 1_00006.png */,
+				8ABF321115C98D8B00129F33 /* Comp 1_00007.png */,
+				8ABF321215C98D8B00129F33 /* Comp 1_00008.png */,
+				8ABF321315C98D8B00129F33 /* Comp 1_00009.png */,
+				8ABF321415C98D8B00129F33 /* Comp 1_00010.png */,
+				8ABF321515C98D8B00129F33 /* Comp 1_00011.png */,
+				8ABF321615C98D8B00129F33 /* Comp 1_00012.png */,
+				8ABF321715C98D8B00129F33 /* Comp 1_00013.png */,
+				8ABA6C9F15C4A386009D4D1D /* TictactoeViewController.h */,
+				8ABA6CA015C4A386009D4D1D /* TictactoeViewController.m */,
+				8A70C43915C9F81500FB1B81 /* tic-O_00000.png */,
+				8A70C43A15C9F81500FB1B81 /* tic-O_00001.png */,
+				8A70C43B15C9F81500FB1B81 /* tic-O_00002.png */,
+				8A70C43C15C9F81600FB1B81 /* tic-O_00003.png */,
+				8A70C43D15C9F81600FB1B81 /* tic-O_00004.png */,
+				8A70C43E15C9F81600FB1B81 /* tic-O_00005.png */,
+				8A70C43F15C9F81600FB1B81 /* tic-O_00006.png */,
+				8A70C44015C9F81600FB1B81 /* tic-O_00007.png */,
+				8A70C44115C9F81600FB1B81 /* tic-O_00008.png */,
+				8A70C44215C9F81600FB1B81 /* tic-O_00009.png */,
+				8A70C44315C9F81600FB1B81 /* tic-O_00010.png */,
+				8A70C44415C9F81600FB1B81 /* tic-O_00011.png */,
+				8A70C44515C9F81700FB1B81 /* tic-O_00012.png */,
+				8A70C44615C9F81700FB1B81 /* tic-O_00013.png */,
+				237B24AF157D191500FC288E /* PTDateViewController.xib */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
 				237B24AE157D191500FC288E /* PTDateViewController.m */,
-				237B24AF157D191500FC288E /* PTDateViewController.xib */,
+				8ABA6C9B15C48C90009D4D1D /* TictactoeView.h */,
+				8ABA6C9C15C48C90009D4D1D /* TictactoeView.m */,
+				8A0EC49B15C4C7F200ADE616 /* tictactoe-board2.png */,
+				8A0EC49815C4C79A00ADE616 /* tictactoe-board.png */,
 				F4E3EAE6157FAAD300A218EC /* PTDiagnosticViewController.h */,
 				F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */,
 				F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */,
@@ -1782,6 +1891,10 @@
 		F4A9D8DF157909530015D977 /* api */ = {
 			isa = PBXGroup;
 			children = (
+				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
+				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
+				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
+				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
 				F4A9D8E01579096F0015D977 /* PTRequest.h */,
 				F4A9D8E11579096F0015D977 /* PTRequest.m */,
 				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
@@ -2057,6 +2170,37 @@
 				23D41A8E159CAEF900677E03 /* dialad-live.png in Resources */,
 				23D41A91159CB09800677E03 /* dialpad-pending.png in Resources */,
 				F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */,
+				8ABA6CA315C4BCF0009D4D1D /* TictactoeViewController.xib in Resources */,
+				8A0EC49915C4C79A00ADE616 /* tictactoe-board.png in Resources */,
+				8A0EC49C15C4C7F200ADE616 /* tictactoe-board2.png in Resources */,
+				8ABF321815C98D8B00129F33 /* Comp 1_00000.png in Resources */,
+				8ABF321915C98D8B00129F33 /* Comp 1_00001.png in Resources */,
+				8ABF321A15C98D8B00129F33 /* Comp 1_00002.png in Resources */,
+				8ABF321B15C98D8B00129F33 /* Comp 1_00003.png in Resources */,
+				8ABF321C15C98D8B00129F33 /* Comp 1_00004.png in Resources */,
+				8ABF321D15C98D8B00129F33 /* Comp 1_00005.png in Resources */,
+				8ABF321E15C98D8B00129F33 /* Comp 1_00006.png in Resources */,
+				8ABF321F15C98D8B00129F33 /* Comp 1_00007.png in Resources */,
+				8ABF322015C98D8B00129F33 /* Comp 1_00008.png in Resources */,
+				8ABF322115C98D8B00129F33 /* Comp 1_00009.png in Resources */,
+				8ABF322215C98D8B00129F33 /* Comp 1_00010.png in Resources */,
+				8ABF322315C98D8B00129F33 /* Comp 1_00011.png in Resources */,
+				8ABF322415C98D8B00129F33 /* Comp 1_00012.png in Resources */,
+				8ABF322515C98D8B00129F33 /* Comp 1_00013.png in Resources */,
+				8A70C44715C9F81700FB1B81 /* tic-O_00000.png in Resources */,
+				8A70C44815C9F81700FB1B81 /* tic-O_00001.png in Resources */,
+				8A70C44915C9F81700FB1B81 /* tic-O_00002.png in Resources */,
+				8A70C44A15C9F81700FB1B81 /* tic-O_00003.png in Resources */,
+				8A70C44B15C9F81700FB1B81 /* tic-O_00004.png in Resources */,
+				8A70C44C15C9F81700FB1B81 /* tic-O_00005.png in Resources */,
+				8A70C44D15C9F81700FB1B81 /* tic-O_00006.png in Resources */,
+				8A70C44E15C9F81700FB1B81 /* tic-O_00007.png in Resources */,
+				8A70C44F15C9F81700FB1B81 /* tic-O_00008.png in Resources */,
+				8A70C45015C9F81700FB1B81 /* tic-O_00009.png in Resources */,
+				8A70C45115C9F81700FB1B81 /* tic-O_00010.png in Resources */,
+				8A70C45215C9F81700FB1B81 /* tic-O_00011.png in Resources */,
+				8A70C45315C9F81700FB1B81 /* tic-O_00012.png in Resources */,
+				8A70C45415C9F81700FB1B81 /* tic-O_00013.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2153,6 +2297,10 @@
 				F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */,
 				2387FCE11590FCF500B1FB55 /* PTPlaydateDetailsRequest.m in Sources */,
 				23D41A94159CBF7E00677E03 /* PTUsersGetStatusRequest.m in Sources */,
+				8ABA6C9D15C48C90009D4D1D /* TictactoeView.m in Sources */,
+				8ABA6CA115C4A386009D4D1D /* TictactoeViewController.m in Sources */,
+				8AF4D00615C7E6E900DB665E /* PTTictactoeNewGameRequest.m in Sources */,
+				8AF4D00D15C7EEA000DB665E /* PTTictactoePlacePieceRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

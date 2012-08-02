@@ -19,6 +19,7 @@
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
+#import "PTTictactoeNewGameRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTBookChangeRequest.h"
 #import "PTBookCloseRequest.h"
@@ -31,6 +32,11 @@
 #import "PTPlaydateFingerTapRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTBooksListRequest.h"
+#import "TictactoeViewController.h"
+
+//networking post stuff
+#import "AFNetworking.h"
+#import "NSMutableURLRequest+POSTParameters.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
@@ -43,7 +49,7 @@
 @synthesize playdate;
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
-@synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup;
+@synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup, button2;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
@@ -180,6 +186,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateCloseBook:) name:@"PlayDateCloseBook" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
+    //listen for tictactoe game
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeEnd:) name:@"pusherPlayDateTictactoeEnd" object:nil];
+
     
     // Setup end playdate & close book buttons
     [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
@@ -226,7 +235,7 @@
     [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
                                onSuccess:^(NSDictionary *result)
     {
-        NSDictionary *allBooks = [result valueForKey:@"books"];
+        NSDictionary *allBooks = [result valueForKey:@"books"];  //TODOGIANCARLO valueforkey@"games"
         if (boolListLoadedFromPlist == NO) {
             // Parse all books into format we need
             books = [[NSMutableDictionary alloc] init];
@@ -323,6 +332,9 @@
         // Book cover pages load
         [coversToLoad addObject:bookId];
     }
+    
+    //TODOGIANCARLO another loop here for games
+    
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * [books count];
@@ -437,6 +449,49 @@
     }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)playTictactoe:(id)sender {
+    PTPlaymate *playmate;
+    
+    PTTictactoeNewGameRequest *newGameRequest = [[PTTictactoeNewGameRequest alloc] init];
+    
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        LogInfo(@"Current user is initator. Playmate is playmate.");
+        playmate = self.playdate.playmate;
+        
+    } else {
+        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
+        playmate = self.playdate.initiator;
+    }
+    
+    [newGameRequest newBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                authToken:[[PTUser currentUser] authToken]
+                                initiator_id:[NSNumber numberWithInteger:[[PTUser currentUser] userID]]
+                                playmate_id:[NSNumber numberWithInteger:playmate.userID]
+                                 onSuccess:^(NSDictionary *result)
+     {
+         NSLog(@"%@", result);  //TODOGIANCARLO valueforkey@"games"
+         
+         NSInteger board_id = (NSInteger)[result objectForKey:@"board_id"];
+         
+         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+         
+         TictactoeViewController *tictactoeVc = [[TictactoeViewController alloc] init];
+         [tictactoeVc setPlaydate:self.playdate];
+         [tictactoeVc initGameWithMyTurn:YES];
+         tictactoeVc.board_id = board_id;
+         tictactoeVc.playmate_id = playmate.userID;
+         tictactoeVc.initiator_id = [[PTUser currentUser] userID];
+         
+         //bring up the view controller of the new game!
+         [appDelegate.transitionController transitionToViewController:tictactoeVc
+                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         NSLog(@"%@", error);
+         NSLog(@"%@", request);
+         NSLog(@"%@", JSON);
+     }];
 }
 
 - (IBAction)playdateDisconnect:(id)sender {    

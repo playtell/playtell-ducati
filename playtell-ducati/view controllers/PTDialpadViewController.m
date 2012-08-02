@@ -1,3 +1,4 @@
+
 //
 //  PTDialpadViewController.m
 //  PlayTell
@@ -82,7 +83,7 @@
         // Otherwise there's playdate collision!
         // More than likely, this will return the same playdate
         // BUT loading playdate id passed via push to be safe
-        [self checkForPendingPlaydatesAndNotifyUser];
+//        [self checkForPendingPlaydatesAndNotifyUser]; // TODOGIANCARLO fix this
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
@@ -142,7 +143,7 @@
 
 - (void)checkForPendingPlaydateOnForegrounding:(NSNotification*)note {
     if (playdateRequestedViaPush != YES) {
-        [self checkForPendingPlaydatesAndNotifyUser];
+//        [self checkForPendingPlaydatesAndNotifyUser]; TODOGIANCARLO fix this
     }
 }
 

@@ -25,7 +25,7 @@
                                     token, @"authentication_token",
                                     nil];
     
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/playdate/check_for_playdate", ROOT_URL]];
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/playdate/check_for_playdate.json", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
     [request setPostParameters:postParameters];
     
