@@ -31,6 +31,7 @@
 #import "PTPlaydateFingerTapRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTBooksListRequest.h"
+#import "TargetConditionals.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
@@ -89,7 +90,8 @@
         myToken = playdate.playmateTokboxToken;
     }
 
-#ifndef TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
+#elif TARGET_OS_IPHONE
     [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
                                        withToken:myToken
                                          success:^(OTPublisher *publisher)
