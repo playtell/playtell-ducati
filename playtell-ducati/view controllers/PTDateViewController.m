@@ -15,16 +15,15 @@
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
-#import "PTChatHUDView.h"
+#import "PTChatHUDView.h" //clumsy and nasty and needs to be rehandled -Ricky
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
 #import "PTTictactoeNewGameRequest.h"
-#import "PTPlayTellPusher.h"
 #import "PTBookChangeRequest.h"
 #import "PTBookCloseRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
-#import "PTVideoPhone.h"
+#import "PTVideoPhone.h" //as much opentok stuff as possible is taken out but there are still things to deal with
 #import "PTPlaydateJoinedRequest.h"
 #import "TransitionController.h"
 #import "PTPlayTellPusher.h"
@@ -32,7 +31,7 @@
 #import "PTPlaydateFingerTapRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTBooksListRequest.h"
-#import "TictactoeViewController.h"
+#import "PTTictactoeViewController.h"
 
 //networking post stuff
 #import "AFNetworking.h"
@@ -189,7 +188,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerStart:) name:@"PlayDateFingerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
     //listen for tictactoe game
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeEnd:) name:@"pusherPlayDateTictactoeEnd" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeNewGame:) name:@"PlayDateTictactoeNewGame" object:nil];
 
     
     // Setup end playdate & close book buttons
@@ -475,14 +474,14 @@
      {
          NSLog(@"%@", result);  //TODOGIANCARLO valueforkey@"games"
          
-         NSInteger board_id = (NSInteger)[result objectForKey:@"board_id"];
+         NSString *board_id = [result valueForKey:@"board_id"];
          
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
          
-         TictactoeViewController *tictactoeVc = [[TictactoeViewController alloc] init];
+         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
-         tictactoeVc.board_id = board_id;
+         tictactoeVc.board_id = [board_id intValue];
          tictactoeVc.playmate_id = playmate.userID;
          tictactoeVc.initiator_id = [[PTUser currentUser] userID];
          
@@ -689,6 +688,27 @@
     NSInteger y = [[eventData objectForKey:@"y"] integerValue];
     CGPoint point = CGPointMake(x, y);
     [self addFingerAtPoint:point];
+}
+
+- (void)pusherPlayDateTictactoeNewGame:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+    [tictactoeVc setPlaydate:self.playdate];
+    [tictactoeVc initGameWithMyTurn:NO];
+    tictactoeVc.board_id = board_id;
+    tictactoeVc.playmate_id = [[PTUser currentUser] userID];
+    tictactoeVc.initiator_id = initiator_id;
+    
+    //bring up the view controller of the new game!
+    [appDelegate.transitionController transitionToViewController:tictactoeVc
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+
+    
 }
 
 - (void)pusherPlayDateFingerEnd:(NSNotification *)notification {

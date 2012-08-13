@@ -313,7 +313,7 @@
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
     LogDebug(@"%@ Playdate Joined: %@", NSStringFromSelector(_cmd), playdate);
     
-    // Make sure current user didn't participate in this playdate
+    // Make sure current user didn't paripate in this playdate
     if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
         // Mark players in this playdate as 'in playdate' in dialpad
         

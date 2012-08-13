@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
-#import "PTViewController.h"
-
 #import <UIKit/UIKit.h>
 
 @class PTLoginViewController;

@@ -167,6 +167,27 @@ static PTPlayTellPusher* instance = nil;
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateFingerEnd" object:self userInfo:eventData];
     }];
+    
+
+    // ## GAMES START ##
+    
+    // tictactoe_new_game
+    [aPlaydateChannel bindToEventNamed:@"games_tictactoe_new_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoeNewGame" object:self userInfo:eventData];
+    }];
+    
+    // tictactoe_end_game
+    [aPlaydateChannel bindToEventNamed:@"games_tictactoe_end_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoeEndGame" object:self userInfo:eventData];
+    }];
+    
+    // tictactoe_piece_placed
+    [aPlaydateChannel bindToEventNamed:@"games_tictactoe_place_piece" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoePlacePiece" object:self userInfo:eventData];
+    }];
 
     self.isSubscribedToPlaydateChannel = YES;
 }

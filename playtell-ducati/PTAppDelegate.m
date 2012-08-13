@@ -21,7 +21,6 @@
 #import "PTPusherChannel.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
-#import "PTViewController.h"
 #import "TransitionController.h"
 #import "UAPush.h"
 #import "UAirship.h"

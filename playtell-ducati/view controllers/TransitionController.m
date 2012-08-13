@@ -51,6 +51,7 @@ viewController = _viewController;
 - (void)transitionToViewController:(UIViewController *)aViewController
                        withOptions:(UIViewAnimationOptions)options
 {
+    //TODOGIANCARLO containerwithstatusbar?
     CGRect containerViewWithStatusbar = CGRectMake(0, 20, 1024, 748);
     aViewController.view.frame = containerViewWithStatusbar;
     [UIView transitionWithView:self.containerView

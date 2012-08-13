@@ -13,11 +13,11 @@
 @implementation PTTictactoeNewGameRequest
 
 - (void)newBoardWithPlaydateId:(NSNumber*)playdateId
-                     authToken:(NSString *)token
-                    initiator_id:(NSNumber *)initiator_id
-                    playmate_id:(NSString *)playmate_id
-                    onSuccess:(PTTictactoeNewGameRequestSuccessBlock)success
-                    onFailure:(PTTictactoeNewGameRequestFailureBlock)failure
+                        authToken:(NSString *)token
+                        initiator_id:(NSNumber *)initiator_id
+                        playmate_id:(NSString *)playmate_id
+                        onSuccess:(PTTictactoeNewGameRequestSuccessBlock)success
+                        onFailure:(PTTictactoeNewGameRequestFailureBlock)failure
 {
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     playdateId, @"playdate_id",

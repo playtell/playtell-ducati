@@ -53,6 +53,7 @@ static PTVideoPhone* instance = nil;
     [self wakeUp];
 }
 
+//associates ipad with session and communicates with server
 - (void)connectToSession:(NSString*)aSession
                withToken:(NSString*)aToken
                  success:(PTVideoConnectionSuccessBlock)onSuccess
