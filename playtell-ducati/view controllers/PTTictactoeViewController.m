@@ -58,13 +58,7 @@
 
 @implementation PTTictactoeViewController
 
-@synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer;
-
-@synthesize dateController;
-
-@synthesize chatView, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup;
-
-@synthesize space00, space01, space02, space10, space11, space12, space20, space21, space22;
+@synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer, dateController, chatView, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup, space00, space01, space02, space10, space11, space12, space20, space21, space22;
 
 - (NSInteger)getPlaymateUserID
 {
@@ -87,8 +81,6 @@
     return zeros;
 }
 
-// Returns number of zeros that precede filenames in the Adobe Illustrator naming convention for exported files used by Jason DePerro in Aug, 2012.
-//IMPORTANT, this assumes that there will never be more than a 100 image sequence
 -(int)getNumZeros:(int)currentNum
 {
     if (currentNum < 10) {
@@ -105,7 +97,7 @@
                           unique_identifier:(NSString *)unique
 {
     NSMutableArray *array = [NSMutableArray array];
-    for (int i = start; i <= end; i = i + 10) {
+    for (int i = start; i <= end; i++) {
         NSString *zeros = [self zeroFactory:[self getNumZeros:i]];
         
         NSString *filename = [NSString stringWithFormat:@"%@%@%@%@%@", unique, @"_", zeros, [NSString stringWithFormat:@"%d", i], @".png"];
@@ -189,78 +181,77 @@
     UIImageView* slash;
     
     if (win_status_code == PLACED_WON_ACROSS_TOP_LEFT) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"LR@2x"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"LR"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"LR@2X_00079.png";
+        endingImageName = @"LR_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,594);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ACROS_BOTTON_LEFT) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"RL@2x"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"RL"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"RL@2X_00079.png";
+        endingImageName = @"RL_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,594);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_0) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Vertical@2X"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical@2X_00079.png";
+        endingImageName = @"Vertical_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_1) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Vertical@2X"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_1;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical@2X_00079.png";
+        endingImageName = @"Vertical_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_2) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Vertical@2X"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_2;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical@2X_00079.png";
+        endingImageName = @"Vertical_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_0) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Horizontal@2x"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_0;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal@2X_00079.png";
+        endingImageName = @"Horizontal_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_1) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Horizontal@2x"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_1;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal@2X_00079.png";
+        endingImageName = @"Horizontal_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_2) {
-        array = [self buildImageArrayWithStart:0 end:79 unique_identifier:@"Horizontal@2x"];
+        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_2;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal@2X_00079.png";
+        endingImageName = @"Horizontal_00014.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
-
 
     
     slash.image = [UIImage imageNamed:endingImageName];
@@ -320,7 +311,6 @@
     }
 }
 
-//TODOGIANCARLO in the future this will include 
 - (void) updateDebugInfo
 {
     [playdate_id_label setText:[NSString stringWithFormat:@"%d",  self.playdate.playdateID]];
@@ -689,34 +679,34 @@ userId:(NSString *)userID
 
 //Client-side place piece attempt
 -(IBAction)placePiece:(id)sender{
-//    [self displayCats];
+    [self displayCats];
 
-//    [self displayYouLost];
+    [self displayYouLost];
 
 //CODE TO TEST SLASH ANIMATIONS
-//    UIButton *button = (UIButton *)sender;
-//    NSString *buttonTag = [NSString stringWithFormat:@"%d", [button tag]]; //buttons are tagged with their coordinates in interface builder
-//    [whichButton setText:buttonTag];
-//    
-//    if ([buttonTag isEqualToString:@"0"]) {
-//        [self slashAnimate:PLACED_WON_ROW_0];
-//        [self slashAnimate:PLACED_WON_COL_0];
-//        [self slashAnimate:PLACED_WON_ACROSS_TOP_LEFT];
-//    }
-//    if ([buttonTag isEqualToString:@"1"]) {
-//        [self slashAnimate:PLACED_WON_COL_1];
-//        
-//    }
-//    if ([buttonTag isEqualToString:@"2"]) {
-//        [self slashAnimate:PLACED_WON_COL_2];
-//    }
-//    if ([buttonTag isEqualToString:@"10"]) {
-//        [self slashAnimate:PLACED_WON_ROW_1];
-//    }
-//    if ([buttonTag isEqualToString:@"20"]) {
-//        [self slashAnimate:PLACED_WON_ROW_2];
-//        [self slashAnimate:PLACED_WON_ACROS_BOTTON_LEFT];
-//    }
+    UIButton *button = (UIButton *)sender;
+    NSString *buttonTag = [NSString stringWithFormat:@"%d", [button tag]]; //buttons are tagged with their coordinates in interface builder
+    [whichButton setText:buttonTag];
+
+    if ([buttonTag isEqualToString:@"0"]) {
+        [self slashAnimate:PLACED_WON_ROW_0];
+        [self slashAnimate:PLACED_WON_COL_0];
+        [self slashAnimate:PLACED_WON_ACROSS_TOP_LEFT];
+    }
+    if ([buttonTag isEqualToString:@"1"]) {
+        [self slashAnimate:PLACED_WON_COL_1];
+        
+    }
+    if ([buttonTag isEqualToString:@"2"]) {
+        [self slashAnimate:PLACED_WON_COL_2];
+    }
+    if ([buttonTag isEqualToString:@"10"]) {
+        [self slashAnimate:PLACED_WON_ROW_1];
+    }
+    if ([buttonTag isEqualToString:@"20"]) {
+        [self slashAnimate:PLACED_WON_ROW_2];
+        [self slashAnimate:PLACED_WON_ACROS_BOTTON_LEFT];
+    }
     
     if (self->board_enabled) {
         [self disableBoard]; //disables board
