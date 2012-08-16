@@ -17,6 +17,7 @@
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h"
+#import "PTChatViewController.h"
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
@@ -59,6 +60,7 @@
 @implementation PTTictactoeViewController
 
 @synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer, dateController, chatView, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup, space00, space01, space02, space10, space11, space12, space20, space21, space22;
+@synthesize playmate_id, initiator_id;
 
 - (NSInteger)getPlaymateUserID
 {
@@ -753,6 +755,8 @@ userId:(NSString *)userID
     
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
+    PTChatViewController* chatController = [[PTChatViewController alloc] initWithplaydate:aPlaydate];
+    [self.view addSubview:chatController.view];
 }
 - (void)wireUpwireUpPlaydateConnections {
     
