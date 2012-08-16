@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTContactSelectDelegate.h"
 
-@interface PTContactsSelectedViewController : UIViewController <UITableViewDelegate> {
+@interface PTContactsSelectedViewController : UIViewController <UITableViewDelegate, PTContactSelectDelegate> {
     NSMutableArray *_selectedContacts;
     IBOutlet UITableView *contactsTableView;
+    IBOutlet UINavigationBar *navigationBar;
+    UIImageView *emptyImage;
 }
 
 @property (nonatomic, retain) NSMutableArray *selectedContacts;

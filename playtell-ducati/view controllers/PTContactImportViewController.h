@@ -9,8 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "GTMOAuth2Authentication.h"
 
-@interface PTContactImportViewController : UIViewController {
+@interface PTContactImportViewController : UIViewController <UITextFieldDelegate> {
     GTMOAuth2Authentication *googleAuth;
+    IBOutlet UINavigationBar *inviteNavigationBar;
+    IBOutlet UIView *inviteContainer;
+    IBOutlet UIView *inviteContainerOuter;
+    IBOutlet UIView *inviteContainerTexts;
+    IBOutlet UIView *inviteExternal;
+    IBOutlet UIView *inviteExternalOuter;
+    IBOutlet UITextField *textName;
+    IBOutlet UITextField *textEmail;
+    IBOutlet UIButton *buttonSendInvite;
+    IBOutlet UIButton *buttonGoogle;
+    IBOutlet UIButton *buttonAddressBook;
+    BOOL isKeyboardShown;
 }
 
 - (IBAction)googleContactsStart:(id)sender;

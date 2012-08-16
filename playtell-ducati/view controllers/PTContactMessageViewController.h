@@ -7,12 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTContactSelectDelegate.h"
 
-@interface PTContactMessageViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate> {
+@interface PTContactMessageViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate, PTContactSelectDelegate> {
     UIBarButtonItem *buttonBack;
     UIBarButtonItem *buttonSend;
     NSMutableArray *contacts;
     IBOutlet UITableView *contactsTableView;
+    IBOutlet UITextView *msgBody;
+    IBOutlet UIView *contactsTableContainer;
+    IBOutlet UIView *leftContainer;
+    IBOutlet UIView *composeBox;
+    IBOutlet UIImageView *myProfilePic;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;

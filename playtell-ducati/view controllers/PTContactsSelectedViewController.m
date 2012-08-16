@@ -7,6 +7,9 @@
 //
 
 #import "PTContactsSelectedViewController.h"
+#import "PTContactsTableBigCell.h"
+#import "PTContactsTableRemoveCell.h"
+#import "UIColor+HexColor.h"
 
 @interface PTContactsSelectedViewController ()
 
@@ -27,22 +30,42 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+
+    // Table view style
+    contactsTableView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
+    contactsTableView.separatorColor = [UIColor colorFromHex:@"#55707f"];
+    
+    // Navigation bar
+    navigationBar.tintColor = [UIColor colorFromHex:@"#2e4857"];
+    navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    if ([self.selectedContacts count] == 0) {
+        if (emptyImage == nil) {
+            emptyImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactsSelectedNone"]];
+            emptyImage.frame = CGRectMake(0.0f, 44.0f, 405.0f, 364.0f);
+            [self.view addSubview:emptyImage];
+        }
+        contactsTableView.hidden = YES;
+        emptyImage.hidden = NO;
+    } else {
+        contactsTableView.hidden = NO;
+        emptyImage.hidden = YES;
+        [contactsTableView reloadData];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 - (void)setSelectedContacts:(NSMutableArray *)selectedContacts {
     _selectedContacts = selectedContacts;
-    [contactsTableView reloadData];
 }
 
 #pragma mark - Table View delegates
@@ -56,51 +79,25 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"ContactDetailCell";
+    static NSString *CellIdentifier = @"PTContactsTableRemoveCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    PTInviteContactButton *addButton;
+    PTContactsTableRemoveCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        
-        // Button
-//        addButton = [PTInviteContactButton buttonWithType:UIButtonTypeCustom];
-//        addButton.frame = CGRectMake(382.0f, 9.0f, 120.0f, 33.0f);
-//        addButton.tag = 100;
-//        addButton.layer.borderColor = [UIColor blackColor].CGColor;
-//        addButton.layer.borderWidth = 1.0f;
-//        addButton.layer.cornerRadius = 10.0f;
-//        [addButton addTarget:self action:@selector(contactAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [cell addSubview:addButton];
+        cell = [[PTContactsTableRemoveCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
     }
     
     // Contact description
-    NSDictionary *contact = [self.selectedContacts objectAtIndex:indexPath.row];
-    cell.textLabel.text = [contact objectForKey:@"name"];
-//    addButton = (PTInviteContactButton *)[cell viewWithTag:100];
-//    addButton.contact = contact;
-    if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) {
-        cell.detailTextLabel.text = [contact objectForKey:@"email"];
-//        [addButton setTitle:@"Invite contact" forState:UIControlStateNormal];
-//        addButton.backgroundColor = [UIColor blueColor];
-    } else {
-        BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
-        if (isFriend) {
-//            [addButton setTitle:@"A friend!" forState:UIControlStateNormal];
-//            [addButton setEnabled:NO];
-//            addButton.backgroundColor = [UIColor blackColor];
-        } else {
-//            [addButton setTitle:@"Add as friend" forState:UIControlStateNormal];
-//            addButton.backgroundColor = [UIColor redColor];
-        }
-    }
+    NSMutableDictionary *contact = [self.selectedContacts objectAtIndex:indexPath.row];
     
+    // Define cell
+    cell.delegate = self;
+    cell.contact = contact;
+
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50.0f;
+    return 114.0f;
 }
 
 // The following implementation gets rid of empty cells
@@ -115,7 +112,23 @@
 #pragma mark - Button handlers
 
 - (IBAction)closeThyself:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"selectedContactsPopoverShouldDismiss" object:nil];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark - Contact select delegates
+
+- (void)contactDidCancelInvite:(NSMutableDictionary *)contact cell:(id)sender {
+    // Remove contact from list
+    [self.selectedContacts removeObject:contact];
+    
+    // Announce action
+    NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionUninvited], @"action", nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
+    
+    // Remove cell
+    PTContactsTableRemoveCell *cell = (PTContactsTableRemoveCell *)sender;
+    NSIndexPath *indexPath = [contactsTableView indexPathForCell:cell];
+    [contactsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 @end

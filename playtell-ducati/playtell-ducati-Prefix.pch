@@ -20,7 +20,7 @@ green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #ifdef PLAYTELL_STAGING
-#define ROOT_URL @"http://playtell-staging.heroku.com"
+#define ROOT_URL @"http://playtell.com"
 #else
 #define ROOT_URL @"http://playtell.com"
 #endif
