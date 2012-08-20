@@ -12,6 +12,7 @@
 #import "PTBookView.h"
 #import "PTBooksScrollView.h"
 #import "PTBooksParentView.h"
+#import "PTChatViewController.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
 
@@ -50,6 +51,9 @@
 //tic tac toe specific
 @property (nonatomic, retain) IBOutlet UIButton *space00, *space01, *space02, *space10, *space11, *space12, *space20, *space21, *space22, *closeTictactoe;
 @property (nonatomic) NSInteger board_id, initiator_id, playmate_id;  // TODOGIANCARLO figure out if BOOL is the right thing i want here, also discuss use of nonatomic and retain
+
+// Chat view controller
+@property (nonatomic, strong) PTChatViewController* chatController;
 
 //tic tac toe specific methods
 - (IBAction)endGame:(id)sender; //TODOGIANCARLO implement this

@@ -17,7 +17,6 @@
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h"
-#import "PTChatViewController.h"
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
@@ -61,6 +60,7 @@
 
 @synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer, dateController, chatView, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup, space00, space01, space02, space10, space11, space12, space20, space21, space22;
 @synthesize playmate_id, initiator_id;
+@synthesize chatController;
 
 - (NSInteger)getPlaymateUserID
 {
@@ -464,10 +464,10 @@
     [self updateDebugInfo];
 
     // Add the ChatHUD view to the top of the screen
-    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.chatView];
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
+//    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+//    [self.view addSubview:self.chatView];
+//    [self setCurrentUserPhoto];
+//    [self setPlaymatePhoto];
     
     //add board uibuttons to nsdictionary so they can be disabled!
     board_buttons = [[NSArray alloc] initWithObjects:space00, space01, space02, space10, space11, space12, space20, space21, space22, nil];
@@ -754,9 +754,8 @@ userId:(NSString *)userID
     NSAssert(playdate == nil, @"Playdate already set");
     
     playdate = aPlaydate;
-    [self wireUpwireUpPlaydateConnections];
-    PTChatViewController* chatController = [[PTChatViewController alloc] initWithplaydate:aPlaydate];
-    [self.view addSubview:chatController.view];
+//    [self wireUpwireUpPlaydateConnections];
+    [self.view addSubview:self.chatController.view];
 }
 - (void)wireUpwireUpPlaydateConnections {
     

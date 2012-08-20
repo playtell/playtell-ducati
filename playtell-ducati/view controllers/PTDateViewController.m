@@ -15,6 +15,7 @@
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
+#import "PTChatViewController.h"
 #import "PTChatHUDView.h" //clumsy and nasty and needs to be rehandled -Ricky
 #import "PTPageView.h"
 #import "PTUser.h"
@@ -42,6 +43,7 @@
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
+@property (nonatomic, strong) PTChatViewController* chatController;
 @end
 
 @implementation PTDateViewController
@@ -50,13 +52,20 @@
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
 @synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup, button2;
+@synthesize chatController;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
     NSAssert(playdate == nil, @"Playdate already set");
 
     playdate = aPlaydate;
-    [self wireUpwireUpPlaydateConnections];
+//    [self wireUpwireUpPlaydateConnections];
+    if (!self.chatController) {
+        PTChatViewController* aChatController;
+        aChatController = [[PTChatViewController alloc] initWithplaydate:aPlaydate];
+        [self.view addSubview:aChatController.view];
+        self.chatController = aChatController;
+    }
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -176,7 +185,7 @@
     
     // Add the ChatHUD view to the top of the screen
     self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.chatView];
+//    [self.view addSubview:self.chatView];
     [self setCurrentUserPhoto];
     [self setPlaymatePhoto];
 
@@ -479,6 +488,7 @@
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
          
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+         [tictactoeVc setChatController:self.chatController];
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -698,6 +708,7 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
     PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+    [tictactoeVc setChatController:self.chatController];
     [tictactoeVc setPlaydate:self.playdate];
     [tictactoeVc initGameWithMyTurn:NO];
     tictactoeVc.board_id = board_id;

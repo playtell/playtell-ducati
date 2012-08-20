@@ -18,7 +18,6 @@
 @end
 
 @implementation PTChatViewController
-@synthesize view;
 @synthesize chatView, videoPhone, playdate, playmate;
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate {
@@ -35,7 +34,9 @@
     if (self = [super init]) {
         self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
         self.playmate = aPlaymate;
-        [self setupPlaymatePlaceholderImages];
+//        [self setupPlaymatePlaceholderImages];
+        [self setPlaymatePhoto];
+        [self setCurrentUserPhoto];
     }
     return self;
 }
@@ -60,7 +61,9 @@
     } failure:^(NSError* error) {
         LogError(@"Error connecting to OpenTok session: %@", error);
     }];
-    [self setupPlaymatePlaceholderImages];
+//    [self setupPlaymatePlaceholderImages];
+    [self setPlaymatePhoto];
+    [self setCurrentUserPhoto];
 }
 
 - (void)setupPlaymatePlaceholderImages {
@@ -70,6 +73,41 @@
     
     UIImageView* myImageView = [[UIImageView alloc] initWithImage:[[PTUser currentUser] userPhoto]];
     [self.chatView setRightView:myImageView];
+}
+
+- (void)setPlaymatePhoto {
+    // Pick out the other user
+    if (self.playdate) {
+        PTPlaymate* otherUser;
+        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+            otherUser = self.playdate.playmate;
+        } else {
+            otherUser = self.playdate.initiator;
+        }
+        
+        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
+        [self.chatView setLoadingImageForLeftView:otherUserPhoto
+                                      loadingText:otherUser.username];
+    } else {
+        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
+                                      loadingText:@""];
+    }
+}
+
+- (void)setCurrentUserPhoto {
+    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
+    
+    // If user photo is nil user the placeholder
+    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+    [self.chatView setLoadingImageForRightView:myPhoto];
+}
+
+- (UIImage*)placeholderImage {
+    return [UIImage imageNamed:@"profile_default_2.png"];
+}
+
+- (UIView*)view {
+    return self.chatView;
 }
 
 @end
