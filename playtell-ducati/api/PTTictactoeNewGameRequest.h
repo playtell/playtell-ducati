@@ -11,7 +11,6 @@
 typedef void (^PTTictactoeNewGameRequestSuccessBlock) (NSDictionary* result);
 typedef void (^PTTictactoeNewGameRequestFailureBlock) (NSURLRequest* request, NSHTTPURLResponse* response, NSError* error, id JSON);
 
-
 @interface PTTictactoeNewGameRequest : PTRequest
 
 - (void)newBoardWithPlaydateId:(NSNumber*)playdateId

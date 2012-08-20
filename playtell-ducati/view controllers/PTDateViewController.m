@@ -32,6 +32,7 @@
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTBooksListRequest.h"
 #import "PTTictactoeViewController.h"
+#import "PTMemoryGameViewController.h"
 
 //networking post stuff
 #import "AFNetworking.h"
@@ -58,6 +59,7 @@
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
 }
+
 
 - (void)wireUpwireUpPlaydateConnections {
 
@@ -335,14 +337,24 @@
     }
     
     //TODOGIANCARLO another loop here for games
+    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)]; // 800x600
+    tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
+
+    [booksScrollView addSubview:tttBookView];
+    xPos += booksScrollView.frame.size.width;
+    i++;
+//    [bookList addObject:tttBookView];
+    
+    // Book cover pages load
+//    [coversToLoad addObject:tttBookView];
     
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * [books count];
+    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 1);
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
-    
+//
     // Start loading book covers
     [self loadBookCovers];
     isPageViewLoading = NO;
@@ -477,7 +489,7 @@
          NSString *board_id = [result valueForKey:@"board_id"];
          
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-         
+                  
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
@@ -485,9 +497,16 @@
          tictactoeVc.playmate_id = playmate.userID;
          tictactoeVc.initiator_id = [[PTUser currentUser] userID];
          
+         appDelegate.dateViewController = self;
+         
+         CGRect imageframe = CGRectMake(0,0,[appDelegate.screenWidth intValue],[appDelegate.screenHeight intValue]);
+
+         UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+         splash.image = [UIImage imageNamed:@"TTT-cover.png"];
+         
          //bring up the view controller of the new game!
          [appDelegate.transitionController transitionToViewController:tictactoeVc
-                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          NSLog(@"%@", error);
          NSLog(@"%@", request);
@@ -495,7 +514,21 @@
      }];
 }
 
-- (IBAction)playdateDisconnect:(id)sender {    
+- (IBAction)playMemoryGame:(id)sender {
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+    PTMemoryGameViewController *memoryGameVc = [[PTMemoryGameViewController alloc]init];
+//    CGRect imageframe = CGRectMake(0,0,[appDelegate.screenWidth intValue],[appDelegate.screenHeight intValue]);
+    
+    //         UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+    //         splash.image = [UIImage imageNamed:@"TTT-cover.png"];
+    
+    //bring up the view controller of the new game!
+    [appDelegate.transitionController transitionToViewController:memoryGameVc
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)playdateDisconnect:(id)sender {
     // Notify server of disconnect
     [self disconnectPusherAndChat];
     if (self.playdate) {
@@ -691,24 +724,32 @@
 }
 
 - (void)pusherPlayDateTictactoeNewGame:(NSNotification *)notification {
+    //check here to make sure it's coming from the other player
+    
     NSDictionary *eventData = notification.userInfo;
     NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
     NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
     
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (initiator_id != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
     
-    PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-    [tictactoeVc setPlaydate:self.playdate];
-    [tictactoeVc initGameWithMyTurn:NO];
-    tictactoeVc.board_id = board_id;
-    tictactoeVc.playmate_id = [[PTUser currentUser] userID];
-    tictactoeVc.initiator_id = initiator_id;
-    
-    //bring up the view controller of the new game!
-    [appDelegate.transitionController transitionToViewController:tictactoeVc
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+        [tictactoeVc setPlaydate:self.playdate];
+        [tictactoeVc initGameWithMyTurn:NO];
+        tictactoeVc.board_id = board_id;
+        tictactoeVc.playmate_id = [[PTUser currentUser] userID];
+        tictactoeVc.initiator_id = initiator_id;
+        
+        CGRect imageframe = CGRectMake(0,0,[appDelegate.screenWidth intValue],[appDelegate.screenHeight intValue]);
 
-    
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+        splash.image = [UIImage imageNamed:@"TTT-cover.png"];
+        
+        //bring up the view controller of the new game!
+        [appDelegate.transitionController transitionToViewController:tictactoeVc
+                                                         withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
+    }
 }
 
 - (void)pusherPlayDateFingerEnd:(NSNotification *)notification {

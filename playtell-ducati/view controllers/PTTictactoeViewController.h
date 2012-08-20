@@ -15,30 +15,22 @@
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
 
-//TODOGIANCARLO code cleanup here
-
 @interface PTTictactoeViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     
     // Playdate buttons
     PTPlaydate *playdate;
-    IBOutlet UIButton *endPlaydate;
     IBOutlet UIButton *closeTictactoe;
-    IBOutlet UIButton *endPlaydateForreal;
     IBOutlet UIView *endPlaydatePopup;
 
     //tic tac toe specific
-    IBOutlet UILabel *whichButton, *playmate_id_label, *initiator_id_label, *whose_turn_label, *playdate_id_label, *board_id_label, *game_over_label, *success_label, *opponent_turn_label, *placement_status_label;
-    IBOutlet UIButton *space00, *space01, *space02, *space10, *space11, *space12, *space20, *space21, *space22, *animateX, *animateO, *opponentTurnButton;
+    IBOutlet UIButton *space00, *space01, *space02, *space10, *space11, *space12, *space20, *space21, *space22;
     
     //communication variables
-    NSInteger pieces_placed;
-    NSInteger whose_turn;
+    int whose_turn, board_id;
     BOOL board_enabled;
-    BOOL opponent_turn;
-    UIImageView *myPiece, *opponentPiece; // TODOGIANCARLO initialize these guys
+    
     NSArray *board_buttons, *turnIndicators;
     NSMutableArray *board_spaces;
-
 }
 
 //playdate specific
@@ -46,13 +38,14 @@
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydate;
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydateForreal;
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
+@property (nonatomic, retain) UIImageView *board;
 
 //tic tac toe specific
 @property (nonatomic, retain) IBOutlet UIButton *space00, *space01, *space02, *space10, *space11, *space12, *space20, *space21, *space22, *closeTictactoe;
-@property (nonatomic) NSInteger board_id, initiator_id, playmate_id;  // TODOGIANCARLO figure out if BOOL is the right thing i want here, also discuss use of nonatomic and retain
+@property (nonatomic) NSInteger board_id, initiator_id, playmate_id;
 
 //tic tac toe specific methods
-- (IBAction)endGame:(id)sender; //TODOGIANCARLO implement this
+- (IBAction)endGame:(id)sender;
 - (IBAction)placePiece:(id)sender;
 - (void)initGameWithMyTurn:(BOOL)myTurn;
 

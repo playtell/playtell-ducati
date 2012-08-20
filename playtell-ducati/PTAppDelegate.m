@@ -34,13 +34,30 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize dateViewController = _dateViewController;
 @synthesize transitionController = _transitionController;
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
 @synthesize phone;
+@synthesize screenWidth, screenHeight;
+
+- (void) setiPadDimensions
+{    
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+        ([UIScreen mainScreen].scale == 2.0)) {
+        // Retina display
+        screenWidth = [NSNumber numberWithInt:IPAD_RETINA_WIDTH];
+        screenHeight = [NSNumber numberWithInt:IPAD_RETINA_HEIGHT];
+    } else {
+        // non-Retina display
+        screenWidth = [NSNumber numberWithInt:IPAD_WIDTH];
+        screenHeight = [NSNumber numberWithInt:IPAD_HEIGHT];
+    }
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone]; //set status bar hidden
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -76,6 +93,8 @@
     }
     self.transitionController = transitionController;
     self.window.rootViewController = self.transitionController;
+    [self setiPadDimensions];
+    
     [self.window makeKeyAndVisible];
 
     return YES;

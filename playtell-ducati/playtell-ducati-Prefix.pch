@@ -63,6 +63,8 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #define IPAD_WIDTH 1024
 #define IPAD_HEIGHT 768
+#define IPAD_RETINA_WIDTH 2048
+#define IPAD_RETINA_HEIGHT 1536
 
 
 #define PIECE_X 0
