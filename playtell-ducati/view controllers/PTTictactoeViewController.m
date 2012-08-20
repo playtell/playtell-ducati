@@ -150,8 +150,6 @@
          
          NSString *pusher_board_id = [result valueForKey:@"board_id"];
          
- 
-         
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
          
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
@@ -161,6 +159,7 @@
          tictactoeVc.board_id = [pusher_board_id intValue];
          tictactoeVc.playmate_id = [self getPlaymateUserID];
          tictactoeVc.initiator_id = [[PTUser currentUser] userID];
+         [tictactoeVc setChatController:self.chatController];
          
          CGRect imageframe = CGRectMake(0,0,1024,768);
          
@@ -243,7 +242,7 @@
         array = [self buildImageArrayWithStart:2 end:15 unique_identifier:@"RL"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"RL_00015.png";
+        endingImageName = @"RL_00015.png";   
         
         CGRect imageframe = CGRectMake(boardX,boardY,590,590);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -573,7 +572,7 @@
     
     [self.view addSubview:cats];
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
-    
+        
     if (sendNewGame) {[self performSelector:@selector(newGame) withObject:nil afterDelay:4.0];};
 }
 
