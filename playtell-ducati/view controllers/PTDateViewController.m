@@ -60,7 +60,7 @@
     NSAssert(playdate == nil, @"Playdate already set");
 
     playdate = aPlaydate;
-//    [self wireUpwireUpPlaydateConnections];
+    [self wireUpwireUpPlaydateConnections];
     self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
 }
@@ -87,11 +87,11 @@
                                             onFailure:nil
      ];
     
-    [self setPlaymatePhoto];
-
-    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
-        NSLog(@"Session connected!");
-    }];
+//    [self setPlaymatePhoto];
+//
+//    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
+//        NSLog(@"Session connected!");
+//    }];
     
     NSString* myToken;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
@@ -104,30 +104,30 @@
 
 #if TARGET_IPHONE_SIMULATOR
 #elif TARGET_OS_IPHONE
-    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
-                                       withToken:myToken
-                                         success:^(OTPublisher *publisher)
-     {
-         if (publisher.publishVideo) {
-             self.myPublisher = publisher;
-             [self.chatView setRightView:publisher.view];
-         }
-     } failure:^(NSError *error) {
-         LogError(@"Error connecting to video phone session: %@", error);
-     }];
-    
-    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
-        if (subscriber.stream.hasVideo) {
-            self.playmateSubscriber = subscriber;
-            [self.chatView setLeftView:subscriber.view];
-        } else {
-            [self.chatView transitionLeftImage];
-        }
-    }];
-
-    [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
-        [self setPlaymatePhoto];
-    }];
+//    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
+//                                       withToken:myToken
+//                                         success:^(OTPublisher *publisher)
+//     {
+//         if (publisher.publishVideo) {
+//             self.myPublisher = publisher;
+//             [self.chatView setRightView:publisher.view];
+//         }
+//     } failure:^(NSError *error) {
+//         LogError(@"Error connecting to video phone session: %@", error);
+//     }];
+//    
+//    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber *subscriber) {
+//        if (subscriber.stream.hasVideo) {
+//            self.playmateSubscriber = subscriber;
+//            [self.chatView setLeftView:subscriber.view];
+//        } else {
+//            [self.chatView transitionLeftImage];
+//        }
+//    }];
+//
+//    [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
+//        [self setPlaymatePhoto];
+//    }];
 #endif
 }
 
