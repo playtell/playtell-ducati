@@ -57,6 +57,8 @@
 @implementation PTTictactoeViewController
 
 @synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer, dateController, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup, space00, space01, space02, space10, space11, space12, space20, space21, space22, board;
+@synthesize initiator_id, playmate_id;
+@synthesize chatController;
 
 - (int)getPlaymateUserID
 {
@@ -501,6 +503,7 @@
     board = [[UIImageView alloc] initWithFrame:imageframe];
     board.image = [UIImage imageNamed:@"game-board-you.png"];//init with normal board, flip once everything else initialized
     [self.view addSubview:board];
+    [self.view addSubview:self.chatController.view];
     
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];

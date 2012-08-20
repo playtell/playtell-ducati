@@ -16,6 +16,7 @@
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h" //clumsy and nasty and needs to be rehandled -Ricky
+#import "PTChatViewController.h"
 #import "PTPageView.h"
 #import "PTUser.h"
 #import "PTPageTurnRequest.h"
@@ -43,6 +44,7 @@
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
+@property (nonatomic, strong) PTChatViewController* chatController;
 @end
 
 @implementation PTDateViewController
@@ -51,13 +53,16 @@
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
 @synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup, button2;
+@synthesize chatController;
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
     NSAssert(playdate == nil, @"Playdate already set");
 
     playdate = aPlaydate;
-    [self wireUpwireUpPlaydateConnections];
+//    [self wireUpwireUpPlaydateConnections];
+    self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
+    [self.view addSubview:self.chatController.view];
 }
 
 
@@ -177,10 +182,10 @@
     fingerViews = [[NSMutableDictionary alloc] init];
     
     // Add the ChatHUD view to the top of the screen
-    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.chatView];
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
+//    self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+//    [self.view addSubview:self.chatView];
+//    [self setCurrentUserPhoto];
+//    [self setPlaymatePhoto];
 
     // Start listening to pusher notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTurnPage:) name:@"PlayDateTurnPage" object:nil];
@@ -371,6 +376,11 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    // If the chat controller has been created, go ahead an add it
+    if (self.chatController) {
+        [self.view addSubview:self.chatController.view];
+    }
+    
     // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
     // notifications at the time of backgrounding.
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -491,6 +501,7 @@
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                   
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+         [tictactoeVc setChatController:self.chatController];
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -735,6 +746,7 @@
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+        [tictactoeVc setChatController:self.chatController];
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:NO];
         tictactoeVc.board_id = board_id;

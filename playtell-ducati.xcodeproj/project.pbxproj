@@ -518,6 +518,7 @@
 		F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC41415866DE200BE086B /* PTLoadingViewController.m */; };
 		F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */; };
 		F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */; };
+		F4FB354C15E2CE1D006FD40E /* PTChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1284,6 +1285,8 @@
 		F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoadingViewController.xib; sourceTree = "<group>"; };
 		F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTCheckForPlaydateRequest.h; sourceTree = "<group>"; };
 		F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCheckForPlaydateRequest.m; sourceTree = "<group>"; };
+		F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatViewController.h; sourceTree = "<group>"; };
+		F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2755,28 +2758,30 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
-				8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */,
-				8A72FE5715DD2C0F0059A290 /* PTMemoryGameViewController.h */,
-				8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */,
-				8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */,
-				8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */,
-				8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */,
-				237B24AF157D191500FC288E /* PTDateViewController.xib */,
+				F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */,
+				F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
 				237B24AE157D191500FC288E /* PTDateViewController.m */,
+				237B24AF157D191500FC288E /* PTDateViewController.xib */,
 				F4E3EAE6157FAAD300A218EC /* PTDiagnosticViewController.h */,
 				F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */,
 				F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */,
 				F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */,
 				F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */,
-				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
-				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
-				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
-				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
-				F420B7401585BA1800DCAF10 /* TransitionController.m */,
 				F4EAC41315866DE200BE086B /* PTLoadingViewController.h */,
 				F4EAC41415866DE200BE086B /* PTLoadingViewController.m */,
 				F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */,
+				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
+				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
+				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
+				8A72FE5715DD2C0F0059A290 /* PTMemoryGameViewController.h */,
+				8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */,
+				8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */,
+				8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */,
+				8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */,
+				8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */,
+				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
+				F420B7401585BA1800DCAF10 /* TransitionController.m */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -3457,6 +3462,7 @@
 				8A0605D915D9B03700F39098 /* PTTictactoeCoordinate.m in Sources */,
 				8A72FE5915DD2C100059A290 /* PTMemoryGameViewController.m in Sources */,
 				8A72FE5E15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m in Sources */,
+				F4FB354C15E2CE1D006FD40E /* PTChatViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
