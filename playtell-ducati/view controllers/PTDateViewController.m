@@ -67,7 +67,7 @@
 
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
-#if !(!(TARGET_IPHONE_SIMULATOR))
+#if !(TARGET_IPHONE_SIMULATOR)
     self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
 #endif
@@ -109,7 +109,7 @@
         myToken = playdate.playmateTokboxToken;
     }
 
-#if !(!(TARGET_IPHONE_SIMULATOR))
+#if !(TARGET_IPHONE_SIMULATOR)
 #elif TARGET_OS_IPHONE
 //    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
 //                                       withToken:myToken
@@ -505,8 +505,8 @@
     
     [newGameRequest newBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                 authToken:[[PTUser currentUser] authToken]
-                                initiator_id:[NSNumber numberWithInteger:[[PTUser currentUser] userID]]
-                                playmate_id:[NSNumber numberWithInteger:playmate.userID]
+                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                                initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                  onSuccess:^(NSDictionary *result)
      {
          NSLog(@"%@", result);  //TODOGIANCARLO valueforkey@"games"
@@ -759,7 +759,8 @@
     NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
     NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
     
-    if (initiator_id != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
+    //if we did not init new game but there is a pusher for new game on our playdate....
+    if (initiator_id != [[PTUser currentUser] userID]) {
     
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
@@ -772,6 +773,7 @@
         tictactoeVc.board_id = board_id;
         tictactoeVc.playmate_id = [[PTUser currentUser] userID];
         tictactoeVc.initiator_id = initiator_id;
+        appDelegate.dateViewController = self;
         
         CGRect imageframe = CGRectMake(0,0,1024,768);
 

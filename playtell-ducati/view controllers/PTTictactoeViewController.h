@@ -54,7 +54,7 @@
 - (void)initGameWithMyTurn:(BOOL)myTurn;
 
 //playdate specific methods
-- (IBAction)playdateDisconnect:(id)sender;
-- (IBAction)endPlaydatePopupToggle:(id)sender;
+//- (IBAction)playdateDisconnect:(id)sender;
+//- (IBAction)endPlaydatePopupToggle:(id)sender;
 
 @end

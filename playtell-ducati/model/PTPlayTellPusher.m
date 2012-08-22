@@ -177,6 +177,12 @@ static PTPlayTellPusher* instance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoeNewGame" object:self userInfo:eventData];
     }];
     
+    // tictactoe_refresh_game
+    [aPlaydateChannel bindToEventNamed:@"games_tictactoe_refresh_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoeRefreshGame" object:self userInfo:eventData];
+    }];
+    
     // tictactoe_end_game
     [aPlaydateChannel bindToEventNamed:@"games_tictactoe_end_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
