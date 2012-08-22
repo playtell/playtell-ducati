@@ -107,35 +107,44 @@
     return array;
 }
 
+
+//server initiated new game
 -(void)pusherPlayDateTictactoeNewBoard:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
-    NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
     NSInteger boardId = [[eventData objectForKey:@"board_id"] integerValue];
     
-    if (initiator_id != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
-        
-        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        
-        PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-        [tictactoeVc setPlaydate:self.playdate];
-        [tictactoeVc initGameWithMyTurn:NO];
-        tictactoeVc.board_id = boardId;
-        tictactoeVc.playmate_id = [[PTUser currentUser] userID];
-        tictactoeVc.initiator_id = initiator_id;
-        
-        //bring up the view controller of the new game!
-        CGRect imageframe = CGRectMake(0,0,1024,768);
-        
-        UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-        splash.image = [UIImage imageNamed:@"TTT-cover.png"];
-        
-        //bring up the view controller of the new game!
-        [appDelegate.transitionController transitionToViewController:tictactoeVc
-                                                         withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
-
+    if (initiatorId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
+        [self drawNewGame:boardId myTurn:NO initiator:initiatorId];
     }
 }
 
+-(void)drawNewGame:(int)boardId
+          myTurn:(BOOL)isMyTurn
+         initiator:(int)initiatorId
+{
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+    [tictactoeVc setPlaydate:self.playdate];
+#if !(TARGET_IPHONE_SIMULATOR)
+    [tictactoeVc setChatController:self.chatController];
+#endif
+    tictactoeVc.board_id = boardId;
+    if (isMyTurn) {
+        tictactoeVc.playmate_id = [self getPlaymateUserID];
+        tictactoeVc.initiator_id = initiatorId;
+        [tictactoeVc initGameWithMyTurn:YES];
+    } else {
+        tictactoeVc.playmate_id = [[PTUser currentUser] userID];
+        tictactoeVc.initiator_id = initiatorId;
+        [tictactoeVc initGameWithMyTurn:NO];
+    }
+    [appDelegate.transitionController transitionToViewController:tictactoeVc
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+//client initiated new game
 -(void) newGame
 {
     PTTictactoeNewGameRequest *newGameRequest = [[PTTictactoeNewGameRequest alloc] init];
@@ -149,26 +158,9 @@
          NSLog(@"%@", result);
          
          NSString *pusher_board_id = [result valueForKey:@"board_id"];
+         int boardId = [pusher_board_id intValue];
+         [self drawNewGame:boardId myTurn:YES initiator:[[PTUser currentUser] userID]];
          
-         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-         
-         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-         [tictactoeVc setPlaydate:self.playdate];
-         
-         [tictactoeVc initGameWithMyTurn:YES];
-         tictactoeVc.board_id = [pusher_board_id intValue];
-         tictactoeVc.playmate_id = [self getPlaymateUserID];
-         tictactoeVc.initiator_id = [[PTUser currentUser] userID];
-         [tictactoeVc setChatController:self.chatController];
-         
-         CGRect imageframe = CGRectMake(0,0,1024,768);
-         
-         UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-         splash.image = [UIImage imageNamed:@"TTT-cover.png"];
-         
-         //bring up the view controller of the new game!
-         [appDelegate.transitionController transitionToViewController:tictactoeVc
-                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          NSLog(@"%@", error);
          NSLog(@"%@", request);
@@ -177,11 +169,17 @@
     
 }
 
--(void)reAddToBoard
+-(void)reAddToBoard:(BOOL)myTurn
 {
     NSEnumerator *e = [board_spaces objectEnumerator];
     UIImageView *currentObject;
     while (currentObject = [e nextObject]) {
+        if (!myTurn) {
+            currentObject.alpha = .5;
+        }
+        else {
+            currentObject.alpha = 1;
+        }
         [self.view addSubview:currentObject];
     }
 }
@@ -197,15 +195,17 @@
 
 - (void)drawMoveWithCoordinates:(PTTictactoeCoordinate *)coordinate
                              pieceKind:(int)kind
+                             opaque:(BOOL)opaque
 {
     CGRect imageframe = CGRectMake(coordinate.boardX,coordinate.boardY,SPACE_WIDTH,SPACE_HEIGHT);
     
     UIImageView* space = [[UIImageView alloc] initWithFrame:imageframe];
     
-    NSMutableArray * array = (kind == PIECE_X) ? [self buildImageArrayWithStart:0 end:15 unique_identifier:@"X"] : [self buildImageArrayWithStart:0 end:15 unique_identifier:@"O"];
+    NSMutableArray * array = (kind == PIECE_X) ? [self buildImageArrayWithStart:0 end:15 unique_identifier:@"X"] : [self buildImageArrayWithStart:1 end:15 unique_identifier:@"O"];
     
     space.animationImages = array;
     space.animationDuration = .1;
+    space.alpha = (opaque) ? .5 : 1;
     space.animationRepeatCount = 1;
     space.image = (kind == PIECE_X) ? [UIImage imageNamed:@"X_00015.png"] : [UIImage imageNamed:@"O_00015.png"];
     
@@ -239,16 +239,16 @@
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ACROS_BOTTON_LEFT) {
-        array = [self buildImageArrayWithStart:2 end:15 unique_identifier:@"RL"];
+        array = [self buildImageArrayWithStart:2 end:14 unique_identifier:@"RL"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"RL_00015.png";   
+        endingImageName = @"RL_00014.png";   
         
         CGRect imageframe = CGRectMake(boardX,boardY,590,590);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_0) {
-        array = [self buildImageArrayWithStart:2 end:15 unique_identifier:@"Vertical"];
+        array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_0 - 10;
         boardY = COL_COORDINATE_0;
         endingImageName = @"Vertical_00015.png";
@@ -257,25 +257,25 @@
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_1) {
-        array = [self buildImageArrayWithStart:2 end:15 unique_identifier:@"Vertical"];
+        array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_1 - 10;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical_00014.png";
+        endingImageName = @"Vertical_00015.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_COL_2) {
-        array = [self buildImageArrayWithStart:2 end:15 unique_identifier:@"Vertical"];
+        array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_2 - 10;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical_00014.png";
+        endingImageName = @"Vertical_00015.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_0) {
-        array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Horizontal"];
+        array = [self buildImageArrayWithStart:1 end:15 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_0 + 20;
         boardX = ROW_COORDINATE_0;
         endingImageName = @"Horizontal_00015.png";
@@ -284,19 +284,19 @@
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_1) {
-        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Horizontal"];
+        array = [self buildImageArrayWithStart:1 end:14 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_1 + 20;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal_00014.png";
+        endingImageName = @"Horizontal_00015.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
     }
     if (win_status_code == PLACED_WON_ROW_2) {
-        array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"Horizontal"];
+        array = [self buildImageArrayWithStart:1 end:15 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_2 + 20;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal_00014.png";
+        endingImageName = @"Horizontal_00015.png";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -314,43 +314,36 @@
     [self performSelector:@selector(beginSound:) withObject:(id)[NSNumber numberWithInt:STRIKEOUT_SOUND] afterDelay:.2];
 }
 
-- (NSArray *) getTurnIndicators
+- (void) createTurnIndicators:(bool)i_am_x
 {
-    if ([turnIndicators count] < 1) {
-        
-        CGRect opponent = CGRectMake(150, 15, 100, 100);
-        CGRect you = CGRectMake(750, 15, 100, 100);
+    CGRect opponent = CGRectMake(150, 15, 100, 100);
+    CGRect you = CGRectMake(750, 15, 100, 100);
 
-        UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:you];
-        UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponent];
-        
-        if ([self iAmX]) {
-            youIndicator.image = [UIImage imageNamed:@"o-turn.png"];
-            opponentIndicator.image = [UIImage imageNamed:@"x-turn.png"];
-        }
-        else {
-            youIndicator.image = [UIImage imageNamed:@"x-turn.png"];
-            opponentIndicator.image = [UIImage imageNamed:@"o-turn.png"];
-        }
-        
-        [self.view addSubview:youIndicator];
-        [self.view addSubview:opponentIndicator];
-        turnIndicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, nil];
-    }
-    return turnIndicators;
+    UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:you];
+    UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponent];
     
+    if (!i_am_x) {
+        youIndicator.image = [UIImage imageNamed:@"o-turn.png"];                                                    
+        opponentIndicator.image = [UIImage imageNamed:@"x-turn.png"];
+    }
+    else {
+        youIndicator.image = [UIImage imageNamed:@"x-turn.png"];
+        opponentIndicator.image = [UIImage imageNamed:@"o-turn.png"];
+    }
+    
+    [self.view addSubview:youIndicator];
+    [self.view addSubview:opponentIndicator];
+    self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, nil];
 }
 
-- (void) updateTurnIndicators
+- (void) updateTurnIndicators:(BOOL)myTurn
 {
-    NSArray *indicators = [self getTurnIndicators];
-    
-    UIImageView *youIndicator = [indicators objectAtIndex:0];
-    UIImageView *opponentIndicator = [indicators objectAtIndex:1];
+    UIImageView *youIndicator = [self->turn_indicators objectAtIndex:0];
+    UIImageView *opponentIndicator = [self->turn_indicators objectAtIndex:1];
     opponentIndicator.hidden = YES;
     youIndicator.hidden = YES;
     
-    if (self->board_enabled) {
+    if (myTurn) {
         youIndicator.hidden = NO;
     }
     else {
@@ -361,8 +354,8 @@
 -(void)pusherPlayDateTictactoePlacePiece:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     int placement_code = [[eventData objectForKey:@"placement_code"] integerValue];
-    int playmate_id = [[eventData objectForKey:@"playmate_id"] integerValue];
-    if (playmate_id != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
+    int playmateId = [[eventData objectForKey:@"playmate_id"] integerValue];
+    if (playmateId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
         
         NSString *coordinates = [eventData objectForKey:@"coordinates"];
         
@@ -462,21 +455,21 @@
     self.missPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:miss error:&playerError];
     self.strikeoutPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:strikeout error:&playerError];
 
-    self.winPlayer.volume = 0.5;
+    self.winPlayer.volume = 0.75;
     self.winPlayer.numberOfLoops = .5;
     
-    self.lossPlayer.volume = 0.5;
+    self.lossPlayer.volume = 0.75;
     self.lossPlayer.numberOfLoops = .5;
     
-    self.xWritePlayer.volume = 0.5;
+    self.xWritePlayer.volume = 0.75;
     self.xWritePlayer.numberOfLoops = .5;
     self.oWritePlayer.volume = 0.5;
     self.oWritePlayer.numberOfLoops = .5;
     
-    self.missPlayer.volume = 0.5;
+    self.missPlayer.volume = 0.75;
     self.missPlayer.numberOfLoops = .5;
     
-    self.strikeoutPlayer.volume = 0.5;
+    self.strikeoutPlayer.volume = 0.75;
     self.strikeoutPlayer.numberOfLoops = .5;
 }
 
@@ -498,12 +491,14 @@
     [super viewDidLoad];
     
     //init board frame for first time
-    CGRect imageframe = CGRectMake(236,191,596,577);
+    CGRect imageframe = CGRectMake(212,193,601,575);
     board = [[UIImageView alloc] initWithFrame:imageframe];
-    board.image = [UIImage imageNamed:@"game-board-you.png"];//init with normal board, flip once everything else initialized
+    board.image = [UIImage imageNamed:@"game-board-you.png"]; //init with normal board, flip once everything else initialized
     [self.view addSubview:board];
-    [self.view addSubview:self.chatController.view];
     
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self.view addSubview:self.chatController.view];
+#endif
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];
 
@@ -512,8 +507,8 @@
 // ## Tictactoe methods start ##
 -(void)initGameWithMyTurn:(BOOL)myTurn
 {
+    (myTurn) ? [self createTurnIndicators:YES] : [self createTurnIndicators:NO];
     (myTurn) ? [self enableBoard] : [self disableBoard];
-    [self performSelector:@selector(updateTurnIndicators) withObject:nil afterDelay:5.0];
 }
 
 - (void)updateUIWithStatus:(int)status
@@ -538,19 +533,19 @@
     }
     if (status == PLACED_SUCCESS) {
         [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-        [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind];
-        (isCurrentUser) ? [self performSelector:@selector(disableBoard) withObject:nil afterDelay:.2] : [self performSelector:@selector(enableBoard) withObject:nil afterDelay:.2];
+        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
+        (isCurrentUser) ? [self performSelector:@selector(disableBoard) withObject:nil afterDelay:.1] : [self performSelector:@selector(enableBoard) withObject:nil afterDelay:.1];
     }
     if (status == PLACED_WON) {
         [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-        [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind];
+        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
         [self performSelector:@selector(slashAnimate:) withObject:(id)[NSNumber numberWithInt:winStatus] afterDelay:.4];
 
         (isCurrentUser) ? [self performSelector:@selector(displayYouWin) withObject:nil afterDelay:1.2] : [self performSelector:@selector(displayYouLost) withObject:nil afterDelay:1.2];
     }
     if (status == PLACED_CATS) {
         [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-        [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind];
+        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
         
         [self performSelector:@selector(displayCats:) withObject:(id)[NSNumber numberWithBool:isCurrentUser] afterDelay:1.2];
     }
@@ -570,10 +565,11 @@
     cats.alpha = 1;
     [cats startAnimating];
     
+    //fade screen here
     [self.view addSubview:cats];
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
         
-    if (sendNewGame) {[self performSelector:@selector(newGame) withObject:nil afterDelay:4.0];};
+    if (sendNewGame) {[self performSelector:@selector(newGame) withObject:nil afterDelay:2.0];};
 }
 
 - (void) displayYouWin
@@ -589,8 +585,9 @@
     win.animationDuration = 5.75;
     [win startAnimating];
 
+    //fade screen here
     [self.view addSubview:win];
-    [self performSelector:@selector(newGame) withObject:nil afterDelay:4.0];
+    [self performSelector:@selector(newGame) withObject:nil afterDelay:2.0];
 }
 
 - (void) displayYouLost
@@ -606,6 +603,7 @@
     defeat.alpha = 1;
     [defeat startAnimating];
     
+    //TODOGIANCARLO fade screen here
     [self.view addSubview:defeat];
 }
 
@@ -631,7 +629,7 @@
     self->board_enabled = NO;
     //flip the board over, disable the buttons
     
-    [self updateTurnIndicators];
+    [self updateTurnIndicators:NO];
     
     [UIView transitionWithView:self.board
                       duration:0.5f
@@ -643,14 +641,14 @@
                     }
                     completion:^(BOOL finished){
                         [self reAddButtons];
-                        [self reAddToBoard];
+                        [self reAddToBoard:NO];
                     }];
 }
 
 - (void) enableBoard {
     self->board_enabled = YES;
     //flip the board over, enable the buttons
-    [self updateTurnIndicators];
+    [self updateTurnIndicators:YES];
     
     [UIView transitionWithView:self.board
                       duration:0.5f
@@ -662,7 +660,7 @@
                     }
                     completion:^(BOOL finished){
                         [self reAddButtons];
-                        [self reAddToBoard];
+                        [self reAddToBoard:YES];
                     }];
 }
 

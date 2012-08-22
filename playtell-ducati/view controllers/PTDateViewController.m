@@ -2,7 +2,7 @@
 //  PTDateViewController.m
 //  playtell-ducati
 //
-//  Created by Dimitry Bentsionov on 6/4/12.
+//  Created by DisetPlaymatePhotomitry Bentsionov on 6/4/12.
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
@@ -10,35 +10,41 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
-#import "PTCheckForPlaydateRequest.h"
-#import "PTConcretePlaymateFactory.h"
+#import "TransitionController.h"
+
+//VIEW CONTROLLERS
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
-#import "PTBookView.h"
-#import "PTChatHUDView.h" //clumsy and nasty and needs to be rehandled -Ricky
 #import "PTChatViewController.h"
+#import "PTBookView.h"
 #import "PTPageView.h"
+
+//MODELS
 #import "PTUser.h"
+#import "PTCheckForPlaydateRequest.h"
+#import "PTConcretePlaymateFactory.h"
+
+//HTTP POST
+#import "AFNetworking.h"
+#import "NSMutableURLRequest+POSTParameters.h"
+#import "TargetConditionals.h"
+
+//RAILS REQUESTS 
 #import "PTPageTurnRequest.h"
 #import "PTTictactoeNewGameRequest.h"
 #import "PTBookChangeRequest.h"
 #import "PTBookCloseRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
-#import "PTVideoPhone.h" //as much opentok stuff as possible is taken out but there are still things to deal with
 #import "PTPlaydateJoinedRequest.h"
-#import "TransitionController.h"
+#import "PTPlaydateFingerTapRequest.h"
+#import "PTBooksListRequest.h"
+#import "PTPlaydateFingerEndRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
-#import "PTPlaydateFingerTapRequest.h"
-#import "PTPlaydateFingerEndRequest.h"
-#import "PTBooksListRequest.h"
+
+//GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
 #import "PTMemoryGameViewController.h"
-
-//networking post stuff
-#import "AFNetworking.h"
-#import "NSMutableURLRequest+POSTParameters.h"
-#import "TargetConditionals.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
@@ -61,10 +67,11 @@
 
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
+#if !(!(TARGET_IPHONE_SIMULATOR))
     self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
+#endif
 }
-
 
 - (void)wireUpwireUpPlaydateConnections {
 
@@ -102,7 +109,7 @@
         myToken = playdate.playmateTokboxToken;
     }
 
-#if TARGET_IPHONE_SIMULATOR
+#if !(!(TARGET_IPHONE_SIMULATOR))
 #elif TARGET_OS_IPHONE
 //    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
 //                                       withToken:myToken
@@ -133,6 +140,7 @@
 
 - (void)setPlaymatePhoto {
     // Pick out the other user
+#if !(TARGET_IPHONE_SIMULATOR)
     if (self.playdate) {
         PTPlaymate* otherUser;
         if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
@@ -148,6 +156,7 @@
         [self.chatView setLoadingImageForLeftView:[self placeholderImage]
                                       loadingText:@""];
     }
+#endif
 }
 
 - (UIImage*)placeholderImage {
@@ -342,7 +351,8 @@
     }
     
     //TODOGIANCARLO another loop here for games
-    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)]; // 800x600
+    xPos += (booksScrollView.frame.size.width * .75);
+    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
     tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
 
     [booksScrollView addSubview:tttBookView];
@@ -377,9 +387,11 @@
     [super viewWillAppear:animated];
 
     // If the chat controller has been created, go ahead an add it
+#if !(TARGET_IPHONE_SIMULATOR)
     if (self.chatController) {
         [self.view addSubview:self.chatController.view];
     }
+#endif
     
     // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
     // notifications at the time of backgrounding.
@@ -398,8 +410,9 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-
+#if !(TARGET_IPHONE_SIMULATOR)
     [self removePlaymateFromChatHUD];
+#endif
 }
 
 - (void)removePlaymateFromChatHUD {
@@ -444,9 +457,10 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
-
+#if !(TARGET_IPHONE_SIMULATOR)
     [self setCurrentUserPhoto];
     [self setPlaymatePhoto];
+#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -461,8 +475,9 @@
         LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
         [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     }
-    
+#if !(TARGET_IPHONE_SIMULATOR)
     [[PTVideoPhone sharedPhone] disconnect];
+#endif
 }
 
 - (void)transitionToDialpad {
@@ -501,7 +516,9 @@
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                   
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+#if !(TARGET_IPHONE_SIMULATOR)
          [tictactoeVc setChatController:self.chatController];
+#endif
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -510,7 +527,7 @@
          
          appDelegate.dateViewController = self;
          
-         CGRect imageframe = CGRectMake(0,0,[appDelegate.screenWidth intValue],[appDelegate.screenHeight intValue]);
+         CGRect imageframe = CGRectMake(0,0,1024,768);
 
          UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
          splash.image = [UIImage imageNamed:@"TTT-cover.png"];
@@ -569,8 +586,10 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+#if !(TARGET_IPHONE_SIMULATOR)
     [self.chatView removeFromSuperview];
     self.chatView = nil;
+#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -711,7 +730,6 @@
             break;
         }
     }
-    
     // Show close book button
     [UIView animateWithDuration:(BOOK_OPEN_CLOSE_ANIMATION_SPEED + 0.25f) animations:^{
         closeBook.alpha = 1.0f;
@@ -746,14 +764,16 @@
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+#if !(TARGET_IPHONE_SIMULATOR)
         [tictactoeVc setChatController:self.chatController];
+#endif
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:NO];
         tictactoeVc.board_id = board_id;
         tictactoeVc.playmate_id = [[PTUser currentUser] userID];
         tictactoeVc.initiator_id = initiator_id;
         
-        CGRect imageframe = CGRectMake(0,0,[appDelegate.screenWidth intValue],[appDelegate.screenHeight intValue]);
+        CGRect imageframe = CGRectMake(0,0,1024,768);
 
         UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
         splash.image = [UIImage imageNamed:@"TTT-cover.png"];
@@ -772,7 +792,6 @@
     if ([[PTUser currentUser] userID] == playerId) {
         return;
     }
-    
     // Remove finger
     NSInteger x = [[eventData objectForKey:@"x"] integerValue];
     NSInteger y = [[eventData objectForKey:@"y"] integerValue];
@@ -1209,6 +1228,5 @@
     // Clear from memory
     fingerView = nil;
 }
-
 
 @end

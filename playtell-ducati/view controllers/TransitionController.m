@@ -66,8 +66,6 @@ viewController = _viewController;
 
 -(void)transitionToViewController:(UIViewController *)aViewController withOptions:(UIViewAnimationOptions)options withSplash:(UIImageView *)splash
 {
-//    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
     CGRect containerViewWithStatusbar = CGRectMake(0,0,1024,768);
     
     aViewController.view.frame = containerViewWithStatusbar;

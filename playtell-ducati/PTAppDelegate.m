@@ -39,21 +39,6 @@
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
 @synthesize phone;
-@synthesize screenWidth, screenHeight;
-
-- (void) setiPadDimensions
-{    
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-        ([UIScreen mainScreen].scale == 2.0)) {
-        // Retina display
-        screenWidth = [NSNumber numberWithInt:IPAD_RETINA_WIDTH];
-        screenHeight = [NSNumber numberWithInt:IPAD_RETINA_HEIGHT];
-    } else {
-        // non-Retina display
-        screenWidth = [NSNumber numberWithInt:IPAD_WIDTH];
-        screenHeight = [NSNumber numberWithInt:IPAD_HEIGHT];
-    }
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -79,7 +64,9 @@
 #endif
     
     [self setupPushNotifications:launchOptions];
+#if !(TARGET_IPHONE_SIMULATOR)
     [PTVideoPhone sharedPhone];
+#endif
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
@@ -93,7 +80,6 @@
     }
     self.transitionController = transitionController;
     self.window.rootViewController = self.transitionController;
-    [self setiPadDimensions];
     
     [self.window makeKeyAndVisible];
 

@@ -30,7 +30,7 @@
     int whose_turn, board_id;
     BOOL board_enabled;
     
-    NSArray *board_buttons, *turnIndicators;
+    NSArray *board_buttons, *turn_indicators;
     NSMutableArray *board_spaces;
 }
 
@@ -38,7 +38,7 @@
 @property (nonatomic) PTPlaydate *playdate;
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydate;
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydateForreal;
-@property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
+@property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup, *blackScreen;
 @property (nonatomic, retain) UIImageView *board;
 
 //tic tac toe specific
