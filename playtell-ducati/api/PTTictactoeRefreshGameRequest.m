@@ -15,7 +15,8 @@
 - (void)refreshBoardWithPlaydateId:(NSNumber*)playdateId
                      authToken:(NSString *)token
                    playmate_id:(NSString *)playmate_id
-                    already_playing:(NSString *)alreadyPlaying
+                    already_playing:(NSNumber *)alreadyPlaying
+                       initiatorId:(NSNumber *)initiatorId
                      onSuccess:(PTTictactoeRefreshGameRequestSuccessBlock)success
                      onFailure:(PTTictactoeRefreshGameRequestFailureBlock)failure
 {
@@ -24,6 +25,7 @@
                                     token, @"authentication_token",
                                     playmate_id, @"playmate_id",
                                     alreadyPlaying, @"already_playing",
+                                    initiatorId, @"initiator_id",
                                     nil];
     
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/tictactoe/new_game", ROOT_URL]];

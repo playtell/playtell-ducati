@@ -17,17 +17,7 @@ typedef void (^PTTictactoePlacePieceRequestFailureBlock) (NSURLRequest* request,
                         authToken:(NSString *)token
                           user_id:(NSString *)user_id
                          board_id:(NSString *)board_id
-                      playdate_id:(NSString*)playdate_id
-                        with_json:(NSString *)with_json
-                        onSuccess:(PTTictactoePlacePieceRequestSuccessBlock)success
-                        onFailure:(PTTictactoePlacePieceRequestFailureBlock)failure;
-
-- (void)placePieceWithCoordinates:(NSString *)coordinates
-                        authToken:(NSString *)token
-                          user_id:(NSString *)user_id
-                         board_id:(NSString *)board_id
-                      playdate_id:(NSString*)playdate_id
-                     ongoing_game:(NSString *)ongoing_game
+                      playdate_id:(NSString *)playdate_id
                         with_json:(NSString *)with_json
                         onSuccess:(PTTictactoePlacePieceRequestSuccessBlock)success
                         onFailure:(PTTictactoePlacePieceRequestFailureBlock)failure;

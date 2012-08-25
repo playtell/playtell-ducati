@@ -7,25 +7,80 @@
 //
 
 #import "PTMemoryGameViewController.h"
+#import "PTAppDelegate.h"
+#import "TransitionController.h"
+#import "PTPlaydate.h"
 
 @implementation PTMemoryGameViewController
 
-@synthesize card1, card2, card3, card4, card5, card6, card7, card8;
+@synthesize closeMemory, chatController, playdate;
 
-- (IBAction)turnCard:(id)sender
+- (id) initWithPlaydate:(PTPlaydate *)playdateP
+                   myTurn:(BOOL)myTurn
+                  boardID:(int)boardID
+               playmateID:(int)playmateID
+              initiatorID:(int)initiatorID
 {
-    UIButton *button = (UIButton *)sender;
-//    NSString *buttonTag = [NSString stringWithFormat:@"%d", [button tag]]; //buttons are tagged with their coordinates in interface builder
-        
-    [UIView transitionWithView:button.imageView
-                      duration:0.5f
-                       options:UIViewAnimationOptionTransitionFlipFromLeft
-                    animations:^{
-                        button.imageView.image = [UIImage imageNamed:@"login_bg.png"];
-                    }
-                    completion:^(BOOL finished){
-                    }];
+    self.playdate = playdateP;
+    [self drawNewGame];
+    
+    return nil;
+    
 }
 
+- (void) drawNewGame
+{
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self setChatController:self.chatController];
+    [self.view addSubview:self.chatController.view];
+#endif
+}
+
+- (IBAction)cardTouched:(id)sender
+{
+    UIButton *card = (UIButton *)sender;
+    
+}
+
+- (void)pusherMemoryGameEndGame:(NSNotification *)notification {
+    // # TODO IMPLEMENT ENDGAME ONCE API FINISHED #
+
+    
+//    NSLog(@"End game pusher call received");
+//    
+//    NSDictionary *eventData = notification.userInfo;
+//    NSInteger initiatorId = [[eventData objectForKey:@"playmate_id"] integerValue]; //person who ended the game
+//    
+//    if (initiatorId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
+//        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+//    }
+}
+
+-(IBAction)endGame:(id)sender
+{
+    // # TODO IMPLEMENT ENDGAME ONCE API FINISHED #
+    
+//    NSString *boardID = [NSString stringWithFormat:@"%d", self.board_id];
+//    
+//    PTTictactoeEndGameRequest *endGameRequest = [[PTTictactoeEndGameRequest alloc] init];
+//        
+//    [endGameRequest endGameWithBoardId:boardID
+//                             authToken:[[PTUser currentUser] authToken]
+//                                userId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
+//                            playdateId:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
+//                             onSuccess:^(NSDictionary *result) {
+//                                 NSLog(@"End game API call success");
+//                                 
+//                             }
+//                             onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                 NSLog(@"End game API call failure");
+//                             }];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+// # HELPER METHODS START #
 
 @end

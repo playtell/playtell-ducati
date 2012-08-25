@@ -49,11 +49,11 @@ viewController = _viewController;
     [self.viewController didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
 
--(void)loadTictactoeViewController:(id)viewController
+-(void)loadGameViewController:(id)viewController
 {
     UIViewController *aViewController = (UIViewController *)viewController;
     [UIView transitionWithView:self.containerView
-                      duration:.65f
+                      duration:.25f
                        options:UIViewAnimationOptionTransitionCurlDown
                     animations:^{
                         [self.viewController.view removeFromSuperview];
@@ -64,34 +64,38 @@ viewController = _viewController;
                     }];
 }
 
--(void)transitionToViewController:(UIViewController *)aViewController withOptions:(UIViewAnimationOptions)options withSplash:(UIImageView *)splash
+-(void)loadGame:(UIViewController *)aViewController withOptions:(UIViewAnimationOptions)options withSplash:(UIImageView *)splash gameType:(int)gameType
 {
-    CGRect containerViewWithStatusbar = CGRectMake(0,0,1024,768);
-    
-    aViewController.view.frame = containerViewWithStatusbar;
     [UIView transitionWithView:self.containerView
-                      duration:0.65f
-                       options:UIViewAnimationOptionTransitionCurlUp
+                      duration:0.25f
+                       options:options
                     animations:^{
                         [self.viewController.view removeFromSuperview];
                         [self.containerView addSubview:splash];
 
                     }
                     completion:^(BOOL finished){
+                        self.viewController = aViewController;
+                        
+                        [UIView transitionWithView:self.containerView
+                                          duration:1.5f
+                                           options:UIViewAnimationOptionTransitionCrossDissolve
+                                        animations:^{
+                                        }
+                                        completion:^(BOOL finished){
+                                            [splash removeFromSuperview];
+                                        }];
+                        
                     }];
-    [self performSelector:@selector(loadTictactoeViewController:) withObject:(id)aViewController afterDelay:1.5f];
     
+    [self performSelector:@selector(loadGameViewController:) withObject:(id)aViewController afterDelay:1.5f];
 }
 
 - (void)transitionToViewController:(UIViewController *)aViewController
                        withOptions:(UIViewAnimationOptions)options
 {
-//    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    
-    CGRect containerViewWithStatusbar = CGRectMake(0,0,1024,786);
-    aViewController.view.frame = containerViewWithStatusbar;
     [UIView transitionWithView:self.containerView
-                      duration:0.65f
+                      duration:0.25f
                        options:options
                     animations:^{
                         [self.viewController.view removeFromSuperview];

@@ -62,18 +62,6 @@
 @synthesize initiator_id, playmate_id;
 @synthesize chatController;
 
-- (int)getPlaymateUserID
-{
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator. Playmate is playmate.");
-        return self.playdate.playmate.userID;
-        
-    } else {
-        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
-        return self.playdate.initiator.userID;
-    }
-}
-
 -(NSString *)zeroFactory:(int)numZeros
 {
     NSString *zeros = @"";
@@ -116,13 +104,14 @@
     NSInteger boardId = [[eventData objectForKey:@"board_id"] integerValue];
     
     if (initiatorId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
-        [self drawNewGame:boardId myTurn:NO initiator:initiatorId];
+        [self drawNewGame:boardId myTurn:NO initiator:initiatorId playmate:[[PTUser currentUser] userID]];
     }
 }
 
 -(void)drawNewGame:(int)boardId
           myTurn:(BOOL)isMyTurn
          initiator:(int)initiatorId
+          playmate:(int)playmateId
 {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -134,12 +123,12 @@
 #endif
     tictactoeVc.board_id = boardId;
     if (isMyTurn) {
-        tictactoeVc.playmate_id = [self getPlaymateUserID];
         tictactoeVc.initiator_id = initiatorId;
+        tictactoeVc.playmate_id = playmateId;
         [tictactoeVc initGameWithMyTurn:YES];
     } else {
-        tictactoeVc.playmate_id = [[PTUser currentUser] userID];
         tictactoeVc.initiator_id = initiatorId;
+        tictactoeVc.playmate_id = playmateId;
         [tictactoeVc initGameWithMyTurn:NO];
     }
     [appDelegate.transitionController transitionToViewController:tictactoeVc
@@ -153,15 +142,16 @@
     
     [newGameRequest refreshBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                  authToken:[[PTUser currentUser] authToken]
-                               playmate_id:[NSNumber numberWithInt:[self getPlaymateUserID]]
+                                   playmate_id:[NSNumber numberWithInt:[self getOtherUserID]]
                                already_playing:@"yes"
+                                initiatorId:[NSNumber numberWithInt:[[PTUser currentUser] userID]]
                                  onSuccess:^(NSDictionary *result)
      {
          NSLog(@"%@", result);
          
          NSString *boardId = [result valueForKey:@"board_id"];
          int boardID = [boardId intValue];
-         [self drawNewGame:boardID myTurn:YES initiator:[[PTUser currentUser] userID]];
+         [self drawNewGame:boardID myTurn:YES initiator:[[PTUser currentUser] userID] playmate:[self getOtherUserID]];
          
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          NSLog(@"%@", error);
@@ -756,6 +746,17 @@ userId:(NSString *)userID
 - (BOOL) iAmX // TODOGIANCARLO test this!
 {
     return [[PTUser currentUser] userID] == self.initiator_id;
+}
+
+- (int) getOtherUserID
+{
+    int myID = [[PTUser currentUser] userID];
+    if (myID != self.playmate_id) {
+        return self.playmate_id;
+    }
+    else {
+        return self.initiator_id;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

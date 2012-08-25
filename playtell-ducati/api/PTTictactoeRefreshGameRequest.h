@@ -17,6 +17,7 @@ typedef void (^PTTictactoeRefreshGameRequestFailureBlock) (NSURLRequest* request
                      authToken:(NSString*)token
                    playmate_id:(NSNumber*)playdateId
                    already_playing:(NSString*)alreadyPlaying
+                       initiatorId:(NSNumber *)initiatorId
                      onSuccess:(PTTictactoeRefreshGameRequestSuccessBlock)success
                      onFailure:(PTTictactoeRefreshGameRequestFailureBlock)failure;
 
