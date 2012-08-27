@@ -38,6 +38,9 @@
     // Navigation bar
     navigationBar.tintColor = [UIColor colorFromHex:@"#2e4857"];
     navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
+    UIImageView *envelopeImgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactsSelectedTitle"]];
+    envelopeImgView.frame = CGRectMake(0.0f, 0.0f, 30.0f, 21.0f);
+    navigationBar.topItem.titleView = envelopeImgView;
 }
 
 - (void)viewDidUnload {
@@ -45,10 +48,43 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self checkForEmptyList];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // Tap off screen functionality
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapBehind:)];
+    [recognizer setNumberOfTapsRequired:1];
+    recognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
+    [self.view.window addGestureRecognizer:recognizer];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+- (void)setSelectedContacts:(NSMutableArray *)selectedContacts {
+    _selectedContacts = selectedContacts;
+}
+
+- (void)handleTapBehind:(UITapGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        CGPoint location = [sender locationInView:nil]; //Passing nil gives us coordinates in the window
+        
+        //Then we convert the tap's location into the local view's coordinate system, and test to see if it's in or outside. If outside, dismiss the view.
+        if (![self.view pointInside:[self.view convertPoint:location fromView:self.view.window] withEvent:nil]) {
+            // Remove the recognizer first so it's view.window is valid.
+            [self.view.window removeGestureRecognizer:sender];
+            [self dismissModalViewControllerAnimated:YES];
+        }
+    }
+}
+
+- (void)checkForEmptyList {
     if ([self.selectedContacts count] == 0) {
         if (emptyImage == nil) {
             emptyImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactsSelectedNone"]];
-            emptyImage.frame = CGRectMake(0.0f, 44.0f, 405.0f, 364.0f);
+            emptyImage.frame = CGRectMake(0.0f, 44.0f, 404.0f, 365.0f);
             [self.view addSubview:emptyImage];
         }
         contactsTableView.hidden = YES;
@@ -58,14 +94,6 @@
         emptyImage.hidden = YES;
         [contactsTableView reloadData];
     }
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (void)setSelectedContacts:(NSMutableArray *)selectedContacts {
-    _selectedContacts = selectedContacts;
 }
 
 #pragma mark - Table View delegates
@@ -129,6 +157,19 @@
     PTContactsTableRemoveCell *cell = (PTContactsTableRemoveCell *)sender;
     NSIndexPath *indexPath = [contactsTableView indexPathForCell:cell];
     [contactsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationBottom];
+    
+    // Resize self
+    CGSize vcSize;
+    if ([self.selectedContacts count] == 0) {
+        vcSize = CGSizeMake(404.0f, 409.0f);
+    } else {
+        CGFloat height = MIN(614.0f, ([self.selectedContacts count] * 114.0f + 44.0f));
+        vcSize = CGSizeMake(404.0f, height);
+    }
+    [UIView animateWithDuration:0.2 animations:^{
+        self.view.superview.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - vcSize.height) / 2.0f, ([UIScreen mainScreen].bounds.size.height - vcSize.width) / 2.0f, vcSize.height, vcSize.width);
+    }];
+    [self checkForEmptyList];
 }
 
 @end

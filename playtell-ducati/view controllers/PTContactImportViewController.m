@@ -153,6 +153,7 @@
     isKeyboardShown = YES;
     [UIView animateWithDuration:0.3f animations:^{
         inviteContainerOuter.frame = CGRectOffset(inviteContainerOuter.frame, 0.0f, -120.0f);
+        inviteExternalOuter.frame = CGRectOffset(inviteExternalOuter.frame, 0.0f, -300.0f);
         inviteExternalOuter.alpha = 0.0f;
     }];
 }
@@ -161,6 +162,7 @@
     isKeyboardShown = NO;
     [UIView animateWithDuration:0.3f animations:^{
         inviteContainerOuter.frame = CGRectOffset(inviteContainerOuter.frame, 0.0f, 120.0f);
+        inviteExternalOuter.frame = CGRectOffset(inviteExternalOuter.frame, 0.0f, 300.0f);
         inviteExternalOuter.alpha = 1.0f;
     }];
 }

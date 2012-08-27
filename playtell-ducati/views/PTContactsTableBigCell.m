@@ -116,13 +116,13 @@
             break;
         }
         case PTContactsTableBigCellModeAlreadyFriend: {
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteNormal"] forState:UIControlStateNormal];
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteHighlighted"] forState:UIControlStateHighlighted];
-            [buttonAction setTitle:@"Friend" forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsNormal"] forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsHighlighted"] forState:UIControlStateHighlighted];
+            [buttonAction setTitle:@"Friends" forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
             buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
             buttonAction.frame = CGRectMake((tableWidth - 31.0f - 82.0f), 40.0f, 82.0f, 33.0f);
-            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
+            buttonAction.titleEdgeInsets = UIEdgeInsetsZero;
             [buttonAction setEnabled:NO];
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#cde7f7"];
             [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
@@ -143,7 +143,7 @@
         [buttonAction setEnabled:YES];
     } else {
         BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-        lblDetail.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
+        //lblDetail.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
         if (isFriend) {
             [buttonAction setEnabled:NO];
         } else {

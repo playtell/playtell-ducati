@@ -19,6 +19,8 @@
     IBOutlet UIView *leftContainer;
     IBOutlet UIView *composeBox;
     IBOutlet UIImageView *myProfilePic;
+    IBOutlet UILabel *mergeFieldName;
+    IBOutlet UIView *linksBox;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;

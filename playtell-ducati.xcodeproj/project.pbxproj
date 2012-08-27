@@ -19,6 +19,16 @@
 		230AA56415C85F25004EAD7D /* buttonInvitationCountNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 230AA56215C85F25004EAD7D /* buttonInvitationCountNormal.png */; };
 		230AA56715C85F4E004EAD7D /* PTContactsInvitationCountButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 230AA56615C85F4E004EAD7D /* PTContactsInvitationCountButton.m */; };
 		230AA56915C8629E004EAD7D /* invitationBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 230AA56815C8629E004EAD7D /* invitationBg.png */; };
+		230B46AC15E271F700CCA24B /* buttonFriendsHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46AA15E271F300CCA24B /* buttonFriendsHighlighted.png */; };
+		230B46AD15E271F700CCA24B /* buttonFriendsNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46AB15E271F500CCA24B /* buttonFriendsNormal.png */; };
+		230B46B115E27EDF00CCA24B /* PTContactsTableManualInviteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 230B46B015E27EDE00CCA24B /* PTContactsTableManualInviteCell.m */; };
+		230B46B415E2805700CCA24B /* buttonManualInviteHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46B215E2805200CCA24B /* buttonManualInviteHighlighted.png */; };
+		230B46B515E2805700CCA24B /* buttonManualInviteNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46B315E2805500CCA24B /* buttonManualInviteNormal.png */; };
+		230B46B815E2868300CCA24B /* contactsSelectedTitle.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46B615E2867E00CCA24B /* contactsSelectedTitle.png */; };
+		230B46B915E2868300CCA24B /* contactsSelectedTitle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46B715E2867F00CCA24B /* contactsSelectedTitle@2x.png */; };
+		230B46BB15E28D5500CCA24B /* contactsSelectedNone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46BA15E28D5300CCA24B /* contactsSelectedNone@2x.png */; };
+		230B46BE15E2A61100CCA24B /* contactsComposeLinks.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46BC15E2A5FD00CCA24B /* contactsComposeLinks.png */; };
+		230B46BF15E2A61100CCA24B /* contactsComposeLinks@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 230B46BD15E2A60600CCA24B /* contactsComposeLinks@2x.png */; };
 		230DADE315CB1A7D007171EF /* PTContactsTableSmallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 230DADE215CB1A7D007171EF /* PTContactsTableSmallCell.m */; };
 		230DADEF15CC0DA0007171EF /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 230DADEE15CC0DA0007171EF /* AsyncImageView.m */; };
 		230DADF815CC1FE9007171EF /* buttonBackHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 230DADF415CC1FE9007171EF /* buttonBackHighlighted.png */; };
@@ -379,6 +389,17 @@
 		230AA56515C85F4E004EAD7D /* PTContactsInvitationCountButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsInvitationCountButton.h; sourceTree = "<group>"; };
 		230AA56615C85F4E004EAD7D /* PTContactsInvitationCountButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsInvitationCountButton.m; sourceTree = "<group>"; };
 		230AA56815C8629E004EAD7D /* invitationBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = invitationBg.png; sourceTree = "<group>"; };
+		230B46AA15E271F300CCA24B /* buttonFriendsHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonFriendsHighlighted.png; sourceTree = "<group>"; };
+		230B46AB15E271F500CCA24B /* buttonFriendsNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonFriendsNormal.png; sourceTree = "<group>"; };
+		230B46AF15E27EDE00CCA24B /* PTContactsTableManualInviteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsTableManualInviteCell.h; sourceTree = "<group>"; };
+		230B46B015E27EDE00CCA24B /* PTContactsTableManualInviteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableManualInviteCell.m; sourceTree = "<group>"; };
+		230B46B215E2805200CCA24B /* buttonManualInviteHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonManualInviteHighlighted.png; sourceTree = "<group>"; };
+		230B46B315E2805500CCA24B /* buttonManualInviteNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonManualInviteNormal.png; sourceTree = "<group>"; };
+		230B46B615E2867E00CCA24B /* contactsSelectedTitle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contactsSelectedTitle.png; sourceTree = "<group>"; };
+		230B46B715E2867F00CCA24B /* contactsSelectedTitle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contactsSelectedTitle@2x.png"; sourceTree = "<group>"; };
+		230B46BA15E28D5300CCA24B /* contactsSelectedNone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contactsSelectedNone@2x.png"; sourceTree = "<group>"; };
+		230B46BC15E2A5FD00CCA24B /* contactsComposeLinks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contactsComposeLinks.png; sourceTree = "<group>"; };
+		230B46BD15E2A60600CCA24B /* contactsComposeLinks@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contactsComposeLinks@2x.png"; sourceTree = "<group>"; };
 		230DADE115CB1A7D007171EF /* PTContactsTableSmallCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsTableSmallCell.h; sourceTree = "<group>"; };
 		230DADE215CB1A7D007171EF /* PTContactsTableSmallCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableSmallCell.m; sourceTree = "<group>"; };
 		230DADED15CC0DA0007171EF /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
@@ -1042,7 +1063,14 @@
 		230AA55F15C85F1B004EAD7D /* contacts */ = {
 			isa = PBXGroup;
 			children = (
+				230B46BC15E2A5FD00CCA24B /* contactsComposeLinks.png */,
+				230B46BD15E2A60600CCA24B /* contactsComposeLinks@2x.png */,
+				230B46B615E2867E00CCA24B /* contactsSelectedTitle.png */,
+				230B46B715E2867F00CCA24B /* contactsSelectedTitle@2x.png */,
+				230B46B215E2805200CCA24B /* buttonManualInviteHighlighted.png */,
+				230B46B315E2805500CCA24B /* buttonManualInviteNormal.png */,
 				23AD27F515DAB4E000279018 /* contactsComposeBox.png */,
+				230B46BA15E28D5300CCA24B /* contactsSelectedNone@2x.png */,
 				23D78D7B15D58EE000CC284B /* contactsSelectedNone.png */,
 				2309B9EB15D3FC6600B27282 /* contactsWish.png */,
 				2309B9E915D3FC2100B27282 /* contactsInviteeHeader.png */,
@@ -1068,6 +1096,8 @@
 				23CC06BB15CA8CD9003CAA11 /* buttonRemoveNormal.png */,
 				23CC06B015C9BA33003CAA11 /* buttonUninviteHighlighted.png */,
 				23CC06B115C9BA33003CAA11 /* buttonUninviteNormal.png */,
+				230B46AA15E271F300CCA24B /* buttonFriendsHighlighted.png */,
+				230B46AB15E271F500CCA24B /* buttonFriendsNormal.png */,
 				23CC06AC15C9B4AB003CAA11 /* buttonInviteHighlighted.png */,
 				23CC06AD15C9B4AB003CAA11 /* buttonInviteNormal.png */,
 				23CC06B515C9D82D003CAA11 /* contactsTableInvited.png */,
@@ -1187,6 +1217,8 @@
 				230DADE215CB1A7D007171EF /* PTContactsTableSmallCell.m */,
 				23D78D7D15D592E500CC284B /* PTContactsTableMsgCell.h */,
 				23D78D7E15D592E500CC284B /* PTContactsTableMsgCell.m */,
+				230B46AF15E27EDE00CCA24B /* PTContactsTableManualInviteCell.h */,
+				230B46B015E27EDE00CCA24B /* PTContactsTableManualInviteCell.m */,
 				230DADFC15CC21B9007171EF /* PTContactsNavBackButton.h */,
 				230DADFD15CC21B9007171EF /* PTContactsNavBackButton.m */,
 				230DADFF15CC2240007171EF /* PTContactsNavNextButton.h */,
@@ -2460,6 +2492,15 @@
 				23D78D7C15D58EE000CC284B /* contactsSelectedNone.png in Resources */,
 				23AD27F015DA9FCD00279018 /* PTPlaydateEndViewController.xib in Resources */,
 				23AD27F615DAB4E000279018 /* contactsComposeBox.png in Resources */,
+				230B46AC15E271F700CCA24B /* buttonFriendsHighlighted.png in Resources */,
+				230B46AD15E271F700CCA24B /* buttonFriendsNormal.png in Resources */,
+				230B46B415E2805700CCA24B /* buttonManualInviteHighlighted.png in Resources */,
+				230B46B515E2805700CCA24B /* buttonManualInviteNormal.png in Resources */,
+				230B46B815E2868300CCA24B /* contactsSelectedTitle.png in Resources */,
+				230B46B915E2868300CCA24B /* contactsSelectedTitle@2x.png in Resources */,
+				230B46BB15E28D5500CCA24B /* contactsSelectedNone@2x.png in Resources */,
+				230B46BE15E2A61100CCA24B /* contactsComposeLinks.png in Resources */,
+				230B46BF15E2A61100CCA24B /* contactsComposeLinks@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2591,6 +2632,7 @@
 				23D78D7115D5882300CC284B /* MBProgressHUD.m in Sources */,
 				23D78D7F15D592E500CC284B /* PTContactsTableMsgCell.m in Sources */,
 				23AD27EF15DA9FCD00279018 /* PTPlaydateEndViewController.m in Sources */,
+				230B46B115E27EDF00CCA24B /* PTContactsTableManualInviteCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

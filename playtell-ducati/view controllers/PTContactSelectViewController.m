@@ -15,6 +15,7 @@
 #import "PTInviteContactButton.h"
 #import "PTContactsTableBigCell.h"
 #import "PTContactsTableSmallCell.h"
+#import "PTContactsTableManualInviteCell.h"
 #import "UIColor+HexColor.h"
 #import "PTContactsNavBackButton.h"
 #import "PTContactsNavNextButton.h"
@@ -120,6 +121,13 @@
     [relatedContactsContainer.layer addSublayer:sep2];
     relatedContactsContainer.hidden = YES;
     relatedHeader.hidden = YES;
+    
+    // Setup loading view
+    UILabel *loadingLbl = [[loadingView subviews] objectAtIndex:0];
+    loadingLbl.textColor = [UIColor colorFromHex:@"#123542"];
+    UIView *loadingCrank = [self createLoadingCrank];
+    loadingCrank.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
+    [loadingView addSubview:loadingCrank];
 }
 
 - (void)viewDidUnload {
@@ -139,6 +147,24 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+- (UIView *)createLoadingCrank {
+    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
+    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
+    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
+    
+    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    
+    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
+    rotationAnimation.duration = 2.0f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 10000;
+    
+    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    return iconImageview;
 }
 
 - (void)getContactList {
@@ -296,6 +322,11 @@
 #pragma mark - TextField delegates
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
+    [textField performSelector:@selector(resignFirstResponder) withObject:nil afterDelay:0.1f];
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textSearch resignFirstResponder];
     return YES;
 }
@@ -313,7 +344,7 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 0) { // Contacts table
         if (section == 0) {
-            return @"Your friends on Playtell";
+            return @"Your friends already on Playtell";
         } else {
             return @"Your friends from [Source]";
         }
@@ -344,7 +375,7 @@
     lbl.font = [UIFont systemFontOfSize:16.0f];
     lbl.numberOfLines = 1;
     if (section == 0) {
-        lbl.text = @"Your friends on Playtell";
+        lbl.text = @"Your friends already on Playtell";
     } else {
         lbl.text = [NSString stringWithFormat:@"Your friends from %@", self.sourceType];
     }
@@ -372,7 +403,7 @@
             if (section == 0) {
                 return [filteredContactsOnPT count];
             } else {
-                return [filteredContactsNotOnPT count];
+                return [filteredContactsNotOnPT count] + 1; // The extra one is the "Manual Invite" cell.
             }
         } else {
             // All contacts
@@ -389,8 +420,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView.tag == 0) { // Contacts table
-        static NSString *CellIdentifier = @"PTContactsTableBigCell";
+        // Last cell in if we're filtering should always be "Manual Invite" cell
+        if (inSearchMode && indexPath.section == 1 && (indexPath.row == [filteredContactsNotOnPT count])) {
+            PTContactsTableManualInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTContactsTableManualInviteCell"];
+            if (cell == nil) {
+                cell = [[PTContactsTableManualInviteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PTContactsTableManualInviteCell" tableWidth:contactsTableView.frame.size.width];
+            }
+            cell.delegate = self;
+            return cell;
+        }
         
+        // Load normal cells
+        static NSString *CellIdentifier = @"PTContactsTableBigCell";
         PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             cell = [[PTContactsTableBigCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
@@ -485,12 +526,11 @@
     // Properly size the view controller
     CGSize vcSize;
     if ([selectedContacts count] == 0) {
-        vcSize = CGSizeMake(405.0f, 417.0f);
+        vcSize = CGSizeMake(404.0f, 409.0f);
     } else {
-        CGFloat height = MIN(386.0f, ([selectedContacts count] * 114.0f + 44.0f));
-        vcSize = CGSizeMake(405.0f, height);
+        CGFloat height = MIN(614.0f, ([selectedContacts count] * 114.0f + 44.0f));
+        vcSize = CGSizeMake(404.0f, height);
     }
-    NSLog(@"%@", NSStringFromCGSize(vcSize));
     contactsSelectedViewController.view.superview.frame = CGRectMake(([UIScreen mainScreen].bounds.size.height - vcSize.width) / 2.0f, ([UIScreen mainScreen].bounds.size.width - vcSize.height) / 2.0f, vcSize.width, vcSize.height);
 }
 
@@ -554,6 +594,10 @@
     // Announce action
     NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionFriended], @"action", nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
+}
+
+- (void)contactDidPressManualInvite:(id)sender {
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

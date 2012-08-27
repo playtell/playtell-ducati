@@ -94,6 +94,13 @@
     myProfilePic.layer.borderColor = [UIColor blackColor].CGColor;
     myProfilePic.layer.borderWidth = 1.0f;
     myProfilePic.layer.cornerRadius = 14.0f;
+    
+    // Name: Merge field label
+    mergeFieldName.textColor = [UIColor colorFromHex:@"#3FA9F5"];
+    
+    // Links box
+    linksBox.backgroundColor = [UIColor colorFromHex:@"#DCE2E5"];
+    linksBox.layer.cornerRadius = 12.0f;
 }
 
 - (void)viewDidUnload {

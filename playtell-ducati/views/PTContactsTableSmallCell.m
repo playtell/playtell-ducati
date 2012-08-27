@@ -135,7 +135,7 @@
         [buttonAction setEnabled:YES];
     } else {
         BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-        lblDetail.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
+        //lblDetail.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
         if (isFriend) {
             [buttonAction setEnabled:NO];
         } else {

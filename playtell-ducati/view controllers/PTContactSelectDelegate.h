@@ -14,5 +14,6 @@
 - (void)contactDidInvite:(NSMutableDictionary *)contact cell:(id)sender;
 - (void)contactDidCancelInvite:(NSMutableDictionary *)contact cell:(id)sender;
 - (void)contactDidAddFriend:(NSMutableDictionary *)contact cell:(id)sender;
+- (void)contactDidPressManualInvite:(id)sender;
 
 @end
