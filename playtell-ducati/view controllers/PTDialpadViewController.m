@@ -71,6 +71,12 @@
                                              selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
                                                  name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
     if (self.selectedButton) {
         [self deactivatePlaymateButton];
     }
@@ -86,10 +92,6 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
 }
 
 - (void)loadPlaydateDataFromPushNotification {
