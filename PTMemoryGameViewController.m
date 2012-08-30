@@ -11,6 +11,8 @@
 #import "TransitionController.h"
 #import "PTPlaydate.h"
 
+#import "UIView+Animation.h"
+
 @implementation PTMemoryGameViewController
 
 @synthesize closeMemory, chatController, playdate;
@@ -39,7 +41,7 @@
 - (IBAction)cardTouched:(id)sender
 {
     UIButton *card = (UIButton *)sender;
-    
+    [card earthquake];
 }
 
 - (void)pusherMemoryGameEndGame:(NSNotification *)notification {
