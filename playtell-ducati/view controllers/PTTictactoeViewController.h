@@ -8,15 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "PTPageView.h"
-#import "PTBookView.h"
-#import "PTBooksScrollView.h"
-#import "PTBooksParentView.h"
 #import "PTChatViewController.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
 
-@interface PTTictactoeViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
+@interface PTTictactoeViewController : UIViewController {
     
     // Playdate buttons
     PTPlaydate *playdate;
@@ -52,9 +48,5 @@
 - (IBAction)endGame:(id)sender;
 - (IBAction)placePiece:(id)sender;
 - (void)initGameWithMyTurn:(BOOL)myTurn;
-
-//playdate specific methods
-- (IBAction)playdateDisconnect:(id)sender;
-- (IBAction)endPlaydatePopupToggle:(id)sender;
 
 @end

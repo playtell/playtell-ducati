@@ -7,15 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PTChatViewController.h"
+#import "PTPlaydate.h"
 
 @interface PTMemoryGameViewController : UIViewController
 {
+    IBOutlet UIButton *closeMemory, *card0, *card1, *card2, *card3;
 
 }
 
-@property (nonatomic, retain) IBOutlet UIButton *card1, *card2, *card3, *card4, *card5, *card6, *card7, *card8;
+// Board stuff
+@property (nonatomic, retain) IBOutlet UIButton *card0, *card1, *card2, *card3, *closeMemory;
 
-- (IBAction)turnCard:(id)sender;
+// Chat view controller
+@property (nonatomic, strong) PTChatViewController* chatController;
 
+//playdate specific
+@property (nonatomic) PTPlaydate *playdate;
+
+- (id) initWithPlaydate:(PTPlaydate *)playdateP
+                 myTurn:(BOOL)myTurn
+               boardID:(int)boardID
+             playmateID:(int)playmateID
+            initiatorID:(int)initiatorID;
 
 @end

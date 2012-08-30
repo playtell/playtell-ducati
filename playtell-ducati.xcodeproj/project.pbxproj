@@ -38,9 +38,21 @@
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
 		8A0605D915D9B03700F39098 /* PTTictactoeCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A0605D815D9B03700F39098 /* PTTictactoeCoordinate.m */; };
+		8A34AEC715E4B762002B13F5 /* PTTictactoeEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */; };
+		8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */; };
+		8A62E39D15E7EA0D0077CBB6 /* PTMemoryGameBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A62E39C15E7EA0D0077CBB6 /* PTMemoryGameBoard.m */; };
+		8A62E3A515E7EA800077CBB6 /* PTMemoryGameCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A62E3A415E7EA800077CBB6 /* PTMemoryGameCard.m */; };
+		8A62E3A715E813610077CBB6 /* 02173_stanfordatsunrise_1920x1200.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 8A62E3A615E813610077CBB6 /* 02173_stanfordatsunrise_1920x1200.jpeg */; };
+		8A62E3AB15E815FE0077CBB6 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8A62E3A915E815FD0077CBB6 /* test.jpg */; };
+		8A62E3AC15E815FE0077CBB6 /* test@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8A62E3AA15E815FE0077CBB6 /* test@2x.jpg */; };
 		8A72FE5915DD2C100059A290 /* PTMemoryGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */; };
 		8A72FE5B15DD2C350059A290 /* PTMemoryGameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */; };
 		8A72FE5E15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A72FE5D15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m */; };
+		8AAF55A515E823850098A0C9 /* 1_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAF55A215E823850098A0C9 /* 1_0.png */; };
+		8AAF55A615E823850098A0C9 /* 1_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAF55A315E823850098A0C9 /* 1_1.png */; };
+		8AAF55A715E823850098A0C9 /* 1_cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAF55A415E823850098A0C9 /* 1_cover.png */; };
+		8AAF55AB15E824F40098A0C9 /* Memory-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAF55AA15E824F40098A0C9 /* Memory-logo.png */; };
+		8AAF55AD15E832160098A0C9 /* Memory-cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AAF55AC15E832150098A0C9 /* Memory-cover.png */; };
 		8AB1B20715E3153D00FC3948 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AB1B11315E3153D00FC3948 /* background.png */; };
 		8AB1B20815E3153D00FC3948 /* background@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AB1B11415E3153D00FC3948 /* background@2X.png */; };
 		8AB1B20915E3153D00FC3948 /* TTT-cover.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AB1B11615E3153D00FC3948 /* TTT-cover.png */; };
@@ -570,11 +582,27 @@
 		23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateJoinedRequest.m; sourceTree = "<group>"; };
 		8A0605D715D9B03700F39098 /* PTTictactoeCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTTictactoeCoordinate.h; path = ../../PTTictactoeCoordinate.h; sourceTree = "<group>"; };
 		8A0605D815D9B03700F39098 /* PTTictactoeCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTTictactoeCoordinate.m; path = ../../PTTictactoeCoordinate.m; sourceTree = "<group>"; };
+		8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeEndGameRequest.h; sourceTree = "<group>"; };
+		8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeEndGameRequest.m; sourceTree = "<group>"; };
+		8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeRefreshGameRequest.h; sourceTree = "<group>"; };
+		8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeRefreshGameRequest.m; sourceTree = "<group>"; };
+		8A62E39B15E7EA0D0077CBB6 /* PTMemoryGameBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameBoard.h; sourceTree = "<group>"; };
+		8A62E39C15E7EA0D0077CBB6 /* PTMemoryGameBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryGameBoard.m; sourceTree = "<group>"; };
+		8A62E3A315E7EA800077CBB6 /* PTMemoryGameCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameCard.h; sourceTree = "<group>"; };
+		8A62E3A415E7EA800077CBB6 /* PTMemoryGameCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryGameCard.m; sourceTree = "<group>"; };
+		8A62E3A615E813610077CBB6 /* 02173_stanfordatsunrise_1920x1200.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 02173_stanfordatsunrise_1920x1200.jpeg; path = ../../02173_stanfordatsunrise_1920x1200.jpeg; sourceTree = "<group>"; };
+		8A62E3A915E815FD0077CBB6 /* test.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = test.jpg; path = ../test.jpg; sourceTree = "<group>"; };
+		8A62E3AA15E815FE0077CBB6 /* test@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "test@2x.jpg"; path = "../test@2x.jpg"; sourceTree = "<group>"; };
 		8A72FE5715DD2C0F0059A290 /* PTMemoryGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMemoryGameViewController.h; path = ../../PTMemoryGameViewController.h; sourceTree = "<group>"; };
 		8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMemoryGameViewController.m; path = ../../PTMemoryGameViewController.m; sourceTree = "<group>"; };
 		8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PTMemoryGameViewController.xib; path = ../../PTMemoryGameViewController.xib; sourceTree = "<group>"; };
 		8A72FE5C15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateGetAllBooksAndActivities.h; sourceTree = "<group>"; };
 		8A72FE5D15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateGetAllBooksAndActivities.m; sourceTree = "<group>"; };
+		8AAF55A215E823850098A0C9 /* 1_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1_0.png; sourceTree = "<group>"; };
+		8AAF55A315E823850098A0C9 /* 1_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1_1.png; sourceTree = "<group>"; };
+		8AAF55A415E823850098A0C9 /* 1_cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1_cover.png; sourceTree = "<group>"; };
+		8AAF55AA15E824F40098A0C9 /* Memory-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Memory-logo.png"; sourceTree = "<group>"; };
+		8AAF55AC15E832150098A0C9 /* Memory-cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Memory-cover.png"; sourceTree = "<group>"; };
 		8AB1B11315E3153D00FC3948 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		8AB1B11415E3153D00FC3948 /* background@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2X.png"; sourceTree = "<group>"; };
 		8AB1B11615E3153D00FC3948 /* TTT-cover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TTT-cover.png"; sourceTree = "<group>"; };
@@ -1325,6 +1353,146 @@
 			name = extras;
 			sourceTree = "<group>";
 		};
+		8A1B740E15E6EB4F009BCEA0 /* games */ = {
+			isa = PBXGroup;
+			children = (
+				8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */,
+				8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */,
+				8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */,
+				8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */,
+				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
+				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
+				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
+				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
+			);
+			name = games;
+			sourceTree = "<group>";
+		};
+		8A1B741015E6EB59009BCEA0 /* books */ = {
+			isa = PBXGroup;
+			children = (
+				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
+				23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */,
+				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
+				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
+				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
+				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
+				2311E0B6157F8E480084859B /* PTPageTurnRequest.h */,
+				2311E0B7157F8E480084859B /* PTPageTurnRequest.m */,
+			);
+			name = books;
+			sourceTree = "<group>";
+		};
+		8A1B741115E6EB76009BCEA0 /* playdates */ = {
+			isa = PBXGroup;
+			children = (
+				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
+				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
+				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
+				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
+				2311E0BC157F90A20084859B /* PTBookChangeRequest.h */,
+				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
+				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
+				2311E0BD157F90A30084859B /* PTBookChangeRequest.m */,
+				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
+				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
+				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
+				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
+				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
+				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
+				2311E0BF157F921D0084859B /* PTBookCloseRequest.h */,
+				2311E0C0157F921E0084859B /* PTBookCloseRequest.m */,
+				2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */,
+				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
+				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
+				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
+				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
+				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
+			);
+			name = playdates;
+			sourceTree = "<group>";
+		};
+		8A1B741215E6EBA7009BCEA0 /* toybox */ = {
+			isa = PBXGroup;
+			children = (
+				8A72FE5C15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.h */,
+				8A72FE5D15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m */,
+			);
+			name = toybox;
+			sourceTree = "<group>";
+		};
+		8A62E39F15E7EA160077CBB6 /* memory game */ = {
+			isa = PBXGroup;
+			children = (
+				8A62E39B15E7EA0D0077CBB6 /* PTMemoryGameBoard.h */,
+				8A62E39C15E7EA0D0077CBB6 /* PTMemoryGameBoard.m */,
+				8A62E3A315E7EA800077CBB6 /* PTMemoryGameCard.h */,
+				8A62E3A415E7EA800077CBB6 /* PTMemoryGameCard.m */,
+			);
+			name = "memory game";
+			sourceTree = "<group>";
+		};
+		8A62E3A015E7EA1E0077CBB6 /* tictactoe */ = {
+			isa = PBXGroup;
+			children = (
+				8A0605D715D9B03700F39098 /* PTTictactoeCoordinate.h */,
+				8A0605D815D9B03700F39098 /* PTTictactoeCoordinate.m */,
+			);
+			name = tictactoe;
+			sourceTree = "<group>";
+		};
+		8A62E3A115E7EA330077CBB6 /* games */ = {
+			isa = PBXGroup;
+			children = (
+				8A62E39F15E7EA160077CBB6 /* memory game */,
+				8A62E3A015E7EA1E0077CBB6 /* tictactoe */,
+			);
+			name = games;
+			sourceTree = "<group>";
+		};
+		8A62E3A215E7EA4F0077CBB6 /* games */ = {
+			isa = PBXGroup;
+			children = (
+				8A72FE5715DD2C0F0059A290 /* PTMemoryGameViewController.h */,
+				8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */,
+				8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */,
+				8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */,
+				8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */,
+				8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */,
+			);
+			name = games;
+			sourceTree = "<group>";
+		};
+		8A62E3A815E813710077CBB6 /* test */ = {
+			isa = PBXGroup;
+			children = (
+				8A62E3A915E815FD0077CBB6 /* test.jpg */,
+				8A62E3AA15E815FE0077CBB6 /* test@2x.jpg */,
+				8A62E3A615E813610077CBB6 /* 02173_stanfordatsunrise_1920x1200.jpeg */,
+			);
+			name = test;
+			sourceTree = "<group>";
+		};
+		8AAF559F15E8234F0098A0C9 /* memory */ = {
+			isa = PBXGroup;
+			children = (
+				8AAF55AC15E832150098A0C9 /* Memory-cover.png */,
+				8AAF55AA15E824F40098A0C9 /* Memory-logo.png */,
+				8AAF55A115E823620098A0C9 /* theme1 */,
+			);
+			name = memory;
+			sourceTree = "<group>";
+		};
+		8AAF55A115E823620098A0C9 /* theme1 */ = {
+			isa = PBXGroup;
+			children = (
+				8AAF55A215E823850098A0C9 /* 1_0.png */,
+				8AAF55A315E823850098A0C9 /* 1_1.png */,
+				8AAF55A415E823850098A0C9 /* 1_cover.png */,
+			);
+			name = theme1;
+			sourceTree = "<group>";
+		};
 		8AB1B11015E3153D00FC3948 /* Games */ = {
 			isa = PBXGroup;
 			children = (
@@ -1805,6 +1973,8 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				8AAF559F15E8234F0098A0C9 /* memory */,
+				8A62E3A815E813710077CBB6 /* test */,
 				8AB1B11015E3153D00FC3948 /* Games */,
 				23D41A90159CB09800677E03 /* dialpad-pending.png */,
 				23D41A8D159CAEF900677E03 /* dialad-live.png */,
@@ -2553,6 +2723,7 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				8A62E3A215E7EA4F0077CBB6 /* games */,
 				F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */,
 				F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
@@ -2569,12 +2740,6 @@
 				F4A9D88D1577FBB40015D977 /* PTLoginViewController.h */,
 				F4A9D88E1577FBB40015D977 /* PTLoginViewController.m */,
 				F4A9D88F1577FBB40015D977 /* PTLoginViewController.xib */,
-				8A72FE5715DD2C0F0059A290 /* PTMemoryGameViewController.h */,
-				8A72FE5815DD2C0F0059A290 /* PTMemoryGameViewController.m */,
-				8A72FE5A15DD2C350059A290 /* PTMemoryGameViewController.xib */,
-				8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */,
-				8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */,
-				8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */,
 				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
 				F420B7401585BA1800DCAF10 /* TransitionController.m */,
 			);
@@ -2643,44 +2808,12 @@
 		F4A9D8DF157909530015D977 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
-				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
-				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
-				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
+				8A1B741215E6EBA7009BCEA0 /* toybox */,
+				8A1B741115E6EB76009BCEA0 /* playdates */,
+				8A1B741015E6EB59009BCEA0 /* books */,
+				8A1B740E15E6EB4F009BCEA0 /* games */,
 				F4A9D8E01579096F0015D977 /* PTRequest.h */,
 				F4A9D8E11579096F0015D977 /* PTRequest.m */,
-				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
-				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
-				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
-				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
-				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
-				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
-				2311E0B6157F8E480084859B /* PTPageTurnRequest.h */,
-				2311E0B7157F8E480084859B /* PTPageTurnRequest.m */,
-				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
-				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
-				2311E0BC157F90A20084859B /* PTBookChangeRequest.h */,
-				2311E0BD157F90A30084859B /* PTBookChangeRequest.m */,
-				2311E0BF157F921D0084859B /* PTBookCloseRequest.h */,
-				2311E0C0157F921E0084859B /* PTBookCloseRequest.m */,
-				2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */,
-				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
-				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
-				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
-				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
-				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
-				23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */,
-				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
-				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
-				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
-				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
-				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
-				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
-				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
-				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
-				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
-				8A72FE5C15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.h */,
-				8A72FE5D15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2688,8 +2821,7 @@
 		F4A9D8E6157921630015D977 /* model */ = {
 			isa = PBXGroup;
 			children = (
-				8A0605D715D9B03700F39098 /* PTTictactoeCoordinate.h */,
-				8A0605D815D9B03700F39098 /* PTTictactoeCoordinate.m */,
+				8A62E3A115E7EA330077CBB6 /* games */,
 				F4A9D907157AB17F0015D977 /* PTMockPlaymateFactory.h */,
 				F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */,
 				F4A9D903157AAAC40015D977 /* PTPlaydate.h */,
@@ -3152,6 +3284,14 @@
 				8AB1B2E715E3153D00FC3948 /* o-turn@2X.png in Resources */,
 				8AB1B2E815E3153D00FC3948 /* x-turn.png in Resources */,
 				8AB1B2E915E3153D00FC3948 /* x-turn@2X.png in Resources */,
+				8A62E3A715E813610077CBB6 /* 02173_stanfordatsunrise_1920x1200.jpeg in Resources */,
+				8A62E3AB15E815FE0077CBB6 /* test.jpg in Resources */,
+				8A62E3AC15E815FE0077CBB6 /* test@2x.jpg in Resources */,
+				8AAF55A515E823850098A0C9 /* 1_0.png in Resources */,
+				8AAF55A615E823850098A0C9 /* 1_1.png in Resources */,
+				8AAF55A715E823850098A0C9 /* 1_cover.png in Resources */,
+				8AAF55AB15E824F40098A0C9 /* Memory-logo.png in Resources */,
+				8AAF55AD15E832160098A0C9 /* Memory-cover.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3254,6 +3394,10 @@
 				8A72FE5915DD2C100059A290 /* PTMemoryGameViewController.m in Sources */,
 				8A72FE5E15DD359E0059A290 /* PTPlaydateGetAllBooksAndActivities.m in Sources */,
 				F4FB354C15E2CE1D006FD40E /* PTChatViewController.m in Sources */,
+				8A34AEC715E4B762002B13F5 /* PTTictactoeEndGameRequest.m in Sources */,
+				8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */,
+				8A62E39D15E7EA0D0077CBB6 /* PTMemoryGameBoard.m in Sources */,
+				8A62E3A515E7EA800077CBB6 /* PTMemoryGameCard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

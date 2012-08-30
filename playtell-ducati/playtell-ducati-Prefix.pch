@@ -27,6 +27,10 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #define LOGMETHOD LogTrace(@"%@",NSStringFromSelector(_cmd))
 
+// ## GENERIC GAME STUFF ##
+#define TICTACTOE 0
+#define MEMORY 1
+
 // ## TIC TAC TOE START ###
 #define NOT_PLACED 0
 #define PLACED_SUCCESS 1
@@ -63,9 +67,6 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #define IPAD_WIDTH 1024
 #define IPAD_HEIGHT 768
-#define IPAD_RETINA_WIDTH 2048
-#define IPAD_RETINA_HEIGHT 1536
-
 
 #define PIECE_X 0
 #define PIECE_Y 1
@@ -76,5 +77,14 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define STRIKEOUT_SOUND 3
 #define WIN_SOUND 4
 #define LOSS_SOUND 5
+
+// ##MEMORY GAME START ###
+#define CARD_WIDTH 170
+#define CARD_HEIGHT 238
+
+#define MEMORY_Y_ROW_0 255
+#define MEMORY_X_COL_0 257
+#define MEMORY_Y_ROW_1 512
+#define MEMORY_X_COL_1 767
 
 #endif

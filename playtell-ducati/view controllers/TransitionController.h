@@ -16,8 +16,9 @@
 - (void)transitionToViewController:(UIViewController *)viewController
                        withOptions:(UIViewAnimationOptions)options;
 
-- (void)transitionToViewController:(UIViewController *)viewController
+- (void)loadGame:(UIViewController *)viewController
                        withOptions:(UIViewAnimationOptions)options
-                        withSplash:(UIImageView *)splash;
+                        withSplash:(UIImageView *)splash
+                        gameType:(int)gameType; //gameType is #define-ed
 
 @end

@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Logging.h"
+
 #import "PTAppDelegate.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
@@ -32,7 +33,8 @@
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTBooksListRequest.h"
 #import "TargetConditionals.h"
-#import "PTTictactoeNewGameRequest.h"
+#import "PTTictactoeEndGameRequest.h"
+#import "PTTictactoeRefreshGameRequest.h"
 
 //tictactoe stuff
 #import "PTTictactoeViewController.h"
@@ -59,18 +61,6 @@
 @synthesize winPlayer, lossPlayer, xWritePlayer, oWritePlayer, missPlayer, strikeoutPlayer, dateController, board_id, playdate, playmateSubscriber, myPublisher, endPlaydate, endPlaydateForreal, closeTictactoe, endPlaydatePopup, space00, space01, space02, space10, space11, space12, space20, space21, space22, board;
 @synthesize initiator_id, playmate_id;
 @synthesize chatController;
-
-- (int)getPlaymateUserID
-{
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator. Playmate is playmate.");
-        return self.playdate.playmate.userID;
-        
-    } else {
-        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
-        return self.playdate.initiator.userID;
-    }
-}
 
 -(NSString *)zeroFactory:(int)numZeros
 {
@@ -107,21 +97,21 @@
     return array;
 }
 
-
 //server initiated new game
--(void)pusherPlayDateTictactoeNewBoard:(NSNotification *)notification {
+-(void)pusherPlayDateTictactoeRefreshGame:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
     NSInteger boardId = [[eventData objectForKey:@"board_id"] integerValue];
     
     if (initiatorId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
-        [self drawNewGame:boardId myTurn:NO initiator:initiatorId];
+        [self drawNewGame:boardId myTurn:NO initiator:initiatorId playmate:[[PTUser currentUser] userID]];
     }
 }
 
 -(void)drawNewGame:(int)boardId
           myTurn:(BOOL)isMyTurn
          initiator:(int)initiatorId
+          playmate:(int)playmateId
 {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
@@ -129,15 +119,16 @@
     [tictactoeVc setPlaydate:self.playdate];
 #if !(TARGET_IPHONE_SIMULATOR)
     [tictactoeVc setChatController:self.chatController];
+    [self.view addSubview:self.chatController.view];
 #endif
     tictactoeVc.board_id = boardId;
     if (isMyTurn) {
-        tictactoeVc.playmate_id = [self getPlaymateUserID];
         tictactoeVc.initiator_id = initiatorId;
+        tictactoeVc.playmate_id = playmateId;
         [tictactoeVc initGameWithMyTurn:YES];
     } else {
-        tictactoeVc.playmate_id = [[PTUser currentUser] userID];
         tictactoeVc.initiator_id = initiatorId;
+        tictactoeVc.playmate_id = playmateId;
         [tictactoeVc initGameWithMyTurn:NO];
     }
     [appDelegate.transitionController transitionToViewController:tictactoeVc
@@ -147,19 +138,20 @@
 //client initiated new game
 -(void) newGame
 {
-    PTTictactoeNewGameRequest *newGameRequest = [[PTTictactoeNewGameRequest alloc] init];
+    PTTictactoeRefreshGameRequest *newGameRequest = [[PTTictactoeRefreshGameRequest alloc] init];
     
-    [newGameRequest newBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+    [newGameRequest refreshBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                  authToken:[[PTUser currentUser] authToken]
-                              initiator_id:[NSNumber numberWithInt:[[PTUser currentUser] userID]]
-                               playmate_id:[NSNumber numberWithInt:[self getPlaymateUserID]]
+                                   playmate_id:[NSNumber numberWithInt:[self getOtherUserID]]
+                               already_playing:@"yes"
+                                initiatorId:[NSNumber numberWithInt:[[PTUser currentUser] userID]]
                                  onSuccess:^(NSDictionary *result)
      {
          NSLog(@"%@", result);
          
-         NSString *pusher_board_id = [result valueForKey:@"board_id"];
-         int boardId = [pusher_board_id intValue];
-         [self drawNewGame:boardId myTurn:YES initiator:[[PTUser currentUser] userID]];
+         NSString *boardId = [result valueForKey:@"board_id"];
+         int boardID = [boardId intValue];
+         [self drawNewGame:boardID myTurn:YES initiator:[[PTUser currentUser] userID] playmate:[self getOtherUserID]];
          
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          NSLog(@"%@", error);
@@ -480,7 +472,7 @@
     //listen for tictactoe pusher calls
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoePlacePiece:) name:@"PlayDateTictactoePlacePiece" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeEndGame:) name:@"PlayDateTictactoeEndGame" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeNewBoard:) name:@"PlayDateTictactoeNewGame" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeRefreshGame:) name:@"PlayDateTictactoeRefreshGame" object:nil];
     
     //add board uibuttons to nsdictionary so they can be disabled!
     board_buttons = [[NSArray alloc] initWithObjects:space00, space01, space02, space10, space11, space12, space20, space21, space22, nil];
@@ -672,6 +664,9 @@ userId:(NSString *)userID
     
     PTTictactoePlacePieceRequest *placePieceRequest = [[PTTictactoePlacePieceRequest alloc] init];
     NSLog(@"Auth token is :%@",[[PTUser currentUser] authToken] );
+    NSLog(@"user_id is :%@", userID);
+    NSLog(@"board_id is :%@",boardID);
+    NSLog(@"playdate_id is :%@",[NSString stringWithFormat:@"%d", self.playdate.playdateID]);
     [placePieceRequest placePieceWithCoordinates:coordinate.coordinateString
                                        authToken:[[PTUser currentUser] authToken]
                                     user_id:userID
@@ -688,7 +683,8 @@ userId:(NSString *)userID
                                                NSNumber *winCode = [result valueForKey:@"win_code"];
                                                win_code = [winCode intValue];
                                            }
-                                           
+                                           NSLog(@"%@", result);
+
                                            [self updateUIWithStatus:placement_status coordinates:coordinate winStatus:win_code isCurrentUser:YES];
                                        }
                                        onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -707,43 +703,60 @@ userId:(NSString *)userID
     NSString *buttonTag = [NSString stringWithFormat:@"%d", [button tag]]; //buttons are tagged with their coordinates in interface builder
     PTTictactoeCoordinate *clientCoordinates = [[PTTictactoeCoordinate alloc] initWithCoordinateString:buttonTag];
     NSString *userId = [NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]];;
-
-
-//    if ([buttonTag isEqualToString:@"0"]) {
-//        [self updateUIWithStatus:PLACED_WON coordinates:clientCoordinates winStatus:PLACED_WON_ACROSS_TOP_LEFT isCurrentUser:YES];
-//    }
-//    if ([buttonTag isEqualToString:@"1"]) {
-//        [self updateUIWithStatus:PLACED_WON coordinates:clientCoordinates winStatus:PLACED_WON_ACROS_BOTTON_LEFT isCurrentUser:YES];
-//    }
-//    if ([buttonTag isEqualToString:@"2"]) {
-//        [self updateUIWithStatus:PLACED_CATS coordinates:clientCoordinates winStatus:PLACED_WON_COL_2 isCurrentUser:YES];
-//    }
-//    if ([buttonTag isEqualToString:@"10"]) {
-//        [self updateUIWithStatus:PLACED_WON coordinates:clientCoordinates winStatus:PLACED_WON_ROW_1 isCurrentUser:YES];
-//    }
-//    if ([buttonTag isEqualToString:@"20"]) {
-//        [self updateUIWithStatus:PLACED_WON coordinates:clientCoordinates winStatus:PLACED_WON_ROW_2 isCurrentUser:YES];
-//    }
-//    [self updateUIWithStatus:PLACED_SUCCESS coordinates:clientCoordinates winStatus:0 isCurrentUser:YES];
     
     [self tryPlacePieceRequestWithCoordinates:clientCoordinates userId:userId];
 }
 
-- (void)pusherPlayDateTictactoeEndGame
-{
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+- (void)pusherPlayDateTictactoeEndGame:(NSNotification *)notification {
+    NSLog(@"End game pusher call received");
+    
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger initiatorId = [[eventData objectForKey:@"playmate_id"] integerValue]; //person who ended the game
+    
+    if (initiatorId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    }
 }
 
 -(IBAction)endGame:(id)sender
 {
-    [self pusherPlayDateTictactoeEndGame];
+    NSString *boardID = [NSString stringWithFormat:@"%d", self.board_id];
+    
+    PTTictactoeEndGameRequest *endGameRequest = [[PTTictactoeEndGameRequest alloc] init];
+    NSLog(@"Auth token is :%@",[[PTUser currentUser] authToken] );
+    
+    [endGameRequest endGameWithBoardId:boardID
+                             authToken:[[PTUser currentUser] authToken]
+                                userId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
+                            playdateId:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
+                             onSuccess:^(NSDictionary *result) {
+        NSLog(@"End game API call success");
+
+    }
+                             onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"End game API call failure");
+    }];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 // ## Helper methods start ###
 - (BOOL) iAmX // TODOGIANCARLO test this!
 {
     return [[PTUser currentUser] userID] == self.initiator_id;
+}
+
+- (int) getOtherUserID
+{
+    int myID = [[PTUser currentUser] userID];
+    if (myID != self.playmate_id) {
+        return self.playmate_id;
+    }
+    else {
+        return self.initiator_id;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

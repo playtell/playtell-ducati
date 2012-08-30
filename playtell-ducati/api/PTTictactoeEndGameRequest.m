@@ -1,37 +1,37 @@
 //
-//  PTTictactoeNewGameRequest.m
+//  PTTictactoeEndGameRequest.m
 //  playtell-ducati
 //
-//  Created by Giancarlo Daniele on 7/31/12.
+//  Created by Giancarlo Daniele on 8/21/12.
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import "PTTictactoeNewGameRequest.h"
+#import "PTTictactoeEndGameRequest.h"
 #import "AFNetworking.h"
 #import "NSMutableURLRequest+POSTParameters.h"
 
-@implementation PTTictactoeNewGameRequest
+@implementation PTTictactoeEndGameRequest
 
-- (void)newBoardWithPlaydateId:(NSNumber*)playdateId
-                        authToken:(NSString *)token
-                        playmate_id:(NSString *)playmate_id
-                        initiatorId:(NSString *)initiator_id
-                        onSuccess:(PTTictactoeNewGameRequestSuccessBlock)success
-                        onFailure:(PTTictactoeNewGameRequestFailureBlock)failure
+- (void)endGameWithBoardId:(NSString *)boardId
+                  authToken:(NSString *)token
+                  userId:(NSString *)userId
+                  playdateId:(NSString*)playdateId
+                  onSuccess:(PTTictactoeEndGameRequestSuccessBlock)success
+                  onFailure:(PTTictactoeEndGameRequestFailureBlock)failure
 {
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    playdateId, @"playdate_id",
+                                    boardId, @"board_id",
                                     token, @"authentication_token",
-                                    initiator_id, @"initiator_id",
-                                    playmate_id, @"playmate_id",
+                                    userId, @"user_id",
+                                    playdateId, @"playdate_id",
                                     nil];
-
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/tictactoe/new_game", ROOT_URL]];
+    
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/tictactoe/end_game", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
     [request setPostParameters:postParameters];
     
-    AFJSONRequestOperation* newGame;
-    newGame = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+    AFJSONRequestOperation* endGame;
+    endGame = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
                                                               success:^(NSURLRequest *request,
                                                                         NSHTTPURLResponse *response,
                                                                         id JSON)
@@ -44,7 +44,7 @@
                        failure(request, response, error, JSON); //some thing wrong
                    }
                }];
-    [newGame start];
+    [endGame start];
 }
 
 @end

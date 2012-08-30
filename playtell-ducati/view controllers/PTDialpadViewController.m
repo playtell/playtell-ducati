@@ -72,6 +72,12 @@
                                              selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
                                                  name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
     if (self.selectedButton) {
         [self deactivatePlaymateButton];
     }
@@ -87,13 +93,14 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
 }
 
 - (void)loadPlaydateDataFromPushNotification {
+    // Create the loading view
+    loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
+    UIImageView* loadingBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"date_bg.png"]];
+    [loadingView addSubview:loadingBG];
+
     // Request playdate details from server (using playdate id passed in via push notification)
     PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
     [playdateDetailsRequest playdateDetailsForPlaydateId:playdateRequestedViaPushId
@@ -106,13 +113,13 @@
                                                          [self joinPlaydate];
                                                      });
                                                  }
-                                                 failure:nil
-     ];
+                                                 failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                     // Request failed. Assuming there is no existing playdate.
+                                                     // Remove the loading view.
+                                                     [loadingView removeFromSuperview];
+                                                 }];
     
     // Add a loading view to hide dialpad controls
-    loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
-    UIImageView* loadingBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"date_bg.png"]];
-    [loadingView addSubview:loadingBG];
     [self.view addSubview:loadingView];
     
     // Clean up for next dialpad view load (after playdate ends)

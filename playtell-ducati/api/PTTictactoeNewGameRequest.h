@@ -15,8 +15,8 @@ typedef void (^PTTictactoeNewGameRequestFailureBlock) (NSURLRequest* request, NS
 
 - (void)newBoardWithPlaydateId:(NSNumber*)playdateId
                                authToken:(NSString*)token
-                               initiator_id:(NSNumber*)initiatorId
-                               playmate_id:(NSNumber*)playdateId
+                               playmate_id:(NSString *)playdateId
+                               initiatorId:(NSString *)initiator_id
                                onSuccess:(PTTictactoeNewGameRequestSuccessBlock)success
                                onFailure:(PTTictactoeNewGameRequestFailureBlock)failure;
 
