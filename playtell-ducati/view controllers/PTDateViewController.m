@@ -354,6 +354,10 @@
     xPos += (booksScrollView.frame.size.width * .75);
     UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
     tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
+    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(ticTacToeTapped:)];
+    [tttBookView addGestureRecognizer:tapRecognizer];
+    tttBookView.userInteractionEnabled = YES;
 
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
@@ -373,6 +377,10 @@
     // Start loading book covers
     [self loadBookCovers];
     isPageViewLoading = NO;
+}
+
+- (void)ticTacToeTapped:(UIGestureRecognizer*)tapRecognizer {
+    [self playTictactoe:nil];
 }
 
 - (void)setCurrentUserPhoto {
