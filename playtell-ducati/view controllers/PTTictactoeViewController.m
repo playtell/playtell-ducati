@@ -308,24 +308,51 @@
 
 - (void) createTurnIndicators:(bool)i_am_x
 {
-    CGRect opponent = CGRectMake(150, 15, 100, 100);
-    CGRect you = CGRectMake(750, 15, 100, 100);
-
-    UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:you];
-    UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponent];
+    CGRect opponentPlaceholderX = CGRectMake(254, 19, 35, 45);
+    CGRect youPlaceholderX = CGRectMake(733, 19, 35, 45);
+    CGRect opponentPlaceholderO = CGRectMake(249, 21.25, 39, 41);
+    CGRect opponentO = CGRectMake(250, 14, 47, 55);
+    CGRect opponentX = CGRectMake(250, 11.25, 43, 59);
+    CGRect youPlaceholderO = CGRectMake(730, 19, 39, 41);
+    CGRect youO = CGRectMake(725, 15, 47, 55);
+    CGRect youX = CGRectMake(728, 10, 43, 59);
     
     if (!i_am_x) {
+        UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:youO];
+        UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponentX];
+        UIImageView* youPlaceholder = [[UIImageView alloc] initWithFrame:youPlaceholderO];
+        UIImageView* opponentPlaceholder = [[UIImageView alloc] initWithFrame:opponentPlaceholderX];
+        
         youIndicator.image = [UIImage imageNamed:@"o-turn.png"];                                                    
         opponentIndicator.image = [UIImage imageNamed:@"x-turn.png"];
+        youPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
+        opponentPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
+        
+        [self.view addSubview:youPlaceholder];
+        [self.view addSubview:opponentPlaceholder];
+        [self.view addSubview:youIndicator];
+        [self.view addSubview:opponentIndicator];
+        
+        self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, youPlaceholder, opponentPlaceholder, nil];
     }
     else {
+        UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:youX];
+        UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponentO];
+        UIImageView* youPlaceholder = [[UIImageView alloc] initWithFrame:youPlaceholderX];
+        UIImageView* opponentPlaceholder = [[UIImageView alloc] initWithFrame:opponentPlaceholderO];
+        
         youIndicator.image = [UIImage imageNamed:@"x-turn.png"];
         opponentIndicator.image = [UIImage imageNamed:@"o-turn.png"];
+        youPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
+        opponentPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
+        
+        [self.view addSubview:youPlaceholder];
+        [self.view addSubview:opponentPlaceholder];
+        [self.view addSubview:youIndicator];
+        [self.view addSubview:opponentIndicator];
+        
+        self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, youPlaceholder, opponentPlaceholder, nil];
     }
-    
-    [self.view addSubview:youIndicator];
-    [self.view addSubview:opponentIndicator];
-    self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, nil];
 }
 
 - (void) updateTurnIndicators:(BOOL)myTurn
@@ -337,9 +364,31 @@
     
     if (myTurn) {
         youIndicator.hidden = NO;
+        //animate it
+        [UIView beginAnimations:@"bounce" context:nil];
+        [UIView setAnimationRepeatCount:2];
+        [UIView setAnimationRepeatAutoreverses:YES];
+        youIndicator.center = CGPointMake(youIndicator.center.x, youIndicator.center.y + 10);
+        [UIView commitAnimations];
+        [UIView beginAnimations:@"bounce" context:nil];
+        [UIView setAnimationRepeatCount:2];
+        [UIView setAnimationRepeatAutoreverses:YES];
+        youIndicator.center = CGPointMake(youIndicator.center.x, youIndicator.center.y - 10);
+        [UIView commitAnimations];
     }
     else {
         opponentIndicator.hidden = NO;
+        //animate it!
+        [UIView beginAnimations:@"bounce" context:nil];
+        [UIView setAnimationRepeatCount:2];
+        [UIView setAnimationRepeatAutoreverses:YES];
+        opponentIndicator.center = CGPointMake(opponentIndicator.center.x, opponentIndicator.center.y + 10);
+        [UIView commitAnimations];
+        [UIView beginAnimations:@"bounce" context:nil];
+        [UIView setAnimationRepeatCount:2];
+        [UIView setAnimationRepeatAutoreverses:YES];
+        opponentIndicator.center = CGPointMake(opponentIndicator.center.x, opponentIndicator.center.y - 10);
+        [UIView commitAnimations];
     }
 }
 
@@ -493,7 +542,6 @@
 #endif
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];
-
 }
 
 // ## Tictactoe methods start ##
@@ -639,8 +687,6 @@
 
 - (void) enableBoard {
     self->board_enabled = YES;
-    //flip the board over, enable the buttons
-    [self updateTurnIndicators:YES];
     
     [UIView transitionWithView:self.board
                       duration:0.5f
@@ -654,6 +700,9 @@
                         [self reAddButtons];
                         [self reAddToBoard:YES];
                     }];
+    
+    //flip the board over, enable the buttons
+    [self updateTurnIndicators:YES];
 }
 
 //Client-side place piece API support

@@ -189,7 +189,7 @@
     self.messageTable = nil;
     [selectedIndexPathsForEditing removeAllObjects];
     RELEASE_SAFELY(selectedIndexPathsForEditing);
-    RELEASE_SAFELY(setOfUnreadMessagesInSelection);
+//    RELEASE_SAFELY(setOfUnreadMess  agesInSelection);
     RELEASE_SAFELY(deleteItem);
     RELEASE_SAFELY(markAsReadButtonItem);
 }
