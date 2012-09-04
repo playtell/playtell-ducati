@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
+<<<<<<< HEAD
 		<int key="IBDocument.SystemTarget">1296</int>
 		<string key="IBDocument.SystemVersion">11E53</string>
+=======
+		<int key="IBDocument.SystemTarget">1280</int>
+		<string key="IBDocument.SystemVersion">12B19</string>
+>>>>>>> Added prelim memory graphics
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
 		<string key="IBDocument.AppKitVersion">1138.47</string>
 		<string key="IBDocument.HIToolboxVersion">569.00</string>
@@ -48,7 +53,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">02173_stanfordatsunrise_1920x1200.jpeg</string>
+							<string key="NSResourceName">memory_background@2X.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="132998211">
@@ -152,7 +157,7 @@
 					<object class="IBUIButton" id="1057827459">
 						<reference key="NSNextResponder" ref="94392653"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{296, 126}, {170, 238}}</string>
+						<string key="NSFrame">{{296, 146}, {170, 238}}</string>
 						<reference key="NSSuperview" ref="94392653"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1011269338"/>
@@ -199,6 +204,10 @@
 						<string key="NSFrame">{{559, 403}, {170, 238}}</string>
 						<reference key="NSSuperview" ref="94392653"/>
 						<reference key="NSWindow"/>
+<<<<<<< HEAD
+=======
+						<reference key="NSNextKeyView"/>
+>>>>>>> Added prelim memory graphics
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -321,9 +330,9 @@
 							<reference ref="49546954"/>
 							<reference ref="214676877"/>
 							<reference ref="1011269338"/>
-							<reference ref="1057827459"/>
 							<reference ref="439816560"/>
 							<reference ref="273097639"/>
+							<reference ref="1057827459"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -445,21 +454,72 @@
 				</object>
 			</array>
 		</object>
+<<<<<<< HEAD
+=======
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">PTMemoryGameViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">endGame:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">endGame:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">endGame:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="card0">UIButton</string>
+						<string key="card1">UIButton</string>
+						<string key="card2">UIButton</string>
+						<string key="card3">UIButton</string>
+						<string key="closeMemory">UIButton</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="card0">
+							<string key="name">card0</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="card1">
+							<string key="name">card1</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="card2">
+							<string key="name">card2</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="card3">
+							<string key="name">card3</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="closeMemory">
+							<string key="name">closeMemory</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/PTMemoryGameViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
+>>>>>>> Added prelim memory graphics
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1296" key="NS.object.0"/>
-		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="02173_stanfordatsunrise_1920x1200.jpeg">{1920, 1200}</string>
 			<string key="1_cover.png">{170, 238}</string>
 			<string key="close-press-animate.png">{45, 45}</string>
 			<string key="close-press.png">{45, 45}</string>
 			<string key="close.png">{46, 48}</string>
 			<string key="crank-press.png">{59, 59}</string>
+			<string key="memory_background@2X.png">{2048, 1536}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1498</string>
 	</data>
