@@ -71,7 +71,9 @@
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
+										<float key="IBUIAlpha">0.5</float>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+										<bool key="IBUIEnabled">NO</bool>
 										<int key="IBUIContentVerticalAlignment">0</int>
 										<string key="IBUIText"/>
 										<int key="IBUIBorderStyle">3</int>
@@ -152,7 +154,7 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-										<string key="IBUIText">Loading contacts</string>
+										<string key="IBUIText">Loading contacts...</string>
 										<object class="NSColor" key="IBUITextColor">
 											<int key="NSColorSpace">3</int>
 											<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>
@@ -175,7 +177,7 @@
 								<string key="NSFrame">{{0, 105}, {606, 643}}</string>
 								<reference key="NSSuperview" ref="426480467"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
+								<reference key="NSNextKeyView" ref="774417523"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
@@ -202,6 +204,7 @@
 								<string key="NSFrameSize">{380, 456}</string>
 								<reference key="NSSuperview" ref="383465873"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="693996074"/>
 								<bool key="IBUIClipsSubviews">YES</bool>

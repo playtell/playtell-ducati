@@ -25,6 +25,7 @@
         
         // Avatar
         avatar = [[AsyncImageView alloc] initWithFrame:CGRectMake(0.0f, 19.0f, 100.0f, 75.0f)];
+        avatar.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:avatar];
         
         // Lbls

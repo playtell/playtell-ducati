@@ -21,4 +21,15 @@
     return self;
 }
 
+- (void)setEnabled:(BOOL)enabled {
+    [super setEnabled:enabled];
+    
+    // Dim the text
+    if (enabled == YES) {
+        self.titleLabel.alpha = 1.0f;
+    } else {
+        self.titleLabel.alpha = 0.5f;
+    }
+}
+
 @end

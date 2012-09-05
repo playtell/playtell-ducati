@@ -70,10 +70,6 @@
     sep1.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
     sep1.frame = CGRectMake(0.0f, 0.0f, contactsTableView.frame.size.width, 1.0f);
     [contactsTableContainer.layer addSublayer:sep1];
-    CALayer *sep2 = [CALayer layer];
-    sep2.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
-    sep2.frame = CGRectMake(0.0f, contactsTableView.frame.size.height - 1.0f, contactsTableView.frame.size.width, 1.0f);
-    [contactsTableContainer.layer addSublayer:sep2];
     
     // Text body style
     msgBody.layer.borderColor = [UIColor colorFromHex:@"#000000" alpha:0.3f].CGColor;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1296</int>
+		<int key="IBDocument.SystemTarget">1280</int>
 		<string key="IBDocument.SystemVersion">12A269</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
 		<string key="IBDocument.AppKitVersion">1187</string>
@@ -63,6 +63,7 @@
 								<string key="NSFrameSize">{380, 570}</string>
 								<reference key="NSSuperview" ref="755395584"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -122,10 +123,11 @@
 										<bool key="IBUIMultipleTouchEnabled">YES</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
-										<string type="base64-UTF8" key="IBUIText">Sm9pbiBtZSBvbiBQbGF5VGVsbCBzbyB3ZSBjYW4gcmVhZCBib29rcyBhbmQgcGxheSBnYW1lcyB0b2dl
-dGhlci4gVGhlcmUgYXJlIHNvbWUgZnVuIGZyZWUgYWN0aXZpdGllcyB3ZSBjYW4gdHJ5IG91dCEKClRv
-IGdldCB0aGUgYXBwLCBvcGVuIHRoaXMgb24geW91ciBpUGFkIGFuZCBwcmVzcyB0byBkb3dubG9hZCBQ
-bGF5VGVsbCBmcm9tIGlUdW5lcy4KCkNoZWVycw</string>
+										<string type="base64-UTF8" key="IBUIText">Sm9pbiBtZSBvbiBQbGF5dGVsbCwgc28gd2UgY2FuIHJlYWQgYm9va3MgYW5kIHBsYXkgZ2FtZXMgdG9n
+ZXRoZXIuIFRoZXJlIGFyZSBzb21lIGZ1biBmcmVlIGFjdGl2aXRpZXMsIHN1Y2ggYXMgVGljIFRhYyBU
+b2UsIG1hdGNoaW5nIGFuZCB0aGUgc3Rvcnkg4oCcT25lIHRvIFRlbuKAnSB0byBnZXQgdXMgc3RhcnRl
+ZCBpbiBvdXIgcGxheWRhdGVzLgoKVG8gZ2V0IHRoZSBhcHAsIG9wZW4gdGhpcyBsaW5rIG9uIHlvdXIg
+aVBhZCBhbmQgcHJlc3MgYmVsb3cgdG8gZG93bmxvYWQgUGxheXRlbGwgZnJvbSBpVHVuZXMuA</string>
 										<object class="NSColor" key="IBUITextColor" id="982415159">
 											<int key="NSColorSpace">3</int>
 											<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>
@@ -605,10 +607,6 @@ bGF5VGVsbCBmcm9tIGlUdW5lcy4KCkNoZWVycw</string>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1296" key="NS.object.0"/>
-		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">

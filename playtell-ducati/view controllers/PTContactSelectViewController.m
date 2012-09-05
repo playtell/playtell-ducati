@@ -68,7 +68,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
     // Navigation controller setup
-    self.title = @"Invite your family members to PlayTell";
+    self.title = @"Invite your family";
     
     // Nav buttons
     PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
@@ -115,10 +115,6 @@
     sep1.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
     sep1.frame = CGRectMake(0.0f, 0.0f, relatedContactsTableView.frame.size.width, 1.0f);
     [relatedContactsContainer.layer addSublayer:sep1];
-    CALayer *sep2 = [CALayer layer];
-    sep2.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
-    sep2.frame = CGRectMake(0.0f, relatedContactsTableView.frame.size.height - 1.0f, relatedContactsTableView.frame.size.width, 1.0f);
-    [relatedContactsContainer.layer addSublayer:sep2];
     relatedContactsContainer.hidden = YES;
     relatedHeader.hidden = YES;
     
@@ -223,11 +219,13 @@
                                              
                                              // Show the contacts table
                                              dispatch_async(dispatch_get_main_queue(), ^() {
-                                                 // Update table view and fade out the loading sign
+                                                 // Enable search box & Update table view and fade out the loading sign
                                                  [contactsTableView reloadData];
                                                  [UIView animateWithDuration:0.2f animations:^{
+                                                     textSearch.alpha = 1.0f;
                                                      loadingView.alpha = 0.0f;
                                                  } completion:^(BOOL finished) {
+                                                     textSearch.enabled = YES;
                                                      loadingView.hidden = YES;
                                                      
                                                      // Show table
