@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "UAPushNotificationHandler.h"
+#import "PTPlaymateView.h"
 
-@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate> {
+@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate, PTPlaymateDelegate> {
     BOOL playdateRequestedViaPush;
     NSInteger playdateRequestedViaPushId;
     UIView *loadingView;
+    UIView *shimView; // Shim used behind ringing playmate view
 }
 
 @property (nonatomic, strong) UIScrollView* scrollView;

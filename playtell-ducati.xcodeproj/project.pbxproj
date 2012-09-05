@@ -14,6 +14,8 @@
 		2311E0C1157F921E0084859B /* PTBookCloseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2311E0C0157F921E0084859B /* PTBookCloseRequest.m */; };
 		2311E0C4157F92A70084859B /* PTPlaydateDisconnectRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */; };
 		232265A5157D4D8800D5A960 /* date_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 232265A4157D4D8800D5A960 /* date_bg.png */; };
+		23263E8715F67ADD0080463A /* PTFriendshipAcceptRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23263E8615F67ADD0080463A /* PTFriendshipAcceptRequest.m */; };
+		23263E8B15F67AF50080463A /* PTFriendshipDeclineRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23263E8A15F67AF50080463A /* PTFriendshipDeclineRequest.m */; };
 		237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249D157D182A00FC288E /* PTBooksParentView.m */; };
 		237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B249F157D182A00FC288E /* PTBooksScrollView.m */; };
 		237B24A8157D182A00FC288E /* PTBookView.m in Sources */ = {isa = PBXBuildFile; fileRef = 237B24A1157D182A00FC288E /* PTBookView.m */; };
@@ -28,12 +30,14 @@
 		23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE31592393100525588 /* EndPlaydatePopupButton.png */; };
 		23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE41592393100525588 /* EndPlaydatePopupBg.png */; };
 		2387FCE11590FCF500B1FB55 /* PTPlaydateDetailsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */; };
+		23A1EAAB15ED2594000FED09 /* PTPlaymateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */; };
 		23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
 		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
 		23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */; };
 		23D41A8E159CAEF900677E03 /* dialad-live.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A8D159CAEF900677E03 /* dialad-live.png */; };
 		23D41A91159CB09800677E03 /* dialpad-pending.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A90159CB09800677E03 /* dialpad-pending.png */; };
 		23D41A94159CBF7E00677E03 /* PTUsersGetStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */; };
+		23DF5FA015EE9477004210FE /* UIColor+ColorFromHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */; };
 		23F199371586B9F000DC2E16 /* cover_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199361586B9F000DC2E16 /* cover_loading.png */; };
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
@@ -299,6 +303,10 @@
 		2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDisconnectRequest.h; sourceTree = "<group>"; };
 		2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDisconnectRequest.m; sourceTree = "<group>"; };
 		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
+		23263E8515F67ADD0080463A /* PTFriendshipAcceptRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendshipAcceptRequest.h; sourceTree = "<group>"; };
+		23263E8615F67ADD0080463A /* PTFriendshipAcceptRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFriendshipAcceptRequest.m; sourceTree = "<group>"; };
+		23263E8915F67AF50080463A /* PTFriendshipDeclineRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendshipDeclineRequest.h; sourceTree = "<group>"; };
+		23263E8A15F67AF50080463A /* PTFriendshipDeclineRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFriendshipDeclineRequest.m; sourceTree = "<group>"; };
 		232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPagesScrollViewDelegate.h; sourceTree = "<group>"; };
 		237B249C157D182A00FC288E /* PTBooksParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBooksParentView.h; sourceTree = "<group>"; };
 		237B249D157D182A00FC288E /* PTBooksParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBooksParentView.m; sourceTree = "<group>"; };
@@ -323,6 +331,8 @@
 		23866FE41592393100525588 /* EndPlaydatePopupBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupBg.png; sourceTree = "<group>"; };
 		2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDetailsRequest.h; sourceTree = "<group>"; };
 		2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDetailsRequest.m; sourceTree = "<group>"; };
+		23A1EAA915ED2594000FED09 /* PTPlaymateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateView.h; sourceTree = "<group>"; };
+		23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateView.m; sourceTree = "<group>"; };
 		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
 		23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerTapRequest.h; sourceTree = "<group>"; };
 		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
@@ -332,6 +342,8 @@
 		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialpad-pending.png"; sourceTree = "<group>"; };
 		23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUsersGetStatusRequest.h; sourceTree = "<group>"; };
 		23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUsersGetStatusRequest.m; sourceTree = "<group>"; };
+		23DF5F9E15EE9477004210FE /* UIColor+ColorFromHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorFromHex.h"; sourceTree = "<group>"; };
+		23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHex.m"; sourceTree = "<group>"; };
 		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_loading.png; sourceTree = "<group>"; };
 		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateJoinedRequest.h; sourceTree = "<group>"; };
@@ -1733,6 +1745,8 @@
 				F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */,
 				F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */,
 				F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */,
+				23DF5F9E15EE9477004210FE /* UIColor+ColorFromHex.h */,
+				23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -1760,6 +1774,8 @@
 			children = (
 				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
+				23A1EAA915ED2594000FED09 /* PTPlaymateView.h */,
+				23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */,
 				237B249C157D182A00FC288E /* PTBooksParentView.h */,
 				237B249D157D182A00FC288E /* PTBooksParentView.m */,
 				237B249E157D182A00FC288E /* PTBooksScrollView.h */,
@@ -1814,6 +1830,10 @@
 				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
 				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
 				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
+				23263E8515F67ADD0080463A /* PTFriendshipAcceptRequest.h */,
+				23263E8615F67ADD0080463A /* PTFriendshipAcceptRequest.m */,
+				23263E8915F67AF50080463A /* PTFriendshipDeclineRequest.h */,
+				23263E8A15F67AF50080463A /* PTFriendshipDeclineRequest.m */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -2153,6 +2173,10 @@
 				F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */,
 				2387FCE11590FCF500B1FB55 /* PTPlaydateDetailsRequest.m in Sources */,
 				23D41A94159CBF7E00677E03 /* PTUsersGetStatusRequest.m in Sources */,
+				23A1EAAB15ED2594000FED09 /* PTPlaymateView.m in Sources */,
+				23DF5FA015EE9477004210FE /* UIColor+ColorFromHex.m in Sources */,
+				23263E8715F67ADD0080463A /* PTFriendshipAcceptRequest.m in Sources */,
+				23263E8B15F67AF50080463A /* PTFriendshipDeclineRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2184,7 +2208,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2210,7 +2235,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2228,7 +2254,7 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2255,8 +2281,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "499C16BF-5B58-43B0-9943-519716293A98";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2264,7 +2289,7 @@
 		F4A9D5F01576B5950015D977 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2284,8 +2309,6 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2296,7 +2319,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2314,7 +2338,7 @@
 		F4A9D8D8157869840015D977 /* Distribution - Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2339,8 +2363,6 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Staging";
@@ -2351,7 +2373,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2369,7 +2392,7 @@
 		F4A9D8DA157869930015D977 /* Distribution - Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell Inc.";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell Inc.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2393,8 +2416,6 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Production";
