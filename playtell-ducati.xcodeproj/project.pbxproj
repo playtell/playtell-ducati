@@ -295,6 +295,11 @@
 		8AB1B2E915E3153D00FC3948 /* x-turn@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 8AB1B20615E3153D00FC3948 /* x-turn@2X.png */; };
 		8ABA6CA115C4A386009D4D1D /* PTTictactoeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */; };
 		8ABA6CA315C4BCF0009D4D1D /* PTTictactoeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */; };
+		8AC60EE115F80EA40012FD9F /* PTMemoryNewGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EE015F80EA40012FD9F /* PTMemoryNewGameRequest.m */; };
+		8AC60EE415F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EE315F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m */; };
+		8AC60EE715F82E2F0012FD9F /* PTMemoryEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EE615F82E2F0012FD9F /* PTMemoryEndGameRequest.m */; };
+		8AC60EEA15F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EE915F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m */; };
+		8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EED15F84FFD0012FD9F /* PTMatchingEndGameRequest.m */; };
 		8AF4D00615C7E6E900DB665E /* PTTictactoeNewGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */; };
 		8AF4D00D15C7EEA000DB665E /* PTTictactoePlacePieceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
@@ -862,6 +867,16 @@
 		8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeViewController.h; sourceTree = "<group>"; };
 		8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeViewController.m; sourceTree = "<group>"; };
 		8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTTictactoeViewController.xib; sourceTree = "<group>"; };
+		8AC60EDF15F80EA40012FD9F /* PTMemoryNewGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMemoryNewGameRequest.h; path = games/memory/PTMemoryNewGameRequest.h; sourceTree = "<group>"; };
+		8AC60EE015F80EA40012FD9F /* PTMemoryNewGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMemoryNewGameRequest.m; path = games/memory/PTMemoryNewGameRequest.m; sourceTree = "<group>"; };
+		8AC60EE215F82E1F0012FD9F /* PTMemoryPlayTurnRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMemoryPlayTurnRequest.h; path = games/memory/PTMemoryPlayTurnRequest.h; sourceTree = "<group>"; };
+		8AC60EE315F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMemoryPlayTurnRequest.m; path = games/memory/PTMemoryPlayTurnRequest.m; sourceTree = "<group>"; };
+		8AC60EE515F82E2F0012FD9F /* PTMemoryEndGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMemoryEndGameRequest.h; path = games/memory/PTMemoryEndGameRequest.h; sourceTree = "<group>"; };
+		8AC60EE615F82E2F0012FD9F /* PTMemoryEndGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMemoryEndGameRequest.m; path = games/memory/PTMemoryEndGameRequest.m; sourceTree = "<group>"; };
+		8AC60EE815F82E4A0012FD9F /* PTMemoryRefreshGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMemoryRefreshGameRequest.h; path = games/memory/PTMemoryRefreshGameRequest.h; sourceTree = "<group>"; };
+		8AC60EE915F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMemoryRefreshGameRequest.m; path = games/memory/PTMemoryRefreshGameRequest.m; sourceTree = "<group>"; };
+		8AC60EEC15F84FFD0012FD9F /* PTMatchingEndGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMatchingEndGameRequest.h; path = games/matching/PTMatchingEndGameRequest.h; sourceTree = "<group>"; };
+		8AC60EED15F84FFD0012FD9F /* PTMatchingEndGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMatchingEndGameRequest.m; path = games/matching/PTMatchingEndGameRequest.m; sourceTree = "<group>"; };
 		8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeNewGameRequest.h; sourceTree = "<group>"; };
 		8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeNewGameRequest.m; sourceTree = "<group>"; };
 		8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoePlacePieceRequest.h; sourceTree = "<group>"; };
@@ -1389,14 +1404,9 @@
 		8A1B740E15E6EB4F009BCEA0 /* games */ = {
 			isa = PBXGroup;
 			children = (
-				8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */,
-				8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */,
-				8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */,
-				8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */,
-				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
-				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
-				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
-				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
+				8AC60EEB15F84F8F0012FD9F /* matching */,
+				8AC60EDE15F80E540012FD9F /* memory */,
+				8AC60EDC15F80E4F0012FD9F /* tictactoe */,
 			);
 			name = games;
 			sourceTree = "<group>";
@@ -1963,6 +1973,45 @@
 				8AB1B1B515E3153D00FC3948 /* X-Pen.wav */,
 			);
 			name = Tictactoe;
+			sourceTree = "<group>";
+		};
+		8AC60EDC15F80E4F0012FD9F /* tictactoe */ = {
+			isa = PBXGroup;
+			children = (
+				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
+				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
+				8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */,
+				8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */,
+				8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */,
+				8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */,
+				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
+				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
+			);
+			name = tictactoe;
+			sourceTree = "<group>";
+		};
+		8AC60EDE15F80E540012FD9F /* memory */ = {
+			isa = PBXGroup;
+			children = (
+				8AC60EDF15F80EA40012FD9F /* PTMemoryNewGameRequest.h */,
+				8AC60EE015F80EA40012FD9F /* PTMemoryNewGameRequest.m */,
+				8AC60EE215F82E1F0012FD9F /* PTMemoryPlayTurnRequest.h */,
+				8AC60EE315F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m */,
+				8AC60EE515F82E2F0012FD9F /* PTMemoryEndGameRequest.h */,
+				8AC60EE615F82E2F0012FD9F /* PTMemoryEndGameRequest.m */,
+				8AC60EE815F82E4A0012FD9F /* PTMemoryRefreshGameRequest.h */,
+				8AC60EE915F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m */,
+			);
+			name = memory;
+			sourceTree = "<group>";
+		};
+		8AC60EEB15F84F8F0012FD9F /* matching */ = {
+			isa = PBXGroup;
+			children = (
+				8AC60EEC15F84FFD0012FD9F /* PTMatchingEndGameRequest.h */,
+				8AC60EED15F84FFD0012FD9F /* PTMatchingEndGameRequest.m */,
+			);
+			name = matching;
 			sourceTree = "<group>";
 		};
 		F4A123EC1592776800FC7A24 /* audio */ = {
@@ -3504,6 +3553,11 @@
 				8A62E39D15E7EA0D0077CBB6 /* PTMemoryGameBoard.m in Sources */,
 				8A62E3A515E7EA800077CBB6 /* PTMemoryGameCard.m in Sources */,
 				F441F5BD15F0269A00A1596A /* UIView+Animation.m in Sources */,
+				8AC60EE115F80EA40012FD9F /* PTMemoryNewGameRequest.m in Sources */,
+				8AC60EE415F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m in Sources */,
+				8AC60EE715F82E2F0012FD9F /* PTMemoryEndGameRequest.m in Sources */,
+				8AC60EEA15F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m in Sources */,
+				8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

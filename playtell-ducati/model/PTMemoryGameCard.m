@@ -34,6 +34,9 @@
 
 - (void) removeFromPlay{ }
 
+- (void) placeOnBoard { }
+
+
 
 // # START HELPER METHODS #
 // # setters #
