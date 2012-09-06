@@ -350,35 +350,33 @@
         [coversToLoad addObject:bookId];
     }
     
-    //TODOGIANCARLO another loop here for games
+    //TODO we need to incorporate an API call here to load games from the API
+    
     xPos += (booksScrollView.frame.size.width * .75);
     UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
     tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
     UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(ticTacToeTapped:)];
+                                                                                action:@selector(ticTacToeTapped:)];
     [tttBookView addGestureRecognizer:tapRecognizer];
     tttBookView.userInteractionEnabled = YES;
-
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
     
     UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
     memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-    
+    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(memoryTapped:)];
+    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
+    memoryBookView.userInteractionEnabled = YES;
     [booksScrollView addSubview:memoryBookView];
     xPos += booksScrollView.frame.size.width;
-//    [bookList addObject:tttBookView];
-    
-    // Book cover pages load
-//    [coversToLoad addObject:tttBookView];
-    
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
-//
+
     // Start loading book covers
     [self loadBookCovers];
     isPageViewLoading = NO;
@@ -386,6 +384,10 @@
 
 - (void)ticTacToeTapped:(UIGestureRecognizer*)tapRecognizer {
     [self playTictactoe:nil];
+}
+
+- (void)memoryTapped:(UIGestureRecognizer*)tapRecognizer {
+    [self playMemoryGame:nil];
 }
 
 - (void)setCurrentUserPhoto {
