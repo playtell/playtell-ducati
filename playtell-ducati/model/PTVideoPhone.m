@@ -123,7 +123,7 @@ static PTVideoPhone* instance = nil;
         return;
     }
 
-#ifndef TARGET_IPHONE_SIMULATOR
+//#ifndef TARGET_IPHONE_SIMULATOR
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
     self.publisher.delegate = self;
     [self.session publish:self.publisher];
@@ -131,7 +131,7 @@ static PTVideoPhone* instance = nil;
     if (self.successBlock) {
         self.successBlock(self.publisher);
     }
-#endif
+//#endif
 }
 
 - (void)sessionDidDisconnect:(OTSession*)session {

@@ -3651,8 +3651,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Giancarlo Daniele (BJYG4USW2T)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Giancarlo Daniele (BJYG4USW2T)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3678,8 +3678,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "499C16BF-5B58-43B0-9943-519716293A98";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "499C16BF-5B58-43B0-9943-519716293A98";
+				PROVISIONING_PROFILE = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
