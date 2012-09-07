@@ -21,15 +21,21 @@
         self.layer.zPosition = currentPage - (pageNumber - 1);
         hasContent = NO;
         
-        // Enable pinching
+        // Enable pinching (to close the book)
         UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
         [pinchRecognizer setDelegate:self];
         [self addGestureRecognizer:pinchRecognizer];
         
-        // Enable long press
+        // Enable long press (grandma finger concept)
         UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTouched:)];
+        longPressRecognizer.minimumPressDuration = 0.1f; // Default is 0.5 sec. Too long!
         [longPressRecognizer setDelegate:self];
         [self addGestureRecognizer:longPressRecognizer];
+        
+        // Enable normal press (page navigation)
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+        [tapRecognizer setDelegate:self];
+        [self addGestureRecognizer:tapRecognizer];
     }
     return self;
 }
@@ -395,15 +401,40 @@
     UIImage *rightImage = [UIImage imageWithCGImage:image_quarz];
     CGImageRelease(image_quarz);
     
+    // First add black outline to right-side
+    UIGraphicsBeginImageContext(rightImage.size);
+    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    [rightImage drawInRect:CGRectMake(0, 0, rightImage.size.width, rightImage.size.height)];
+    
+    CGContextSetStrokeColorWithColor(bitmap, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.1f].CGColor);
+    CGContextSetLineWidth(bitmap, 1.0);
+    CGContextMoveToPoint(bitmap, 0.0f, 0.0);
+    CGContextAddLineToPoint(bitmap, size.width / 2, 0.0f);
+    CGContextAddLineToPoint(bitmap, size.width / 2, size.height);
+    CGContextAddLineToPoint(bitmap, 0.0f, size.height);
+    CGContextStrokePath(bitmap);
+    
+    rightImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
     // Set right-side contents of page
     right.contents = (id)rightImage.CGImage;
     
-    // First mirror left-side contents of page
+    // First mirror left-side contents of page + add black outline
     UIGraphicsBeginImageContext(leftImage.size);
-    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    bitmap = UIGraphicsGetCurrentContext();
     CGAffineTransform transform = CGAffineTransformMake(-1.0, 0.0, 0.0, 1.0, leftImage.size.width, 0.0);
     CGContextConcatCTM(bitmap, transform);
     [leftImage drawInRect:CGRectMake(0, 0, leftImage.size.width, leftImage.size.height)];
+    
+    CGContextSetStrokeColorWithColor(bitmap, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.1f].CGColor);
+    CGContextSetLineWidth(bitmap, 1.0);
+    CGContextMoveToPoint(bitmap, size.width / 2, 0.0);
+    CGContextAddLineToPoint(bitmap, 0.0f, 0.0f);
+    CGContextAddLineToPoint(bitmap, 0.0f, size.height);
+    CGContextAddLineToPoint(bitmap, size.width / 2, size.height);
+    CGContextStrokePath(bitmap);
+    
     UIImage *flipped = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -436,6 +467,20 @@
         [delegate fingerTouchStartedAtPoint:fingerPoint];
     } else if (longPressRecognizer.state == UIGestureRecognizerStateEnded) {
         [delegate fingerTouchEndedAtPoint:fingerPoint];
+    }
+}
+
+- (void)tapped:(id)sender {
+    UITapGestureRecognizer *tapRecognizer = (UITapGestureRecognizer *)sender;
+    CGPoint point = [tapRecognizer locationInView:self];
+    
+    // Navigation to previous page or next page?
+    if (point.x <= pagelet.width) {
+        // Go to previous page
+        [delegate pageShouldGoDown];
+    } else {
+        // Go to next page
+        [delegate pageShouldGoUp];
     }
 }
 

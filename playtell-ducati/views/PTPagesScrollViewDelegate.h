@@ -13,4 +13,6 @@
 - (void)bookPinchClose;
 - (void)fingerTouchStartedAtPoint:(CGPoint)point;
 - (void)fingerTouchEndedAtPoint:(CGPoint)point;
+- (void)pageShouldGoUp;
+- (void)pageShouldGoDown;
 @end

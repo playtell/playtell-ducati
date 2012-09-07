@@ -34,6 +34,10 @@
 		23D41A8E159CAEF900677E03 /* dialad-live.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A8D159CAEF900677E03 /* dialad-live.png */; };
 		23D41A91159CB09800677E03 /* dialpad-pending.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A90159CB09800677E03 /* dialpad-pending.png */; };
 		23D41A94159CBF7E00677E03 /* PTUsersGetStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */; };
+		23DAE25A15F939C3008D7524 /* friendfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25615F939C3008D7524 /* friendfinger.png */; };
+		23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25715F939C3008D7524 /* friendfinger@2x.png */; };
+		23DAE26015F93D98008D7524 /* yourfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25E15F93D98008D7524 /* yourfinger.png */; };
+		23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25F15F93D98008D7524 /* yourfinger@2x.png */; };
 		23F199371586B9F000DC2E16 /* cover_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199361586B9F000DC2E16 /* cover_loading.png */; };
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
@@ -597,6 +601,10 @@
 		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialpad-pending.png"; sourceTree = "<group>"; };
 		23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUsersGetStatusRequest.h; sourceTree = "<group>"; };
 		23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUsersGetStatusRequest.m; sourceTree = "<group>"; };
+		23DAE25615F939C3008D7524 /* friendfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friendfinger.png; sourceTree = "<group>"; };
+		23DAE25715F939C3008D7524 /* friendfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friendfinger@2x.png"; sourceTree = "<group>"; };
+		23DAE25E15F93D98008D7524 /* yourfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yourfinger.png; sourceTree = "<group>"; };
+		23DAE25F15F93D98008D7524 /* yourfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yourfinger@2x.png"; sourceTree = "<group>"; };
 		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_loading.png; sourceTree = "<group>"; };
 		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateJoinedRequest.h; sourceTree = "<group>"; };
@@ -2110,9 +2118,16 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< HEAD
 				8AAF559F15E8234F0098A0C9 /* memory */,
 				8A62E3A815E813710077CBB6 /* test */,
 				8AB1B11015E3153D00FC3948 /* Games */,
+=======
+				23DAE25E15F93D98008D7524 /* yourfinger.png */,
+				23DAE25F15F93D98008D7524 /* yourfinger@2x.png */,
+				23DAE25615F939C3008D7524 /* friendfinger.png */,
+				23DAE25715F939C3008D7524 /* friendfinger@2x.png */,
+>>>>>>> staging
 				23D41A90159CB09800677E03 /* dialpad-pending.png */,
 				23D41A8D159CAEF900677E03 /* dialad-live.png */,
 				23866FE31592393100525588 /* EndPlaydatePopupButton.png */,
@@ -3196,6 +3211,7 @@
 				23D41A8E159CAEF900677E03 /* dialad-live.png in Resources */,
 				23D41A91159CB09800677E03 /* dialpad-pending.png in Resources */,
 				F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */,
+<<<<<<< HEAD
 				8ABA6CA315C4BCF0009D4D1D /* PTTictactoeViewController.xib in Resources */,
 				8A72FE5B15DD2C350059A290 /* PTMemoryGameViewController.xib in Resources */,
 				8AB1B20715E3153D00FC3948 /* background.png in Resources */,
@@ -3446,6 +3462,12 @@
 				8AAD0A4415F603E600233323 /* turn-indicator@2X.png in Resources */,
 				8AAD0A4815F604CF00233323 /* memory_background@2X.png in Resources */,
 				8AAD0A4915F604CF00233323 /* memory_title@2X.png in Resources */,
+=======
+				23DAE25A15F939C3008D7524 /* friendfinger.png in Resources */,
+				23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */,
+				23DAE26015F93D98008D7524 /* yourfinger.png in Resources */,
+				23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */,
+>>>>>>> staging
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3625,8 +3647,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (43V7365Q24)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3652,8 +3674,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "499C16BF-5B58-43B0-9943-519716293A98";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "499C16BF-5B58-43B0-9943-519716293A98";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
