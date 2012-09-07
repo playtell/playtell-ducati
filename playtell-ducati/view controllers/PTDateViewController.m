@@ -47,6 +47,11 @@
 #import "PTTictactoeViewController.h"
 #import "PTMemoryGameViewController.h"
 
+//SUPPORT FOR UIPOPOVER END PLAYDATE
+#import "PTPlaydateEndViewController.h"
+#import "PTPlaydateDelegate.h"
+
+
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
@@ -631,11 +636,14 @@
 }
 
 - (IBAction)endPlaydatePopupToggle:(id)sender {
-    if (endPlaydatePopup.hidden) {
-        endPlaydatePopup.hidden = NO;
-    } else {
-        endPlaydatePopup.hidden = YES;
+    if (playdateEndViewController == nil || playdateEndPopover == nil) {
+        playdateEndViewController = [[PTPlaydateEndViewController alloc] initWithNibName:@"PTPlaydateEndViewController" bundle:nil];
+        playdateEndViewController.delegate = self;
+        playdateEndPopover = [[UIPopoverController alloc] initWithContentViewController:playdateEndViewController];
+        playdateEndPopover.popoverContentSize = CGSizeMake(205.0f, 60.0f);
     }
+    
+    [playdateEndPopover presentPopoverFromRect:endPlaydate.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 }
 
 - (void)viewDidUnload {
