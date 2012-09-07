@@ -47,11 +47,6 @@
 #import "PTTictactoeViewController.h"
 #import "PTMemoryGameViewController.h"
 
-//SUPPORT FOR UIPOPOVER END PLAYDATE
-#import "PTPlaydateEndViewController.h"
-#import "PTPlaydateDelegate.h"
-
-
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
@@ -218,8 +213,12 @@
 
     
     // Setup end playdate & close book buttons
-    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
-    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateSelected];
+    endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
+    endPlaydate.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
+    endPlaydate.layer.shadowOpacity = 0.2f;
+    endPlaydate.layer.shadowRadius = 6.0f;
+//    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateHighlighted];
+//    [endPlaydate setImage:[UIImage imageNamed:@"EndCallCrankPressed"] forState:UIControlStateSelected];
     [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateHighlighted];
     [closeBook setImage:[UIImage imageNamed:@"CloseBookPressed"] forState:UIControlStateSelected];
     closeBook.alpha = 0.0f;
@@ -635,15 +634,24 @@
     }
 }
 
-- (IBAction)endPlaydatePopupToggle:(id)sender {
-    if (playdateEndViewController == nil || playdateEndPopover == nil) {
-        playdateEndViewController = [[PTPlaydateEndViewController alloc] initWithNibName:@"PTPlaydateEndViewController" bundle:nil];
-        playdateEndViewController.delegate = self;
-        playdateEndPopover = [[UIPopoverController alloc] initWithContentViewController:playdateEndViewController];
-        playdateEndPopover.popoverContentSize = CGSizeMake(205.0f, 60.0f);
+- (IBAction)endPlaydateHandle:(id)sender {
+    // Notify server of disconnect
+    [self disconnectPusherAndChat];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:^(NSDictionary* result)
+         {
+             // We delay moving to the dialpad because it will be checking for
+             // playdates when it appears
+             [self transitionToDialpad];
+         }
+                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+         {
+             [self transitionToDialpad];
+         }];
     }
-    
-    [playdateEndPopover presentPopoverFromRect:endPlaydate.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 }
 
 - (void)viewDidUnload {

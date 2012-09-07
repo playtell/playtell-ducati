@@ -28,6 +28,8 @@
 		23866FE51592393100525588 /* EndPlaydatePopupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE31592393100525588 /* EndPlaydatePopupButton.png */; };
 		23866FE61592393100525588 /* EndPlaydatePopupBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE41592393100525588 /* EndPlaydatePopupBg.png */; };
 		2387FCE11590FCF500B1FB55 /* PTPlaydateDetailsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */; };
+		23BE484315FA8865005BF396 /* endCallButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484115FA8865005BF396 /* endCallButton.png */; };
+		23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484215FA8865005BF396 /* endCallButton@2x.png */; };
 		23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
 		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
 		23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */; };
@@ -44,10 +46,6 @@
 		8A0605D915D9B03700F39098 /* PTTictactoeCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A0605D815D9B03700F39098 /* PTTictactoeCoordinate.m */; };
 		8A34AEC715E4B762002B13F5 /* PTTictactoeEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */; };
 		8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */; };
-		8A51067715FA5DB9000EC244 /* PTPlaydateDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 8A51067615FA51BD000EC244 /* PTPlaydateDelegate.h */; };
-		8A51067815FA5DBB000EC244 /* PTPlaydateEndViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 8A51067215FA51A4000EC244 /* PTPlaydateEndViewController.h */; };
-		8A51067915FA5DBC000EC244 /* PTPlaydateEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A51067315FA51A4000EC244 /* PTPlaydateEndViewController.m */; };
-		8A51067A15FA5DBD000EC244 /* PTPlaydateEndViewController.xib in Sources */ = {isa = PBXBuildFile; fileRef = 8A51067415FA51A4000EC244 /* PTPlaydateEndViewController.xib */; };
 		8A51067B15FA5DBE000EC244 /* PTDateViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AD157D191400FC288E /* PTDateViewController.h */; };
 		8A62E39D15E7EA0D0077CBB6 /* PTMemoryGameBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A62E39C15E7EA0D0077CBB6 /* PTMemoryGameBoard.m */; };
 		8A62E3A515E7EA800077CBB6 /* PTMemoryGameCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A62E3A415E7EA800077CBB6 /* PTMemoryGameCard.m */; };
@@ -597,6 +595,8 @@
 		23866FE41592393100525588 /* EndPlaydatePopupBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupBg.png; sourceTree = "<group>"; };
 		2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDetailsRequest.h; sourceTree = "<group>"; };
 		2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDetailsRequest.m; sourceTree = "<group>"; };
+		23BE484115FA8865005BF396 /* endCallButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endCallButton.png; sourceTree = "<group>"; };
+		23BE484215FA8865005BF396 /* endCallButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "endCallButton@2x.png"; sourceTree = "<group>"; };
 		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
 		23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerTapRequest.h; sourceTree = "<group>"; };
 		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
@@ -620,10 +620,6 @@
 		8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeEndGameRequest.m; sourceTree = "<group>"; };
 		8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeRefreshGameRequest.h; sourceTree = "<group>"; };
 		8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeRefreshGameRequest.m; sourceTree = "<group>"; };
-		8A51067215FA51A4000EC244 /* PTPlaydateEndViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTPlaydateEndViewController.h; sourceTree = "<group>"; };
-		8A51067315FA51A4000EC244 /* PTPlaydateEndViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateEndViewController.m; sourceTree = "<group>"; };
-		8A51067415FA51A4000EC244 /* PTPlaydateEndViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PTPlaydateEndViewController.xib; sourceTree = "<group>"; };
-		8A51067615FA51BD000EC244 /* PTPlaydateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDelegate.h; sourceTree = "<group>"; };
 		8A62E39B15E7EA0D0077CBB6 /* PTMemoryGameBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameBoard.h; sourceTree = "<group>"; };
 		8A62E39C15E7EA0D0077CBB6 /* PTMemoryGameBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryGameBoard.m; sourceTree = "<group>"; };
 		8A62E3A315E7EA800077CBB6 /* PTMemoryGameCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameCard.h; sourceTree = "<group>"; };
@@ -2127,6 +2123,8 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				23BE484115FA8865005BF396 /* endCallButton.png */,
+				23BE484215FA8865005BF396 /* endCallButton@2x.png */,
 				8AAF559F15E8234F0098A0C9 /* memory */,
 				8A62E3A815E813710077CBB6 /* test */,
 				8AB1B11015E3153D00FC3948 /* Games */,
@@ -2883,11 +2881,7 @@
 			children = (
 				8A62E3A215E7EA4F0077CBB6 /* games */,
 				F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */,
-				8A51067615FA51BD000EC244 /* PTPlaydateDelegate.h */,
 				F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */,
-				8A51067215FA51A4000EC244 /* PTPlaydateEndViewController.h */,
-				8A51067315FA51A4000EC244 /* PTPlaydateEndViewController.m */,
-				8A51067415FA51A4000EC244 /* PTPlaydateEndViewController.xib */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
 				237B24AE157D191500FC288E /* PTDateViewController.m */,
 				237B24AF157D191500FC288E /* PTDateViewController.xib */,
@@ -3475,6 +3469,8 @@
 				23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */,
 				23DAE26015F93D98008D7524 /* yourfinger.png in Resources */,
 				23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */,
+				23BE484315FA8865005BF396 /* endCallButton.png in Resources */,
+				23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3539,15 +3535,11 @@
 				F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */,
 				F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */,
 				F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */,
-				8A51067715FA5DB9000EC244 /* PTPlaydateDelegate.h in Sources */,
 				F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */,
 				F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */,
 				8A51067B15FA5DBE000EC244 /* PTDateViewController.h in Sources */,
 				F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */,
 				237B24B0157D191500FC288E /* PTDateViewController.m in Sources */,
-				8A51067915FA5DBC000EC244 /* PTPlaydateEndViewController.m in Sources */,
-				8A51067A15FA5DBD000EC244 /* PTPlaydateEndViewController.xib in Sources */,
-				8A51067815FA5DBB000EC244 /* PTPlaydateEndViewController.h in Sources */,
 				F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */,
 				237B24A6157D182A00FC288E /* PTBooksParentView.m in Sources */,
 				237B24A7157D182A00FC288E /* PTBooksScrollView.m in Sources */,

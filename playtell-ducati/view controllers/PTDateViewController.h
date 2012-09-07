@@ -13,8 +13,6 @@
 #import "PTBooksParentView.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
-#import "PTPlaydateDelegate.h"
-#import "PTPlaydateEndViewController.h"
 
 @interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     // Playdate
@@ -24,7 +22,6 @@
     IBOutlet UIButton *endPlaydateForreal;
     IBOutlet UIView *endPlaydatePopup;
     UIPopoverController *playdateEndPopover;
-    PTPlaydateEndViewController *playdateEndViewController;
     
     // Books
     PTBooksParentView *booksParentView;
@@ -61,7 +58,7 @@
 - (IBAction)playdateDisconnect:(id)sender;
 - (IBAction)playTictactoe:(id)sender;
 
-- (IBAction)endPlaydatePopupToggle:(id)sender;
+- (IBAction)endPlaydateHandle:(id)sender;
 - (void)openBookAfterNavigation;
 
 @end
