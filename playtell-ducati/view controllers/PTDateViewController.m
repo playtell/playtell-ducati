@@ -438,31 +438,39 @@
 }
 
 - (IBAction)playdateDisconnect:(id)sender {    
-    // Notify server of disconnect
-    [self disconnectPusherAndChat];
-    if (self.playdate) {
-        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
-        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                                          authToken:[[PTUser currentUser] authToken]
-                                                          onSuccess:^(NSDictionary* result)
-        {
-            // We delay moving to the dialpad because it will be checking for
-            // playdates when it appears
-            [self transitionToDialpad];
-        }
-                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
-        {
-            [self transitionToDialpad];
-        }];
-    }
+//    // Notify server of disconnect
+//    [self disconnectPusherAndChat];
+//    if (self.playdate) {
+//        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+//        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+//                                                          authToken:[[PTUser currentUser] authToken]
+//                                                          onSuccess:^(NSDictionary* result)
+//        {
+//            // We delay moving to the dialpad because it will be checking for
+//            // playdates when it appears
+//            [self transitionToDialpad];
+//        }
+//                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+//        {
+//            [self transitionToDialpad];
+//        }];
+//    }
 }
 
 - (IBAction)endPlaydatePopupToggle:(id)sender {
-    if (endPlaydatePopup.hidden) {
-        endPlaydatePopup.hidden = NO;
-    } else {
-        endPlaydatePopup.hidden = YES;
+//    if (endPlaydatePopup.hidden) {
+//        endPlaydatePopup.hidden = NO;
+//    } else {
+//        endPlaydatePopup.hidden = YES;
+//    }
+    if (playdateEndViewController == nil || playdateEndPopover == nil) {
+        playdateEndViewController = [[PTPlaydateEndViewController alloc] initWithNibName:@"PTPlaydateEndViewController" bundle:nil];
+        playdateEndViewController.delegate = self;
+        playdateEndPopover = [[UIPopoverController alloc] initWithContentViewController:playdateEndViewController];
+        playdateEndPopover.popoverContentSize = CGSizeMake(205.0f, 60.0f);
     }
+
+    [playdateEndPopover presentPopoverFromRect:endPlaydate.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 }
 
 - (void)viewDidUnload {
@@ -1078,5 +1086,31 @@
     fingerView = nil;
 }
 
+
+#pragma mark -
+#pragma mark Playdate delegates
+
+- (void)playdateShouldEnd {
+    // Dismiss popover
+    [playdateEndPopover dismissPopoverAnimated:NO];
+
+    // Notify server of disconnect
+    [self disconnectPusherAndChat];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:^(NSDictionary* result)
+         {
+             // We delay moving to the dialpad because it will be checking for
+             // playdates when it appears
+             [self transitionToDialpad];
+         }
+                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+         {
+             [self transitionToDialpad];
+         }];
+    }
+}
 
 @end
