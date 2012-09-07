@@ -549,7 +549,7 @@
          
          //bring up the view controller of the new game!
          [appDelegate.transitionController loadGame:tictactoeVc
-                                                          withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:TICTACTOE];
+                                                          withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
          NSLog(@"%@", error);
          NSLog(@"%@", request);
@@ -835,7 +835,7 @@
         
         //bring up the view controller of the new game!
         [appDelegate.transitionController loadGame:tictactoeVc
-                                                         withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash gameType:TICTACTOE];
+                                                         withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
     }
 }
 

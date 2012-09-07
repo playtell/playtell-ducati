@@ -3462,7 +3462,7 @@
 				23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */,
 				23DAE26015F93D98008D7524 /* yourfinger.png in Resources */,
 				23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */,
-			);
+				);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
