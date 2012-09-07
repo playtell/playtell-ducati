@@ -803,7 +803,7 @@
     NSInteger x = [[eventData objectForKey:@"x"] integerValue];
     NSInteger y = [[eventData objectForKey:@"y"] integerValue];
     CGPoint point = CGPointMake(x, y);
-    [self addFingerAtPoint:point];
+    [self addFingerAtPoint:point initiatedBySelf:NO];
 }
 
 - (void)pusherPlayDateTictactoeNewGame:(NSNotification *)notification {
@@ -1244,7 +1244,7 @@
     ];
     
     // Add finger
-    //[self addFingerAtPoint:point];
+    [self addFingerAtPoint:point initiatedBySelf:YES];
 }
 
 - (void)fingerTouchEndedAtPoint:(CGPoint)point {
@@ -1258,18 +1258,59 @@
     ];
     
     // Remove finger
-    //[self removeFingerAtPoint:point];
+    [self removeFingerAtPoint:point];
+}
+
+- (void)pageShouldGoUp {
+    // Is there a next page to go to?
+    if (pagesScrollView.currentPage == pagesScrollView.totalPages) {
+        return;
+    }
+    
+    // Go to next page
+    NSInteger newPageNumber = pagesScrollView.currentPage+1;
+    [pagesScrollView navigateToPage:newPageNumber];
+    
+    // Update current page in the book obj
+    NSMutableDictionary *book = [books objectForKey:currentBookId];
+    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    
+    // Notify delegate to start loading new page content
+    [self pageTurnedTo:newPageNumber];
+}
+
+- (void)pageShouldGoDown {
+    // Is there a previous page to go to?
+    if (pagesScrollView.currentPage == 1) {
+        return;
+    }
+    
+    // Go to previous page
+    NSInteger newPageNumber = pagesScrollView.currentPage-1;
+    [pagesScrollView navigateToPage:newPageNumber];
+    
+    // Update current page in the book obj
+    NSMutableDictionary *book = [books objectForKey:currentBookId];
+    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    
+    // Notify delegate to start loading new page content
+    [self pageTurnedTo:newPageNumber];
 }
 
 #pragma mark -
 #pragma mark Grandma Finger
 
-- (void)addFingerAtPoint:(CGPoint)point {
+- (void)addFingerAtPoint:(CGPoint)point initiatedBySelf:(BOOL)isInitiatedBySelf {
     // Create finger view
-    UIView *fingerView = [[UIView alloc] initWithFrame:CGRectMake(point.x-20.0f+pagesScrollView.frame.origin.x, point.y-20.0f+pagesScrollView.frame.origin.y, 40.0f, 40.0f)];
-    fingerView.layer.cornerRadius = 20.0f;
-    fingerView.layer.masksToBounds = YES;
-    fingerView.backgroundColor = [UIColor colorWithRed:0.0f green:(162.0f / 255.0f) blue:(206.0f / 255.0f) alpha:1.0f];
+    UIImage *fingerImage;
+    if (isInitiatedBySelf == YES) {
+        fingerImage = [UIImage imageNamed:@"yourfinger"];
+    } else {
+        fingerImage = [UIImage imageNamed:@"friendfinger"];
+    }
+    CGSize fingerSize = fingerImage.size;
+    UIImageView *fingerView = [[UIImageView alloc] initWithImage:fingerImage];
+    fingerView.frame = CGRectMake(point.x-(fingerSize.width/2.0f)+pagesScrollView.frame.origin.x, point.y-(fingerSize.height/2.0f)+pagesScrollView.frame.origin.y, fingerSize.width, fingerSize.height);
     [fingerViews setObject:fingerView forKey:[NSValue valueWithCGPoint:point]];
     
     [self.view addSubview:fingerView];
