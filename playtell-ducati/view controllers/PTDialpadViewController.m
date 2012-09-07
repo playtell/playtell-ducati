@@ -82,6 +82,13 @@
     
     // Setup dialing ringer
     [self setupRinger];
+    
+    // TEMP
+    UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
+    contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
+    [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:contactButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -170,6 +177,15 @@
         PTPlaymateView *playmateView = [self.playmateViews objectForKey:key];
         playmateView.alpha = 0.0f;
     }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupRinger];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
 }
 
 - (void)drawPlaymates {
@@ -796,97 +812,12 @@
     [self endRinging];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self deactivatePlaymateButton];
-}
-
-- (void)deactivatePlaymateButton {
-    self.selectedButton.transform = CGAffineTransformIdentity;
-    [self.selectedButton.layer removeAllAnimations];
-    self.selectedButton.isActivated = NO;
-    [self.selectedButton resetButton];
-
-    CGRect newFrame = [self.scrollView convertRect:self.selectedButton.frame fromView:self.view];
-    self.selectedButton.frame = newFrame;
-    [self.scrollView addSubview:self.selectedButton];
-
-    [self.selectedButton removeTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
-    [self.selectedButton addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-
-    self.selectedButton = nil;
-
-    UIView* backgroundView = [self.view viewWithTag:669];
-    [backgroundView removeFromSuperview];
-
-    self.cancelPlaydateRecognizer.enabled = NO;
-}
-
-- (void)loadView {
-    [super loadView];
-    self.view.frame = CGRectMake(0, 0, 1024, 748);
-
-    UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
-    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
-    background.tag = 666;
-    [self.view addSubview:background];
-
-    NSString* welcomeText = @"WHO WILL YOU PLAY WITH TODAY?";
-    CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
-                               constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
-    CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 55,
-                                  labelSize.width, labelSize.height);
-    UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
-    welcomeLabel.text = welcomeText;
-    welcomeLabel.font = [self welcomeTextFont];
-    welcomeLabel.textColor = [UIColor redColor];
-    welcomeLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:welcomeLabel];
-
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
-    [self.view addSubview:self.scrollView];
-
-    self.cancelPlaydateRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
-    [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
-    self.cancelPlaydateRecognizer.enabled = NO;
-    self.cancelPlaydateRecognizer.delegate = self;
-
-    [self drawPlaymates];
-    
-     // TEMP
-     UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-     [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
-     contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
-     [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
-     [self.view addSubview:contactButton];
- }
-
 - (void)loadContactImportController:(id)sender {
      PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
      UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
      
      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
      [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self setupRinger];
-}
-
-- (void)setupRinger {
-    NSError *playerError;
-    NSURL *ringtone = [[NSBundle mainBundle] URLForResource:@"ringtone-connecting" withExtension:@"mp3"];
-    AVAudioPlayer *thePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:ringtone error:&playerError];
-    thePlayer.volume = 0.25;
-    thePlayer.numberOfLoops = 4;
-    self.audioPlayer = thePlayer;
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
 }
 
 - (UIFont*)welcomeTextFont {
