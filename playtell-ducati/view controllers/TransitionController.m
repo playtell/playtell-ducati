@@ -64,7 +64,7 @@ viewController = _viewController;
                     }];
 }
 
--(void)loadGame:(UIViewController *)aViewController withOptions:(UIViewAnimationOptions)options withSplash:(UIImageView *)splash gameType:(int)gameType
+-(void)loadGame:(UIViewController *)aViewController withOptions:(UIViewAnimationOptions)options withSplash:(UIImageView *)splash
 {
     [UIView transitionWithView:self.containerView
                       duration:0.25f

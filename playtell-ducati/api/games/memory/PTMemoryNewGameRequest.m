@@ -12,14 +12,14 @@
 
 @implementation PTMemoryNewGameRequest
 
-- (void)newBoardWithPlaydateId:(NSNumber*)playdate_id
-                     authToken:(NSString*)token
-                   playmate_id:(NSString *)playmate_id
-                   initiatorId:(NSString *)initiator_id
-                     onSuccess:(PTMemoryNewGameRequestSuccessBlock)success
-                      theme_ID:(NSString *)theme_id
-               num_total_cards:(NSString *)num_total_cards
-                     onFailure:(PTMemoryNewGameRequestFailureBlock)failure
+- (void)newBoardWithPlaydate_id:(NSString *)playdate_id
+                     auth_token:(NSString *)token
+                    playmate_id:(NSString *)playmate_id
+                    initiatorId:(NSString *)initiator_id
+                       theme_ID:(NSString *)theme_id
+                num_total_cards:(NSString *)num_total_cards
+                      onSuccess:(PTMemoryNewGameRequestSuccessBlock)success
+                      onFailure:(PTMemoryNewGameRequestFailureBlock)failure
 {
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     playdate_id, @"playdate_id",

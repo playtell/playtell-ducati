@@ -18,7 +18,5 @@
 
 - (void)loadGame:(UIViewController *)viewController
                        withOptions:(UIViewAnimationOptions)options
-                        withSplash:(UIImageView *)splash
-                        gameType:(int)gameType; //gameType is #define-ed
-
+      withSplash:(UIImageView *)splash;
 @end

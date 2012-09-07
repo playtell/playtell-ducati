@@ -41,6 +41,7 @@
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
+#import "PTMemoryNewGameRequest.h"
 
 //GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
@@ -165,6 +166,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //set the app delegate's dateViewController
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.dateViewController = self;
 
     // Init books scroll view
     booksParentView = [[PTBooksParentView alloc] initWithFrame:CGRectMake(0.0f, 126.0f, 1024.0f, 600.0f)];
@@ -351,7 +356,6 @@
     }
     
     //TODO we need to incorporate an API call here to load games from the API
-    
     xPos += (booksScrollView.frame.size.width * .75);
     UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
     tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
@@ -506,9 +510,7 @@
 
 - (IBAction)playTictactoe:(id)sender {
     PTPlaymate *playmate;
-    
     PTTictactoeNewGameRequest *newGameRequest = [[PTTictactoeNewGameRequest alloc] init];
-    
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         LogInfo(@"Current user is initator. Playmate is playmate.");
         playmate = self.playdate.playmate;
@@ -539,9 +541,7 @@
          tictactoeVc.board_id = [board_id intValue];
          tictactoeVc.playmate_id = playmate.userID;
          tictactoeVc.initiator_id = [[PTUser currentUser] userID];
-         
-         appDelegate.dateViewController = self;
-         
+                  
          CGRect imageframe = CGRectMake(0,0,1024,768);
 
          UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
@@ -558,44 +558,57 @@
 }
 
 - (IBAction)playMemoryGame:(id)sender {
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    PTMemoryGameViewController *memoryGameVc = [[PTMemoryGameViewController alloc]init];
-    [appDelegate setDateViewController:self];
+    // ##start MEMORY API CALL ##
+    PTPlaymate *playmate;
+    PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     
-    CGRect imageframe = CGRectMake(0,0,1024,768);
-    UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-    splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        LogInfo(@"Current user is initator. Playmate is playmate.");
+        playmate = self.playdate.playmate;
+        
+    } else {
+        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
+        playmate = self.playdate.initiator;
+    }
+    [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
+                                 auth_token:[[PTUser currentUser] authToken]
+                               playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                               initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
+                                  theme_ID:@"19"
+                           num_total_cards:@"4"
+                                 onSuccess:^(NSDictionary *result) {
+                                     
+                                     NSLog(@"%@", result);
+                                     
+                                     //get response parameters
+                                     NSString *board_id = [result valueForKey:@"board_id"];
+//                                     NSDictionary *filenameArray = [result valueForKey:@"filename_dump"];
+                                                                         
+                                    PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
+                                     
+                            #if !(TARGET_IPHONE_SIMULATOR)
+                                    [memoryVc setChatController:self.chatController];
+                            #endif
+                                     //    [appDelegate.transitionController loadGame:memoryGameVc withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:MEMORY];3
+                                                                         
+                                    CGRect imageframe = CGRectMake(0,0,1024,768);
+                                    
+                                    UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+                                    splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                    
+                                    //bring up the view controller of the new game!
+                                     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                                    [appDelegate.transitionController loadGame:memoryVc
+                                                                   withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"%@", error);
+        NSLog(@"%@", request);
+        NSLog(@"%@", JSON);}];
     
-
-    //bring up the view controller of the new game!
-    [appDelegate.transitionController loadGame:memoryGameVc withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:MEMORY];
-    
-    //    //TODO make API call here :)
+    // ##end MEMORY API CALL ##
 }
-
-
-
-//- (IBAction)playMemoryGame:(id)sender {
-//    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-//        
-//    PTMemoryGameViewController *memoryGameVc = [[PTMemoryGameViewController alloc]initWithPlaydate:self.playdate myTurn:YES boardID:2 playmateID:19 initiatorID:18];
-//    
-//#if !(TARGET_IPHONE_SIMULATOR)
-//    [memoryGameVc setChatController:self.chatController];
-//#endif
-//    [appDelegate setDateViewController:self];
-//        
-//    CGRect imageframe = CGRectMake(0,0,1024,768);
-//    UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-//    splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-//    
-//    //bring up the view controller of the new game!
-//    [appDelegate.transitionController transitionToViewController:memoryGameVc
-//                                                     withOptions:UIViewAnimationOptionTransitionCurlUp];    
-//    
-//    //TODO make API call here :)
-//}
+     
 
 - (IBAction)playdateDisconnect:(id)sender {
     // Notify server of disconnect
@@ -814,7 +827,6 @@
         tictactoeVc.board_id = board_id;
         tictactoeVc.playmate_id = [[PTUser currentUser] userID];
         tictactoeVc.initiator_id = initiator_id;
-        appDelegate.dateViewController = self;
         
         CGRect imageframe = CGRectMake(0,0,1024,768);
 
