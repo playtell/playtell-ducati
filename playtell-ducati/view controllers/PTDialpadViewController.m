@@ -443,7 +443,7 @@
 
 - (void)loadView {
     [super loadView];
-    self.view.frame = CGRectMake(0, 0, 1024, 748);
+    self.view.frame = CGRectMake(0, 0, 1024, 768);
 
     UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
     UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];

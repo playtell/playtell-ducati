@@ -7,7 +7,7 @@
 //
 
 #import "PTMemoryGameViewController.h"
-#import "PTAppDelegate.h"pt
+#import "PTAppDelegate.h"
 #import "TransitionController.h"
 #import "PTPlaydate.h"
 

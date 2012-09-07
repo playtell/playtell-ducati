@@ -811,6 +811,46 @@ userId:(NSString *)userID
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
-                           
+
+- (void)disconnectPusherAndChat {
+    // Unsubscribe from playdate channel
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    if (self.playdate) {
+        LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
+    }
+#if !(TARGET_IPHONE_SIMULATOR)
+    [[PTVideoPhone sharedPhone] disconnect];
+#endif
+}
+
+- (void)transitionToDialpad {
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (appDelegate.dialpadController.loadingView != nil) {
+        [appDelegate.dialpadController.loadingView removeFromSuperview];
+    }
+    [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)endPlaydateHandle:(id)sender {
+    // Notify server of disconnect
+    [self disconnectPusherAndChat];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:^(NSDictionary* result)
+         {
+             // We delay moving to the dialpad because it will be checking for
+             // playdates when it appears
+             [self transitionToDialpad];
+         }
+                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+         {
+             [self transitionToDialpad];
+         }];
+    }
+}
 
 @end

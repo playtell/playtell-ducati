@@ -370,14 +370,14 @@
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
     
-    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
-    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(memoryTapped:)];
-    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
-    memoryBookView.userInteractionEnabled = YES;
-    [booksScrollView addSubview:memoryBookView];
-    xPos += booksScrollView.frame.size.width;
+//    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
+//    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
+//    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                                    action:@selector(memoryTapped:)];
+//    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
+//    memoryBookView.userInteractionEnabled = YES;
+//    [booksScrollView addSubview:memoryBookView];
+//    xPos += booksScrollView.frame.size.width;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
