@@ -16,10 +16,12 @@
     id<PTPagesScrollViewDelegate> pagesScrollDelegate;
     NSMutableDictionary *book;
     NSMutableArray *pages;
+    NSInteger totalPages;
 }
 
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> pagesScrollDelegate;
 @property (nonatomic) NSInteger currentPage;
+@property (nonatomic) NSInteger totalPages;
 
 - (void)navigateToPage:(NSInteger)page;
 - (void)setCurrentBook:(NSMutableDictionary *)bookData;
