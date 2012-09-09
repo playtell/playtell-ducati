@@ -6,9 +6,11 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
 #import "Logging.h"
 #import "PTAllFriendsRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTSoloUser.h"
 #import "PTUser.h"
 
 @interface PTConcretePlaymateFactory ()
@@ -79,8 +81,24 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
 
             PTPlaymate* playmateObject = [[PTPlaymate alloc] initWithDictionary:playmate];
             [playmateList addObject:playmateObject];
+            
+            NSURLRequest* urlRequest = [NSURLRequest requestWithURL:playmateObject.photoURL];
+            AFImageRequestOperation* reqeust;
+            reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                        success:^(UIImage *image)
+            {
+                LogTrace(@"Fetched image for %@", playmateObject.username);
+                playmateObject.userPhoto = image;
+            }];
+            [reqeust start];
+
         }
         self.playmates = playmateList;
+        
+        PTSoloUser* solo = [[PTSoloUser alloc] init];
+        NSMutableArray* playmatesAndSolo = [NSMutableArray arrayWithArray:playmateList];
+        [playmatesAndSolo insertObject:solo atIndex:0];
+        self.playmates = [NSArray arrayWithArray:playmatesAndSolo];
 
         if (success) {
             success();

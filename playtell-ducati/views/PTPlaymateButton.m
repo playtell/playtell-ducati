@@ -28,6 +28,11 @@
     UIImage* placeholder = [UIImage imageNamed:@"profile_default_2.png"];
 
     PTPlaymateButton* playmateButton = [PTPlaymateButton buttonWithType:UIButtonTypeCustom];
+    [aPlaymate addObserver:playmateButton
+                forKeyPath:@"userPhoto"
+                   options:NSKeyValueObservingOptionNew
+                   context:NULL];
+    
     [playmateButton setBackgroundImage:placeholder forState:UIControlStateNormal];
     [playmateButton setTitle:aPlaymate.username forState:UIControlStateNormal];
     playmateButton.titleLabel.font = [self playmateNameFont];
@@ -55,12 +60,15 @@
         // Set the loaded photo only if the user doesn't have a 'pending' status (aka. they haven't installed the app yet)
         if (!playmateButton.isPending) {
             [playmateButton setBackgroundImage:image forState:UIControlStateNormal];
-            playmateButton.layer.cornerRadius = 10.0;
-            playmateButton.clipsToBounds = YES;
         }
         aPlaymate.userPhoto = image;
     }];
-    [reqeust start];
+    
+    if (aPlaymate.userPhoto && !playmateButton.isPending) {
+        [playmateButton setBackgroundImage:aPlaymate.userPhoto forState:UIControlStateNormal];
+    }
+
+//    [reqeust start];
 
 //    CGRect containerFrame = CGRectMake(0, 0, 100, 30);
 //    UIView* container = [[UIView alloc] initWithFrame:containerFrame];
@@ -113,6 +121,24 @@
 
 - (void)setNormal {
     [self setEnabled:YES];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+    
+    // Allow the superclass to handle any of it's KVO updates
+    if (![keyPath isEqualToString:@"userPhoto"]) {
+        [super observeValueForKeyPath:keyPath
+                             ofObject:object
+                               change:change
+                              context:context];
+        return;
+    }
+    
+    LogDebug(@"Updated button image for: %@", self.playmate.username);
+    [self setBackgroundImage:[change valueForKey:NSKeyValueChangeNewKey] forState:UIControlStateNormal];
 }
 
 @end
