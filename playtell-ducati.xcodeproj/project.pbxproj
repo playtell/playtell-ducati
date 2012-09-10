@@ -311,6 +311,7 @@
 		8AF4D00D15C7EEA000DB665E /* PTTictactoePlacePieceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F441F5BD15F0269A00A1596A /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = F441F5BC15F0269A00A1596A /* UIView+Animation.m */; };
+		F4432EC615FE34FE0088DCAB /* PTNullPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */; };
 		F462B0F915FBCC5F0087E33F /* PTSoloUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F462B0F815FBCC5F0087E33F /* PTSoloUser.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
@@ -899,6 +900,8 @@
 		F420B7401585BA1800DCAF10 /* TransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionController.m; sourceTree = "<group>"; };
 		F441F5BB15F0269A00A1596A /* UIView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animation.h"; sourceTree = "<group>"; };
 		F441F5BC15F0269A00A1596A /* UIView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animation.m"; sourceTree = "<group>"; };
+		F4432EC415FE34FE0088DCAB /* PTNullPlaymate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNullPlaymate.h; sourceTree = "<group>"; };
+		F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNullPlaymate.m; sourceTree = "<group>"; };
 		F462B0F715FBCC5F0087E33F /* PTSoloUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSoloUser.h; sourceTree = "<group>"; };
 		F462B0F815FBCC5F0087E33F /* PTSoloUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSoloUser.m; sourceTree = "<group>"; };
 		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
@@ -3000,6 +3003,8 @@
 				F4A9D8EB1579218E0015D977 /* PTUser.m */,
 				F4688779158138190086D351 /* PTVideoPhone.h */,
 				F468877A158138190086D351 /* PTVideoPhone.m */,
+				F4432EC415FE34FE0088DCAB /* PTNullPlaymate.h */,
+				F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -3590,6 +3595,7 @@
 				8AC60EEA15F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m in Sources */,
 				8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */,
 				F462B0F915FBCC5F0087E33F /* PTSoloUser.m in Sources */,
+				F4432EC615FE34FE0088DCAB /* PTNullPlaymate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,10 +9,12 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTNullPlaymate.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
@@ -36,6 +38,7 @@
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @property (nonatomic, retain) PTDateViewController* dateController;
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
+@property (nonatomic, retain) PTChatViewController* chatController;
 @end
 
 @implementation PTDialpadViewController
@@ -48,6 +51,7 @@
 @synthesize dateController;
 @synthesize loadingView;
 @synthesize audioPlayer;
+@synthesize chatController;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -156,14 +160,17 @@
 
 - (void)drawPlaymates {
     // TODO : revist the naming of these variables...
-    NSUInteger numPlaymates = self.playmates.count + 1;
+    //
+    // The dialpad should have at least 9 buttons. If not, pad
+    // it out with null buttons.
+    NSUInteger numButtons = MAX(self.playmates.count + 1, 9);
+    NSUInteger addFriendsIndex = MAX(self.playmates.count, 5);
     
-    CGFloat margin = 70;
-    const CGFloat leftMargin = margin;
-    const CGFloat rightMargin = margin;
-    const CGFloat topMargin = 30;
+    const CGFloat leftMargin = 202;
+    const CGFloat rightMargin = 200;
+    const CGFloat topMargin = 100;
     CGFloat rowSpacing = 10;
-    const NSUInteger itemsPerRow = 4;
+    const NSUInteger itemsPerRow = 3;
     const CGSize buttonSize = CGSizeMake(201, 151);
     
     CGFloat W = 1024;
@@ -171,13 +178,13 @@
     
     // Testing...
     rowSpacing = interCellPadding;
-    NSUInteger numRows = numPlaymates/itemsPerRow + MIN(numPlaymates%itemsPerRow, 1);
-
+    NSUInteger numRows = numButtons/itemsPerRow + MIN(numButtons%itemsPerRow, 1);
+    
     NSMutableDictionary* playmatesAndButtons = [NSMutableDictionary dictionary];
     for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
         for (int cellIndex = 0; cellIndex < itemsPerRow; cellIndex++) {
             NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
-            if (playmateIndex >= numPlaymates) {
+            if (playmateIndex >= numButtons) {
                 continue;
             }
             
@@ -185,18 +192,33 @@
             CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
             
             UIButton* button;
-            if (playmateIndex == numPlaymates - 1) {
+            if (playmateIndex == addFriendsIndex) {
                 button = [UIButton buttonWithType:UIButtonTypeCustom];
                 button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
                 [button setImage:[UIImage imageNamed:@"add-family.png"] forState:UIControlStateNormal];
                 [playmatesAndButtons setObject:button
                                         forKey:@"AddUserButton"];
-            } else {
+            } else if (playmateIndex < playmates.count) {
                 PTPlaymate* currentPlaymate = [self.playmates objectAtIndex:playmateIndex];
                 button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
                 [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
                 [playmatesAndButtons setObject:button
                                         forKey:[self stringFromUInt:currentPlaymate.userID]];
+            } else if (playmateIndex >= self.playmates.count && playmateIndex < addFriendsIndex) {
+                button = [PTPlaymateButton playmateButtonWithPlaymate:[[PTNullPlaymate alloc] init]];
+                button.layer.borderWidth = 1.0f;
+                button.layer.borderColor = [UIColor colorWithRed:1.0f
+                                                           green:1.0f
+                                                            blue:1.0f
+                                                           alpha:0.7f].CGColor;
+                button.layer.shadowOpacity = 0.0f;
+                button.enabled = NO;
+            } else {
+                button = [UIButton buttonWithType:UIButtonTypeCustom];
+                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+                [button setImage:[UIImage imageNamed:@"dialpad-pending"]
+                        forState:UIControlStateNormal];
+                button.enabled = NO;
             }
             
             CGRect buttonFrame = button.frame;
@@ -242,24 +264,44 @@
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
     LOGMETHOD;
-    // Initiate playdate request
-    [self joinPlaydate];
+    [[sender superview] bringSubviewToFront:sender];
+    sender.superview.clipsToBounds = NO;
 
-    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
-                                          authToken:[[PTUser currentUser] authToken]
-                                          onSuccess:^(NSDictionary *result)
-     {
-         LogInfo(@"playdateCreateWithFriend response: %@", result);
-         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-         [self.dateController setPlaydate:aPlaydate];
-         self.dateController = nil;
-     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         LogError(@"playdateCreateWithFriend failed: %@", error);
-     }
-     ];
-    LogInfo(@"Requesting playdate...");
+    [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        CGPoint buttonCenter = sender.center;
+        buttonCenter.x += 50.0;
+        buttonCenter.y -= 20.0;
+        sender.center = buttonCenter;
+        
+        CGAffineTransform rotation = CGAffineTransformMakeRotation(3.14159f);
+        sender.transform = rotation;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            CGPoint buttonCenter = sender.center;
+            buttonCenter.x += 50.0;
+            buttonCenter.y -= 20.0;
+            sender.center = buttonCenter;
+//            sender.transform = CGAffineTransformIdentity;
+        } completion:NULL];
+    }];
+//    // Initiate playdate request
+//    [self joinPlaydate];
+//
+//    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+//    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
+//                                          authToken:[[PTUser currentUser] authToken]
+//                                          onSuccess:^(NSDictionary *result)
+//     {
+//         LogInfo(@"playdateCreateWithFriend response: %@", result);
+//         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+//                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+//         [self.dateController setPlaydate:aPlaydate];
+//         self.dateController = nil;
+//     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//         LogError(@"playdateCreateWithFriend failed: %@", error);
+//     }
+//     ];
+//    LogInfo(@"Requesting playdate...");
 }
 
 - (void)joinPlaydate {
@@ -450,16 +492,16 @@
     background.tag = 666;
     [self.view addSubview:background];
 
-    NSString* welcomeText = @"WHO WILL YOU PLAY WITH TODAY?";
+    NSString* welcomeText = @"Choose a Friend For A Playdate";
     CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
                                constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
     CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 55,
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - round(labelSize.width/2.0), 170,
                                   labelSize.width, labelSize.height);
     UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
     welcomeLabel.text = welcomeText;
     welcomeLabel.font = [self welcomeTextFont];
-    welcomeLabel.textColor = [UIColor redColor];
+    welcomeLabel.textColor = [UIColor blackColor];
     welcomeLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:welcomeLabel];
 
@@ -470,7 +512,11 @@
     [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
-
+    
+    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithPhoto:nil];
+    [self.view addSubview:aChatController.view];
+    self.chatController = aChatController;
+    
     [self drawPlaymates];
 }
 
@@ -493,7 +539,7 @@
 }
 
 - (UIFont*)welcomeTextFont {
-    return [UIFont fontWithName:@"TeluguSangamMN" size:26.0];
+    return [UIFont fontWithName:@"MarkerFelt-Thin" size:24.0];
 }
 
 - (void)viewTapped:(UIGestureRecognizer*)recognizers {

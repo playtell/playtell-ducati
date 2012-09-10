@@ -8,6 +8,7 @@
 
 #import "Logging.h"
 #import "PTChatViewController.h"
+#import "PTNullPlaymate.h"
 #import "PTUser.h"
 
 #import "PTPlaydate+InitatorChecking.h"
@@ -37,6 +38,15 @@
 //        [self setupPlaymatePlaceholderImages];
         [self setPlaymatePhoto];
         [self setCurrentUserPhoto];
+    }
+    return self;
+}
+
+- (id)initWithPhoto:(UIImage*)playmatePhoto {
+    if (self = [super init]) {
+        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+        PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
+        [self.chatView setImageForRightView:nullPlaymate.userPhoto];
     }
     return self;
 }

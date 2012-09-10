@@ -37,16 +37,21 @@
     [playmateButton setTitle:aPlaymate.username forState:UIControlStateNormal];
     playmateButton.titleLabel.font = [self playmateNameFont];
     playmateButton.layer.cornerRadius = 10.0;
-    playmateButton.clipsToBounds = YES;
+//    playmateButton.clipsToBounds = YES;
     playmateButton.isActivated = NO;
-
+    playmateButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    playmateButton.layer.borderWidth = 8.0f;
+    playmateButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    playmateButton.layer.shadowOffset = CGSizeMake(-0.5, 3.0);
+    playmateButton.layer.shadowOpacity = 0.9f;
+    
     CGRect buttonFrame = CGRectZero;
     buttonFrame.size = placeholder.size;
     playmateButton.frame = buttonFrame;
 
     CGRect buttonLabelFrame = playmateButton.titleLabel.frame;
     buttonLabelFrame.origin.y = CGRectGetHeight(playmateButton.bounds) - buttonLabelFrame.size.height - 2.0;
-    playmateButton.titleEdgeInsets = UIEdgeInsetsMake(CGRectGetHeight(playmateButton.bounds) - buttonLabelFrame.size.height - 2.0,
+    playmateButton.titleEdgeInsets = UIEdgeInsetsMake(CGRectGetHeight(playmateButton.bounds) - buttonLabelFrame.size.height - 10.0,
                                                      0,
                                                      0, 0);
     playmateButton.playmate = aPlaymate;
@@ -83,7 +88,7 @@
 }
 
 + (UIFont*)playmateNameFont {
-    return [UIFont fontWithName:@"HelveticaNeue-Bold" size:20];
+    return [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
 }
 
 - (void)setRequestingPlaydate {

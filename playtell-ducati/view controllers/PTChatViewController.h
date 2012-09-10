@@ -17,6 +17,7 @@
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
+- (id)initWithPhoto:(UIImage*)playmatePhoto;
 
 @property (nonatomic, readonly) UIView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;

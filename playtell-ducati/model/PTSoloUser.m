@@ -28,7 +28,7 @@
 }
 
 - (NSString*)username {
-    return @"Solo";
+    return @"Test Call with Solo";
 }
 
 @end

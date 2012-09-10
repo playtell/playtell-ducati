@@ -15,12 +15,13 @@
 
 @interface PTConcretePlaymateFactory ()
 @property (nonatomic, retain) NSArray* playmates;
+@property (nonatomic, retain) NSArray* robotPlaymates;
 @end
 
 static PTConcretePlaymateFactory* sharedInstance =  nil;
 
 @implementation PTConcretePlaymateFactory
-@synthesize playmates;
+@synthesize playmates, robotPlaymates=_robotPlaymates;
 
 + (PTConcretePlaymateFactory*)sharedFactory {
     if(!sharedInstance) {
@@ -67,6 +68,15 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
                             token:(NSString*)token
                           success:(void(^)(void))success
                           failure:(void(^)(NSError* error))failure {
+    
+    if (!token || [token isEqualToString:@""]) {
+        self.playmates = self.robotPlaymates;
+        if (success) {
+            success();
+        }
+        return;
+    }
+    
     PTAllFriendsRequest* request = [[PTAllFriendsRequest alloc] init];
     [request allFriendsWithUserID:ID
                         authToken:token
@@ -93,13 +103,9 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
             [reqeust start];
 
         }
-        self.playmates = playmateList;
+        NSArray* robots = [self robotPlaymates];
+        self.playmates = [robots arrayByAddingObjectsFromArray:playmateList];
         
-        PTSoloUser* solo = [[PTSoloUser alloc] init];
-        NSMutableArray* playmatesAndSolo = [NSMutableArray arrayWithArray:playmateList];
-        [playmatesAndSolo insertObject:solo atIndex:0];
-        self.playmates = [NSArray arrayWithArray:playmatesAndSolo];
-
         if (success) {
             success();
         }
@@ -109,6 +115,14 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
             failure(error);
         }
     }];
+}
+
+- (NSArray*)robotPlaymates {
+    if (!_robotPlaymates) {
+        PTSoloUser* solo = [[PTSoloUser alloc] init];
+        self.robotPlaymates = [NSArray arrayWithObject:solo];
+    }
+    return _robotPlaymates;
 }
 
 @end

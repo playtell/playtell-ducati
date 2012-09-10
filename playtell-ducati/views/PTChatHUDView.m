@@ -400,8 +400,9 @@
 
     self.rightImageView.image = anImage;
     self.rightImageView.frame = [[self class] rectForLeftView];
-    self.rightImageView.layer.borderWidth = 6.0;
-    self.rightImageView.layer.borderColor = [self photoBorderColor].CGColor;
+    self.rightImageView.layer.borderWidth = 1.0;
+    self.rightImageView.layer.cornerRadius = 10.0;
+    self.rightImageView.layer.borderColor = [UIColor darkGrayColor].CGColor;
     [self.theRightView addSubview:self.rightImageView];
 }
 
