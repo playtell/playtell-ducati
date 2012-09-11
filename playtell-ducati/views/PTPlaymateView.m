@@ -42,10 +42,7 @@
             profilePhotoImage = [UIImage imageNamed:@"profile_default_2"];
         }
         profilePhotoContainer = [[UIView alloc] initWithFrame:contentsView.bounds];
-        profilePhotoContainer.layer.shadowColor = [UIColor blackColor].CGColor;
-        profilePhotoContainer.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-        profilePhotoContainer.layer.shadowOpacity = 0.6f;
-        profilePhotoContainer.layer.shadowRadius = 2.0f;
+        profilePhotoContainer.layer.cornerRadius = 10.0f;
         
         profilePhotoView = [[UIImageView alloc] initWithImage:profilePhotoImage];
         profilePhotoView.frame = contentsView.bounds;
@@ -56,7 +53,7 @@
         
         [profilePhotoContainer addSubview:profilePhotoView];
         [contentsView addSubview:profilePhotoContainer];
-        //[self loadProfilePhoto];
+        [self loadProfilePhoto];
         
         // Add tap capability to photo
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoViewDidTap:)];
@@ -66,7 +63,7 @@
         // Init the name label
         lblName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 122.0f, self.bounds.size.width-20.0f, 18.0f)];
         lblName.backgroundColor = [UIColor clearColor];
-        lblName.text = playmate.username;//[NSString stringWithFormat:@"%@ (%@)", playmate.username, playmate.friendshipStatus];
+        lblName.text = playmate.username;
         lblName.textColor = [UIColor whiteColor];
         lblName.textAlignment = UITextAlignmentCenter;
         lblName.font = [UIFont boldSystemFontOfSize:15.0f];

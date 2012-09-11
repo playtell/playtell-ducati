@@ -24,24 +24,23 @@
         tableWidth = width;
         
         // Avatar
-        avatar = [[AsyncImageView alloc] initWithFrame:CGRectMake(0.0f, 19.0f, 100.0f, 75.0f)];
-        avatar.backgroundColor = [UIColor redColor];
+        avatar = [[AsyncImageView alloc] initWithFrame:CGRectMake(-14.0f, 19.0f, 100.0f, 75.0f)];
         [self.contentView addSubview:avatar];
         
         // Lbls
-        lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(112.0f, 25.0f, tableWidth - 209.0f, 21.0f)];
+        lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(84.0f, 25.0f, tableWidth - 181.0f, 21.0f)];
         lblTitle.backgroundColor = [UIColor clearColor];
         lblTitle.font = [UIFont boldSystemFontOfSize:20.0f];
         lblTitle.textColor = [UIColor colorFromHex:@"#636363"];
         [self.contentView addSubview:lblTitle];
         
-        lblTitle2 = [[UILabel alloc] initWithFrame:CGRectMake(112.0f, 48.0f, tableWidth - 209.0f, 21.0f)];
+        lblTitle2 = [[UILabel alloc] initWithFrame:CGRectMake(84.0f, 48.0f, tableWidth - 181.0f, 21.0f)];
         lblTitle2.backgroundColor = [UIColor clearColor];
         lblTitle2.font = [UIFont boldSystemFontOfSize:20.0f];
         lblTitle2.textColor = [UIColor colorFromHex:@"#636363"];
         [self.contentView addSubview:lblTitle2];
         
-        lblDetail = [[UILabel alloc] initWithFrame:CGRectMake(112.0f, 71.0f, tableWidth - 209.0f, 19.0f)];
+        lblDetail = [[UILabel alloc] initWithFrame:CGRectMake(84.0f, 71.0f, tableWidth - 181.0f, 19.0f)];
         lblDetail.backgroundColor = [UIColor clearColor];
         lblDetail.font = [UIFont systemFontOfSize:16.0f];
         lblDetail.textColor = [UIColor colorFromHex:@"#636363"];

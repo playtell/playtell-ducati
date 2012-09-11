@@ -462,8 +462,9 @@
                 [cell setMode:PTContactsTableBigCellModeUninvite];
             }
         } else { // Existing PT user
-            BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-            if (isFriend) { // Already a friend
+            BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
+            BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
+            if (isConfirmedFriend || isPendingFriend) { // Already a friend (confirmed or pending)
                 [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
             } else { // Not a friend
                 [cell setMode:PTContactsTableBigCellModeFriend];
@@ -485,9 +486,10 @@
         // Define cell
         cell.delegate = self;
         cell.contact = contact;
-        
-        BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-        if (isFriend) { // Already a friend
+
+        BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
+        BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
+        if (isConfirmedFriend || isPendingFriend) { // Already a friend
             [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
         } else { // Not a friend
             [cell setMode:PTContactsTableBigCellModeFriend];
@@ -586,8 +588,8 @@
                                                success:nil
                                                failure:nil];
     
-    // Mark as friend locally
-    [contact setObject:[NSNumber numberWithBool:YES] forKey:@"is_friend"];
+    // Mark as pending friend locally
+    [contact setObject:[NSNumber numberWithBool:YES] forKey:@"is_pending_friend"];
     
     // Announce action
     NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionFriended], @"action", nil];

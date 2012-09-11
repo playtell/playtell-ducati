@@ -101,7 +101,14 @@
         case PTContactsTableBigCellModeAlreadyFriend: {
             [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteNormal"] forState:UIControlStateNormal];
             [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteHighlighted"] forState:UIControlStateHighlighted];
-            [buttonAction setTitle:@"Friend" forState:UIControlStateNormal];
+            // Are we pending friends or confirmed friends?
+            BOOL isConfirmedFriend = [[self.contact objectForKey:@"is_confirmed_friend"] boolValue];
+            BOOL isPendingFriend = [[self.contact objectForKey:@"is_pending_friend"] boolValue];
+            if (isConfirmedFriend == YES) {
+                [buttonAction setTitle:@"Friends" forState:UIControlStateNormal];
+            } else if (isPendingFriend == YES) {
+                [buttonAction setTitle:@"Pending" forState:UIControlStateNormal];
+            }
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
             buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
             buttonAction.frame = CGRectMake((tableWidth - 82.0f), 40.0f, 82.0f, 33.0f);
@@ -134,9 +141,9 @@
         lblDetail.text = [contact objectForKey:@"email"];
         [buttonAction setEnabled:YES];
     } else {
-        BOOL isFriend = [[contact objectForKey:@"is_friend"] boolValue];
-        //lblDetail.text = [NSString stringWithFormat:@"Existing user! (%i)", [[contact objectForKey:@"user_id"] integerValue]];
-        if (isFriend) {
+        BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
+        BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
+        if (isConfirmedFriend || isPendingFriend) {
             [buttonAction setEnabled:NO];
         } else {
             [buttonAction setEnabled:YES];

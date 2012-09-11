@@ -139,14 +139,9 @@
 }
 
 - (void)cancelContactImport:(id)sender {
-    if (isKeyboardShown) { // Is keyboard shown, hide it
-        [textName resignFirstResponder];
-        [textEmail resignFirstResponder];
-    } else { // If not, go back to dialpad
-        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
-                                                         withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-    }
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)keyboardWillShow {
