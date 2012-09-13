@@ -20,7 +20,9 @@
     [self placeOnBoard];
 }
 
-- (void) flip{ }
+- (void) flip{
+
+}
 
 - (void) enlarge{ }
 

@@ -64,9 +64,9 @@
 #endif
     
     [self setupPushNotifications:launchOptions];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [PTVideoPhone sharedPhone];
-//#endif
+#endif
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {

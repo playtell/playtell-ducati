@@ -117,10 +117,10 @@
     
     PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
     [tictactoeVc setPlaydate:self.playdate];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [tictactoeVc setChatController:self.chatController];
     [self.view addSubview:self.chatController.view];
-//#endif
+#endif
     tictactoeVc.board_id = boardId;
     if (isMyTurn) {
         tictactoeVc.initiator_id = initiatorId;
@@ -484,7 +484,7 @@
     NSURL *win = [[NSBundle mainBundle] URLForResource:@"winner-applause" withExtension:@"wav"];
     NSURL *loss = [[NSBundle mainBundle] URLForResource:@"winner-gong" withExtension:@"aiff"];
     NSURL *xWrite = [[NSBundle mainBundle] URLForResource:@"X-Pen" withExtension:@"wav"];
-    NSURL *oWrite = [[NSBundle mainBundle] URLForResource:@"O-Pen" withExtension:@"wav"];
+    NSURL *oWrite = [[NSBundle mainBundle] URLForResource:@"O-Pen" withExtension:@"mp3"];
     NSURL *miss = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
     NSURL *strikeout = [[NSBundle mainBundle] URLForResource:@"sword-hit" withExtension:@"wav"];
 
@@ -537,9 +537,9 @@
     board.image = [UIImage imageNamed:@"game-board-you.png"]; //init with normal board, flip once everything else initialized
     [self.view addSubview:board];
     
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [self.view addSubview:self.chatController.view];
-//#endif
+#endif
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];
 }
@@ -819,9 +819,9 @@ userId:(NSString *)userID
         LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
         [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     }
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [[PTVideoPhone sharedPhone] disconnect];
-//#endif
+#endif
 }
 
 - (void)transitionToDialpad {

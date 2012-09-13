@@ -68,10 +68,10 @@
 
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
-//#endif
+#endif
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -141,7 +141,7 @@
 
 - (void)setPlaymatePhoto {
     // Pick out the other user
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     if (self.playdate) {
         PTPlaymate* otherUser;
         if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
@@ -157,7 +157,7 @@
         [self.chatView setLoadingImageForLeftView:[self placeholderImage]
                                       loadingText:@""];
     }
-//#endif
+#endif
 }
 
 - (UIImage*)placeholderImage {
@@ -370,14 +370,14 @@
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
     
-//    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
-//    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-//    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                                                                    action:@selector(memoryTapped:)];
-//    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
-//    memoryBookView.userInteractionEnabled = YES;
-//    [booksScrollView addSubview:memoryBookView];
-//    xPos += booksScrollView.frame.size.width;
+    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
+    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
+    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(memoryTapped:)];
+    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
+    memoryBookView.userInteractionEnabled = YES;
+    [booksScrollView addSubview:memoryBookView];
+    xPos += booksScrollView.frame.size.width;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
@@ -410,11 +410,11 @@
     [super viewWillAppear:animated];
 
     // If the chat controller has been created, go ahead an add it
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     if (self.chatController) {
         [self.view addSubview:self.chatController.view];
     }
-//#endif
+#endif
     
     // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
     // notifications at the time of backgrounding.
@@ -433,9 +433,9 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [self removePlaymateFromChatHUD];
-//#endif
+#endif
 }
 
 - (void)removePlaymateFromChatHUD {
@@ -480,10 +480,10 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [self setCurrentUserPhoto];
     [self setPlaymatePhoto];
-//#endif
+#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -498,9 +498,9 @@
         LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
         [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     }
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [[PTVideoPhone sharedPhone] disconnect];
-//#endif
+#endif
 }
 
 - (void)transitionToDialpad {
@@ -537,9 +537,9 @@
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                   
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
          [tictactoeVc setChatController:self.chatController];
-//#endif
+#endif
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -591,9 +591,9 @@
                                                                          
                                     PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
                                      
-//                            #if !(TARGET_IPHONE_SIMULATOR)
+                            #if !(TARGET_IPHONE_SIMULATOR)
                                     [memoryVc setChatController:self.chatController];
-//                            #endif
+                            #endif
                                      //    [appDelegate.transitionController loadGame:memoryGameVc withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:MEMORY];3
                                                                          
                                     CGRect imageframe = CGRectMake(0,0,1024,768);
@@ -656,10 +656,10 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [self.chatView removeFromSuperview];
     self.chatView = nil;
-//#endif
+#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -835,9 +835,9 @@
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
         [tictactoeVc setChatController:self.chatController];
-//#endif
+#endif
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:NO];
         tictactoeVc.board_id = board_id;
