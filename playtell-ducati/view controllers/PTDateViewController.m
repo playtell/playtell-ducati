@@ -370,7 +370,7 @@
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
     
-    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
+    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
     memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
     UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(memoryTapped:)];
