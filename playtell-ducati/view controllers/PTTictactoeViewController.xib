@@ -42,14 +42,13 @@
 						<int key="NSvFlags">311</int>
 						<string key="NSFrameSize">{1029, 773}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="768623729"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">background.png</string>
+							<string key="NSResourceName">tictactoe-background.png</string>
 						</object>
 					</object>
 					<object class="IBUIImageView" id="640151437">
@@ -57,7 +56,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{136, 217}, {797, 521}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="955268505"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -72,7 +70,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{-55, -22}, {94, 21}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="591341646"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -103,7 +100,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{617, 393}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="30169972"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -143,7 +139,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{617, 580}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -167,7 +162,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{225, 580}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="933696262"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -191,7 +185,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{225, 393}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="251433777"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -215,7 +208,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{225, 205}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="895141992"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -238,7 +230,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{617, 205}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="259809323"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -262,7 +253,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{421, 205}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="610032075"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -286,7 +276,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{421, 393}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="747569591"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -310,7 +299,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{421, 580}, {185, 175}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="229122959"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -334,7 +322,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 20}, {48, 48}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="23713229"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -366,7 +353,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{960, 20}, {44, 44}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="640151437"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -397,7 +383,6 @@
 				</array>
 				<string key="NSFrameSize">{1024, 768}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="205458883"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -766,111 +751,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">159</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">PTTictactoeViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="endGame:">id</string>
-						<string key="endPlaydateHandle:">id</string>
-						<string key="placePiece:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="endGame:">
-							<string key="name">endGame:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="endPlaydateHandle:">
-							<string key="name">endPlaydateHandle:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="placePiece:">
-							<string key="name">placePiece:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="blackScreen">UIView</string>
-						<string key="closeTictactoe">UIButton</string>
-						<string key="endPlaydate">UIButton</string>
-						<string key="endPlaydateForreal">UIButton</string>
-						<string key="endPlaydatePopup">UIView</string>
-						<string key="space00">UIButton</string>
-						<string key="space01">UIButton</string>
-						<string key="space02">UIButton</string>
-						<string key="space10">UIButton</string>
-						<string key="space11">UIButton</string>
-						<string key="space12">UIButton</string>
-						<string key="space20">UIButton</string>
-						<string key="space21">UIButton</string>
-						<string key="space22">UIButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="blackScreen">
-							<string key="name">blackScreen</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="closeTictactoe">
-							<string key="name">closeTictactoe</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="endPlaydate">
-							<string key="name">endPlaydate</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="endPlaydateForreal">
-							<string key="name">endPlaydateForreal</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="endPlaydatePopup">
-							<string key="name">endPlaydatePopup</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space00">
-							<string key="name">space00</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space01">
-							<string key="name">space01</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space02">
-							<string key="name">space02</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space10">
-							<string key="name">space10</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space11">
-							<string key="name">space11</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space12">
-							<string key="name">space12</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space20">
-							<string key="name">space20</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space21">
-							<string key="name">space21</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="space22">
-							<string key="name">space22</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/PTTictactoeViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
@@ -880,13 +761,13 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="background.png">{1027, 771}</string>
 			<string key="close-press-animate.png">{45, 45}</string>
 			<string key="close-press.png">{45, 45}</string>
 			<string key="close.png">{46, 48}</string>
 			<string key="endCallButton.png">{48, 48}</string>
 			<string key="grid-press.png">{185, 175}</string>
 			<string key="shadow.png">{750, 666}</string>
+			<string key="tictactoe-background.png">{1027, 771}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1498</string>
 	</data>
