@@ -18,5 +18,6 @@
 @property (nonatomic, readwrite) NSURL* photoURL;
 @property (nonatomic, assign) NSUInteger userID;
 @property (nonatomic, retain) UIImage* userPhoto;
+@property (nonatomic, readonly) BOOL isARobot;
 
 @end

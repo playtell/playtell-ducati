@@ -12,6 +12,7 @@
 
 @protocol PTLoginViewControllerDelegate <NSObject>
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller;
+- (void)createNewAccount:(PTLoginViewController*)controller;
 @end
 
 @interface PTLoginViewController : UIViewController <UITextFieldDelegate>
@@ -35,6 +36,7 @@
 @property (nonatomic) id<PTLoginViewControllerDelegate> delegate;
 
 - (IBAction)doneButtonPressed:(id)sender;
+- (IBAction)createAccount:(id)sender;
 - (IBAction)testShowErrors:(id)sender;
 
 @end

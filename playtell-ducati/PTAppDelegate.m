@@ -64,9 +64,7 @@
 #endif
     
     [self setupPushNotifications:launchOptions];
-//#if !(TARGET_IPHONE_SIMULATOR)
     [PTVideoPhone sharedPhone];
-//#endif
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
@@ -119,6 +117,22 @@
      }];
 }
 
+- (void)runNewUserWorkflow {
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:0
+                                         token:nil
+                                       success:^
+     {
+         self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+         self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         [self.transitionController transitionToViewController:self.dialpadController
+                                                   withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         NSAssert(NO, @"Failed to load playmates");
+     }];
+}
+
 - (void)setupPushNotifications:(NSDictionary*)theLaunchOptions {
     [self registerForAPNS];
     [self registerForUrbanAirshipNotifications:theLaunchOptions];
@@ -140,6 +154,11 @@
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Transition to the Dialpad
     [self runLoggedInWorkflow];
+}
+
+- (void)createNewAccount:(PTLoginViewController*)controller {
+    // Run the new user workflow
+    [self runNewUserWorkflow];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

@@ -42,27 +42,37 @@
     return self;
 }
 
-- (id)initWithPhoto:(UIImage*)playmatePhoto {
+- (id)initWithNullPlaymate {
     if (self = [super init]) {
         self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
         PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
         [self.chatView setImageForRightView:nullPlaymate.userPhoto];
+        [self connectToOpenTokSession];
     }
     return self;
 }
 
 - (void)connectToOpenTokSession {
-    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
-        LogDebug(@"Session connected");
-    }];
-    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber* subscriber) {
-        LogDebug(@"Subscriber connected");
-        [self.chatView setLeftView:subscriber.view];
-    }];
+    NSString *myToken, *mySession;
+    if ([[PTUser currentUser] isLoggedIn]) {
+        [[PTVideoPhone sharedPhone] setSessionConnectedBlock:^(OTStream *subscriberStream, OTSession *session, BOOL isSelf) {
+            LogDebug(@"Session connected");
+        }];
+        [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber* subscriber) {
+            LogDebug(@"Subscriber connected");
+            [self.chatView setLeftView:subscriber.view];
+        }];
+
+        myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
+        self.playdate.initiatorTokboxToken : self.playdate.playmateTokboxToken;
+        
+        mySession = self.playdate.tokboxSessionID;
+    } else {
+        myToken = @"T1==cGFydG5lcl9pZD0zMzUzMTImc2lnPTkyYTY5YWU0OWFhMTZkYzEzNjMyNDY3Y2VjODc5ZWYwNjM0NDYxM2U6c2Vzc2lvbl9pZD0yX01YNHpNelV6TVRKLWZrMXZiaUJUWlhBZ01UY2dNVEk2TkRFNk5EZ2dVRVJVSURJd01USi1NQzQxT1RFeU5USi0mY3JlYXRlX3RpbWU9MTM0NzkxMTA4OSZleHBpcmVfdGltZT0xMzQ3OTk3NDg5JnJvbGU9cHVibGlzaGVyJmNvbm5lY3Rpb25fZGF0YT0mbm9uY2U9ODEyOTE=";
+        mySession = @"2_MX4zMzUzMTJ-fk1vbiBTZXAgMTcgMTI6NDE6NDggUERUIDIwMTJ-MC41OTEyNTJ-";
+    }
     
-    NSString* myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
-    self.playdate.initiatorTokboxToken : self.playdate.playmateTokboxToken;
-    [[PTVideoPhone sharedPhone] connectToSession:self.playdate.tokboxSessionID
+    [[PTVideoPhone sharedPhone] connectToSession:mySession
                                        withToken:myToken
                                          success:^(OTPublisher* publisher)
     {
@@ -86,6 +96,37 @@
 }
 
 - (void)setPlaymatePhoto {
+    if (![[PTUser currentUser] isLoggedIn]) {
+        CGRect dummyFrame = CGRectMake(0, 0, 200, 150);
+        UIView *dummyBackground = [[UIView alloc] initWithFrame:dummyFrame];
+        dummyBackground.backgroundColor = [UIColor colorWithRed:0.0f
+                                                          green:0.0f
+                                                           blue:0.0f
+                                                          alpha:0.2f];
+        dummyBackground.layer.cornerRadius = 10.0;
+        dummyBackground.layer.borderColor = [UIColor whiteColor].CGColor;
+        dummyBackground.layer.borderWidth = 6.0;
+        
+        CGSize maxTextSize = CGSizeMake(200.0, CGFLOAT_MAX);
+        NSString* playmateText = NSLocalizedString(@"Playmate",
+                                                   @"Playmate placeholder string displayed in chat HUD.");
+        UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold"
+                                           size:18.0f];
+        CGSize textSize = [playmateText sizeWithFont:textFont
+                                   constrainedToSize:maxTextSize];
+        CGRect textFrame = CGRectMake(roundf(CGRectGetMidX(dummyFrame)) - roundf(textSize.width/2.0),
+                                     CGRectGetMaxY(dummyFrame) - 6.0 - textSize.height - 5.0,
+                                     textSize.width,
+                                     textSize.height);
+        UILabel *textLabel = [[UILabel alloc] initWithFrame:textFrame];
+        textLabel.backgroundColor = [UIColor clearColor];
+        textLabel.font = textFont;
+        textLabel.text = playmateText;
+        [dummyBackground addSubview:textLabel];
+        [self.chatView setLeftView:dummyBackground];
+        return;
+    }
+    
     // Pick out the other user
     if (self.playdate) {
         PTPlaymate* otherUser;

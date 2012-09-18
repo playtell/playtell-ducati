@@ -23,6 +23,7 @@
 #import "PTUser.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTSoloUser.h"
 
 //HTTP POST
 #import "AFNetworking.h"
@@ -52,6 +53,7 @@
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
 @property (nonatomic, strong) PTChatViewController* chatController;
+@property (nonatomic, strong) PTPlaymate* playmate;
 @end
 
 @implementation PTDateViewController
@@ -61,6 +63,18 @@
 @synthesize myPublisher;
 @synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup, button2;
 @synthesize chatController;
+@synthesize playmate;
+
+- (id)initWithPlaymate:(PTPlaymate*)aPlaymate
+    chatViewController:(PTChatViewController*)aChatController {
+    self = [super initWithNibName:@"PTDateViewController"
+                           bundle:nil];
+    if (self) {
+        [[self view] addSubview:aChatController.view];
+        self.playmate = aPlaymate;
+    }
+    return self;
+}
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
@@ -422,7 +436,14 @@
                                              selector:@selector(dateControllerDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
-    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTDialpadLoadedNotification"
+                                                        object:self];
+}
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
     
@@ -513,20 +534,20 @@
 }
 
 - (IBAction)playTictactoe:(id)sender {
-    PTPlaymate *playmate;
+    PTPlaymate *aPlaymate;
     PTTictactoeNewGameRequest *newGameRequest = [[PTTictactoeNewGameRequest alloc] init];
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         LogInfo(@"Current user is initator. Playmate is playmate.");
-        playmate = self.playdate.playmate;
+        aPlaymate = self.playdate.playmate;
         
     } else {
         LogInfo(@"Current user is NOT initiator. Playmate is initiator");
-        playmate = self.playdate.initiator;
+        aPlaymate = self.playdate.initiator;
     }
     
     [newGameRequest newBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                 authToken:[[PTUser currentUser] authToken]
-                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                                playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
                                 initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                  onSuccess:^(NSDictionary *result)
      {
@@ -543,7 +564,7 @@
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
-         tictactoeVc.playmate_id = playmate.userID;
+         tictactoeVc.playmate_id = aPlaymate.userID;
          tictactoeVc.initiator_id = [[PTUser currentUser] userID];
                   
          CGRect imageframe = CGRectMake(0,0,1024,768);
@@ -564,20 +585,20 @@
 - (IBAction)playMemoryGame:(id)sender {
     
     // ##start MEMORY API CALL ##
-    PTPlaymate *playmate;
+    PTPlaymate *aPlaymate;
     PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         LogInfo(@"Current user is initator. Playmate is playmate.");
-        playmate = self.playdate.playmate;
+        aPlaymate = self.playdate.playmate;
         
     } else {
         LogInfo(@"Current user is NOT initiator. Playmate is initiator");
-        playmate = self.playdate.initiator;
+        aPlaymate = self.playdate.initiator;
     }
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
                                  auth_token:[[PTUser currentUser] authToken]
-                               playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                               playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
                                initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                   theme_ID:@"19"
                            num_total_cards:@"4"
@@ -589,7 +610,7 @@
                                      NSString *board_id = [result valueForKey:@"board_id"];
 //                                     NSDictionary *filenameArray = [result valueForKey:@"filename_dump"];
                                                                          
-                                    PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
+                                    PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:aPlaymate.userID initiatorID:[[PTUser currentUser] userID]];
                                      
 //                            #if !(TARGET_IPHONE_SIMULATOR)
                                     [memoryVc setChatController:self.chatController];
@@ -635,6 +656,9 @@
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
+    if ([self.playmate isARobot]) {
+        [self transitionToDialpad];
+    }
     // Notify server of disconnect
     [self disconnectPusherAndChat];
     if (self.playdate) {

@@ -84,6 +84,12 @@ typedef void (^PTLoginFailureBlock) (NSError *);
 @synthesize nicknameError, emailError, firstPasswordError, secondPasswordError;
 @synthesize delegate;
 
+- (IBAction)createAccount:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(createNewAccount:)]) {
+        [self.delegate createNewAccount:self];
+    }
+}
+
 - (IBAction)doneButtonPressed:(id)sender {
     BOOL errorOcurred = NO;
     [self resetErrorIndicators];

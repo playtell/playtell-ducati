@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "PTDateViewController.h"
 #import "PTPlaymate.h"
 
 @interface PTSoloUser : PTPlaymate
+
+@property (nonatomic, retain) PTDateViewController* dateController;
 
 @end

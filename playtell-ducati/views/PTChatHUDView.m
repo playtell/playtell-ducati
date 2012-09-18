@@ -94,7 +94,7 @@
                                                                cornerRadii:CGSizeMake(6.0, 6.0)];
         CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
         shapeLayer.path = cornerPath.CGPath;
-        innerView.layer.mask = shapeLayer;
+//        innerView.layer.mask = shapeLayer;
         innerView.layer.masksToBounds = YES;
         [self addSubview:innerView];
 
@@ -431,14 +431,10 @@
     aView.frame = viewFrame;
     self.rightVideoView = aView;
     [aView removeAllGestureRecognizers];
+    aView.layer.cornerRadius = 6.0;
+    aView.clipsToBounds = YES;
 
-    UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
-                                                     byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight
-                                                           cornerRadii:CGSizeMake(6.0, 6.0)];
-    CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
-    shapeLayer.path = cornerPath.CGPath;
     [self.theRightView removeFromSuperview];
-    //self.theRightView.layer.mask = shapeLayer;
 
     [self.rightImageView removeFromSuperview];
     [self.theRightView addSubview:aView];

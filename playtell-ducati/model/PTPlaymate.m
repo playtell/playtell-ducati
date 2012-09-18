@@ -15,6 +15,10 @@
 @synthesize photoURL;
 @synthesize userPhoto;
 
+- (BOOL)isARobot {
+    return NO;
+}
+
 // TODO: Need to route this through the dictionary initializer
 - (id)initWithEmail:(NSString*)anEmail username:(NSString*)aName userID:(NSUInteger)aUserID {
     if (self = [super init]) {

@@ -17,13 +17,15 @@
 #import "PTNullPlaymate.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
+#import "PTPlaydateDetailsRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
+#import "PTSoloUser.h"
 #import "PTUser.h"
-#import "TransitionController.h"
-#import "PTPlaydateDetailsRequest.h"
 #import "PTUsersGetStatusRequest.h"
+#import "TransitionController.h"
+
 #import "UIView+PlayTell.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -55,7 +57,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    if ([[PTUser currentUser] isLoggedIn]) {
+        [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    }
     
     UIView* background = [self.view viewWithTag:666];
     CGRect backgroundFrame = self.view.frame;
@@ -239,69 +243,75 @@
             [ids addObject:key];
         }
     }
-    PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
-    [usersGetStatusRequest usersGetStatusForUserIds:ids
-                                          authToken:[[PTUser currentUser] authToken]
-                                            success:^(NSDictionary *result) {
-                                                NSArray *statuses = [result objectForKey:@"status"];
-                                                for (NSDictionary *userStatus in statuses) {
-                                                    NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
-                                                    NSString *user_status = [userStatus objectForKey:@"status"];
-                                                    PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
-                                                    if (button == nil) {
-                                                        return;
-                                                    }
-                                                    if ([user_status isEqualToString:@"pending"]) {
-                                                        [button setPending];
-                                                    } else if ([user_status isEqualToString:@"playdate"]) {
-                                                        [button setPlaydating];
+    if ([[PTUser currentUser] isLoggedIn]) {
+        PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
+        [usersGetStatusRequest usersGetStatusForUserIds:ids
+                                              authToken:[[PTUser currentUser] authToken]
+                                                success:^(NSDictionary *result) {
+                                                    NSArray *statuses = [result objectForKey:@"status"];
+                                                    for (NSDictionary *userStatus in statuses) {
+                                                        NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
+                                                        NSString *user_status = [userStatus objectForKey:@"status"];
+                                                        PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
+                                                        if (button == nil) {
+                                                            return;
+                                                        }
+                                                        if ([user_status isEqualToString:@"pending"]) {
+                                                            [button setPending];
+                                                        } else if ([user_status isEqualToString:@"playdate"]) {
+                                                            [button setPlaydating];
+                                                        }
                                                     }
                                                 }
-                                            }
-                                            failure:nil
-     ];
+                                                failure:nil];
+    }
 }
 
 - (void)playmateClicked:(PTPlaymateButton*)sender {
-    LOGMETHOD;
-    [[sender superview] bringSubviewToFront:sender];
-    sender.superview.clipsToBounds = NO;
+    // Initiate playdate request
+    // TODO This check needs to go away at some point...
+    [self initiatePlaydateWithPlaymate:sender.playmate];
 
-    [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        CGPoint buttonCenter = sender.center;
-        buttonCenter.x += 50.0;
-        buttonCenter.y -= 20.0;
-        sender.center = buttonCenter;
-        
-        CGAffineTransform rotation = CGAffineTransformMakeRotation(3.14159f);
-        sender.transform = rotation;
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:1.0 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            CGPoint buttonCenter = sender.center;
-            buttonCenter.x += 50.0;
-            buttonCenter.y -= 20.0;
-            sender.center = buttonCenter;
-//            sender.transform = CGAffineTransformIdentity;
-        } completion:NULL];
-    }];
-//    // Initiate playdate request
-//    [self joinPlaydate];
+    // If the user is logged in and the
+    if ([[PTUser currentUser] isLoggedIn] && ![sender.playmate isARobot]) {
+        PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+        [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
+                                              authToken:[[PTUser currentUser] authToken]
+                                              onSuccess:^(NSDictionary *result)
+         {
+             LogInfo(@"playdateCreateWithFriend response: %@", result);
+             PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                            playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+             [self.dateController setPlaydate:aPlaydate];
+             self.dateController = nil;
+         } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+             LogError(@"playdateCreateWithFriend failed: %@", error);
+         }];
+        LogInfo(@"Requesting playdate...");
+    }
+}
+
 //
-//    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-//    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
-//                                          authToken:[[PTUser currentUser] authToken]
-//                                          onSuccess:^(NSDictionary *result)
-//     {
-//         LogInfo(@"playdateCreateWithFriend response: %@", result);
-//         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-//                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-//         [self.dateController setPlaydate:aPlaydate];
-//         self.dateController = nil;
-//     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-//         LogError(@"playdateCreateWithFriend failed: %@", error);
-//     }
-//     ];
-//    LogInfo(@"Requesting playdate...");
+// Intended to be called only from playmateClicked:
+//
+- (void)initiatePlaydateWithPlaymate:(PTPlaymate*)aPlaymate {
+    if ([aPlaymate isARobot]) {
+        PTSoloUser* robot = (PTSoloUser*)aPlaymate;
+        self.dateController = [[PTDateViewController alloc] initWithPlaymate:aPlaymate
+                                                          chatViewController:self.chatController];
+        robot.dateController = self.dateController;
+    } else {
+        self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                     bundle:nil];
+    }
+    
+    if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    }
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:self.dateController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)joinPlaydate {
@@ -313,8 +323,10 @@
 
     self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
                                                                  bundle:nil];
+    
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    [appDelegate.transitionController transitionToViewController:self.dateController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 
     if (self.requestedPlaydate) {
         [self.dateController setPlaydate:self.requestedPlaydate];
@@ -513,7 +525,7 @@
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
     
-    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithPhoto:nil];
+    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithNullPlaymate];
     [self.view addSubview:aChatController.view];
     self.chatController = aChatController;
     

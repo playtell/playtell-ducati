@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTChatViewController.h"
 #import "PTPageView.h"
 #import "PTBookView.h"
 #import "PTBooksScrollView.h"
 #import "PTBooksParentView.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
+#import "PTPlaymate.h"
 
 @interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     // Playdate
@@ -55,6 +57,10 @@
 @property (nonatomic, retain) IBOutlet UIButton *button2;
 
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
+
+- (id)initWithPlaymate:(PTPlaymate*)aPlaymate
+    chatViewController:(PTChatViewController*)chatController;
+
 - (IBAction)playdateDisconnect:(id)sender;
 - (IBAction)playTictactoe:(id)sender;
 
