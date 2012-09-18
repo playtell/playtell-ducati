@@ -21,6 +21,9 @@
 #import "UAirship.h"
 #import "UAPush.h"
 
+#import "TransitionController.h"
+#import "PTNewUserNavigationController.h"
+
 typedef void (^PTLoginSuccessBlock) (NSDictionary*);
 typedef void (^PTLoginFailureBlock) (NSError *);
 
@@ -317,6 +320,17 @@ typedef void (^PTLoginFailureBlock) (NSError *);
     self.passwordField.textColor = UIColorFromRGB(0x397684);
     self.confirmPasswordField.textColor = UIColorFromRGB(0x397684);
     self.errorTextLabel.textColor = UIColorFromRGB(0x88331C);
+    
+    UIButton *signUpButton = (UIButton *)[self.view viewWithTag:100];
+    [signUpButton addTarget:self action:@selector(signUpDidPress:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)signUpDidPress:(id)sender {
+    PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:newUserNavigationController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)resetFontColors {

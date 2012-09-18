@@ -25,6 +25,7 @@
 #import "TransitionController.h"
 #import "UAPush.h"
 #import "UAirship.h"
+#import "PTNewUserNavigationController.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -42,6 +43,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone]; //set status bar hidden
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -62,18 +64,21 @@
                      andSecret:@"0mjxkxof9n45k3tzgzqylapf1c62naep"];
 #endif
     
-    [self setupPushNotifications:launchOptions];
     [PTVideoPhone sharedPhone];
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
+        // Register for push noticication only if logged in
+        [self setupPushNotifications:launchOptions];
+
         PTLoadingViewController* loadingView = [[PTLoadingViewController alloc] initWithNibName:@"PTLoadingViewController" bundle:nil];
         transitionController = [[TransitionController alloc] initWithViewController:loadingView];
         [self runLoggedInWorkflow];
     } else {
-        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-        loginController.delegate = self;
-        transitionController = [[TransitionController alloc] initWithViewController:loginController];
+//        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
+//        loginController.delegate = self;
+        PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+        transitionController = [[TransitionController alloc] initWithViewController:newUserNavigationController];
     }
     self.transitionController = transitionController;
     self.window.rootViewController = self.transitionController;
@@ -165,6 +170,14 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Updates the device token and registers the token with UA
     [[UAirship shared] registerDeviceToken:deviceToken];
+    
+    // Notify of successfull push notification registration request
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    // Notify of failed push notification registration request
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidFail" object:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -175,5 +188,9 @@
         [self.dialpadController loadPlaydateDataFromPushNotification];
     }
 }
+
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+//    return [FBSession.activeSession handleOpenURL:url];
+//}
 
 @end
