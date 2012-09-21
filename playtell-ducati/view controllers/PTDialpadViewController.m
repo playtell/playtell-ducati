@@ -101,6 +101,8 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
+
+    [self.view addSubview:self.chatController.view];
 }
 
 - (void)loadPlaydateDataFromPushNotification {
@@ -297,6 +299,7 @@
 - (void)initiatePlaydateWithPlaymate:(PTPlaymate*)aPlaymate {
     if ([aPlaymate isARobot]) {
         PTSoloUser* robot = (PTSoloUser*)aPlaymate;
+        [robot resetScriptState];
         self.dateController = [[PTDateViewController alloc] initWithPlaymate:aPlaymate
                                                           chatViewController:self.chatController];
         robot.dateController = self.dateController;
@@ -526,7 +529,6 @@
     self.cancelPlaydateRecognizer.delegate = self;
     
     PTChatViewController* aChatController = [[PTChatViewController alloc] initWithNullPlaymate];
-    [self.view addSubview:aChatController.view];
     self.chatController = aChatController;
     
     [self drawPlaymates];

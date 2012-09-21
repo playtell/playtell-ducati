@@ -57,6 +57,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *button2;
 
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
+@property (nonatomic, strong) PTChatViewController* chatController;
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)chatController;
@@ -66,5 +67,7 @@
 
 - (IBAction)endPlaydateHandle:(id)sender;
 - (void)openBookAfterNavigation;
+
+- (UIView*)openBookView;
 
 @end

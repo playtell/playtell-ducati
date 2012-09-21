@@ -15,7 +15,6 @@
 //VIEW CONTROLLERS
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
-#import "PTChatViewController.h"
 #import "PTBookView.h"
 #import "PTPageView.h"
 
@@ -52,7 +51,6 @@
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
-@property (nonatomic, strong) PTChatViewController* chatController;
 @property (nonatomic, strong) PTPlaymate* playmate;
 @end
 
@@ -70,6 +68,7 @@
     self = [super initWithNibName:@"PTDateViewController"
                            bundle:nil];
     if (self) {
+        self.chatController = aChatController;
         [[self view] addSubview:aChatController.view];
         self.playmate = aPlaymate;
     }
@@ -525,6 +524,7 @@
 }
 
 - (void)transitionToDialpad {
+    [self.chatController setLeftViewAsPlaceholder];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
@@ -656,6 +656,9 @@
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTPlaydateEnded"
+                                                        object:self
+                                                      userInfo:nil];
     if ([self.playmate isARobot]) {
         [self transitionToDialpad];
     }
@@ -1146,14 +1149,23 @@
         // Show close book button
         [UIView animateWithDuration:(BOOK_OPEN_CLOSE_ANIMATION_SPEED + 0.25f) animations:^{
             closeBook.alpha = 1.0f;
-        }];
+        }];        
     }
+}
+
+- (UIView*)openBookView {
+    return pagesScrollView;
 }
 
 - (void)bookOpenedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
     currentBookId = [bookId copy];
     [pagesScrollView setHidden:NO];
     [bookView setHidden:YES];
+    
+    // Post a notification the book was opened
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTBookOpened"
+                                                        object:self
+                                                      userInfo:nil];
 }
 
 - (void)bookClosedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
@@ -1223,6 +1235,10 @@
                                       onFailure:nil
          ];
     }
+    
+    // Post notification of page turn
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTPageTurned"
+                                                        object:self];
 }
 
 - (void)pageLoaded:(NSInteger)number {

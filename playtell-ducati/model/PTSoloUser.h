@@ -13,4 +13,6 @@
 
 @property (nonatomic, retain) PTDateViewController* dateController;
 
+- (void)resetScriptState;
+
 @end

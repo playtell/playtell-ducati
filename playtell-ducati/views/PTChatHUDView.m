@@ -413,12 +413,8 @@
     self.leftVideoView = aView;
     [aView removeAllGestureRecognizers];
 
-    UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
-                                                     byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft
-                                                           cornerRadii:CGSizeMake(6.0, 6.0)];
-    CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
-    shapeLayer.path = cornerPath.CGPath;
     [self.theLeftView removeFromSuperview];
+    [self.theLeftView removeAllSubviews];
 
     [self.leftImageView removeFromSuperview];
     [self.theLeftView addSubview:aView];

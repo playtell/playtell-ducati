@@ -19,6 +19,8 @@
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
 - (id)initWithNullPlaymate;
 
+- (void)setLeftViewAsPlaceholder;
+
 @property (nonatomic, readonly) UIView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;
 @property (nonatomic, strong) PTPlaymate* playmate;

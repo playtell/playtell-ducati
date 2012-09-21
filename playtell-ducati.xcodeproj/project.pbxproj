@@ -312,6 +312,13 @@
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F441F5BD15F0269A00A1596A /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = F441F5BC15F0269A00A1596A /* UIView+Animation.m */; };
 		F4432EC615FE34FE0088DCAB /* PTNullPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */; };
+		F44CFA2B160A55760089CCA0 /* koda-hi-2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */; };
+		F44CFA33160ABB7C0089CCA0 /* tool-tip-finger-you.png in Resources */ = {isa = PBXBuildFile; fileRef = F44CFA31160ABB7C0089CCA0 /* tool-tip-finger-you.png */; };
+		F44CFA34160ABB7C0089CCA0 /* tool-tip-finger.png in Resources */ = {isa = PBXBuildFile; fileRef = F44CFA32160ABB7C0089CCA0 /* tool-tip-finger.png */; };
+		F44CFA3C160ABB8E0089CCA0 /* PTFriendTouchTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA37160ABB8E0089CCA0 /* PTFriendTouchTooltip.m */; };
+		F44CFA3D160ABB8E0089CCA0 /* PTImageTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA39160ABB8E0089CCA0 /* PTImageTooltip.m */; };
+		F44CFA3E160ABB8E0089CCA0 /* PTTouchHereTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA3B160ABB8E0089CCA0 /* PTTouchHereTooltip.m */; };
+		F44CFA82160CB4460089CCA0 /* PTGetSampleOpenTokToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA81160CB4460089CCA0 /* PTGetSampleOpenTokToken.m */; };
 		F462B0F915FBCC5F0087E33F /* PTSoloUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F462B0F815FBCC5F0087E33F /* PTSoloUser.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
@@ -326,6 +333,8 @@
 		F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F46B3FC415A4B2220023C82B /* opentok.bundle */; };
 		F4A123F01592777600FC7A24 /* music-box.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EE1592777600FC7A24 /* music-box.wav */; };
 		F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */; };
+		F4A5373116080706001B1519 /* koda-hi.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A5373016080706001B1519 /* koda-hi.mp4 */; };
+		F4A5373416080750001B1519 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A537331608074F001B1519 /* MediaPlayer.framework */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -902,6 +911,17 @@
 		F441F5BC15F0269A00A1596A /* UIView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animation.m"; sourceTree = "<group>"; };
 		F4432EC415FE34FE0088DCAB /* PTNullPlaymate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNullPlaymate.h; sourceTree = "<group>"; };
 		F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNullPlaymate.m; sourceTree = "<group>"; };
+		F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "koda-hi-2.mp4"; sourceTree = "<group>"; };
+		F44CFA31160ABB7C0089CCA0 /* tool-tip-finger-you.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool-tip-finger-you.png"; sourceTree = "<group>"; };
+		F44CFA32160ABB7C0089CCA0 /* tool-tip-finger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool-tip-finger.png"; sourceTree = "<group>"; };
+		F44CFA36160ABB8E0089CCA0 /* PTFriendTouchTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendTouchTooltip.h; sourceTree = "<group>"; };
+		F44CFA37160ABB8E0089CCA0 /* PTFriendTouchTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFriendTouchTooltip.m; sourceTree = "<group>"; };
+		F44CFA38160ABB8E0089CCA0 /* PTImageTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTImageTooltip.h; sourceTree = "<group>"; };
+		F44CFA39160ABB8E0089CCA0 /* PTImageTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTImageTooltip.m; sourceTree = "<group>"; };
+		F44CFA3A160ABB8E0089CCA0 /* PTTouchHereTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTouchHereTooltip.h; sourceTree = "<group>"; };
+		F44CFA3B160ABB8E0089CCA0 /* PTTouchHereTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTouchHereTooltip.m; sourceTree = "<group>"; };
+		F44CFA80160CB4460089CCA0 /* PTGetSampleOpenTokToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTGetSampleOpenTokToken.h; sourceTree = "<group>"; };
+		F44CFA81160CB4460089CCA0 /* PTGetSampleOpenTokToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTGetSampleOpenTokToken.m; sourceTree = "<group>"; };
 		F462B0F715FBCC5F0087E33F /* PTSoloUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSoloUser.h; sourceTree = "<group>"; };
 		F462B0F815FBCC5F0087E33F /* PTSoloUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSoloUser.m; sourceTree = "<group>"; };
 		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
@@ -921,6 +941,8 @@
 		F46B3FC415A4B2220023C82B /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/opentok/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		F4A123EE1592777600FC7A24 /* music-box.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "music-box.wav"; path = "audio/music-box.wav"; sourceTree = "<group>"; };
 		F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "ringtone-connecting.mp3"; path = "audio/ringtone-connecting.mp3"; sourceTree = "<group>"; };
+		F4A5373016080706001B1519 /* koda-hi.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "koda-hi.mp4"; sourceTree = "<group>"; };
+		F4A537331608074F001B1519 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1381,6 +1403,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A5373416080750001B1519 /* MediaPlayer.framework in Frameworks */,
 				F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */,
 				F468878815813B040086D351 /* OpenGLES.framework in Frameworks */,
 				F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */,
@@ -1448,28 +1471,30 @@
 		8A1B741115E6EB76009BCEA0 /* playdates */ = {
 			isa = PBXGroup;
 			children = (
-				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
-				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
-				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
-				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
+				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
+				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
 				2311E0BC157F90A20084859B /* PTBookChangeRequest.h */,
-				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
-				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
 				2311E0BD157F90A30084859B /* PTBookChangeRequest.m */,
-				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
-				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
-				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
-				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
-				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
-				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
 				2311E0BF157F921D0084859B /* PTBookCloseRequest.h */,
 				2311E0C0157F921E0084859B /* PTBookCloseRequest.m */,
+				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
+				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
+				F44CFA80160CB4460089CCA0 /* PTGetSampleOpenTokToken.h */,
+				F44CFA81160CB4460089CCA0 /* PTGetSampleOpenTokToken.m */,
+				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
+				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
+				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
+				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
+				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
+				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
 				2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */,
 				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
 				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
 				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
-				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
-				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
+				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
+				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
+				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
+				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
 			);
 			name = playdates;
 			sourceTree = "<group>";
@@ -2033,6 +2058,15 @@
 			name = matching;
 			sourceTree = "<group>";
 		};
+		F44CFA30160ABB7C0089CCA0 /* NUX */ = {
+			isa = PBXGroup;
+			children = (
+				F44CFA31160ABB7C0089CCA0 /* tool-tip-finger-you.png */,
+				F44CFA32160ABB7C0089CCA0 /* tool-tip-finger.png */,
+			);
+			path = NUX;
+			sourceTree = "<group>";
+		};
 		F4A123EC1592776800FC7A24 /* audio */ = {
 			isa = PBXGroup;
 			children = (
@@ -2043,9 +2077,19 @@
 			name = audio;
 			sourceTree = "<group>";
 		};
+		F4A5372F16080706001B1519 /* video */ = {
+			isa = PBXGroup;
+			children = (
+				F4A5373016080706001B1519 /* koda-hi.mp4 */,
+				F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */,
+			);
+			path = video;
+			sourceTree = "<group>";
+		};
 		F4A9D5C51576B5950015D977 = {
 			isa = PBXGroup;
 			children = (
+				F4A537331608074F001B1519 /* MediaPlayer.framework */,
 				F4A9D5DA1576B5950015D977 /* playtell-ducati */,
 				F4A9D5D31576B5950015D977 /* Frameworks */,
 				F4A9D5D11576B5950015D977 /* Products */,
@@ -2105,6 +2149,7 @@
 				F4A9D8E6157921630015D977 /* model */,
 				F4A9D7B515771CAE0015D977 /* pusher */,
 				F4A9D61E1576C1B50015D977 /* urban airship */,
+				F4A5372F16080706001B1519 /* video */,
 				F4A9D88C1577FBB40015D977 /* view controllers */,
 				F4A9D8CF1578153E0015D977 /* views */,
 				F4E3EAEC157FAAF000A218EC /* Logging.h */,
@@ -2129,6 +2174,7 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				F44CFA30160ABB7C0089CCA0 /* NUX */,
 				23BE484115FA8865005BF396 /* endCallButton.png */,
 				23BE484215FA8865005BF396 /* endCallButton@2x.png */,
 				8AAF559F15E8234F0098A0C9 /* memory */,
@@ -2948,6 +2994,12 @@
 		F4A9D8CF1578153E0015D977 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				F44CFA36160ABB8E0089CCA0 /* PTFriendTouchTooltip.h */,
+				F44CFA37160ABB8E0089CCA0 /* PTFriendTouchTooltip.m */,
+				F44CFA38160ABB8E0089CCA0 /* PTImageTooltip.h */,
+				F44CFA39160ABB8E0089CCA0 /* PTImageTooltip.m */,
+				F44CFA3A160ABB8E0089CCA0 /* PTTouchHereTooltip.h */,
+				F44CFA3B160ABB8E0089CCA0 /* PTTouchHereTooltip.m */,
 				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				237B249C157D182A00FC288E /* PTBooksParentView.h */,
@@ -3481,6 +3533,10 @@
 				23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */,
 				23BE484315FA8865005BF396 /* endCallButton.png in Resources */,
 				23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */,
+				F4A5373116080706001B1519 /* koda-hi.mp4 in Resources */,
+				F44CFA2B160A55760089CCA0 /* koda-hi-2.mp4 in Resources */,
+				F44CFA33160ABB7C0089CCA0 /* tool-tip-finger-you.png in Resources */,
+				F44CFA34160ABB7C0089CCA0 /* tool-tip-finger.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3596,6 +3652,10 @@
 				8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */,
 				F462B0F915FBCC5F0087E33F /* PTSoloUser.m in Sources */,
 				F4432EC615FE34FE0088DCAB /* PTNullPlaymate.m in Sources */,
+				F44CFA3C160ABB8E0089CCA0 /* PTFriendTouchTooltip.m in Sources */,
+				F44CFA3D160ABB8E0089CCA0 /* PTImageTooltip.m in Sources */,
+				F44CFA3E160ABB8E0089CCA0 /* PTTouchHereTooltip.m in Sources */,
+				F44CFA82160CB4460089CCA0 /* PTGetSampleOpenTokToken.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3663,8 +3723,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Giancarlo Daniele (BJYG4USW2T)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Giancarlo Daniele (BJYG4USW2T)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Ricky Hussmann (KJU6M7BFEC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3690,8 +3750,8 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
+				PROVISIONING_PROFILE = "499C16BF-5B58-43B0-9943-519716293A98";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "499C16BF-5B58-43B0-9943-519716293A98";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
