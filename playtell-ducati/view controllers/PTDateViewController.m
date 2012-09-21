@@ -45,7 +45,7 @@
 
 //GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
-#import "PTMemoryGameViewController.h"
+#import "PTMemoryViewController.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, strong) PTChatHUDView* chatView;
@@ -358,7 +358,7 @@
         // Book cover pages load
         [coversToLoad addObject:bookId];
     }
-    
+        
     //TODO we need to incorporate an API call here to load games from the API
     xPos += (booksScrollView.frame.size.width * .75);
     UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
@@ -589,7 +589,7 @@
                                      NSString *board_id = [result valueForKey:@"board_id"];
 //                                     NSDictionary *filenameArray = [result valueForKey:@"filename_dump"];
                                                                          
-                                    PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
+                                    PTMemoryViewController *memoryVc = [[PTMemoryViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
                                      
                             #if !(TARGET_IPHONE_SIMULATOR)
                                     [memoryVc setChatController:self.chatController];
@@ -603,6 +603,7 @@
                                     
                                     //bring up the view controller of the new game!
                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                                                                          
                                     [appDelegate.transitionController loadGame:memoryVc
                                                                    withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {

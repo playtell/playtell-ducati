@@ -1,19 +1,18 @@
 //
-//  PTMemoryGameViewController.h
+//  PTMemoryViewController.h
 //  playtell-ducati
 //
-//  Created by Giancarlo Daniele on 8/16/12.
+//  Created by Giancarlo D on 9/16/12.
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "PTChatViewController.h"
 #import "PTPlaydate.h"
 
-@interface PTMemoryGameViewController : UIViewController
-{
-    IBOutlet UIButton *closeMemory, *card0, *card1, *card2, *card3;
 
+@interface PTMemoryViewController : UIViewController {
+    IBOutlet UIButton *closeMemory, *card0, *card1, *card2, *card3;
 }
 
 // Board stuff
@@ -27,7 +26,7 @@
 
 - (id) initWithPlaydate:(PTPlaydate *)playdateP
                  myTurn:(BOOL)myTurn
-               boardID:(int)boardID
+                boardID:(int)boardID
              playmateID:(int)playmateID
             initiatorID:(int)initiatorID;
 

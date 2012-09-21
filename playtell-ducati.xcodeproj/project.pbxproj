@@ -307,8 +307,6 @@
 		8A7F7A251601D10900B049BF /* x-placeholder@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A7F79211601D10900B049BF /* x-placeholder@2X.png */; };
 		8A7F7A261601D10900B049BF /* x-turn.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A7F79221601D10900B049BF /* x-turn.png */; };
 		8A7F7A271601D10900B049BF /* x-turn@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A7F79231601D10900B049BF /* x-turn@2X.png */; };
-		8A7F7A2B1601D14400B049BF /* PTMemoryGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7F7A291601D14400B049BF /* PTMemoryGameViewController.m */; };
-		8A7F7A2C1601D14400B049BF /* PTMemoryGameViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A7F7A2A1601D14400B049BF /* PTMemoryGameViewController.xib */; };
 		8A7F7A2F1601D20E00B049BF /* PTTictactoecoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A7F7A2E1601D20E00B049BF /* PTTictactoecoordinate.m */; };
 		8A9688251602827F00055A95 /* O-Pen.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8A9688241602827F00055A95 /* O-Pen.mp3 */; };
 		8ABA6CA115C4A386009D4D1D /* PTTictactoeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */; };
@@ -320,6 +318,8 @@
 		8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AC60EED15F84FFD0012FD9F /* PTMatchingEndGameRequest.m */; };
 		8AF4D00615C7E6E900DB665E /* PTTictactoeNewGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */; };
 		8AF4D00D15C7EEA000DB665E /* PTTictactoePlacePieceRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */; };
+		8AF80B781606CB2400F5BD06 /* PTMemoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF80B761606CB2300F5BD06 /* PTMemoryViewController.m */; };
+		8AF80B791606CB2400F5BD06 /* PTMemoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AF80B771606CB2400F5BD06 /* PTMemoryViewController.xib */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F441F5BD15F0269A00A1596A /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = F441F5BC15F0269A00A1596A /* UIView+Animation.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
@@ -893,20 +893,10 @@
 		8A7F79211601D10900B049BF /* x-placeholder@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "x-placeholder@2X.png"; sourceTree = "<group>"; };
 		8A7F79221601D10900B049BF /* x-turn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "x-turn.png"; sourceTree = "<group>"; };
 		8A7F79231601D10900B049BF /* x-turn@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "x-turn@2X.png"; sourceTree = "<group>"; };
-		8A7F7A281601D14400B049BF /* PTMemoryGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameViewController.h; sourceTree = "<group>"; };
-		8A7F7A291601D14400B049BF /* PTMemoryGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryGameViewController.m; sourceTree = "<group>"; };
-		8A7F7A2A1601D14400B049BF /* PTMemoryGameViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTMemoryGameViewController.xib; sourceTree = "<group>"; };
 		8A7F7A2D1601D20E00B049BF /* PTTictactoecoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoecoordinate.h; sourceTree = "<group>"; };
 		8A7F7A2E1601D20E00B049BF /* PTTictactoecoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoecoordinate.m; sourceTree = "<group>"; };
 		8A9688221602827200055A95 /* sword-hit-version2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "sword-hit-version2.mp3"; sourceTree = "<group>"; };
 		8A9688241602827F00055A95 /* O-Pen.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "O-Pen.mp3"; sourceTree = "<group>"; };
-		8AB1B1AF15E3153D00FC3948 /* O-Pen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "O-Pen.wav"; path = "Games/Tictactoe/Sounds/O-Pen.wav"; sourceTree = "<group>"; };
-		8AB1B1B015E3153D00FC3948 /* sword-hit-version2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "sword-hit-version2.mp3"; path = "Games/Tictactoe/Sounds/sword-hit-version2.mp3"; sourceTree = "<group>"; };
-		8AB1B1B115E3153D00FC3948 /* sword-hit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "sword-hit.wav"; path = "Games/Tictactoe/Sounds/sword-hit.wav"; sourceTree = "<group>"; };
-		8AB1B1B215E3153D00FC3948 /* wiff.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = wiff.wav; path = Games/Tictactoe/Sounds/wiff.wav; sourceTree = "<group>"; };
-		8AB1B1B315E3153D00FC3948 /* winner-applause.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "winner-applause.wav"; path = "Games/Tictactoe/Sounds/winner-applause.wav"; sourceTree = "<group>"; };
-		8AB1B1B415E3153D00FC3948 /* winner-gong.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; name = "winner-gong.aiff"; path = "Games/Tictactoe/Sounds/winner-gong.aiff"; sourceTree = "<group>"; };
-		8AB1B1B515E3153D00FC3948 /* X-Pen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "X-Pen.wav"; path = "Games/Tictactoe/Sounds/X-Pen.wav"; sourceTree = "<group>"; };
 		8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeViewController.h; sourceTree = "<group>"; };
 		8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeViewController.m; sourceTree = "<group>"; };
 		8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTTictactoeViewController.xib; sourceTree = "<group>"; };
@@ -924,6 +914,9 @@
 		8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeNewGameRequest.m; sourceTree = "<group>"; };
 		8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoePlacePieceRequest.h; sourceTree = "<group>"; };
 		8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoePlacePieceRequest.m; sourceTree = "<group>"; };
+		8AF80B751606CB2300F5BD06 /* PTMemoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryViewController.h; sourceTree = "<group>"; };
+		8AF80B761606CB2300F5BD06 /* PTMemoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryViewController.m; sourceTree = "<group>"; };
+		8AF80B771606CB2400F5BD06 /* PTMemoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTMemoryViewController.xib; sourceTree = "<group>"; };
 		F420B73F1585BA1800DCAF10 /* TransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionController.h; sourceTree = "<group>"; };
 		F420B7401585BA1800DCAF10 /* TransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionController.m; sourceTree = "<group>"; };
 		F441F5BB15F0269A00A1596A /* UIView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animation.h"; sourceTree = "<group>"; };
@@ -1444,6 +1437,50 @@
 			name = extras;
 			sourceTree = "<group>";
 		};
+		8A0CE6CF160D0B2A00C0FD1A /* playtell */ = {
+			isa = PBXGroup;
+			children = (
+				F468877515812A060086D351 /* logo_loading.gif */,
+				23F199381586BB7200DC2E16 /* page_loading.png */,
+				F4A9D8FF157A88870015D977 /* profile_default_2.png */,
+				23DAE25E15F93D98008D7524 /* yourfinger.png */,
+				F4A9D8C3157814EF0015D977 /* login_bg.png */,
+				23DAE25F15F93D98008D7524 /* yourfinger@2x.png */,
+				F4A9D61C1576BA370015D977 /* 144.png */,
+				F4A9D61A1576BA330015D977 /* 72.png */,
+				F4E6DA131585346600BDEF0A /* add-family.png */,
+				F4A9D8B9157814EF0015D977 /* arrow-error.png */,
+				F4A9D8BA157814EF0015D977 /* border.png */,
+				23866FE0159234FE00525588 /* CloseBookNormal.png */,
+				23866FDF159234FE00525588 /* CloseBookPressed.png */,
+				F4A9D8BB157814EF0015D977 /* contact-info.png */,
+				23F199361586B9F000DC2E16 /* cover_loading.png */,
+				23C7314315862C7D00B9A9E6 /* crank-nav.png */,
+				F4A9D8BC157814EF0015D977 /* create-password.png */,
+				232265A4157D4D8800D5A960 /* date_bg.png */,
+				F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */,
+				23D41A8D159CAEF900677E03 /* dialad-live.png */,
+				23D41A90159CB09800677E03 /* dialpad-pending.png */,
+				F4A9D8BD157814EF0015D977 /* done-press.png */,
+				F4A9D8BE157814EF0015D977 /* done.png */,
+				F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */,
+				F4A9D8BF157814EF0015D977 /* dual-form-field.png */,
+				23BE484115FA8865005BF396 /* endCallButton.png */,
+				23BE484215FA8865005BF396 /* endCallButton@2x.png */,
+				23866FDB1592338100525588 /* EndCallCrankNormal.png */,
+				23866FDA1592338100525588 /* EndCallCrankPressed.png */,
+				23866FE41592393100525588 /* EndPlaydatePopupBg.png */,
+				23866FE31592393100525588 /* EndPlaydatePopupButton.png */,
+				F4A9D8C0157814EF0015D977 /* error-alert.png */,
+				F4A9D8C1157814EF0015D977 /* error-header.png */,
+				F4A9D8D31578157F0015D977 /* form-field-depressed.png */,
+				F4A9D8C2157814EF0015D977 /* form-field.png */,
+				23DAE25615F939C3008D7524 /* friendfinger.png */,
+				23DAE25715F939C3008D7524 /* friendfinger@2x.png */,
+			);
+			name = playtell;
+			sourceTree = "<group>";
+		};
 		8A1B740E15E6EB4F009BCEA0 /* games */ = {
 			isa = PBXGroup;
 			children = (
@@ -1458,13 +1495,13 @@
 			isa = PBXGroup;
 			children = (
 				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
-				23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */,
-				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
-				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
-				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
 				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
 				2311E0B6157F8E480084859B /* PTPageTurnRequest.h */,
 				2311E0B7157F8E480084859B /* PTPageTurnRequest.m */,
+				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
+				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
+				23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */,
+				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
 			);
 			name = books;
 			sourceTree = "<group>";
@@ -1472,28 +1509,28 @@
 		8A1B741115E6EB76009BCEA0 /* playdates */ = {
 			isa = PBXGroup;
 			children = (
-				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
-				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
-				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
-				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
+				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
+				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
 				2311E0BC157F90A20084859B /* PTBookChangeRequest.h */,
-				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
-				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
 				2311E0BD157F90A30084859B /* PTBookChangeRequest.m */,
-				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
-				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
-				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
-				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
-				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
-				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
 				2311E0BF157F921D0084859B /* PTBookCloseRequest.h */,
 				2311E0C0157F921E0084859B /* PTBookCloseRequest.m */,
+				F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */,
+				F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */,
+				F4A9D8E31579098E0015D977 /* PTLoginRequest.h */,
+				F4A9D8E41579098E0015D977 /* PTLoginRequest.m */,
+				2311E0B9157F8F280084859B /* PTPlaydateCreateRequest.h */,
+				2311E0BA157F8F280084859B /* PTPlaydateCreateRequest.m */,
+				2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */,
+				2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */,
 				2311E0C2157F92A60084859B /* PTPlaydateDisconnectRequest.h */,
 				2311E0C3157F92A60084859B /* PTPlaydateDisconnectRequest.m */,
 				23FF8EF815812EAF00FC5821 /* PTPlaydateJoinedRequest.h */,
 				23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */,
-				F4E6D9FF15825EC900BDEF0A /* PTAllFriendsRequest.h */,
-				F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */,
+				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
+				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
+				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
+				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
 			);
 			name = playdates;
 			sourceTree = "<group>";
@@ -1539,9 +1576,9 @@
 		8A62E3A215E7EA4F0077CBB6 /* games */ = {
 			isa = PBXGroup;
 			children = (
-				8A7F7A281601D14400B049BF /* PTMemoryGameViewController.h */,
-				8A7F7A291601D14400B049BF /* PTMemoryGameViewController.m */,
-				8A7F7A2A1601D14400B049BF /* PTMemoryGameViewController.xib */,
+				8AF80B751606CB2300F5BD06 /* PTMemoryViewController.h */,
+				8AF80B761606CB2300F5BD06 /* PTMemoryViewController.m */,
+				8AF80B771606CB2400F5BD06 /* PTMemoryViewController.xib */,
 				8ABA6C9F15C4A386009D4D1D /* PTTictactoeViewController.h */,
 				8ABA6CA015C4A386009D4D1D /* PTTictactoeViewController.m */,
 				8ABA6CA215C4BCF0009D4D1D /* PTTictactoeViewController.xib */,
@@ -1549,17 +1586,18 @@
 			name = games;
 			sourceTree = "<group>";
 		};
-		8A7F78041601D10900B049BF /* games */ = {
+		8A7F78041601D10900B049BF /* playtell games */ = {
 			isa = PBXGroup;
 			children = (
-				8A7F78051601D10900B049BF /* Generic Gamelet Assets */,
-				8A7F78121601D10900B049BF /* Memory */,
-				8A7F782B1601D10900B049BF /* Tictactoe */,
+				8A7F78051601D10900B049BF /* generic gamelet assets */,
+				8A7F78121601D10900B049BF /* memory */,
+				8A7F782B1601D10900B049BF /* tictactoe */,
 			);
+			name = "playtell games";
 			path = games;
 			sourceTree = "<group>";
 		};
-		8A7F78051601D10900B049BF /* Generic Gamelet Assets */ = {
+		8A7F78051601D10900B049BF /* generic gamelet assets */ = {
 			isa = PBXGroup;
 			children = (
 				8A7F78061601D10900B049BF /* theme19artwork1.png */,
@@ -1575,10 +1613,11 @@
 				8A7F78101601D10900B049BF /* theme19artwork6.png */,
 				8A7F78111601D10900B049BF /* theme19artwork6@2x.png */,
 			);
+			name = "generic gamelet assets";
 			path = "Generic Gamelet Assets";
 			sourceTree = "<group>";
 		};
-		8A7F78121601D10900B049BF /* Memory */ = {
+		8A7F78121601D10900B049BF /* memory */ = {
 			isa = PBXGroup;
 			children = (
 				8A7F78131601D10900B049BF /* Backgrounds and title */,
@@ -1588,16 +1627,17 @@
 				8A7F78231601D10900B049BF /* Score indicators */,
 				8A7F78281601D10900B049BF /* Turn indicators */,
 			);
+			name = memory;
 			path = Memory;
 			sourceTree = "<group>";
 		};
 		8A7F78131601D10900B049BF /* Backgrounds and title */ = {
 			isa = PBXGroup;
 			children = (
-				8A5AC2BE16028859000BA3F6 /* memory-title.png */,
-				8A5AC2BF16028859000BA3F6 /* memory-title@2X.png */,
 				8A7F78141601D10900B049BF /* memory-background.png */,
 				8A7F78151601D10900B049BF /* memory-background@2X.png */,
+				8A5AC2BE16028859000BA3F6 /* memory-title.png */,
+				8A5AC2BF16028859000BA3F6 /* memory-title@2X.png */,
 			);
 			path = "Backgrounds and title";
 			sourceTree = "<group>";
@@ -1651,7 +1691,7 @@
 			path = "Turn indicators";
 			sourceTree = "<group>";
 		};
-		8A7F782B1601D10900B049BF /* Tictactoe */ = {
+		8A7F782B1601D10900B049BF /* tictactoe */ = {
 			isa = PBXGroup;
 			children = (
 				8A7F782C1601D10900B049BF /* Backgrounds */,
@@ -1664,6 +1704,7 @@
 				8A7F79141601D10900B049BF /* Tictactoeboard */,
 				8A7F791B1601D10900B049BF /* Turn Indicators */,
 			);
+			name = tictactoe;
 			path = Tictactoe;
 			sourceTree = "<group>";
 		};
@@ -2035,13 +2076,6 @@
 		8AB1B2EA15E3155300FC3948 /* Tictactoe */ = {
 			isa = PBXGroup;
 			children = (
-				8AB1B1AF15E3153D00FC3948 /* O-Pen.wav */,
-				8AB1B1B015E3153D00FC3948 /* sword-hit-version2.mp3 */,
-				8AB1B1B115E3153D00FC3948 /* sword-hit.wav */,
-				8AB1B1B215E3153D00FC3948 /* wiff.wav */,
-				8AB1B1B315E3153D00FC3948 /* winner-applause.wav */,
-				8AB1B1B415E3153D00FC3948 /* winner-gong.aiff */,
-				8AB1B1B515E3153D00FC3948 /* X-Pen.wav */,
 			);
 			name = Tictactoe;
 			sourceTree = "<group>";
@@ -2049,14 +2083,14 @@
 		8AC60EDC15F80E4F0012FD9F /* tictactoe */ = {
 			isa = PBXGroup;
 			children = (
-				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
-				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
 				8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */,
 				8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */,
-				8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */,
-				8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */,
+				8AF4D00415C7E6E900DB665E /* PTTictactoeNewGameRequest.h */,
+				8AF4D00515C7E6E900DB665E /* PTTictactoeNewGameRequest.m */,
 				8AF4D00B15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.h */,
 				8AF4D00C15C7EE9F00DB665E /* PTTictactoePlacePieceRequest.m */,
+				8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */,
+				8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */,
 			);
 			name = tictactoe;
 			sourceTree = "<group>";
@@ -2064,12 +2098,12 @@
 		8AC60EDE15F80E540012FD9F /* memory */ = {
 			isa = PBXGroup;
 			children = (
+				8AC60EE515F82E2F0012FD9F /* PTMemoryEndGameRequest.h */,
+				8AC60EE615F82E2F0012FD9F /* PTMemoryEndGameRequest.m */,
 				8AC60EDF15F80EA40012FD9F /* PTMemoryNewGameRequest.h */,
 				8AC60EE015F80EA40012FD9F /* PTMemoryNewGameRequest.m */,
 				8AC60EE215F82E1F0012FD9F /* PTMemoryPlayTurnRequest.h */,
 				8AC60EE315F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m */,
-				8AC60EE515F82E2F0012FD9F /* PTMemoryEndGameRequest.h */,
-				8AC60EE615F82E2F0012FD9F /* PTMemoryEndGameRequest.m */,
 				8AC60EE815F82E4A0012FD9F /* PTMemoryRefreshGameRequest.h */,
 				8AC60EE915F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m */,
 			);
@@ -2115,8 +2149,6 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F46B3FC415A4B2220023C82B /* opentok.bundle */,
-				F46B3FC215A4B0790023C82B /* Opentok.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F468878115813A880086D351 /* AVFoundation.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
@@ -2133,6 +2165,8 @@
 				F4A9D7A71576C3A70015D977 /* MessageUI.framework */,
 				F4A9D7971576C35A0015D977 /* MobileCoreServices.framework */,
 				F468878715813B040086D351 /* OpenGLES.framework */,
+				F46B3FC415A4B2220023C82B /* opentok.bundle */,
+				F46B3FC215A4B0790023C82B /* Opentok.framework */,
 				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D901157A92F80015D977 /* QuartzCore.framework */,
 				F4A9D7991576C3620015D977 /* Security.framework */,
@@ -2146,23 +2180,23 @@
 		F4A9D5DA1576B5950015D977 /* playtell-ducati */ = {
 			isa = PBXGroup;
 			children = (
-				F4A123EC1592776800FC7A24 /* audio */,
-				237B24AB157D183D00FC288E /* extras */,
-				F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */,
 				F4A9D8961577FCDD0015D977 /* AFNetworking */,
 				F4A9D8DF157909530015D977 /* api */,
 				F4A9D6061576B8B00015D977 /* artwork */,
+				F4A123EC1592776800FC7A24 /* audio */,
 				F4A9D8921577FC150015D977 /* categories */,
 				F4A9D7CF15771F3F0015D977 /* crittercism-sdk */,
+				237B24AB157D183D00FC288E /* extras */,
+				F4E3EAEC157FAAF000A218EC /* Logging.h */,
 				F4A9D8E6157921630015D977 /* model */,
+				F4A9D88B1577F50E0015D977 /* playtell-ducati.entitlements */,
+				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
+				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
 				F4A9D7B515771CAE0015D977 /* pusher */,
+				F4A9D5DB1576B5950015D977 /* Supporting Files */,
 				F4A9D61E1576C1B50015D977 /* urban airship */,
 				F4A9D88C1577FBB40015D977 /* view controllers */,
 				F4A9D8CF1578153E0015D977 /* views */,
-				F4E3EAEC157FAAF000A218EC /* Logging.h */,
-				F4A9D5E31576B5950015D977 /* PTAppDelegate.h */,
-				F4A9D5E41576B5950015D977 /* PTAppDelegate.m */,
-				F4A9D5DB1576B5950015D977 /* Supporting Files */,
 			);
 			path = "playtell-ducati";
 			sourceTree = "<group>";
@@ -2170,9 +2204,9 @@
 		F4A9D5DB1576B5950015D977 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */,
 				F4A9D5DD1576B5950015D977 /* InfoPlist.strings */,
 				F4A9D5E01576B5950015D977 /* main.m */,
+				F4A9D5DC1576B5950015D977 /* playtell-ducati-Info.plist */,
 				F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -2181,44 +2215,8 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
-				8A7F78041601D10900B049BF /* games */,
-				23BE484115FA8865005BF396 /* endCallButton.png */,
-				23BE484215FA8865005BF396 /* endCallButton@2x.png */,
-				23DAE25E15F93D98008D7524 /* yourfinger.png */,
-				23DAE25F15F93D98008D7524 /* yourfinger@2x.png */,
-				23DAE25615F939C3008D7524 /* friendfinger.png */,
-				23DAE25715F939C3008D7524 /* friendfinger@2x.png */,
-				23D41A90159CB09800677E03 /* dialpad-pending.png */,
-				23D41A8D159CAEF900677E03 /* dialad-live.png */,
-				23866FE31592393100525588 /* EndPlaydatePopupButton.png */,
-				23866FE41592393100525588 /* EndPlaydatePopupBg.png */,
-				23866FDF159234FE00525588 /* CloseBookPressed.png */,
-				23866FE0159234FE00525588 /* CloseBookNormal.png */,
-				23866FDA1592338100525588 /* EndCallCrankPressed.png */,
-				23866FDB1592338100525588 /* EndCallCrankNormal.png */,
-				23F199381586BB7200DC2E16 /* page_loading.png */,
-				23F199361586B9F000DC2E16 /* cover_loading.png */,
-				23C7314315862C7D00B9A9E6 /* crank-nav.png */,
-				F4A9D61C1576BA370015D977 /* 144.png */,
-				F4A9D61A1576BA330015D977 /* 72.png */,
-				F4E6DA131585346600BDEF0A /* add-family.png */,
-				F4A9D8B9157814EF0015D977 /* arrow-error.png */,
-				F4A9D8BA157814EF0015D977 /* border.png */,
-				F4A9D8BB157814EF0015D977 /* contact-info.png */,
-				F4A9D8BC157814EF0015D977 /* create-password.png */,
-				232265A4157D4D8800D5A960 /* date_bg.png */,
-				F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */,
-				F4A9D8BD157814EF0015D977 /* done-press.png */,
-				F4A9D8BE157814EF0015D977 /* done.png */,
-				F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */,
-				F4A9D8BF157814EF0015D977 /* dual-form-field.png */,
-				F4A9D8C0157814EF0015D977 /* error-alert.png */,
-				F4A9D8C1157814EF0015D977 /* error-header.png */,
-				F4A9D8D31578157F0015D977 /* form-field-depressed.png */,
-				F4A9D8C2157814EF0015D977 /* form-field.png */,
-				F4A9D8C3157814EF0015D977 /* login_bg.png */,
-				F468877515812A060086D351 /* logo_loading.gif */,
-				F4A9D8FF157A88870015D977 /* profile_default_2.png */,
+				8A0CE6CF160D0B2A00C0FD1A /* playtell */,
+				8A7F78041601D10900B049BF /* playtell games */,
 			);
 			path = artwork;
 			sourceTree = "<group>";
@@ -2998,8 +2996,6 @@
 		F4A9D8CF1578153E0015D977 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
-				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				237B249C157D182A00FC288E /* PTBooksParentView.h */,
 				237B249D157D182A00FC288E /* PTBooksParentView.m */,
 				237B249E157D182A00FC288E /* PTBooksScrollView.h */,
@@ -3008,11 +3004,13 @@
 				237B24A1157D182A00FC288E /* PTBookView.m */,
 				F468876E158129800086D351 /* PTChatHUDView.h */,
 				F468876F158129800086D351 /* PTChatHUDView.m */,
-				232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */,
 				237B24A2157D182A00FC288E /* PTPagesScrollView.h */,
 				237B24A3157D182A00FC288E /* PTPagesScrollView.m */,
+				232978EF158A65F000D9CE0C /* PTPagesScrollViewDelegate.h */,
 				237B24A4157D182A00FC288E /* PTPageView.h */,
 				237B24A5157D182A00FC288E /* PTPageView.m */,
+				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
+				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				F4A9D8D01578153E0015D977 /* PTTextField.h */,
 				F4A9D8D11578153E0015D977 /* PTTextField.m */,
 			);
@@ -3022,12 +3020,12 @@
 		F4A9D8DF157909530015D977 /* api */ = {
 			isa = PBXGroup;
 			children = (
-				8A1B741215E6EBA7009BCEA0 /* toybox */,
-				8A1B741115E6EB76009BCEA0 /* playdates */,
 				8A1B741015E6EB59009BCEA0 /* books */,
 				8A1B740E15E6EB4F009BCEA0 /* games */,
+				8A1B741115E6EB76009BCEA0 /* playdates */,
 				F4A9D8E01579096F0015D977 /* PTRequest.h */,
 				F4A9D8E11579096F0015D977 /* PTRequest.m */,
+				8A1B741215E6EBA7009BCEA0 /* toybox */,
 			);
 			path = api;
 			sourceTree = "<group>";
@@ -3036,6 +3034,8 @@
 			isa = PBXGroup;
 			children = (
 				8A62E3A115E7EA330077CBB6 /* games */,
+				F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */,
+				F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */,
 				F4A9D907157AB17F0015D977 /* PTMockPlaymateFactory.h */,
 				F4A9D908157AB17F0015D977 /* PTMockPlaymateFactory.m */,
 				F4A9D903157AAAC40015D977 /* PTPlaydate.h */,
@@ -3043,14 +3043,12 @@
 				F4A9D8E71579217E0015D977 /* PTPlaymate.h */,
 				F4A9D8E81579217E0015D977 /* PTPlaymate.m */,
 				F4A9D906157AB1450015D977 /* PTPlaymateFactory.h */,
-				F4A9D8EA1579218E0015D977 /* PTUser.h */,
-				F4A9D8EB1579218E0015D977 /* PTUser.m */,
 				F4A9D90A157ABB060015D977 /* PTPlayTellPusher.h */,
 				F4A9D90B157ABB060015D977 /* PTPlayTellPusher.m */,
+				F4A9D8EA1579218E0015D977 /* PTUser.h */,
+				F4A9D8EB1579218E0015D977 /* PTUser.m */,
 				F4688779158138190086D351 /* PTVideoPhone.h */,
 				F468877A158138190086D351 /* PTVideoPhone.m */,
-				F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */,
-				F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -3532,12 +3530,12 @@
 				8A7F7A251601D10900B049BF /* x-placeholder@2X.png in Resources */,
 				8A7F7A261601D10900B049BF /* x-turn.png in Resources */,
 				8A7F7A271601D10900B049BF /* x-turn@2X.png in Resources */,
-				8A7F7A2C1601D14400B049BF /* PTMemoryGameViewController.xib in Resources */,
 				8A9688251602827F00055A95 /* O-Pen.mp3 in Resources */,
 				8A5AC2C016028859000BA3F6 /* memory-title.png in Resources */,
 				8A5AC2C116028859000BA3F6 /* memory-title@2X.png in Resources */,
 				8A5AC2C416028875000BA3F6 /* memory-winner.png in Resources */,
 				8A5AC2C516028875000BA3F6 /* memory-winner@2X.png in Resources */,
+				8AF80B791606CB2400F5BD06 /* PTMemoryViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3649,8 +3647,8 @@
 				8AC60EE715F82E2F0012FD9F /* PTMemoryEndGameRequest.m in Sources */,
 				8AC60EEA15F82E4A0012FD9F /* PTMemoryRefreshGameRequest.m in Sources */,
 				8AC60EEE15F84FFE0012FD9F /* PTMatchingEndGameRequest.m in Sources */,
-				8A7F7A2B1601D14400B049BF /* PTMemoryGameViewController.m in Sources */,
 				8A7F7A2F1601D20E00B049BF /* PTTictactoecoordinate.m in Sources */,
+				8AF80B781606CB2400F5BD06 /* PTMemoryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
