@@ -377,7 +377,7 @@
     [memoryBookView addGestureRecognizer:tapRecognizerMemory];
     memoryBookView.userInteractionEnabled = YES;
     [booksScrollView addSubview:memoryBookView];
-    xPos += booksScrollView.frame.size.width;
+    xPos = booksScrollView.frame.size.width + xPos;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
