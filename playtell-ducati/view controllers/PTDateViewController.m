@@ -587,25 +587,23 @@
                                      
                                      //get response parameters
                                      NSString *board_id = [result valueForKey:@"board_id"];
-//                                     NSDictionary *filenameArray = [result valueForKey:@"filename_dump"];
-                                                                         
-                                    PTMemoryViewController *memoryVc = [[PTMemoryViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
                                      
-                            #if !(TARGET_IPHONE_SIMULATOR)
-                                    [memoryVc setChatController:self.chatController];
-                            #endif
-                                     //    [appDelegate.transitionController loadGame:memoryGameVc withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:MEMORY];3
-                                                                         
-                                    CGRect imageframe = CGRectMake(0,0,1024,768);
-                                    
-                                    UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-                                    splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-                                    
-                                    //bring up the view controller of the new game!
                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-                                                                          
-                                    [appDelegate.transitionController loadGame:memoryVc
-                                                                   withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+                                     
+                                     PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] init];
+#if !(TARGET_IPHONE_SIMULATOR)
+                                     [memoryVC setChatController:self.chatController];
+#endif
+                                     
+                                     CGRect imageframe = CGRectMake(0,0,1024,768);
+                                     
+                                     UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+                                     splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                     
+                                     //bring up the view controller of the new game!
+                                     [appDelegate.transitionController loadGame:memoryVC
+                                                                    withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         NSLog(@"%@", error);
         NSLog(@"%@", request);
