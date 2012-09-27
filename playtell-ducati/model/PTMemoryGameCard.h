@@ -10,29 +10,33 @@
 
 @interface PTMemoryGameCard : NSObject
 {
-    int artwork_index; //id of artwork, used for matching
-    int theme_id;
+    int artworkIndex; //id of artwork, used for matching
+    int themeId;
+    int boardId;
     int boardIndex; //index in board's card array
 
-    UIImageView *faceDown;
-    UIImageView *faceUp;
-    NSString *faceDownFilename;
+    UIButton *card;
+    
+    NSString *artworkFilename;
     
     BOOL isFaceDown;
     
     float boardX;
-    float boardY;
+    float boardY;    
 }
 
-@property int artwork_index, boardIndex, theme_id, board_id;
+@property int artworkIndex, boardIndex, themeId, boardId;
 
 @property float boardX, boardY;
-@property BOOL isFaceDown;
-@property UIImageView *faceDown, *faceUp;
-@property NSString *faceDownFilename;
 
-- (void) initWithTheme:(int)themeId
-               artwork:(int)artworkIndex;
+@property BOOL isFaceDown;
+
+@property UIButton *card;
+@property NSString *artworkFilename;
+
+- (void) initWithTheme:(int)theme_id
+               artwork:(int)artworkNumber
+          indexOnBoard:(int)index;
 
 - (void) placeOnBoard;
 

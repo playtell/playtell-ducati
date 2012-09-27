@@ -10,35 +10,65 @@
 
 @implementation PTMemoryGameCard
 
-@synthesize artwork_index, boardIndex, boardX, boardY, isFaceDown, faceDown, faceUp, theme_id, faceDownFilename;
+@synthesize artworkIndex, boardIndex, themeId, boardId, boardX, boardY, isFaceDown, card, artworkFilename;
 
-- (void) initWithTheme:(int)themeId
-                    artwork:(int)artworkIndex
+- (void) initWithTheme:(int)theme_id
+                    artwork:(int)artworkNumber
+                    indexOnBoard:(int)index
 {
-    [self setArtWorkFilenames:themeId artworkIndex:artworkIndex];
+    //to initialize card set isFacedown flag
+    self.isFaceDown = true;
+    
+    //set the filename for the bottom artwork
+    [self setArtWorkFilenames:theme_id artworkIndex:artworkNumber];
+    
+    //give the card a notion of where it is on the board
+    self.boardIndex = index;
+    
+    
     
     [self placeOnBoard];
 }
 
-- (void) flip{
-
+- (void) placeOnBoard
+{
+    
 }
 
-- (void) enlarge{ }
+- (void) flip
+{
+    
+}
 
-- (void) floatToMiddle{ } //preceeds stashInDeck
+- (void) enlarge
+{
+    
+}
 
-- (void) stashInDeck:(int)player_id{ }
+- (void) floatToMiddle
+{
+    
+} //preceeds stashInDeck
 
-- (void) shake{ }
+- (void) stashInDeck:(int)player_id
+{
+    
+}
 
-- (void) glow{ }
+- (void) shake
+{
+    
+}
 
-- (void) removeFromPlay{ }
+- (void) glow
+{
+    
+}
 
-- (void) placeOnBoard { }
-
-
+- (void) removeFromPlay
+{
+    
+}
 
 // # START HELPER METHODS #
 // # setters #

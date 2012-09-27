@@ -10,6 +10,8 @@
 
 @implementation UIView (Animation)
 
+@synthesize rightSideUp, artworkFilename;
+
 - (void)earthquake {
     CGFloat t = 2.0;
     
@@ -39,5 +41,18 @@
         item.transform = CGAffineTransformIdentity;
     }
 }
+
+- (void)flipOver {
+    [UIView transitionWithView:self
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        board.image = [UIImage imageNamed:@"game-board-opponent.png"];
+                    }
+                    completion:^(BOOL finished){
+                    }];
+}
+
+
 
 @end

@@ -11,6 +11,8 @@
 #import "TransitionController.h"
 #import "PTPlaydate.h"
 #import "UIView+Animation.h"
+#import "PTMemoryGameCard.h"
+#import "PTMemoryGameBoard.h"
 
 @interface PTMemoryViewController ()
 
@@ -61,8 +63,11 @@
 - (IBAction)cardTouched:(id)sender
 {
     //card should be a card object!!!
+//    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
     UIButton *card = (UIButton *)sender;
-    [card earthquake];
+
+    NSString *filename = @"theme19artwork1.png"; //card.filename;
+    [card enlarge];
 }
 
 - (void) drawNewGame
