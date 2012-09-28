@@ -1,5 +1,5 @@
 //
-//  UIView+Animation.h
+//  UIImageView+Animation.h
 //  playtell-ducati
 //
 //  Created by Ricky Hussmann on 8/30/12.
@@ -10,12 +10,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIView (Animation)
+@interface UIImageView (Animation)
 
 - (void)earthquake;
 
-- (void)flipToFrontWithFilename:(NSString *)filename;
-
-- (void)flipToBack;
+- (void)flipOverWithIsBackUp:(BOOL)backUp
+                  frontImage:(UIImage *)front
+                   backImage:(UIImage *)back;
 
 @end

@@ -1,16 +1,14 @@
 //
-//  UIView+Animation.m
+//  UIImageView+Animation.m
 //  playtell-ducati
 //
 //  Created by Ricky Hussmann on 8/30/12.
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import "UIView+Animation.h"
+#import "UIImageView+Animation.h"
 
-@implementation UIView (Animation)
-
-@synthesize rightSideUp, artworkFilename;
+@implementation UIImageView (Animation)
 
 - (void)earthquake {
     CGFloat t = 2.0;
@@ -42,17 +40,22 @@
     }
 }
 
-- (void)flipOver {
+- (void)flipOverWithIsBackUp:(BOOL)backUp
+frontImage:(UIImage *)front
+backImage:(UIImage *)back
+{
+    UIImage *otherSideImage;
+    otherSideImage = (backUp) ? front : back;
+    
     [UIView transitionWithView:self
                       duration:0.5f
                        options:UIViewAnimationOptionTransitionFlipFromLeft
                     animations:^{
-                        board.image = [UIImage imageNamed:@"game-board-opponent.png"];
+                        self.image = otherSideImage;
                     }
                     completion:^(BOOL finished){
+                        self.image = otherSideImage;
                     }];
 }
-
-
 
 @end

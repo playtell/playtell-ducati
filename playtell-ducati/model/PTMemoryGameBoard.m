@@ -7,32 +7,43 @@
 //
 
 #import "PTMemoryGameBoard.h"
+#import "PTMemoryGameCard.h"
 
 @implementation PTMemoryGameBoard
 
-@synthesize theme_id, totalNumCards, cardsLeft, myTurn, initiator_id, playmate_id, cards, playdate_id;
+NSString *backFilename = @"card-back.png";
+
+@synthesize initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard, cardsOnBoard, isMyTurn, isOneCardAlreadyFlipped;
 
 - (void)initMemoryGameBoardWithNumCards:(int)numCards
-                        cardOrderString:(NSString *)ordering
-                               isMyTurn:(BOOL)isMyTurn
+                               isMyTurn:(BOOL)myTurn
                                playdate:(int)playdateId
                               initiator:(int)initiatorId
                                playmate:(int)playmateId
-                                  theme:(int)themeId
+                               filenameDict:(NSArray *)allFilenames
 {
     //set instance vars
-    self.theme_id = themeId;
-    self.totalNumCards = numCards;
-    self.cardsLeft = numCards;
-    self.playmate_id = playmateId;
-    self.initiator_id = initiatorId;
-    self.playdate_id = playdateId;
-    self.myTurn = isMyTurn;
+    [self setTotalNumCards:numCards];
+    [self setPlaydate_id:playdateId];
+    [self setInitiator_id:initiatorId];
+    [self setIsMyTurn:myTurn];
+    [self setIsOneCardAlreadyFlipped:NO];
     
-    //set up card order visually (also sets board coordinates of each card)
-    
-    
+    [self setCardsOnBoard:[self initializeCardsOnBoard:allFilenames]];
 }
+
+- (NSMutableArray *)initializeCardsOnBoard:(NSArray *)filenames
+{
+    NSMutableArray *allCards = [[NSMutableArray alloc] init];
+    int count = [filenames count];
+    for (int i = 0; i < count; i++) {
+//        PTMemoryGameCard *oneCard = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i] backFilename:backFilename indexOnBoard:i boardX:[self grabBoardXFromIndex:i andNumCards:numCards] boardY:<#(float)#> cardWidth:<#(float)#> cardHeight:<#(float)#>
+        
+        
+    }
+    return allCards;
+}
+                                     
 
 - (void)enableBoard
 {

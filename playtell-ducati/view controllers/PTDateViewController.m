@@ -583,23 +583,30 @@
                            num_total_cards:@"4"
                                  onSuccess:^(NSDictionary *result) {
                                      
-                                     NSLog(@"%@", result);
+//                                     NSLog(@"%@", result);
                                      
                                      //get response parameters
                                      NSString *board_id = [result valueForKey:@"board_id"];
                                      
+                                     NSString *filenames = [result valueForKey:@"filename_dump"];
+                                     filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
+                                     NSArray *items = [filenames componentsSeparatedByString:@"\",\""];
+                                                                          
                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                                      
                                      PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] init];
+                                     
+                                     //set the game view controller
+                                     [memoryVC initializeWithPlaydate:self.playdate myTurn:YES boardID:[board_id integerValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
+                                     
+                                     
 #if !(TARGET_IPHONE_SIMULATOR)
                                      [memoryVC setChatController:self.chatController];
 #endif
                                      
                                      CGRect imageframe = CGRectMake(0,0,1024,768);
-                                     
                                      UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
                                      splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-                                     
                                      //bring up the view controller of the new game!
                                      [appDelegate.transitionController loadGame:memoryVC
                                                                     withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];

@@ -24,10 +24,10 @@
 //playdate specific
 @property (nonatomic) PTPlaydate *playdate;
 
-- (id) initWithPlaydate:(PTPlaydate *)playdateP
-                 myTurn:(BOOL)myTurn
-                boardID:(int)boardID
-             playmateID:(int)playmateID
-            initiatorID:(int)initiatorID;
+- (void) initializeWithPlaydate:(PTPlaydate *)playdate_id
+                         myTurn:(BOOL)myTurn
+                        boardID:(int)boardID
+                     playmateID:(int)playmateID
+                    initiatorID:(int)initiatorID;
 
 @end

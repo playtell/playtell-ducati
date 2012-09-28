@@ -7,37 +7,42 @@
 //
 
 #import "PTMemoryGameCard.h"
+#import "PTMemoryCardCoordinate.h"
 
+// ## PTMemoryCard class encompasses a single card object on the board. "boardIndex" is what's used by the rails backend to determine whether or not two selected cards have been matched. The "front" of the card, as referred to in code, is the side of the card that contains the artwork, the "back" is not unique.
 @implementation PTMemoryGameCard
 
-@synthesize artworkIndex, boardIndex, themeId, boardId, boardX, boardY, isFaceDown, card, artworkFilename;
+@synthesize boardIndex, coordinates, cardHeight, cardWidth, isBackUp, cardDisabled, card, front, back;
 
-- (void) initWithTheme:(int)theme_id
-                    artwork:(int)artworkNumber
-                    indexOnBoard:(int)index
+- (void) initWithFrontFilename:(NSString *)front_filename
+                  backFilename:(NSString *)back_filename
+                    indexOnBoard:(int)board_index
+                   boardX:(float)board_x
+                   boardY:(float)board_y
+                   cardWidth:(float)card_width
+                   cardHeight:(float)card_height
 {
-    //to initialize card set isFacedown flag
-    self.isFaceDown = true;
+    //create "card" UIBUtton
+    [self setCard:[UIButton buttonWithType:UIButtonTypeCustom]];
+    [self setBack:[UIImage imageNamed:back_filename]];
+    [self setFront:[UIImage imageNamed:front_filename]];
     
-    //set the filename for the bottom artwork
-    [self setArtWorkFilenames:theme_id artworkIndex:artworkNumber];
+    [[self card] setBackgroundImage:[self back] forState:UIControlStateNormal];
     
-    //give the card a notion of where it is on the board
-    self.boardIndex = index;
-    
-    
-    
-    [self placeOnBoard];
-}
-
-- (void) placeOnBoard
-{
-    
+    [[self card] addTarget:self action:@selector(cardTouched:) forControlEvents:UIControlEventTouchUpInside];
+        
+    //set up the card object
+    [self setBoardIndex:board_index];
+//    [self setCoordinates:[[PTMemoryCardCoordinate alloc] initWithNumCards:<#(int)#> index:<#(int)#>
+    [self setBoardY:board_y];
+    [self setCardWidth:card_width];
+    [self setCardHeight:card_height];
+    [self setIsBackUp:YES];
+    [[self card] setFrame:CGRectMake([self boardX], [self boardY], [self cardWidth], [self cardHeight])];    
 }
 
 - (void) flip
 {
-    
 }
 
 - (void) enlarge
@@ -66,6 +71,11 @@
 }
 
 - (void) removeFromPlay
+{
+    
+}
+
+- (void) cardTouched
 {
     
 }

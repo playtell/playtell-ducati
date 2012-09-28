@@ -7,38 +7,33 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PTMemoryCardCoordinate.h"
 
 @interface PTMemoryGameCard : NSObject
 {
-    int artworkIndex; //id of artwork, used for matching
-    int themeId;
-    int boardId;
     int boardIndex; //index in board's card array
-
     UIButton *card;
-    
-    NSString *artworkFilename;
-    
-    BOOL isFaceDown;
-    
-    float boardX;
-    float boardY;    
+    UIImage *back, *front;
+    BOOL isBackUp, cardDisabled; //cards are disabled once they form part of a match
+    float boardX,boardY;
+    float cardWidth, cardHeight;
+    PTMemoryCardCoordinate *coordinates;
 }
 
-@property int artworkIndex, boardIndex, themeId, boardId;
-
-@property float boardX, boardY;
-
-@property BOOL isFaceDown;
-
+@property int boardIndex;
+@property float boardX, boardY, cardWidth, cardHeight;
+@property BOOL isBackUp, cardDisabled;
 @property UIButton *card;
-@property NSString *artworkFilename;
+@property UIImage *back, *front;
+@property PTMemoryCardCoordinate *coordinates;
 
-- (void) initWithTheme:(int)theme_id
-               artwork:(int)artworkNumber
-          indexOnBoard:(int)index;
-
-- (void) placeOnBoard;
+- (void) initWithFrontFilename:(NSString *)front_filename
+                  backFilename:(NSString *)back_filename
+                  indexOnBoard:(int)board_index
+                        boardX:(float)board_x
+                        boardY:(float)board_y
+                     cardWidth:(float)card_width
+                    cardHeight:(float)card_height;
 
 - (void) flip;
 

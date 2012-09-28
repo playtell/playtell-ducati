@@ -10,7 +10,7 @@
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
 #import "PTPlaydate.h"
-#import "UIView+Animation.h"
+#import "UIImageView+Animation.h"
 #import "PTMemoryGameCard.h"
 #import "PTMemoryGameBoard.h"
 
@@ -29,16 +29,16 @@
     return self;
 }
 
-- (id) initWithPlaydate:(PTPlaydate *)playdateP
+- (void) initializeWithPlaydate:(PTPlaydate *)playdate_id
                  myTurn:(BOOL)myTurn
                 boardID:(int)boardID
              playmateID:(int)playmateID
             initiatorID:(int)initiatorID
 {
-    self.playdate = playdateP;
-    [self drawNewGame];
+    NSMutableArray *allVisualsCurrentlyOnBoard = [[NSMutableArray alloc] init];
+    //initialize the memoryBoard object
     
-    return nil;
+    //place all cards on the screen
 }
 
 - (void)viewDidLoad
@@ -62,20 +62,14 @@
 // ## GAMEPLAY METHODS START ##
 - (IBAction)cardTouched:(id)sender
 {
-    //card should be a card object!!!
-//    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
-    UIButton *card = (UIButton *)sender;
+    //find out which card has been touched and grab it from the array of cards
+    
+    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
+//    UIButton *card = (UIButton *)sender;
 
-    NSString *filename = @"theme19artwork1.png"; //card.filename;
-    [card enlarge];
-}
-
-- (void) drawNewGame
-{
-#if !(TARGET_IPHONE_SIMULATOR)
-    [self setChatController:self.chatController];
-    [self.view addSubview:self.chatController.view];
-#endif
+    NSString *filename = @"theme19artwork1.png";
+    
+//    [card.imageView flipOverWithIsBackUp:[card isBackUp] frontImage:[card front] backImage:[card back]];
 }
 
 - (void)pusherMemoryGameEndGame:(NSNotification *)notification {
