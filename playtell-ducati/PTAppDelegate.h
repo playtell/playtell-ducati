@@ -26,5 +26,6 @@
 @property (strong, nonatomic) TransitionController *transitionController;
 @property (strong, nonatomic) PTDialpadViewController *dialpadController;
 @property (strong, nonatomic) PTDateViewController *dateViewController;
+@property (nonatomic, retain) PTChatViewController* chatController;
 
 @end

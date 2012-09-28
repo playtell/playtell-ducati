@@ -7,24 +7,50 @@
 //
 
 #import "Logging.h"
+#import "PTChatHUDView.h"
+#import "PTChatHUDView2.h"
 #import "PTChatViewController.h"
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
 #import "PTUser.h"
 
 #import "PTPlaydate+InitatorChecking.h"
+#import "UIView+PlayTell.h"
+
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface PTChatViewController ()
-@property (nonatomic, strong) PTChatHUDView* chatView;
+@property (nonatomic, strong) PTChatHUDView2* chatView;
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
+@property (nonatomic, strong) MPMoviePlayerController* movieController;
 @end
 
 @implementation PTChatViewController
 @synthesize chatView, videoPhone, playdate, playmate;
+@synthesize movieController;
+
+- (void)playMovieURLInLeftPane:(NSURL*)movieURL {
+    self.movieController.contentURL = movieURL;
+    self.movieController.scalingMode = MPMovieScalingModeAspectFit;
+    self.movieController.controlStyle = MPMovieControlStyleNone;
+    [self.chatView setLeftView:self.movieController.view];
+    [self.movieController play];
+}
+
+- (void)stopPlayingMovies {
+    [self.movieController stop];
+}
+
+- (id)init {
+    if (self = [super init]) {
+        self.chatView = [[PTChatHUDView2 alloc] initWithFrame:CGRectZero];
+        self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
+    }
+    return self;
+}
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate {
-    if (self = [super init]) {
-        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    if (self = [self init]) {
         self.playdate = aPlaydate;
         self.playmate = self.playdate.playmate;
         [self connectToOpenTokSession];
@@ -33,28 +59,24 @@
 }
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate {
-    if (self = [super init]) {
-        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
+    if (self = [self init]) {
         self.playmate = aPlaymate;
-//        [self setupPlaymatePlaceholderImages];
-        [self setPlaymatePhoto];
+        [self setLoadingViewForPlaymate:aPlaymate];
         [self setCurrentUserPhoto];
     }
     return self;
 }
 
 - (id)initWithNullPlaymate {
-    if (self = [super init]) {
-        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectZero];
-        PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
-        [self.chatView setImageForRightView:nullPlaymate.userPhoto];
-        [self connectToOpenTokSession];
+    if (self = [self init]) {
+        [self configureForDialpad];
     }
     return self;
 }
 
-- (void)reset {
-    [self connectToOpenTokSession];
+- (void)configureForDialpad {
+    PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
+    [self.chatView setImageForRightView:nullPlaymate.userPhoto];
 }
 
 - (void)setLeftViewAsPlaceholder {
@@ -78,41 +100,40 @@
         mySession = self.playdate.tokboxSessionID;
         
         // Begin duplicated code!
+        [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
+            LogDebug(@"Publisher started streaming");
+            [self.chatView setRightView:aPublisher.view];
+        }];
         [[PTVideoPhone sharedPhone] connectToSession:mySession
                                            withToken:myToken
-                                             success:^(OTPublisher* publisher)
-         {
-             LogDebug(@"Connected to OpenTok session");
-             [self.chatView setRightView:publisher.view];
-         } failure:^(NSError* error) {
+                                             success:NULL
+                                             failure:^(NSError* error) {
              LogError(@"Error connecting to OpenTok session: %@", error);
          }];
         //    [self setupPlaymatePlaceholderImages];
-        [self setPlaymatePhoto];
         [self setCurrentUserPhoto];
         // End duplicated code!
     } else {
-        PTGetSampleOpenTokToken* getTokBoxSession = [[PTGetSampleOpenTokToken alloc] init];
-        [getTokBoxSession requestOpenTokSessionAndTokenWithSuccess:^(NSString *openTokSession, NSString *openTokToken)
-        {
-            // Begin duplicated code!
-            [[PTVideoPhone sharedPhone] connectToSession:openTokSession
-                                               withToken:openTokToken
-                                                 success:^(OTPublisher* publisher)
-             {
-                 LogDebug(@"Connected to OpenTok session");
-                 [self.chatView setRightView:publisher.view];
-             } failure:^(NSError* error) {
-                 LogError(@"Error connecting to OpenTok session: %@", error);
-             }];
-            //    [self setupPlaymatePlaceholderImages];
-            [self setPlaymatePhoto];
-            [self setCurrentUserPhoto];
-            // End duplicated code!
-        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-            LogError(@"Error requesting TokBox token: %@", error);
-        }];
+        [self connectToPlaceholderOpenTokSession];
     }
+}
+
+- (void)connectToPlaceholderOpenTokSession {
+    PTGetSampleOpenTokToken* getTokBoxSession = [[PTGetSampleOpenTokToken alloc] init];
+    [getTokBoxSession requestOpenTokSessionAndTokenWithSuccess:^(NSString *openTokSession, NSString *openTokToken)
+     {
+         [[PTVideoPhone sharedPhone] connectToSession:openTokSession
+                                            withToken:openTokToken
+                                              success:^(OTPublisher* publisher)
+          {
+              LogDebug(@"Connected to OpenTok session");
+              [self.chatView setRightView:publisher.view];
+          } failure:^(NSError* error) {
+              LogError(@"Error connecting to OpenTok session: %@", error);
+          }];
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"Error requesting TokBox token: %@", error);
+     }];
 }
 
 - (void)setupPlaymatePlaceholderImages {
@@ -124,28 +145,57 @@
     [self.chatView setRightView:myImageView];
 }
 
-- (void)setPlaymatePhoto {
-    if (![[PTUser currentUser] isLoggedIn]) {
-        [self.chatView setLeftView:[self playmatePlaceholderView]];
-        return;
-    }
+- (void)setPlaymate:(PTPlaymate *)aPlaymate {
+    UIImageView* anImageview = [[UIImageView alloc] initWithImage:playmate.userPhoto];
+    anImageview.contentMode = UIViewContentModeScaleAspectFit;
+    [self.chatView setLeftView:anImageview];
+    playmate = aPlaymate;
+}
+
+- (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate {
+    UIImageView *anImageView = [[UIImageView alloc] initWithImage:aPlaymate.userPhoto];
+    anImageView.contentMode = UIViewContentModeScaleAspectFit;
+
+    // Create the "ghosted" opacity view
+    UIView *opacityView = [[UIView alloc] initWithFrame:anImageView.bounds];
+    opacityView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    opacityView.backgroundColor = [UIColor colorWithRed:1.0f
+                                                  green:1.0f
+                                                   blue:1.0f
+                                                  alpha:0.7f];
+    [anImageView addSubview:opacityView];
     
-    // Pick out the other user
-    if (self.playdate) {
-        PTPlaymate* otherUser;
-        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-            otherUser = self.playdate.playmate;
-        } else {
-            otherUser = self.playdate.initiator;
-        }
-        
-        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
-        [self.chatView setLoadingImageForLeftView:otherUserPhoto
-                                      loadingText:otherUser.username];
-    } else {
-        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
-                                      loadingText:@""];
-    }
+    // Create and align the loading crank in the opacity view
+    UIView *spinningCrank = [self createWaitingView];
+    spinningCrank.center = opacityView.center;
+    spinningCrank.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
+                                     UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    
+    [opacityView addSubview:spinningCrank];
+    
+    // Determine the playmate name label geometry
+    CGSize maxSize = CGSizeMake(200.0f, 50.0f);
+    CGSize nameLabelSize = [aPlaymate.username sizeWithFont:[UIFont systemFontOfSize:18.0f]
+                                          constrainedToSize:maxSize];
+
+    CGPoint labelOrigin = CGPointMake((int)CGRectGetWidth(opacityView.frame)/2.0 - nameLabelSize.width/2.0,
+                                      CGRectGetHeight(opacityView.frame) - nameLabelSize.height);
+    CGRect nameLabelFrame = CGRectMake(labelOrigin.x,
+                                       labelOrigin.y,
+                                       nameLabelSize.width,
+                                       nameLabelSize.height);
+
+    // Create the name label and add it to the opacity view
+    UILabel* nameLabel = [[UILabel alloc] initWithFrame:nameLabelFrame];
+    nameLabel.text = aPlaymate.username;
+    nameLabel.font = [UIFont systemFontOfSize:18.0f];
+    nameLabel.backgroundColor = [UIColor clearColor];
+    nameLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin |
+                                 UIViewAutoresizingFlexibleRightMargin;
+    [opacityView addSubview:nameLabel];
+    
+    [self.chatView setLeftView:anImageView];
+    playmate = aPlaymate;
 }
 
 - (UIView*)playmatePlaceholderView {
@@ -185,6 +235,24 @@
     // If user photo is nil user the placeholder
     myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
     [self.chatView setLoadingImageForRightView:myPhoto];
+}
+
+- (UIView*)createWaitingView {
+    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
+    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
+    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
+    
+    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
+    CABasicAnimation *rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    
+    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
+    rotationAnimation.duration = 2.0f;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = 10000;
+    
+    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    return iconImageview;
 }
 
 - (UIImage*)placeholderImage {

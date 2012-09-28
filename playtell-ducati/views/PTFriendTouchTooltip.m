@@ -11,15 +11,15 @@
 @implementation PTFriendTouchTooltip
 
 - (NSString*)toolTipImageName {
-    return @"tool-tip-finger";
+    return @"buddy-point";
 }
 
 - (CGFloat)caretXFractionOfWidth {
-    return 0.7127f;
+    return 222.0f / 336.0f;
 }
 
 - (CGFloat)caretYFractionOfHeight {
-    return 0.9106f;
+    return 90.0f / 120.0f;
 }
 
 @end

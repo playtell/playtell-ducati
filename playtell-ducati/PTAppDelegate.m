@@ -10,6 +10,7 @@
 #import "Crittercism.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTChatViewController.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
@@ -39,6 +40,7 @@
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
 @synthesize phone;
+@synthesize chatController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -81,6 +83,9 @@
     
     [self.window makeKeyAndVisible];
 
+    // Create the ChatHUD
+    self.chatController = [[PTChatViewController alloc] initWithNullPlaymate];
+    
     return YES;
 }
 

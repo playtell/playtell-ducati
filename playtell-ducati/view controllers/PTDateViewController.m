@@ -48,14 +48,12 @@
 #import "PTMemoryGameViewController.h"
 
 @interface PTDateViewController ()
-@property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
 @property (nonatomic, strong) PTPlaymate* playmate;
 @end
 
 @implementation PTDateViewController
-@synthesize chatView;
 @synthesize playdate;
 @synthesize playmateSubscriber;
 @synthesize myPublisher;
@@ -82,7 +80,10 @@
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
 //#if !(TARGET_IPHONE_SIMULATOR)
-    self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
+//    self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.chatController = appDelegate.chatController;
+//    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
 //#endif
 }
@@ -149,27 +150,6 @@
 //    [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
 //        [self setPlaymatePhoto];
 //    }];
-//#endif
-}
-
-- (void)setPlaymatePhoto {
-    // Pick out the other user
-//#if !(TARGET_IPHONE_SIMULATOR)
-    if (self.playdate) {
-        PTPlaymate* otherUser;
-        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-            otherUser = self.playdate.playmate;
-        } else {
-            otherUser = self.playdate.initiator;
-        }
-        
-        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
-        [self.chatView setLoadingImageForLeftView:otherUserPhoto
-                                      loadingText:otherUser.username];
-    } else {
-        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
-                                      loadingText:@""];
-    }
 //#endif
 }
 
@@ -411,14 +391,6 @@
     [self playMemoryGame:nil];
 }
 
-- (void)setCurrentUserPhoto {
-    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
-    
-    // If user photo is nil user the placeholder
-    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    [self.chatView setLoadingImageForRightView:myPhoto];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
@@ -500,10 +472,6 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
-//#if !(TARGET_IPHONE_SIMULATOR)
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
-//#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -525,6 +493,7 @@
 
 - (void)transitionToDialpad {
     [self.chatController setLeftViewAsPlaceholder];
+    [self.chatController connectToPlaceholderOpenTokSession];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
@@ -679,14 +648,6 @@
              [self transitionToDialpad];
          }];
     }
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-//#if !(TARGET_IPHONE_SIMULATOR)
-    [self.chatView removeFromSuperview];
-    self.chatView = nil;
-//#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

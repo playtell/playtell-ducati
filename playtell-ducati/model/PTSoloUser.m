@@ -8,8 +8,9 @@
 
 #import "Logging.h"
 #import "PTFriendTouchTooltip.h"
-#import "PTTouchHereTooltip.h"
 #import "PTSoloUser.h"
+#import "PTTouchHereTooltip.h"
+#import "PTTurnPageTooltip.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -45,7 +46,7 @@
         self.moviePlayer = movieController;
         self.moviePlayer.view.frame = CGRectZero;
         
-        self.touchTooltip = [[PTTouchHereTooltip alloc] initWithWidth:300.0f];
+        self.touchTooltip = [[PTTouchHereTooltip alloc] initWithWidth:201.0f];
         self.friendTooltip = [[PTFriendTouchTooltip alloc] initWithWidth:300.0f];
     }
     return self;
@@ -129,48 +130,30 @@
                                                        queue:nil
                                                   usingBlock:^(NSNotification *note) {
                                                       LogDebug(@"Playdate Ended.");
-                                                      [self.moviePlayer stop];
+                                                      PTDateViewController* sender = note.object;
+                                                      [sender.chatController stopPlayingMovies];
                                                   }];
 }
 
 - (void)playIntroVideoWithChatController:(PTChatViewController*)chatController {
-    PTChatHUDView *chatView = (PTChatHUDView*)chatController.view;
-    
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectZero];
-    containerView.backgroundColor = [UIColor clearColor];
-    containerView.layer.cornerRadius = 6.0;
-    containerView.clipsToBounds = YES;
-    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"koda-hi"
+    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_Toybox"
                                               withExtension:@"mp4"];
-    self.moviePlayer.contentURL = introURL;
-    [containerView addSubview:self.moviePlayer.view];
-    [chatView setLeftView:containerView];
-    [self.moviePlayer play];
+    [chatController playMovieURLInLeftPane:introURL];
 }
 
 - (void)playSecondVideoWithChatController:(PTChatViewController*)chatController {
-    PTChatHUDView *chatView = (PTChatHUDView*)chatController.view;
-    
-    UIView *containerView = [[UIView alloc] initWithFrame:CGRectZero];
-    containerView.backgroundColor = [UIColor clearColor];
-    containerView.layer.cornerRadius = 6.0;
-    containerView.clipsToBounds = YES;
-    NSURL *secondURL = [[NSBundle mainBundle] URLForResource:@"koda-hi-2"
+    NSURL *secondURL = [[NSBundle mainBundle] URLForResource:@"Solo_MePoint"
                                                withExtension:@"mp4"];
-    self.moviePlayer.contentURL = secondURL;
-    self.moviePlayer.view.frame = CGRectZero;
-    [containerView addSubview:self.moviePlayer.view];
-    [chatView setLeftView:containerView];
-    [self.moviePlayer play];
+    [chatController playMovieURLInLeftPane:secondURL];
 }
 
 - (NSURL*)photoURL {
-    return [[NSBundle mainBundle] URLForResource:@"dialpad-live"
+    return [[NSBundle mainBundle] URLForResource:@"solo-bot-profile"
                                    withExtension:@"png"];
 }
 
 - (UIImage*)userPhoto {
-    return [UIImage imageNamed:@"dialad-live"];
+    return [UIImage imageNamed:@"solo-bot-profile"];
 }
 
 - (NSString*)email {

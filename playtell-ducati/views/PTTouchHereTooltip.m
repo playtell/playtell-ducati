@@ -11,15 +11,15 @@
 @implementation PTTouchHereTooltip
 
 - (NSString*)toolTipImageName {
-    return @"tool-tip-finger-you";
+    return @"point-here";
 }
 
 - (CGFloat)caretXFractionOfWidth {
-    return 824.0 / 1604.0f;
+    return 88.0 / 201.0;
 }
 
 - (CGFloat)caretYFractionOfHeight {
-    return 732.0 / 1053.0f;
+    return 125.0 / 185.0;
 }
 
 @end

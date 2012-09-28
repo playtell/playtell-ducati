@@ -26,6 +26,7 @@
 #import "PTUsersGetStatusRequest.h"
 #import "TransitionController.h"
 
+#import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -102,6 +103,7 @@
         [self loadPlaydateDataFromPushNotification];
     }
 
+    [self.chatController setLeftViewAsPlaceholder];
     [self.view addSubview:self.chatController.view];
 }
 
@@ -284,12 +286,15 @@
              LogInfo(@"playdateCreateWithFriend response: %@", result);
              PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
                                                             playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+             self.chatController.playdate = aPlaydate;
+             [self.chatController connectToOpenTokSession];
              [self.dateController setPlaydate:aPlaydate];
              self.dateController = nil;
          } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
              LogError(@"playdateCreateWithFriend failed: %@", error);
          }];
         LogInfo(@"Requesting playdate...");
+        [self.chatController setLoadingViewForPlaymate:sender.playmate];
     }
 }
 
@@ -304,8 +309,8 @@
                                                           chatViewController:self.chatController];
         robot.dateController = self.dateController;
     } else {
-        self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                     bundle:nil];
+        self.dateController = [[PTDateViewController alloc] initWithPlaymate:aPlaymate
+                                                          chatViewController:self.chatController];
     }
     
     if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
@@ -323,7 +328,18 @@
     if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
         [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     }
+    
+    PTPlaymate* otherPlaymate;
+    if ([self.requestedPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        otherPlaymate = [self.requestedPlaydate playmate];
+    } else {
+        otherPlaymate = [self.requestedPlaydate initiator];
+    }
 
+    self.chatController.playdate = self.requestedPlaydate;
+    [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+    [self.chatController connectToOpenTokSession];
+    
     self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
                                                                  bundle:nil];
     
@@ -521,6 +537,7 @@
     [self.view addSubview:welcomeLabel];
 
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
+    self.scrollView.scrollEnabled = NO;
     [self.view addSubview:self.scrollView];
 
     self.cancelPlaydateRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
@@ -528,8 +545,10 @@
     self.cancelPlaydateRecognizer.enabled = NO;
     self.cancelPlaydateRecognizer.delegate = self;
     
-    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithNullPlaymate];
-    self.chatController = aChatController;
+//    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithNullPlaymate];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.chatController = appDelegate.chatController;
+    [self.chatController connectToPlaceholderOpenTokSession];
     
     [self drawPlaymates];
 }
