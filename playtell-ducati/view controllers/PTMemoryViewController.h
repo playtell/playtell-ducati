@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PTChatViewController.h"
 #import "PTPlaydate.h"
+#import "PTMemoryGameBoard.h"
 
 
 @interface PTMemoryViewController : UIViewController {
@@ -16,18 +17,18 @@
 }
 
 // Board stuff
-@property (nonatomic, retain) IBOutlet UIButton *card0, *card1, *card2, *card3, *closeMemory;
+@property (nonatomic, retain) IBOutlet UIButton *closeMemory;
 
 // Chat view controller
 @property (nonatomic, strong) PTChatViewController* chatController;
 
-//playdate specific
-@property (nonatomic) PTPlaydate *playdate;
+@property (nonatomic, strong) PTMemoryGameBoard *board;
 
-- (void) initializeWithPlaydate:(PTPlaydate *)playdate_id
-                         myTurn:(BOOL)myTurn
-                        boardID:(int)boardID
-                     playmateID:(int)playmateID
-                    initiatorID:(int)initiatorID;
+- (id) initializeWithmyTurn:(BOOL)myTurn
+                    boardID:(int)board_id
+                 playmateID:(int)playmate_id
+                initiatorID:(int)initiator_id
+               allFilenames:(NSArray *)filenames
+                   numCards:(int)num_cards;
 
 @end

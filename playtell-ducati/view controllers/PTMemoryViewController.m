@@ -10,15 +10,17 @@
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
 #import "PTPlaydate.h"
-#import "UIImageView+Animation.h"
 #import "PTMemoryGameCard.h"
 #import "PTMemoryGameBoard.h"
+#import "UIImageView+Animations.h"
 
 @interface PTMemoryViewController ()
 
 @end
 
 @implementation PTMemoryViewController
+
+@synthesize board;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,22 +31,41 @@
     return self;
 }
 
-- (void) initializeWithPlaydate:(PTPlaydate *)playdate_id
-                 myTurn:(BOOL)myTurn
-                boardID:(int)boardID
-             playmateID:(int)playmateID
-            initiatorID:(int)initiatorID
+- (id) initializeWithmyTurn:(BOOL)myTurn
+                boardID:(int)board_id
+             playmateID:(int)playmate_id
+            initiatorID:(int)initiator_id
+            allFilenames:(NSArray *)filenames
+            numCards:(int)num_cards
 {
+    //this will contain arrays of individual elements, like UIButtons for cards
     NSMutableArray *allVisualsCurrentlyOnBoard = [[NSMutableArray alloc] init];
-    //initialize the memoryBoard object
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    //place all cards on the screen
+    PTPlaydate *playdate = appDelegate.dateViewController.playdate;
+    
+    //initialize the memoryBoard object
+    PTMemoryGameBoard *gameBoard = [[PTMemoryGameBoard alloc] initMemoryGameBoardWithNumCards:num_cards isMyTurn:myTurn playdate:playdate.playdateID initiator:initiator_id playmate:playmate_id filenameDict:filenames];
+    
+    [self setBoard:gameBoard];
+    
+    return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    
+    appDelegate.memoryViewController = self;
+    
+    //add cards to board
+    NSMutableArray *cardsOnBoard = [[self board] cardsOnBoard];
+    int count = [cardsOnBoard count];
+    for (int i = 0; i < count; i ++) {
+        [self.view addSubview:[[cardsOnBoard objectAtIndex:i] card]];
+    }
 }
 
 - (void)viewDidUnload
@@ -63,11 +84,10 @@
 - (IBAction)cardTouched:(id)sender
 {
     //find out which card has been touched and grab it from the array of cards
-    
-    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
-//    UIButton *card = (UIButton *)sender;
-
-    NSString *filename = @"theme19artwork1.png";
+//    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
+//    UIButton *card2 = (UIButton *)sender;
+//
+//    NSString *filename = @"theme19artwork1.png";
     
 //    [card.imageView flipOverWithIsBackUp:[card isBackUp] frontImage:[card front] backImage:[card back]];
 }

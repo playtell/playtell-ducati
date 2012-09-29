@@ -44,6 +44,7 @@
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23FF8EFA15812EAF00FC5821 /* PTPlaydateJoinedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */; };
 		8A1B91B8161584E400B4BF46 /* PTMemoryCardCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B91B7161584E300B4BF46 /* PTMemoryCardCoordinate.m */; };
+		8A1B91BC16160E6600B4BF46 /* UIImageView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B91BB16160E6600B4BF46 /* UIImageView+Animations.m */; };
 		8A34AEC715E4B762002B13F5 /* PTTictactoeEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */; };
 		8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */; };
 		8A51067B15FA5DBE000EC244 /* PTDateViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AD157D191400FC288E /* PTDateViewController.h */; };
@@ -322,7 +323,6 @@
 		8AF80B781606CB2400F5BD06 /* PTMemoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AF80B761606CB2300F5BD06 /* PTMemoryViewController.m */; };
 		8AF80B791606CB2400F5BD06 /* PTMemoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8AF80B771606CB2400F5BD06 /* PTMemoryViewController.xib */; };
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
-		F441F5BD15F0269A00A1596A /* UIImageView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = F441F5BC15F0269A00A1596A /* UIImageView+Animation.m */; };
 		F4688770158129800086D351 /* PTChatHUDView.m in Sources */ = {isa = PBXBuildFile; fileRef = F468876F158129800086D351 /* PTChatHUDView.m */; };
 		F4688774158129C00086D351 /* UIImageView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4688773158129C00086D351 /* UIImageView+PlayTell.m */; };
 		F468877615812A060086D351 /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
@@ -628,6 +628,8 @@
 		23FF8EF915812EAF00FC5821 /* PTPlaydateJoinedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateJoinedRequest.m; sourceTree = "<group>"; };
 		8A1B91B6161584E300B4BF46 /* PTMemoryCardCoordinate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryCardCoordinate.h; sourceTree = "<group>"; };
 		8A1B91B7161584E300B4BF46 /* PTMemoryCardCoordinate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryCardCoordinate.m; sourceTree = "<group>"; };
+		8A1B91BA16160E6600B4BF46 /* UIImageView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Animations.h"; sourceTree = "<group>"; };
+		8A1B91BB16160E6600B4BF46 /* UIImageView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Animations.m"; sourceTree = "<group>"; };
 		8A34AEC515E4B762002B13F5 /* PTTictactoeEndGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeEndGameRequest.h; sourceTree = "<group>"; };
 		8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTictactoeEndGameRequest.m; sourceTree = "<group>"; };
 		8A34AEC815E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTictactoeRefreshGameRequest.h; sourceTree = "<group>"; };
@@ -922,8 +924,6 @@
 		8AF80B771606CB2400F5BD06 /* PTMemoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTMemoryViewController.xib; sourceTree = "<group>"; };
 		F420B73F1585BA1800DCAF10 /* TransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionController.h; sourceTree = "<group>"; };
 		F420B7401585BA1800DCAF10 /* TransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionController.m; sourceTree = "<group>"; };
-		F441F5BB15F0269A00A1596A /* UIImageView+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+Animation.h"; sourceTree = "<group>"; };
-		F441F5BC15F0269A00A1596A /* UIImageView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+Animation.m"; sourceTree = "<group>"; };
 		F468876E158129800086D351 /* PTChatHUDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView.h; sourceTree = "<group>"; };
 		F468876F158129800086D351 /* PTChatHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDView.m; sourceTree = "<group>"; };
 		F4688772158129C00086D351 /* UIImageView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayTell.h"; sourceTree = "<group>"; };
@@ -2972,10 +2972,10 @@
 				F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */,
 				F4688772158129C00086D351 /* UIImageView+PlayTell.h */,
 				F4688773158129C00086D351 /* UIImageView+PlayTell.m */,
-				F441F5BB15F0269A00A1596A /* UIImageView+Animation.h */,
-				F441F5BC15F0269A00A1596A /* UIImageView+Animation.m */,
 				F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */,
 				F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */,
+				8A1B91BA16160E6600B4BF46 /* UIImageView+Animations.h */,
+				8A1B91BB16160E6600B4BF46 /* UIImageView+Animations.m */,
 			);
 			path = categories;
 			sourceTree = "<group>";
@@ -3646,7 +3646,6 @@
 				8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */,
 				8A62E39D15E7EA0D0077CBB6 /* PTMemoryGameBoard.m in Sources */,
 				8A62E3A515E7EA800077CBB6 /* PTMemoryGameCard.m in Sources */,
-				F441F5BD15F0269A00A1596A /* UIImageView+Animation.m in Sources */,
 				8AC60EE115F80EA40012FD9F /* PTMemoryNewGameRequest.m in Sources */,
 				8AC60EE415F82E1F0012FD9F /* PTMemoryPlayTurnRequest.m in Sources */,
 				8AC60EE715F82E2F0012FD9F /* PTMemoryEndGameRequest.m in Sources */,
@@ -3655,6 +3654,7 @@
 				8A7F7A2F1601D20E00B049BF /* PTTictactoecoordinate.m in Sources */,
 				8AF80B781606CB2400F5BD06 /* PTMemoryViewController.m in Sources */,
 				8A1B91B8161584E400B4BF46 /* PTMemoryCardCoordinate.m in Sources */,
+				8A1B91BC16160E6600B4BF46 /* UIImageView+Animations.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

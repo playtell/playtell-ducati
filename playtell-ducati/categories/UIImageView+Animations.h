@@ -1,16 +1,14 @@
 //
-//  UIImageView+Animation.h
+//  UIImageView+Animations.h
 //  playtell-ducati
 //
-//  Created by Ricky Hussmann on 8/30/12.
+//  Created by Giancarlo D on 9/28/12. w/ Ricky Hussman
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-// Lovingly lifted from http://stackoverflow.com/questions/1632364/shake-visual-effect-on-iphone-not-shaking-the-device/1827373#1827373
-
 #import <UIKit/UIKit.h>
 
-@interface UIImageView (Animation)
+@interface UIImageView (Animations)
 
 - (void)earthquake;
 

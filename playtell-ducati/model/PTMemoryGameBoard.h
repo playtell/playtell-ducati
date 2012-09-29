@@ -20,19 +20,17 @@
 @property NSMutableArray *cardsOnBoard;
 @property BOOL isMyTurn, isOneCardAlreadyFlipped;
 
-- (void)initMemoryGameBoardWithNumCards:(int)numCards
-                               isMyTurn:(BOOL)isMyTurn
-                               playdate:(int)playdateId
-                              initiator:(int)initiatorId
-                               playmate:(int)playmateId;
+- (id)initMemoryGameBoardWithNumCards:(int)numCards
+                             isMyTurn:(BOOL)myTurn
+                             playdate:(int)playdateId
+                            initiator:(int)initiatorId
+                             playmate:(int)playmateId
+                         filenameDict:(NSArray *)allFilenames;
 
-- (NSMutableArray *)initializeCardsOnBoardWithOrderString;
 
 - (void)enableBoard;
 
 - (void)disableBoard;
-
-- (void)touchCard:(int)index;
 
 - (void)cardMatch:(int)card1Index card2:(int)card2Index;
 

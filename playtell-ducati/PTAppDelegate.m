@@ -13,6 +13,7 @@
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
+#import "PTMemoryViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTLoadingViewController.h"
 #import "PTPlayTellPusher.h"
@@ -35,6 +36,7 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize dateViewController = _dateViewController;
+@synthesize memoryViewController = _memoryViewController;
 @synthesize transitionController = _transitionController;
 @synthesize dialpadController = _dialpadController;
 @synthesize client;

@@ -1,14 +1,14 @@
 //
-//  UIImageView+Animation.m
+//  UIImageView+Animations.m
 //  playtell-ducati
 //
-//  Created by Ricky Hussmann on 8/30/12.
+//  Created by Giancarlo D on 9/28/12.
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import "UIImageView+Animation.h"
+#import "UIImageView+Animations.h"
 
-@implementation UIImageView (Animation)
+@implementation UIImageView (Animations)
 
 - (void)earthquake {
     CGFloat t = 2.0;
@@ -41,8 +41,8 @@
 }
 
 - (void)flipOverWithIsBackUp:(BOOL)backUp
-frontImage:(UIImage *)front
-backImage:(UIImage *)back
+                  frontImage:(UIImage *)front
+                   backImage:(UIImage *)back
 {
     UIImage *otherSideImage;
     otherSideImage = (backUp) ? front : back;
@@ -56,6 +56,35 @@ backImage:(UIImage *)back
                     completion:^(BOOL finished){
                         self.image = otherSideImage;
                     }];
+}
+
+- (void) flip
+{
+}
+
+- (void) enlarge
+{
+    
+}
+
+- (void) floatToMiddle
+{
+    
+} //preceeds stashInDeck
+
+- (void) stashInDeck:(int)player_id
+{
+    
+}
+
+- (void) shake
+{
+    
+}
+
+- (void) glow
+{
+    
 }
 
 @end

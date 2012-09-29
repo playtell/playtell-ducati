@@ -82,9 +82,6 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define CARD_WIDTH 170
 #define CARD_HEIGHT 238
 
-#define MEMORY_Y_ROW_0 255
-#define MEMORY_X_COL_0 257
-#define MEMORY_Y_ROW_1 512
-#define MEMORY_X_COL_1 767
+#define NUM_MEMORY_CARDS 6
 
 #endif

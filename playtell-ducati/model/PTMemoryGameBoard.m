@@ -15,7 +15,7 @@ NSString *backFilename = @"card-back.png";
 
 @synthesize initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard, cardsOnBoard, isMyTurn, isOneCardAlreadyFlipped;
 
-- (void)initMemoryGameBoardWithNumCards:(int)numCards
+- (id)initMemoryGameBoardWithNumCards:(int)numCards
                                isMyTurn:(BOOL)myTurn
                                playdate:(int)playdateId
                               initiator:(int)initiatorId
@@ -30,6 +30,9 @@ NSString *backFilename = @"card-back.png";
     [self setIsOneCardAlreadyFlipped:NO];
     
     [self setCardsOnBoard:[self initializeCardsOnBoard:allFilenames]];
+    [self setCardsLeftOnBoard:numCards];
+
+    return self;
 }
 
 - (NSMutableArray *)initializeCardsOnBoard:(NSArray *)filenames
@@ -37,9 +40,8 @@ NSString *backFilename = @"card-back.png";
     NSMutableArray *allCards = [[NSMutableArray alloc] init];
     int count = [filenames count];
     for (int i = 0; i < count; i++) {
-//        PTMemoryGameCard *oneCard = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i] backFilename:backFilename indexOnBoard:i boardX:[self grabBoardXFromIndex:i andNumCards:numCards] boardY:<#(float)#> cardWidth:<#(float)#> cardHeight:<#(float)#>
-        
-        
+        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i] backFilename:backFilename indexOnBoard:i];
+        [allCards addObject:card];        
     }
     return allCards;
 }
@@ -55,20 +57,10 @@ NSString *backFilename = @"card-back.png";
     
 }
 
-- (void)touchCard:(int)index
-{
-    //grab card
-    
-    //flip it
-    
-    //enlarge it
-}
-
 - (void)cardMatch:(int)card1Index
             card2:(int)card2Index
 
 {
-    //grab both cards
 }
 
 - (void)displayWinner

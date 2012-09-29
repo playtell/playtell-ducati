@@ -48,6 +48,7 @@
 #import "PTMemoryViewController.h"
 
 @interface PTDateViewController ()
+
 @property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
@@ -562,6 +563,7 @@
 }
 
 - (IBAction)playMemoryGame:(id)sender {
+    int numCards = NUM_MEMORY_CARDS;
     
     // ##start MEMORY API CALL ##
     PTPlaymate *playmate;
@@ -580,26 +582,21 @@
                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
                                initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                   theme_ID:@"19"
-                           num_total_cards:@"4"
+                            num_total_cards:[NSString stringWithFormat:@"%d", numCards]
                                  onSuccess:^(NSDictionary *result) {
                                      
-//                                     NSLog(@"%@", result);
+                                     NSLog(@"%@", result);
                                      
                                      //get response parameters
                                      NSString *board_id = [result valueForKey:@"board_id"];
                                      
                                      NSString *filenames = [result valueForKey:@"filename_dump"];
                                      filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
-                                     NSArray *items = [filenames componentsSeparatedByString:@"\",\""];
+                                     NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
                                                                           
                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                                      
-                                     PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] init];
-                                     
-                                     //set the game view controller
-                                     [memoryVC initializeWithPlaydate:self.playdate myTurn:YES boardID:[board_id integerValue] playmateID:playmate.userID initiatorID:[[PTUser currentUser] userID]];
-                                     
-                                     
+                                     PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:YES boardID:[board_id integerValue]  playmateID:playmate.userID  initiatorID:[[PTUser currentUser] userID] allFilenames:allFilenames numCards:numCards];
 #if !(TARGET_IPHONE_SIMULATOR)
                                      [memoryVC setChatController:self.chatController];
 #endif
