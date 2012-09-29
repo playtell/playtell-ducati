@@ -66,7 +66,8 @@ static PTVideoPhone* instance = nil;
     self.currentUserToken = aToken;
     
     self.session = [[OTSession alloc] initWithSessionId:aSession
-                                               delegate:self];
+                                               delegate:self
+                                            environment:OTSessionEnvironmentProduction];
     [self.session connectWithApiKey:kApiKey
                               token:aToken];
 
@@ -123,7 +124,7 @@ static PTVideoPhone* instance = nil;
         return;
     }
 
-#ifndef TARGET_IPHONE_SIMULATOR
+#if !(TARGET_IPHONE_SIMULATOR)
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
     self.publisher.delegate = self;
     [self.session publish:self.publisher];
