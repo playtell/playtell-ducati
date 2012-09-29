@@ -12,7 +12,6 @@
 #import "PTPlaydate.h"
 #import "PTMemoryGameCard.h"
 #import "PTMemoryGameBoard.h"
-#import "UIImageView+Animations.h"
 
 @interface PTMemoryViewController ()
 
@@ -64,7 +63,12 @@
     NSMutableArray *cardsOnBoard = [[self board] cardsOnBoard];
     int count = [cardsOnBoard count];
     for (int i = 0; i < count; i ++) {
-        [self.view addSubview:[[cardsOnBoard objectAtIndex:i] card]];
+        //set frame for UIButton
+        PTMemoryGameCard *cardObject = [cardsOnBoard objectAtIndex:i];
+        [cardObject.card setFrame:CGRectMake([[cardObject coordinates] boardX], [[cardObject coordinates] boardY], [cardObject cardWidth], [cardObject cardHeight])];
+
+        [self.view addSubview:cardObject.card];
+        NSLog(@"added a card");
     }
 }
 
@@ -78,18 +82,6 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	return YES;
-}
-
-// ## GAMEPLAY METHODS START ##
-- (IBAction)cardTouched:(id)sender
-{
-    //find out which card has been touched and grab it from the array of cards
-//    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
-//    UIButton *card2 = (UIButton *)sender;
-//
-//    NSString *filename = @"theme19artwork1.png";
-    
-//    [card.imageView flipOverWithIsBackUp:[card isBackUp] frontImage:[card front] backImage:[card back]];
 }
 
 - (void)pusherMemoryGameEndGame:(NSNotification *)notification {

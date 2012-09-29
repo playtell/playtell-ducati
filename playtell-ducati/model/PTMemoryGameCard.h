@@ -28,6 +28,7 @@
 
 - (id) initWithFrontFilename:(NSString *)front_filename
                 backFilename:(NSString *)back_filename
-                indexOnBoard:(int)board_index;
+                indexOnBoard:(int)board_index
+               numberOfCards:(int)num_cards;
 
 @end

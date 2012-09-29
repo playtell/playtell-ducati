@@ -26,11 +26,12 @@ NSString *backFilename = @"card-back.png";
     [self setTotalNumCards:numCards];
     [self setPlaydate_id:playdateId];
     [self setInitiator_id:initiatorId];
+    [self setPlaydate_id:playdateId];
     [self setIsMyTurn:myTurn];
     [self setIsOneCardAlreadyFlipped:NO];
-    
-    [self setCardsOnBoard:[self initializeCardsOnBoard:allFilenames]];
     [self setCardsLeftOnBoard:numCards];
+
+    [self setCardsOnBoard:[self initializeCardsOnBoard:allFilenames]];
 
     return self;
 }
@@ -40,8 +41,8 @@ NSString *backFilename = @"card-back.png";
     NSMutableArray *allCards = [[NSMutableArray alloc] init];
     int count = [filenames count];
     for (int i = 0; i < count; i++) {
-        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i] backFilename:backFilename indexOnBoard:i];
-        [allCards addObject:card];        
+        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i] backFilename:backFilename indexOnBoard:i numberOfCards:[self totalNumCards]];
+        [allCards addObject:card];
     }
     return allCards;
 }
