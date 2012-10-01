@@ -312,7 +312,6 @@
 		F420B7411585BA1800DCAF10 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F420B7401585BA1800DCAF10 /* TransitionController.m */; };
 		F441F5BD15F0269A00A1596A /* UIView+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = F441F5BC15F0269A00A1596A /* UIView+Animation.m */; };
 		F4432EC615FE34FE0088DCAB /* PTNullPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */; };
-		F44CFA2B160A55760089CCA0 /* koda-hi-2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */; };
 		F44CFA3C160ABB8E0089CCA0 /* PTFriendTouchTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA37160ABB8E0089CCA0 /* PTFriendTouchTooltip.m */; };
 		F44CFA3D160ABB8E0089CCA0 /* PTImageTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA39160ABB8E0089CCA0 /* PTImageTooltip.m */; };
 		F44CFA3E160ABB8E0089CCA0 /* PTTouchHereTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F44CFA3B160ABB8E0089CCA0 /* PTTouchHereTooltip.m */; };
@@ -330,7 +329,7 @@
 		F44E88BA161540DD00B998AD /* b-day@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A4161540DD00B998AD /* b-day@2X.png */; };
 		F44E88BB161540DD00B998AD /* buddy-point.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A5161540DD00B998AD /* buddy-point.png */; };
 		F44E88BC161540DD00B998AD /* buddy-point@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A6161540DD00B998AD /* buddy-point@2X.png */; };
-		F44E88BD161540DD00B998AD /* close-activity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A7161540DD00B998AD /* close-activity@2x.png */; };
+		F44E88BD161540DD00B998AD /* close-activity@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A7161540DD00B998AD /* close-activity@2X.png */; };
 		F44E88BE161540DD00B998AD /* close-activity.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A8161540DD00B998AD /* close-activity.png */; };
 		F44E88BF161540DD00B998AD /* end-call.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88A9161540DD00B998AD /* end-call.png */; };
 		F44E88C0161540DD00B998AD /* end-call@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F44E88AA161540DD00B998AD /* end-call@2X.png */; };
@@ -363,9 +362,9 @@
 		F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */; };
 		F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46B3FC215A4B0790023C82B /* Opentok.framework */; };
 		F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F46B3FC415A4B2220023C82B /* opentok.bundle */; };
+		F48541D01617B392003E78E6 /* Solo_HiToybox.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F48541CF1617B392003E78E6 /* Solo_HiToybox.mp4 */; };
 		F4A123F01592777600FC7A24 /* music-box.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EE1592777600FC7A24 /* music-box.wav */; };
 		F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */; };
-		F4A5373116080706001B1519 /* koda-hi.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A5373016080706001B1519 /* koda-hi.mp4 */; };
 		F4A5373416080750001B1519 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A537331608074F001B1519 /* MediaPlayer.framework */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
@@ -943,7 +942,6 @@
 		F441F5BC15F0269A00A1596A /* UIView+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animation.m"; sourceTree = "<group>"; };
 		F4432EC415FE34FE0088DCAB /* PTNullPlaymate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNullPlaymate.h; sourceTree = "<group>"; };
 		F4432EC515FE34FE0088DCAB /* PTNullPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNullPlaymate.m; sourceTree = "<group>"; };
-		F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "koda-hi-2.mp4"; sourceTree = "<group>"; };
 		F44CFA36160ABB8E0089CCA0 /* PTFriendTouchTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendTouchTooltip.h; sourceTree = "<group>"; };
 		F44CFA37160ABB8E0089CCA0 /* PTFriendTouchTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFriendTouchTooltip.m; sourceTree = "<group>"; };
 		F44CFA38160ABB8E0089CCA0 /* PTImageTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTImageTooltip.h; sourceTree = "<group>"; };
@@ -966,7 +964,7 @@
 		F44E88A4161540DD00B998AD /* b-day@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "b-day@2X.png"; sourceTree = "<group>"; };
 		F44E88A5161540DD00B998AD /* buddy-point.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "buddy-point.png"; sourceTree = "<group>"; };
 		F44E88A6161540DD00B998AD /* buddy-point@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "buddy-point@2X.png"; sourceTree = "<group>"; };
-		F44E88A7161540DD00B998AD /* close-activity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-activity@2x.png"; sourceTree = "<group>"; };
+		F44E88A7161540DD00B998AD /* close-activity@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-activity@2X.png"; sourceTree = "<group>"; };
 		F44E88A8161540DD00B998AD /* close-activity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-activity.png"; sourceTree = "<group>"; };
 		F44E88A9161540DD00B998AD /* end-call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call.png"; sourceTree = "<group>"; };
 		F44E88AA161540DD00B998AD /* end-call@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call@2X.png"; sourceTree = "<group>"; };
@@ -1007,9 +1005,9 @@
 		F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PTPlaydate+InitatorChecking.m"; sourceTree = "<group>"; };
 		F46B3FC215A4B0790023C82B /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/opentok/Opentok.framework; sourceTree = "<group>"; };
 		F46B3FC415A4B2220023C82B /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/opentok/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
+		F48541CF1617B392003E78E6 /* Solo_HiToybox.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_HiToybox.mp4; sourceTree = "<group>"; };
 		F4A123EE1592777600FC7A24 /* music-box.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "music-box.wav"; path = "audio/music-box.wav"; sourceTree = "<group>"; };
 		F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "ringtone-connecting.mp3"; path = "audio/ringtone-connecting.mp3"; sourceTree = "<group>"; };
-		F4A5373016080706001B1519 /* koda-hi.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "koda-hi.mp4"; sourceTree = "<group>"; };
 		F4A537331608074F001B1519 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -2144,7 +2142,7 @@
 				F44E88A5161540DD00B998AD /* buddy-point.png */,
 				F44E88A6161540DD00B998AD /* buddy-point@2X.png */,
 				F44E88A8161540DD00B998AD /* close-activity.png */,
-				F44E88A7161540DD00B998AD /* close-activity@2x.png */,
+				F44E88A7161540DD00B998AD /* close-activity@2X.png */,
 				F44E88A9161540DD00B998AD /* end-call.png */,
 				F44E88AA161540DD00B998AD /* end-call@2X.png */,
 				F44E88AB161540DD00B998AD /* invite-fam.png */,
@@ -2179,11 +2177,10 @@
 				F44E889216153EA100B998AD /* Solo_Book.mp4 */,
 				F44E889316153EA100B998AD /* Solo_Games.mp4 */,
 				F44E889416153EA100B998AD /* Solo_Hi.mp4 */,
+				F48541CF1617B392003E78E6 /* Solo_HiToybox.mp4 */,
 				F44E889516153EA100B998AD /* Solo_MePoint.mp4 */,
 				F44E889616153EA100B998AD /* Solo_Toybox.mp4 */,
 				F44E889716153EA100B998AD /* Solo_YouPoint.mp4 */,
-				F4A5373016080706001B1519 /* koda-hi.mp4 */,
-				F44CFA29160A55620089CCA0 /* koda-hi-2.mp4 */,
 			);
 			path = video;
 			sourceTree = "<group>";
@@ -3645,8 +3642,6 @@
 				23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */,
 				23BE484315FA8865005BF396 /* endCallButton.png in Resources */,
 				23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */,
-				F4A5373116080706001B1519 /* koda-hi.mp4 in Resources */,
-				F44CFA2B160A55760089CCA0 /* koda-hi-2.mp4 in Resources */,
 				F44E889816153EA100B998AD /* Solo_Book.mp4 in Resources */,
 				F44E889916153EA100B998AD /* Solo_Games.mp4 in Resources */,
 				F44E889A16153EA100B998AD /* Solo_Hi.mp4 in Resources */,
@@ -3659,7 +3654,7 @@
 				F44E88BA161540DD00B998AD /* b-day@2X.png in Resources */,
 				F44E88BB161540DD00B998AD /* buddy-point.png in Resources */,
 				F44E88BC161540DD00B998AD /* buddy-point@2X.png in Resources */,
-				F44E88BD161540DD00B998AD /* close-activity@2x.png in Resources */,
+				F44E88BD161540DD00B998AD /* close-activity@2X.png in Resources */,
 				F44E88BE161540DD00B998AD /* close-activity.png in Resources */,
 				F44E88BF161540DD00B998AD /* end-call.png in Resources */,
 				F44E88C0161540DD00B998AD /* end-call@2X.png in Resources */,
@@ -3677,6 +3672,7 @@
 				F44E88CC161540DD00B998AD /* turn-page@2X.png in Resources */,
 				F44E88CF1615528A00B998AD /* solo-bot-profile.png in Resources */,
 				F44E88D01615528A00B998AD /* solo-bot-profile@2x.png in Resources */,
+				F48541D01617B392003E78E6 /* Solo_HiToybox.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

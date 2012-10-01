@@ -146,7 +146,7 @@
 }
 
 - (void)setPlaymate:(PTPlaymate *)aPlaymate {
-    UIImageView* anImageview = [[UIImageView alloc] initWithImage:playmate.userPhoto];
+    UIImageView* anImageview = [[UIImageView alloc] initWithImage:aPlaymate.userPhoto];
     anImageview.contentMode = UIViewContentModeScaleAspectFit;
     [self.chatView setLeftView:anImageview];
     playmate = aPlaymate;

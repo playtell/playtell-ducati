@@ -7,6 +7,8 @@
 //
 
 #import "Logging.h"
+#import "PTCloseActivityTooltip.h"
+#import "PTEndCallToolTip.h"
 #import "PTFriendTouchTooltip.h"
 #import "PTSoloUser.h"
 #import "PTTouchHereTooltip.h"
@@ -15,10 +17,13 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @interface PTSoloUser ()
-@property (nonatomic, retain) MPMoviePlayerController* moviePlayer;
-@property (nonatomic, retain) PTTouchHereTooltip *touchTooltip;
-@property (nonatomic, retain) PTFriendTouchTooltip *friendTooltip;
+@property (nonatomic, strong) MPMoviePlayerController* moviePlayer;
+@property (nonatomic, strong) PTTouchHereTooltip *touchTooltip;
+@property (nonatomic, strong) PTFriendTouchTooltip *friendTooltip;
+@property (nonatomic, strong) PTCloseActivityTooltip *closeTooltip;
+@property (nonatomic, strong) PTEndCallTooltip* endCallTooltip;
 @property (nonatomic, assign) BOOL isFirstBookOpened;
+@property (nonatomic, assign) BOOL isTouchTipsVisibile;
 @end
 
 @implementation PTSoloUser
@@ -26,15 +31,10 @@
 @synthesize moviePlayer;
 @synthesize touchTooltip;
 @synthesize friendTooltip;
+@synthesize closeTooltip;
+@synthesize endCallTooltip;
 @synthesize isFirstBookOpened;
-
-- (BOOL)isARobot {
-    return YES;
-}
-
-- (void)resetScriptState {
-    self.isFirstBookOpened = NO;
-}
+@synthesize isTouchTipsVisibile;
 
 - (id)init {
     if (self = [super init]) {
@@ -48,103 +48,15 @@
         
         self.touchTooltip = [[PTTouchHereTooltip alloc] initWithWidth:201.0f];
         self.friendTooltip = [[PTFriendTouchTooltip alloc] initWithWidth:300.0f];
+        self.closeTooltip = [[PTCloseActivityTooltip alloc] initWithWidth:225.0f];
+        self.endCallTooltip = [[PTEndCallTooltip alloc] initWithWidth:206.0f];
+        [self resetScriptState];
     }
     return self;
 }
 
-- (void)setDateController:(PTDateViewController *)aDateController {
-    dateController = aDateController;
-    
-    // Remove from previous notifications, and subscribe to notifications
-    // for this instance of the DateController (ensures we're only subscribed once)
-    [self removeAllPreviousNotificationsForDateController:aDateController];
-    [self registerForNotificationsForDateController:aDateController];
-}
-
-- (void)removeAllPreviousNotificationsForDateController:(PTDateViewController*)aDateController {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"PTDialpadLoadedNotification"
-                                                  object:aDateController];
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"PTBookOpened"
-                                                  object:aDateController];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"PTPlaydateEnded"
-                                                  object:aDateController];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"PTPageTurned"
-                                                  object:aDateController];
-}
-
-- (void)registerForNotificationsForDateController:(PTDateViewController*)aDateController {
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"PTDialpadLoadedNotification"
-                                                      object:aDateController
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      PTDateViewController* sender = note.object;
-                                                      [self playIntroVideoWithChatController:sender.chatController];
-                                                  }];
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"PTBookOpened"
-                                                      object:aDateController
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      if (self.isFirstBookOpened) {
-                                                          return;
-                                                      }
-                                                      
-                                                      PTDateViewController* sender = note.object;
-                                                      [self playSecondVideoWithChatController:sender.chatController];
-
-                                                      self.touchTooltip.alpha = 0.0f;
-                                                      [self.touchTooltip addToView:sender.view
-                                                                  withCaretAtPoint:CGPointMake(641.0f, 365.0f)];
-                                                      
-                                                      self.friendTooltip.alpha = 0.0f;
-                                                      [self.friendTooltip addToView:sender.view
-                                                                   withCaretAtPoint:CGPointMake(855.0f, 525.0f)];
-                                                      
-                                                      [UIView animateWithDuration:0.5 animations:^{
-                                                          self.touchTooltip.alpha = 1.0;
-                                                          self.friendTooltip.alpha = 1.0;
-                                                      }];
-                                                      
-                                                      self.isFirstBookOpened = YES;
-                                                  }];
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"PTPageTurned"
-                                                      object:aDateController
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      if (self.isFirstBookOpened) {
-                                                          [self.touchTooltip removeFromSuperview];
-                                                          [self.friendTooltip removeFromSuperview];
-                                                      }
-                                                  }];
-    
-    [[NSNotificationCenter defaultCenter] addObserverForName:@"PTPlaydateEnded"
-                                                      object:aDateController
-                                                       queue:nil
-                                                  usingBlock:^(NSNotification *note) {
-                                                      LogDebug(@"Playdate Ended.");
-                                                      PTDateViewController* sender = note.object;
-                                                      [sender.chatController stopPlayingMovies];
-                                                  }];
-}
-
-- (void)playIntroVideoWithChatController:(PTChatViewController*)chatController {
-    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_Toybox"
-                                              withExtension:@"mp4"];
-    [chatController playMovieURLInLeftPane:introURL];
-}
-
-- (void)playSecondVideoWithChatController:(PTChatViewController*)chatController {
-    NSURL *secondURL = [[NSBundle mainBundle] URLForResource:@"Solo_MePoint"
-                                               withExtension:@"mp4"];
-    [chatController playMovieURLInLeftPane:secondURL];
+- (BOOL)isARobot {
+    return YES;
 }
 
 - (NSURL*)photoURL {
@@ -166,6 +78,163 @@
 
 - (NSString*)username {
     return @"Test Call with Solo";
+}
+
+
+- (void)resetScriptState {
+    self.isFirstBookOpened = NO;
+    self.isTouchTipsVisibile = NO;
+}
+
+- (void)setDateController:(PTDateViewController *)aDateController {
+    dateController = aDateController;
+    aDateController.delegate = self;
+}
+
+#pragma mark - Notification Handlers
+
+- (void)dateControllerOpenedBook:(PTDateViewController *)sender {
+    if (self.isFirstBookOpened) {
+        return;
+    }
+    
+    [self playOpenedBookVideoWithChatController:sender.chatController];
+    self.isFirstBookOpened = YES;
+}
+
+#pragma mark - PTDateViewControllerDelegate methods
+
+- (void)dateViewController:(PTDateViewController *)controller didTurnBookToPage:(NSUInteger)pageNumber {
+    
+    // TODO : this if statement is a hack. The DateViewController, when moving to the
+    // second page calls the page turn method first with the number 2, then the number 1, and
+    // then again with the number 2 in quick succession.
+    if (pageNumber < 3 && !self.isTouchTipsVisibile) {
+        
+        self.friendTooltip.alpha = 0.0f;
+        [self.friendTooltip addToView:controller.view
+                     withCaretAtPoint:CGPointMake(855.0f, 525.0f)];
+        
+        self.closeTooltip.alpha = 0.0f;
+        [self.closeTooltip addToView:controller.view
+                    withCaretAtPoint:CGPointMake(934.0f, 35.0f)];
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            self.friendTooltip.alpha = 1.0;
+            self.closeTooltip.alpha = 1.0;
+        }];
+        [self playSecondVideoWithChatController:controller.chatController];
+        self.isTouchTipsVisibile = YES;
+        
+        [self performSelector:@selector(addMeTouchTooltipAndStartVideoWithController:)
+                   withObject:controller
+                   afterDelay:3.0f];
+    }
+    
+    if (pageNumber == 3) {
+        [self.friendTooltip removeFromSuperview];
+        [self.touchTooltip removeFromSuperview];
+    }
+}
+
+- (void)addMeTouchTooltipAndStartVideoWithController:(PTDateViewController*)controller {
+    self.touchTooltip.alpha = 0.0f;
+    [self.touchTooltip addToView:controller.view
+                withCaretAtPoint:CGPointMake(641.0f, 365.0f)];
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        self.touchTooltip.alpha = 1.0;
+    }];
+}
+
+- (void)dateViewController:(PTDateViewController *)controller didOpenBookWithID:(NSUInteger)bookID {
+    if (self.isFirstBookOpened) {
+        return;
+    }
+    
+    [self playOpenedBookVideoWithChatController:controller.chatController];
+    self.isFirstBookOpened = YES;
+}
+
+- (void)dateViewcontrollerWillCloseBook:(PTDateViewController *)controller {
+
+    // Don't re-add the end call tooltip if it's already
+    // added
+    if (self.endCallTooltip.superview != controller.view) {
+        self.endCallTooltip.alpha = 0.0f;
+        [self.endCallTooltip addToView:controller.view
+                      withCaretAtPoint:CGPointMake(78.0f, 36.0f)];
+    }
+    
+    [UIView animateWithDuration:0.5f animations:^{
+        self.closeTooltip.alpha = 0.0f;
+        self.endCallTooltip.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        [self.closeTooltip removeFromSuperview];
+    }];
+    
+    [self.touchTooltip removeFromSuperview];
+    [self.friendTooltip removeFromSuperview];
+}
+
+- (void)dateViewControllerWillAppear:(PTDateViewController *)controller {
+    [self playIntroVideoWithChatController:controller.chatController];
+}
+
+- (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller {
+    [controller.chatController stopPlayingMovies];
+}
+
+- (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf {
+    // Hit rect should be centered at 641.0f, 365.0f
+    // The rect width and height is 104.0f
+    //
+    // In the future, the hit 
+    CGRect touchHereHitArea = CGRectMake(641.0f - 52.0f,
+                                         365.0f - 52.0f,
+                                         104.0f,
+                                         104.0f);
+    
+    if (self.touchTooltip.superview && initiatedBySelf && CGRectContainsPoint(touchHereHitArea, point)) {
+        [self playYouTouchVideoWithChatController:controller.chatController];
+    }
+}
+
+- (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller {
+    [self playNoGamesVideoWithChatController:controller.chatController];
+    return NO;
+}
+
+#pragma mark - Video loading convenience methods
+
+- (void)playIntroVideoWithChatController:(PTChatViewController*)chatController {
+    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_HiToybox"
+                                              withExtension:@"mp4"];
+    [chatController playMovieURLInLeftPane:introURL];
+}
+
+- (void)playOpenedBookVideoWithChatController:(PTChatViewController*)chatController {
+    NSURL *bookOpenedURL = [[NSBundle mainBundle] URLForResource:@"Solo_Book"
+                                                   withExtension:@"mp4"];
+    [chatController playMovieURLInLeftPane:bookOpenedURL];
+}
+
+- (void)playSecondVideoWithChatController:(PTChatViewController*)chatController {
+    NSURL *secondURL = [[NSBundle mainBundle] URLForResource:@"Solo_MePoint"
+                                               withExtension:@"mp4"];
+    [chatController playMovieURLInLeftPane:secondURL];
+}
+
+- (void)playYouTouchVideoWithChatController:(PTChatViewController*)chatController {
+    NSURL *youTouchURL = [[NSBundle mainBundle] URLForResource:@"Solo_YouPoint"
+                                                 withExtension:@"mp4"];
+    [chatController playMovieURLInLeftPane:youTouchURL];
+}
+
+- (void)playNoGamesVideoWithChatController:(PTChatViewController*)chatController {
+    NSURL *noGameURL = [[NSBundle mainBundle] URLForResource:@"Solo_Games"
+                                               withExtension:@"mp4"];
+    [chatController playMovieURLInLeftPane:noGameURL];
 }
 
 @end

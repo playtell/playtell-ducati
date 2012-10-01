@@ -9,7 +9,7 @@
 #import "PTDateViewController.h"
 #import "PTPlaymate.h"
 
-@interface PTSoloUser : PTPlaymate
+@interface PTSoloUser : PTPlaymate <PTDateViewControllerDelegate>
 
 @property (nonatomic, retain) PTDateViewController* dateController;
 

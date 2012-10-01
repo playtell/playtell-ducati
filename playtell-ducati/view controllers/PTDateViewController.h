@@ -16,6 +16,18 @@
 #import "PTPlaydate.h"
 #import "PTPlaymate.h"
 
+@class PTDateViewController;
+
+@protocol PTDateViewControllerDelegate <NSObject>
+- (void)dateViewController:(PTDateViewController *)controller didTurnBookToPage:(NSUInteger)pageNumber;
+- (void)dateViewController:(PTDateViewController *)controller didOpenBookWithID:(NSUInteger)bookID;
+- (void)dateViewcontrollerWillCloseBook:(PTDateViewController *)controller;
+- (void)dateViewControllerWillAppear:(PTDateViewController *)controller;
+- (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller;
+- (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf;
+- (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller;
+@end
+
 @interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
     // Playdate
     PTPlaydate *playdate;
@@ -58,6 +70,7 @@
 
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
 @property (nonatomic, strong) PTChatViewController* chatController;
+@property (nonatomic, weak) NSObject<PTDateViewControllerDelegate> *delegate;
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)chatController;

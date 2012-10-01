@@ -60,6 +60,7 @@
 @synthesize endPlaydate, endPlaydateForreal, closeBook, endPlaydatePopup, button2;
 @synthesize chatController;
 @synthesize playmate;
+@synthesize delegate;
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)aChatController {
@@ -384,11 +385,28 @@
 }
 
 - (void)ticTacToeTapped:(UIGestureRecognizer*)tapRecognizer {
+    // Only allow a game to be played if the delegate allows it
+    if (![self delegateAllowsPlayingGames]) {
+        return;
+    }
+    
     [self playTictactoe:nil];
 }
 
 - (void)memoryTapped:(UIGestureRecognizer*)tapRecognizer {
+    // Only allow a game to be played if the delegate allows it
+    if (![self delegateAllowsPlayingGames]) {
+        return;
+    }
     [self playMemoryGame:nil];
+}
+
+- (BOOL)delegateAllowsPlayingGames {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewControllerShouldPlayGame:)]) {
+        return [self.delegate dateViewControllerShouldPlayGame:self];
+    }
+    
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -412,8 +430,10 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTDialpadLoadedNotification"
-                                                        object:self];
+    // Alert the delegate the DateViewController will appear
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewControllerWillAppear:)]) {
+        [self.delegate dateViewControllerWillAppear:self];
+    }
 }
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
@@ -625,9 +645,12 @@
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTPlaydateEnded"
-                                                        object:self
-                                                      userInfo:nil];
+
+    // Alert the delegate of playdate end
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewControllerDidEndPlaydate:)]) {
+        [self.delegate dateViewControllerDidEndPlaydate:self];
+    }
+
     if ([self.playmate isARobot]) {
         [self transitionToDialpad];
     }
@@ -707,6 +730,11 @@
 }
 
 - (void)closeBookUsingBookView:(PTBookView*)bookView {
+    // Alert the delegate a book will close
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewcontrollerWillCloseBook:)]) {
+        [self.delegate dateViewcontrollerWillCloseBook:self];
+    }
+
     // Reset page loading
     [pagesToLoad removeAllObjects];
     isPageViewLoading = NO;
@@ -1123,10 +1151,10 @@
     [pagesScrollView setHidden:NO];
     [bookView setHidden:YES];
     
-    // Post a notification the book was opened
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTBookOpened"
-                                                        object:self
-                                                      userInfo:nil];
+    // Alert the delegate of the book opening
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewController:didOpenBookWithID:)]) {
+        [self.delegate dateViewController:self didOpenBookWithID:[bookId integerValue]];
+    }
 }
 
 - (void)bookClosedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
@@ -1198,8 +1226,9 @@
     }
     
     // Post notification of page turn
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PTPageTurned"
-                                                        object:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewController:didTurnBookToPage:)]) {
+        [self.delegate dateViewController:self didTurnBookToPage:number];
+    }
 }
 
 - (void)pageLoaded:(NSInteger)number {
@@ -1318,6 +1347,16 @@
 #pragma mark Grandma Finger
 
 - (void)addFingerAtPoint:(CGPoint)point initiatedBySelf:(BOOL)isInitiatedBySelf {
+
+    LogDebug(@"Date view point: %@", NSStringFromCGPoint(point));
+    // Alert the delegate of the touch event
+    if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewController:detectedGrandmaFingerAtPoint:isInitiatedBySelf:)]) {
+        UIView *currentPageView = [pagesScrollView getPageViewAtPageNumber:pagesScrollView.currentPage];
+        [self.delegate dateViewController:self
+             detectedGrandmaFingerAtPoint:[self.view convertPoint:point fromView:currentPageView]
+                        isInitiatedBySelf:isInitiatedBySelf];
+    }
+    
     // Create finger view
     UIImage *fingerImage;
     if (isInitiatedBySelf == YES) {

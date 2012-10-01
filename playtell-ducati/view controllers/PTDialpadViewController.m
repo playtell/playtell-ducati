@@ -274,28 +274,46 @@
 - (void)playmateClicked:(PTPlaymateButton*)sender {
     // Initiate playdate request
     // TODO This check needs to go away at some point...
-    [self initiatePlaydateWithPlaymate:sender.playmate];
+    
+    UIImage *playmateImage = [sender.playmate userPhoto];
+    UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
+    CGRect buttonRect = sender.frame;
+    buttonRect.origin = [self.view convertPoint:buttonRect.origin
+                                       fromView:self.scrollView];
+    playmateImageView.frame = buttonRect;
+    [self.view insertSubview:playmateImageView belowSubview:self.chatController.view];
+    
+    [UIView animateWithDuration:1.0 animations:^{
+        CGRect imageViewFrame = playmateImageView.frame;
+        imageViewFrame.origin = CGPointMake(312, -1);
+        playmateImageView.frame = imageViewFrame;
+    } completion:^(BOOL finished) {
+        self.chatController.playmate = sender.playmate;
+        [playmateImageView removeFromSuperview];
 
-    // If the user is logged in and the
-    if ([[PTUser currentUser] isLoggedIn] && ![sender.playmate isARobot]) {
-        PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-        [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
-                                              authToken:[[PTUser currentUser] authToken]
-                                              onSuccess:^(NSDictionary *result)
-         {
-             LogInfo(@"playdateCreateWithFriend response: %@", result);
-             PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                            playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-             self.chatController.playdate = aPlaydate;
-             [self.chatController connectToOpenTokSession];
-             [self.dateController setPlaydate:aPlaydate];
-             self.dateController = nil;
-         } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-             LogError(@"playdateCreateWithFriend failed: %@", error);
-         }];
-        LogInfo(@"Requesting playdate...");
-        [self.chatController setLoadingViewForPlaymate:sender.playmate];
-    }
+        [self initiatePlaydateWithPlaymate:sender.playmate];
+
+        // If the user is logged in and the
+        if ([[PTUser currentUser] isLoggedIn] && ![sender.playmate isARobot]) {
+            PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+            [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
+                                                  authToken:[[PTUser currentUser] authToken]
+                                                  onSuccess:^(NSDictionary *result)
+             {
+                 LogInfo(@"playdateCreateWithFriend response: %@", result);
+                 PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                                playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+                 self.chatController.playdate = aPlaydate;
+                 [self.chatController connectToOpenTokSession];
+                 [self.dateController setPlaydate:aPlaydate];
+                 self.dateController = nil;
+             } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                 LogError(@"playdateCreateWithFriend failed: %@", error);
+             }];
+            LogInfo(@"Requesting playdate...");
+            [self.chatController setLoadingViewForPlaymate:sender.playmate];
+        }
+    }];
 }
 
 //
