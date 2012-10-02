@@ -3747,10 +3747,12 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D7FAE8CE-D72C-4A1E-B0D6-685E553210C8";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3776,10 +3778,12 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -3831,10 +3835,12 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Staging";
@@ -3885,10 +3891,12 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1325F22A-B611-4CBF-9BDC-A1DB7D44BFBA";
+				VALID_ARCHS = "armv7s armv7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Production";

@@ -30,5 +30,6 @@
                 backFilename:(NSString *)back_filename
                 indexOnBoard:(int)board_index
                numberOfCards:(int)num_cards;
+- (void)flipCardAnimation;
 
 @end

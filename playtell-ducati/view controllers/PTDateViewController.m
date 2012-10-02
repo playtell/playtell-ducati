@@ -211,7 +211,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
     //listen for tictactoe game
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeNewGame:) name:@"PlayDateTictactoeNewGame" object:nil];
-
+    //listen for memory game
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryNewGame:) name:@"PlayDateMemoryNewGame" object:nil];
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -855,6 +856,48 @@
         //bring up the view controller of the new game!
         [appDelegate.transitionController loadGame:tictactoeVc
                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
+    }
+}
+
+
+- (void)pusherPlayDateMemoryNewGame:(NSNotification *)notification {
+    //check here to make sure it's coming from the other player
+    
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
+    NSInteger numCards = [[eventData objectForKey:@"num_cards"] integerValue];
+    NSString *filenames = [eventData objectForKey:@"filename_dump"];
+    filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
+    NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
+    NSLog(@"Pusher new memory request: filenames are as follows: %@", allFilenames);
+    
+    PTPlaymate *playmate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        LogInfo(@"Current user is initator. Playmate is playmate.");
+        playmate = self.playdate.playmate;
+        
+    } else {
+        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
+        playmate = self.playdate.initiator;
+    }
+    
+    //if we did not init new game but there is a pusher for new game on our playdate....
+    if (initiator_id != [[PTUser currentUser] userID]) {
+        
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:YES boardID:board_id playmateID:playmate.userID  initiatorID:[[PTUser currentUser] userID] allFilenames:allFilenames numCards:numCards];
+#if !(TARGET_IPHONE_SIMULATOR)
+        [memoryVC setChatController:self.chatController];
+#endif
+        
+        CGRect imageframe = CGRectMake(0,0,1024,768);
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+        splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+        //bring up the view controller of the new game!
+        [appDelegate.transitionController loadGame:memoryVC
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
     }
 }
 

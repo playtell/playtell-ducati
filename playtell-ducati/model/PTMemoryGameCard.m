@@ -51,13 +51,29 @@
     return self;
 }
 
+- (void)flipCardAnimation
+{
+    UIImage *otherSideImage;
+    otherSideImage = (self.isBackUp) ? self.front : self.back;
+    
+    [UIView transitionWithView:self.card
+                      duration:0.5f
+                       options:UIViewAnimationOptionTransitionFlipFromLeft
+                    animations:^{
+                        [[self card] setBackgroundImage:otherSideImage forState:UIControlStateNormal];
+                    }
+                    completion:^(BOOL finished){
+                        [[self card] setBackgroundImage:otherSideImage forState:UIControlStateNormal];
+                    }];
+    ([self isBackUp]) ? [self setIsBackUp:NO] : [self setIsBackUp:YES];
+}
+
 // ## GAMEPLAY METHODS START ##
 - (IBAction)cardTouched:(id)sender
 {
-    //find out which card has been touched and grab it from the array of cards
-    //    PTMemoryGameCard *card = (PTMemoryGameCard *)sender;
-
-    [self.card.imageView setAlpha:.5]; //flipOverWithIsBackUp:[self isBackUp] frontImage:[self front] backImage:[self back]];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [[[appDelegate memoryViewController] board] playTurn:self];
+    [self flipCardAnimation];
 }
 
 

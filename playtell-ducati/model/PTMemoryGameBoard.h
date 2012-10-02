@@ -7,16 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PTMemoryGameCard.h"
 
 @interface PTMemoryGameBoard : NSObject
 {
     BOOL isMyTurn, isOneCardAlreadyFlipped;
-    int initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard;
+    int initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard, board_id;
     
     NSMutableArray *cardsOnBoard;
 }
 
-@property int initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard;
+@property int initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard, board_id;
 @property NSMutableArray *cardsOnBoard;
 @property BOOL isMyTurn, isOneCardAlreadyFlipped;
 
@@ -25,6 +26,7 @@
                              playdate:(int)playdateId
                             initiator:(int)initiatorId
                              playmate:(int)playmateId
+                              boardId:(int)boardId
                          filenameDict:(NSArray *)allFilenames;
 
 
@@ -41,5 +43,7 @@
 - (void)endGame;
 
 - (void)suspendGame;
+
+- (void) playTurn:(PTMemoryGameCard *)card;
 
 @end
