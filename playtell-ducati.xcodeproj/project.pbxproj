@@ -3595,6 +3595,7 @@
 			isa = PBXGroup;
 			children = (
 				231786C1161A25F8006BCF6B /* new user */,
+				23CC06A215C9A9BB003CAA11 /* contact import */,
 				F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */,
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				23A1EAA915ED2594000FED09 /* PTPlaymateView.h */,
@@ -3616,7 +3617,6 @@
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				F4A9D8D01578153E0015D977 /* PTTextField.h */,
 				F4A9D8D11578153E0015D977 /* PTTextField.m */,
-				23CC06A215C9A9BB003CAA11 /* contact import */,
 			);
 			path = views;
 			sourceTree = "<group>";
