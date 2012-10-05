@@ -27,4 +27,67 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #define LOGMETHOD LogTrace(@"%@",NSStringFromSelector(_cmd))
 
+// ## GENERIC GAME STUFF ##
+#define TICTACTOE 0
+#define MEMORY 1
+
+// ## TIC TAC TOE START ###
+#define NOT_PLACED 0
+#define PLACED_SUCCESS 1
+#define PLACED_WON 2
+#define PLACED_CATS 3
+
+#define COL_COORDINATE_0 205
+#define COL_COORDINATE_1 393
+#define COL_COORDINATE_2 580
+
+#define ROW_COORDINATE_0 225
+#define ROW_COORDINATE_1 421
+#define ROW_COORDINATE_2 617
+
+#define SPACE_HEIGHT 180
+#define SPACE_WIDTH 186
+#define HALF_SPACE_HEIGHT 90
+#define HALF_SPACE_WIDTH 93
+
+
+#define VISUAL_GAP_BETWEEN_SPACES_NON_RETNA 11 //in pixels
+
+//you win status codes
+#define YOU_DID_NOT_WIN_YET 99
+#define PLACED_WON_ACROSS_TOP_LEFT 9
+#define PLACED_WON_ACROS_BOTTON_LEFT 10
+
+#define PLACED_WON_ROW_0 11
+#define PLACED_WON_ROW_1 12
+#define PLACED_WON_ROW_2 13
+
+#define PLACED_WON_COL_0 6
+#define PLACED_WON_COL_1 7
+#define PLACED_WON_COL_2 8
+
+#define IPAD_WIDTH 1024
+#define IPAD_HEIGHT 768
+
+#define PIECE_X 0
+#define PIECE_Y 1
+
+#define X_SOUND 0
+#define O_SOUND 1
+#define MISS_SOUND 2
+#define STRIKEOUT_SOUND 3
+#define WIN_SOUND 4
+#define LOSS_SOUND 5
+
+// ##MEMORY GAME START ###
+#define CARD_WIDTH 170
+#define CARD_HEIGHT 238
+
+#define NUM_MEMORY_CARDS 6
+
+#define MATCH_FOUND 0
+#define MATCH_ERROR 1
+#define FLIP_FIRST_CARD 2
+#define MATCH_WINNER 3
+
 #endif

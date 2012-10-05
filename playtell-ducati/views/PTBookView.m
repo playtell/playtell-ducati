@@ -294,7 +294,7 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    //NSLog(@"Touched me: %@", [self getId]);
+    NSLog(@"Touched me: %@", [self getId]);
     [delegate bookTouchedWithId:[self getId] AndView:self];
 }
 

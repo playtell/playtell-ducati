@@ -9,6 +9,7 @@
 #import "Logging.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
+#import "TargetConditionals.h"
 
 @interface PTVideoPhone ()
 @property (nonatomic, retain) OTSession *session;
@@ -53,6 +54,7 @@ static PTVideoPhone* instance = nil;
     [self wakeUp];
 }
 
+//associates ipad with session and communicates with server
 - (void)connectToSession:(NSString*)aSession
                withToken:(NSString*)aToken
                  success:(PTVideoConnectionSuccessBlock)onSuccess
@@ -64,7 +66,8 @@ static PTVideoPhone* instance = nil;
     self.currentUserToken = aToken;
     
     self.session = [[OTSession alloc] initWithSessionId:aSession
-                                               delegate:self];
+                                               delegate:self
+                                            environment:OTSessionEnvironmentProduction];
     [self.session connectWithApiKey:kApiKey
                               token:aToken];
 
@@ -121,6 +124,7 @@ static PTVideoPhone* instance = nil;
         return;
     }
 
+#if !(TARGET_IPHONE_SIMULATOR)
     self.publisher = [[OTPublisher alloc] initWithDelegate:self];
     self.publisher.delegate = self;
     [self.session publish:self.publisher];
@@ -128,6 +132,7 @@ static PTVideoPhone* instance = nil;
     if (self.successBlock) {
         self.successBlock(self.publisher);
     }
+#endif
 }
 
 - (void)sessionDidDisconnect:(OTSession*)session {

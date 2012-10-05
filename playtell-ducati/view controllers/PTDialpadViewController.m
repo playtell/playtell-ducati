@@ -1,3 +1,4 @@
+
 //
 //  PTDialpadViewController.m
 //  PlayTell
@@ -137,6 +138,12 @@
                                              selector:@selector(pusherDidReceiveFriendshipDeclineNotification:)
                                                  name:PTPlayTellPusherDidReceiveFriendshipDeclineEvent
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }
@@ -148,14 +155,10 @@
         // Otherwise there's playdate collision!
         // More than likely, this will return the same playdate
         // BUT loading playdate id passed via push to be safe
-        [self checkForPendingPlaydatesAndNotifyUser];
+//        [self checkForPendingPlaydatesAndNotifyUser]; // TODOGIANCARLO fix this
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(checkForPendingPlaydateOnForegrounding:)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -428,6 +431,11 @@
 }
 
 - (void)loadPlaydateDataFromPushNotification {
+    // Create the loading view
+    loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
+    UIImageView* loadingBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"date_bg.png"]];
+    [loadingView addSubview:loadingBG];
+
     // Request playdate details from server (using playdate id passed in via push notification)
     PTPlaydateDetailsRequest *playdateDetailsRequest = [[PTPlaydateDetailsRequest alloc] init];
     [playdateDetailsRequest playdateDetailsForPlaydateId:playdateRequestedViaPushId
@@ -440,13 +448,13 @@
                                                          [self joinPlaydate];
                                                      });
                                                  }
-                                                 failure:nil
-     ];
+                                                 failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                     // Request failed. Assuming there is no existing playdate.
+                                                     // Remove the loading view.
+                                                     [loadingView removeFromSuperview];
+                                                 }];
     
     // Add a loading view to hide dialpad controls
-    loadingView = [[UIView alloc] initWithFrame:self.view.bounds];
-    UIImageView* loadingBG = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"date_bg.png"]];
-    [loadingView addSubview:loadingBG];
     [self.view addSubview:loadingView];
     
     // Clean up for next dialpad view load (after playdate ends)
@@ -477,7 +485,7 @@
 
 - (void)checkForPendingPlaydateOnForegrounding:(NSNotification*)note {
     if (playdateRequestedViaPush != YES) {
-        [self checkForPendingPlaydatesAndNotifyUser];
+//        [self checkForPendingPlaydatesAndNotifyUser]; TODOGIANCARLO fix this
     }
 }
 
@@ -584,7 +592,7 @@
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
     LogDebug(@"%@ Playdate Joined: %@", NSStringFromSelector(_cmd), playdate);
     
-    // Make sure current user didn't participate in this playdate
+    // Make sure current user didn't paripate in this playdate
     if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
         // Mark players in this playdate as 'in playdate' in dialpad
         

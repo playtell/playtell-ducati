@@ -12,7 +12,11 @@
 @property (nonatomic, strong)   UIViewController *      viewController;
 
 - (id)initWithViewController:(UIViewController *)viewController;
+
 - (void)transitionToViewController:(UIViewController *)viewController
                        withOptions:(UIViewAnimationOptions)options;
 
+- (void)loadGame:(UIViewController *)viewController
+                       withOptions:(UIViewAnimationOptions)options
+      withSplash:(UIImageView *)splash;
 @end

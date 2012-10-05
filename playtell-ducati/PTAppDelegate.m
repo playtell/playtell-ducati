@@ -13,6 +13,7 @@
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
+#import "PTMemoryViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTLoadingViewController.h"
 #import "PTPlayTellPusher.h"
@@ -21,7 +22,6 @@
 #import "PTPusherChannel.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
-#import "PTViewController.h"
 #import "TransitionController.h"
 #import "UAPush.h"
 #import "UAirship.h"
@@ -36,6 +36,8 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize dateViewController = _dateViewController;
+@synthesize memoryViewController = _memoryViewController;
 @synthesize transitionController = _transitionController;
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
@@ -64,7 +66,10 @@
                      andSecret:@"0mjxkxof9n45k3tzgzqylapf1c62naep"];
 #endif
     
+    [self setupPushNotifications:launchOptions];
+#if !(TARGET_IPHONE_SIMULATOR)
     [PTVideoPhone sharedPhone];
+#endif
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
@@ -82,6 +87,7 @@
     }
     self.transitionController = transitionController;
     self.window.rootViewController = self.transitionController;
+    
     [self.window makeKeyAndVisible];
 
     return YES;

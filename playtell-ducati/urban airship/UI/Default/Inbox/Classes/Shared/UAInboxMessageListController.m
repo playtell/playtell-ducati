@@ -189,7 +189,7 @@
     self.messageTable = nil;
     [selectedIndexPathsForEditing removeAllObjects];
     RELEASE_SAFELY(selectedIndexPathsForEditing);
-    RELEASE_SAFELY(setOfUnreadMessagesInSelection);
+//    RELEASE_SAFELY(setOfUnreadMess  agesInSelection);
     RELEASE_SAFELY(deleteItem);
     RELEASE_SAFELY(markAsReadButtonItem);
 }
@@ -362,7 +362,7 @@
     } else {
         [deleteItem setTitle:[NSString stringWithFormat:@"%@ (%d)", deleteStr, count] forSegmentAtIndex:0];
         NSUInteger ureadCountInSelection = [self countOfUnreadMessagesInSetOfIndexPaths:selectedIndexPathsForEditing];
-        markAsReadButtonItem.title = [NSString stringWithFormat:@"%@ (%lu)", markReadStr, ureadCountInSelection];
+        markAsReadButtonItem.title = [NSString stringWithFormat:@"%@ (%u)", markReadStr, ureadCountInSelection];
         if ([UAInbox shared].messageList.isBatchUpdating) {
             deleteItem.enabled = NO;
             markAsReadButtonItem.enabled = NO;

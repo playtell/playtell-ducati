@@ -11,7 +11,7 @@
 
 @implementation PTPagesScrollView
 
-@synthesize pagesScrollDelegate, currentPage;
+@synthesize pagesScrollDelegate, currentPage, totalPages;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -73,7 +73,7 @@
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // Create new pages
-    int totalPages = [[book objectForKey:@"total_pages"] intValue];
+    totalPages = [[book objectForKey:@"total_pages"] intValue];
     pages = [[NSMutableArray alloc] initWithCapacity:totalPages];
     
     for (int i=0; i<totalPages; i++) {

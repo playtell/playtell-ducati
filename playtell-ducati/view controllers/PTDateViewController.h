@@ -55,10 +55,13 @@
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydate;
 @property (nonatomic, retain) IBOutlet UIButton *endPlaydateForreal;
 @property (nonatomic, retain) IBOutlet UIButton *closeBook;
+@property (nonatomic, retain) IBOutlet UIButton *button2;
+
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
 - (IBAction)playdateDisconnect:(id)sender;
-- (IBAction)closeBookButtonPressed:(id)sender;
-- (IBAction)endPlaydatePopupToggle:(id)sender;
+- (IBAction)playTictactoe:(id)sender;
+
+- (IBAction)endPlaydateHandle:(id)sender;
 - (void)openBookAfterNavigation;
 
 @end
