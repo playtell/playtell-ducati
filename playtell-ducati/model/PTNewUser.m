@@ -10,9 +10,8 @@
 
 @implementation PTNewUser
 
-@synthesize isCreateViaFacebook;
-@synthesize isAccountForChild;
 @synthesize isNotificationsApproved;
+@synthesize isEmailVerified;
 @synthesize name;
 @synthesize email;
 @synthesize password;
@@ -22,7 +21,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.isAccountForChild = NO;
+        self.isEmailVerified = NO;
     }
     return self;
 }

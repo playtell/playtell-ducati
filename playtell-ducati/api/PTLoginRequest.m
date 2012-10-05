@@ -35,7 +35,7 @@
                                                                                NSHTTPURLResponse *response,
                                                                                id JSON)
       {
-          LogTrace(@"Login success: %@", JSON);
+//          LogTrace(@"Login success: %@", JSON);
           if (![JSON containsKey:@"token"]) {
 
               // TODO: Need to figure out the right information to pass around into the
@@ -51,8 +51,8 @@
               success(JSON);
           }
       } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-          NSLog(@"Login failure");
-          NSLog(@"Request: %@, Response: %@, Error: %@, JSON: %@", request, response, error, JSON);
+//          NSLog(@"Login failure");
+//          NSLog(@"Request: %@, Response: %@, Error: %@, JSON: %@", request, response, error, JSON);
 
           NSError* loginError = error;
           if (![JSON containsKey:@"token"]) {

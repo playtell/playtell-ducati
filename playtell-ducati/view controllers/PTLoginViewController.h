@@ -1,42 +1,43 @@
 //
 //  PTLoginViewController.h
-//  PlayTell
+//  playtell-ducati
 //
-//  Created by Ricky Hussmann on 3/13/12.
-//  Copyright (c) 2012 PlayTell. All rights reserved.
+//  Created by Dimitry Bentsionov on 9/24/12.
+//  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
-
-#import "PTViewController.h"
 
 #import <UIKit/UIKit.h>
 
 @class PTLoginViewController;
 
 @protocol PTLoginViewControllerDelegate <NSObject>
-- (void)loginControllerDidLogin:(PTLoginViewController*)controller;
+    - (void)loginControllerDidLogin:(PTLoginViewController*)controller;
 @end
 
-@interface PTLoginViewController : UIViewController <UITextFieldDelegate>
+@interface PTLoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
+    // Nav button
+    UIBarButtonItem *buttonBack;
 
-@property (nonatomic, retain) IBOutlet UITextField* nicknameField;
-@property (nonatomic, retain) IBOutlet UITextField* emailField;
-@property (nonatomic, retain) IBOutlet UITextField* passwordField;
-@property (nonatomic, retain) IBOutlet UITextField* confirmPasswordField;
-
-@property (nonatomic, retain) IBOutlet UIScrollView* scrollView;
-
-@property (nonatomic, retain) IBOutlet UIImageView* nicknameError;
-@property (nonatomic, retain) IBOutlet UIImageView* emailError;
-@property (nonatomic, retain) IBOutlet UIImageView* firstPasswordError;
-@property (nonatomic, retain) IBOutlet UIImageView* secondPasswordError;
-@property (nonatomic, retain) IBOutlet UIImageView* errorHeaderBackground;
-@property (nonatomic, retain) IBOutlet UIImageView* errorExclamation;
-@property (nonatomic, retain) IBOutlet UILabel* errorTextLabel;
-@property (nonatomic, retain) IBOutlet UIImageView* passwordFieldBackground;
+    // Nav bar
+    IBOutlet UINavigationBar *navigationBar;
+    
+    // Content container
+    IBOutlet UIView *contentContainer;
+    UIView *topShadow;
+    
+    // Textfield
+    UITextField *txtEmail;
+    UITextField *txtPassword;
+    UIActivityIndicatorView *activityEmailView;
+    IBOutlet UITableView *groupedTableView;
+    IBOutlet UITableView *errorsTableView;
+    NSMutableArray *formErrors;
+    IBOutlet UIButton *buttonSignIn;
+}
 
 @property (nonatomic) id<PTLoginViewControllerDelegate> delegate;
+@property (nonatomic, strong) NSString *initialEmailAddress;
 
-- (IBAction)doneButtonPressed:(id)sender;
-- (IBAction)testShowErrors:(id)sender;
+- (IBAction)signInDidPress:(id)sender;
 
 @end

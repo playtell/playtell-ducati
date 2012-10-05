@@ -10,8 +10,10 @@
 #import "PTContactsSelectedViewController.h"
 #import "PTContactSelectDelegate.h"
 #import "PTContactsInvitationCountButton.h"
+#import "GTMOAuth2Authentication.h"
 
 @interface PTContactSelectViewController : UIViewController <UITextFieldDelegate, UITableViewDelegate, PTContactSelectDelegate> {
+    GTMOAuth2Authentication *googleAuth;
     UIBarButtonItem *buttonBack;
     UIBarButtonItem *buttonNext;
     NSMutableArray *contacts;
@@ -43,6 +45,7 @@
 
 @property (nonatomic, retain) NSString *sourceType;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil usingGoogleAuth:(GTMOAuth2Authentication *)_googleAuth;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;
 - (IBAction)viewSelected:(id)sender;
 

@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "PTNewUser.h"
+#import "PTPageIndicatorView.h"
 
-@interface PTNewUserNavigationController : UINavigationController {
+@interface PTNewUserNavigationController : UINavigationController <UINavigationControllerDelegate> {
     PTNewUser *currentUser;
+    PTPageIndicatorView *pageControl;
 }
 
 @property (nonatomic, strong) PTNewUser *currentUser;
 
 - (id)initWithDefaultViewController;
+- (void)hidePageControl;
 
 @end

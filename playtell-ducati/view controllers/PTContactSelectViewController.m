@@ -21,6 +21,7 @@
 #import "PTContactsNavNextButton.h"
 #import "PTContactsNavCancelButton.h"
 #import "PTUsersCreateFriendshipRequest.h"
+#import "GTMOAuth2Authentication.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface PTContactSelectViewController ()
@@ -30,6 +31,28 @@
 @implementation PTContactSelectViewController
 
 @synthesize sourceType;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil usingGoogleAuth:(GTMOAuth2Authentication *)_googleAuth {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Create new selected contacts array
+        selectedContacts = [NSMutableArray array];
+        
+        // Filtering
+        inSearchMode = NO;
+        
+        // Monitor contact selection actions
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(receiveContactAction:)
+                                                     name:@"actionPerformedOnContact"
+                                                   object:nil];
+        
+        // Retrieve Google Contacts
+        googleAuth = _googleAuth;
+        [self getGoogleContacts];
+    }
+    return self;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -68,7 +91,7 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
     // Navigation controller setup
-    self.title = @"Invite your family";
+    self.title = [NSString stringWithFormat:@"Invite From %@", self.sourceType];
     
     // Nav buttons
     PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
@@ -315,6 +338,68 @@
     
     // Navigation buttons
     buttonNext.enabled = [selectedContacts count] > 0;
+}
+
+#pragma mark - Google Contacts
+
+- (void)getGoogleContacts {
+    NSURL *url = [NSURL URLWithString:@"https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=2000"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    GTMHTTPFetcher* fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
+    [fetcher setAuthorizer:googleAuth];
+    [fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
+        if (error == nil) {
+            NSError *jsonError;
+            NSDictionary *contactsJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+            if (jsonError == nil) {
+                NSArray *entries = [[contactsJSON objectForKey:@"feed"] objectForKey:@"entry"];
+                NSMutableArray *contactList = [NSMutableArray array];
+                for (NSDictionary *entry in entries) {
+                    // Verify name exists
+                    if ([entry objectForKey:@"title"] == nil || [[[entry objectForKey:@"title"] objectForKey:@"$t"] length] == 0) {
+                        continue;
+                    }
+                    NSString *title = [[[entry objectForKey:@"title"] objectForKey:@"$t"] copy];
+                    
+                    // Verify at least one email exists
+                    if ([entry objectForKey:@"gd$email"] == nil) {
+                        continue;
+                    }
+                    NSArray *entryEmails = [entry objectForKey:@"gd$email"];
+                    for (NSDictionary *entryEmail in entryEmails) {
+                        // Save this contact
+                        NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                 title,                                                  @"name",
+                                                 [[entryEmail objectForKey:@"address"] lowercaseString], @"email",
+                                                 @"Google Contacts",                                     @"source",
+                                                 nil];
+                        [contactList addObject:contact];
+                    }
+                    
+                }
+                
+                NSLog(@"---> Google Contacts: %i", [contactList count]);
+                
+                // Save contacts to server
+                PTContactsCreateListRequest *contactsCreateListRequest = [[PTContactsCreateListRequest alloc] init];
+                [contactsCreateListRequest createList:contactList
+                                            authToken:[PTUser currentUser].authToken
+                                              success:^(NSDictionary *result) {
+                                                  // Now retrieve contact list from server (with metadata about each contact)
+                                                  [self getContactList];
+                                                  [self getRelatedContacts];
+                                              } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                  NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
+                                              }];
+            } else {
+                // TODO: Handle error
+                NSLog(@"JSON ERROR: %@", jsonError);
+            }
+        } else {
+            // TODO: Handle error
+            NSLog(@"ERROR: %@", error);
+        }
+    }];
 }
 
 #pragma mark - TextField delegates

@@ -136,6 +136,10 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)didPressInviteMore:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark - Temp UI Alert
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

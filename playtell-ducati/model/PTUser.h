@@ -13,6 +13,7 @@
 + (PTUser*)currentUser;
 
 - (BOOL)isLoggedIn;
+- (void)resetUser;
 
 @property (nonatomic, readwrite) NSString* authToken;
 

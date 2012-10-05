@@ -203,6 +203,14 @@
 }
 
 - (void)getGoogleContacts {
+    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController"
+                                                                                                                 bundle:nil
+                                                                                                        usingGoogleAuth:googleAuth];
+    contactSelectViewController.sourceType = @"Google Contacts";
+    [self.navigationController pushViewController:contactSelectViewController animated:YES];
+}
+
+- (void)getGoogleContacts2 {
     NSURL *url = [NSURL URLWithString:@"https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=2000"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     GTMHTTPFetcher* fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
@@ -243,11 +251,13 @@
                 NSLog(@"---> Contacts: %i", [contacts count]);
                 
                 // Load select controller
-                PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController"
-                                                                                                                             bundle:nil
-                                                                                                                       withContacts:contacts];
-                contactSelectViewController.sourceType = @"Google Contacts";
-                [self.navigationController pushViewController:contactSelectViewController animated:YES];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController"
+                                                                                                                                 bundle:nil
+                                                                                                                           withContacts:contacts];
+                    contactSelectViewController.sourceType = @"Google Contacts";
+                    [self.navigationController pushViewController:contactSelectViewController animated:YES];
+                });
             } else {
                 // TODO: Handle error
                 NSLog(@"JSON ERROR: %@", jsonError);
@@ -270,10 +280,42 @@
 }
 
 - (IBAction)localAddressBook:(id)sender {
-    ABAddressBookRef addressBook = ABAddressBookCreate();
+    ABAddressBookRef addressBook;
+    // iOS 6 and up
+    if (ABAddressBookGetAuthorizationStatus != NULL) {
+        ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+        
+        // Check address book permission
+        if (status != kABAuthorizationStatusAuthorized) {
+            CFErrorRef error = nil;
+            addressBook = ABAddressBookCreateWithOptions(NULL, &error);
+            ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+    //                if (error) {
+    //                    NSError* nsError = (__bridge NSError*)error;
+    //                    NSLog(@"nsError: %@", nsError.localizedDescription);
+    //                }
+                    // Permission granted?
+                    if (granted && !error) {
+                        [self getContactsFromAddressBook:addressBook];
+                    }
+                });
+            });
+        } else {
+            addressBook = ABAddressBookCreate();
+            [self getContactsFromAddressBook:addressBook];
+        }
+    } else {
+        // Pre-iOS 6
+        addressBook = ABAddressBookCreate();
+        [self getContactsFromAddressBook:addressBook];
+    }
+}
+
+- (void)getContactsFromAddressBook:(ABAddressBookRef)addressBook {
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex nPeople = ABAddressBookGetPersonCount(addressBook);
-
+    
     NSMutableArray *contacts = [NSMutableArray array];
     for (int i=0; i<nPeople; i++) {
         ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
@@ -286,7 +328,7 @@
         if (emailsRef) {
             for (int i=0; i<ABMultiValueGetCount(emailsRef); i++) {
                 NSString *email = (__bridge NSString *)ABMultiValueCopyValueAtIndex(emailsRef, i);
-
+                
                 // Save the contact
                 NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [fullName copy],                @"name",
@@ -300,7 +342,7 @@
         // Cleanup
         CFRelease(ref);
     }
-
+    
     NSLog(@"---> Got contacts: %i", [contacts count]);
     
     // Load select controller

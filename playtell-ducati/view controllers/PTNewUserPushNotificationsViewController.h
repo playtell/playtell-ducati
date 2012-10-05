@@ -13,15 +13,18 @@
     UIBarButtonItem *buttonFinish;
     
     // Content container
+    IBOutlet UIView *contentContainerMain;
     IBOutlet UIView *contentContainer;
+    IBOutlet UIView *contentContainer2;
     
     // Push notifications
-    IBOutlet UIView *viewAlreadyEnabled;
     IBOutlet UIView *viewPushNotificationInfo;
-    IBOutlet UIView *viewPushNotificationSuccess;
-    IBOutlet UIView *viewPushNotificationFailure;
+    
+    // Account creation
+    IBOutlet UIView *viewAccountSuccess;
     IBOutlet UIView *viewAccountCreating;
     IBOutlet UIView *viewAccountFailure;
+    BOOL isAccountSuccessfullyCreated;
 }
 
 - (IBAction)showPushNotificationPrompt:(id)sender;

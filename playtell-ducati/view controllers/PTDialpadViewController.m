@@ -26,6 +26,8 @@
 #import "PTFriendshipAcceptRequest.h"
 #import "PTFriendshipDeclineRequest.h"
 #import "PTContactImportViewController.h"
+#import "PTNewUserNavigationController.h"
+#import "UIColor+ColorFromHex.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
@@ -61,7 +63,7 @@
     background.tag = 666;
     [self.view addSubview:background];
     
-    NSString* welcomeText = @"WHO WILL YOU PLAY WITH TODAY?";
+    NSString* welcomeText = @"Who will you play with today?";
     CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
                                constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
     CGRect welcomeLabelRect;
@@ -70,7 +72,7 @@
     UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
     welcomeLabel.text = welcomeText;
     welcomeLabel.font = [self welcomeTextFont];
-    welcomeLabel.textColor = [UIColor redColor];
+    welcomeLabel.textColor = [UIColor colorFromHex:@"#000000" alpha:0.8f];
     welcomeLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:welcomeLabel];
     
@@ -89,6 +91,12 @@
     contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
     [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:contactButton];
+    
+    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+    logoutButton.frame = CGRectMake(210.0f, 695.0f, 170.0f, 35.0f);
+    [logoutButton addTarget:self action:@selector(logoutDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:logoutButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -821,7 +829,7 @@
 }
 
 - (UIFont*)welcomeTextFont {
-    return [UIFont fontWithName:@"TeluguSangamMN" size:26.0];
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:28.0];
 }
 
 - (void)ignorePlaydateRequest:(UIGestureRecognizer*)tapRecognizer {
@@ -902,6 +910,18 @@
                                                     [playmateView enableFriendshipConfirmationButtons];
                                                 });
                                             }];
+}
+
+#pragma mark - Temp
+
+- (void)logoutDidPress:(id)sender {
+    // Clear out current user values
+    [[PTUser currentUser] resetUser];
+    
+    // Load new user workflow
+    PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:newUserNavigationController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 @end

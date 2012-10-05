@@ -10,9 +10,8 @@
 
 @interface PTNewUser : NSObject
 
-@property (nonatomic) BOOL isCreateViaFacebook;
-@property (nonatomic) BOOL isAccountForChild;
 @property (nonatomic) BOOL isNotificationsApproved;
+@property (nonatomic) BOOL isEmailVerified;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, strong) NSString *password;

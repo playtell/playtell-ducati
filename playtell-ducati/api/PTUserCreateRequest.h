@@ -18,7 +18,6 @@ typedef void (^PTUserCreateRequestFailureBlock) (NSURLRequest* request, NSHTTPUR
                   password:(NSString *)password
                      photo:(UIImage *)photo
                  birthdate:(NSDate *)birthdate
-         isAccountForChild:(BOOL)isAccountForChild
                    success:(PTUserCreateRequestSuccessBlock)success
                    failure:(PTUserCreateRequestFailureBlock)failure;
 

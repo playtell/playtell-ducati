@@ -24,5 +24,6 @@
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;
+- (IBAction)didPressInviteMore:(id)sender;
 
 @end

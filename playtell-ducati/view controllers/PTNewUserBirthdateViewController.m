@@ -40,26 +40,23 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg.png"]];
     
     // Nav setup
-    self.title = @"Birthdate";
+    self.title = @"Adult Supervision";
     
     // Nav buttons
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(cancelDidPress:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
+    self.navigationItem.hidesBackButton = YES;
     
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
     [buttonBackView addTarget:self action:@selector(backDidPress:) forControlEvents:UIControlEventTouchUpInside];
     buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
     
-    PTContactsNavNextButton *buttonNextView = [PTContactsNavNextButton buttonWithType:UIButtonTypeCustom];
-    buttonNextView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
-    [buttonNextView addTarget:self action:@selector(nextDidPress:) forControlEvents:UIControlEventTouchUpInside];
-    buttonNext = [[UIBarButtonItem alloc] initWithCustomView:buttonNextView];
-    buttonNext.enabled = NO;
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonNext, buttonBack, nil]];
+    PTContactsNavNextButton *buttonFinishView = [PTContactsNavNextButton buttonWithType:UIButtonTypeCustom];
+    buttonFinishView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
+    [buttonFinishView setTitle:@"Finish" forState:UIControlStateNormal];
+    [buttonFinishView addTarget:self action:@selector(finishDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    buttonFinish = [[UIBarButtonItem alloc] initWithCustomView:buttonFinishView];
+    buttonFinish.enabled = NO;
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonFinish, buttonBack, nil]];
     
     // Content container style
     contentContainer.backgroundColor = [UIColor clearColor];
@@ -96,17 +93,8 @@
     datePickerView.layer.masksToBounds = YES;
     [datePicker addTarget:self action:@selector(datePickerDidUpdate:) forControlEvents:UIControlEventValueChanged];
     
-    // Child switch setup
-    childAccountSwitch = [[DCRoundSwitch alloc] initWithFrame:CGRectMake(335.0f, 150.0f, 78.0f, 30.0f)];
-    childAccountSwitch.onText = @"Yes";
-    childAccountSwitch.offText = @"No";
-    [self.view addSubview:childAccountSwitch];
-    
-    // Page control
-    UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(485.0f, 642.0f, 54.0f, 36.0f)];
-    pageControl.numberOfPages = 4;
-    pageControl.currentPage = 2;
-    [self.view addSubview:pageControl];
+    // Txtfield Date setup
+    txtDate.textColor = [UIColor colorFromHex:@"#999999"];
 }
 
 - (void)viewDidUnload {
@@ -118,10 +106,9 @@
     PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
     if (newUserNavigationController.currentUser.birthday != nil) {
         datePicker.date = newUserNavigationController.currentUser.birthday;
-        buttonNext.enabled = YES;
+        buttonFinish.enabled = [self isAbove13:datePicker.date];
         [self updateLabelUsingDate:datePicker.date];
     }
-    [childAccountSwitch setOn:newUserNavigationController.currentUser.isAccountForChild];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -130,7 +117,6 @@
     if (hasDateChanged == YES) {
         newUserNavigationController.currentUser.birthday = datePicker.date;
     }
-    newUserNavigationController.currentUser.isAccountForChild = childAccountSwitch.on;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -139,38 +125,41 @@
 
 #pragma mark - Navigation button handlers
 
-- (void)cancelDidPress:(id)sender {
-    // Load the login view controller
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-    loginController.delegate = appDelegate;
-    
-    // Transition to it
-    [appDelegate.transitionController transitionToViewController:loginController
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-}
-
 - (void)backDidPress:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)nextDidPress:(id)sender {
+- (void)finishDidPress:(id)sender {
     PTNewUserPushNotificationsViewController *newUserPushNotificationsViewController = [[PTNewUserPushNotificationsViewController alloc] initWithNibName:@"PTNewUserPushNotificationsViewController" bundle:nil];
     [self.navigationController pushViewController:newUserPushNotificationsViewController animated:YES];
 }
 
 #pragma mark - Date picker handler
 
+- (BOOL)isAbove13:(NSDate *)compareDate {
+    NSTimeInterval diff = [compareDate timeIntervalSinceNow];
+    
+    NSDate *date1 = [[NSDate alloc] init];
+    NSDate *date2 = [[NSDate alloc] initWithTimeInterval:diff sinceDate:date1];
+    NSDateComponents *conversionInfo = [[NSCalendar currentCalendar] components:NSYearCalendarUnit
+                                                                       fromDate:date1
+                                                                         toDate:date2
+                                                                        options:0];
+    
+    NSInteger years = conversionInfo.year * -1;
+    return (years >= 13);
+}
+
 - (void)datePickerDidUpdate:(id)sender {
     hasDateChanged = YES;
-    buttonNext.enabled = YES;
+    buttonFinish.enabled = [self isAbove13:datePicker.date];
     [self updateLabelUsingDate:datePicker.date];
 }
 
 - (void)updateLabelUsingDate:(NSDate *)date {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
-    lblDate.text = [dateFormatter stringFromDate:date];
+    txtDate.text = [dateFormatter stringFromDate:date];
 }
 
 @end

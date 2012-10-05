@@ -59,11 +59,7 @@
     self.title = @"Pick a photo";
     
     // Nav buttons
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(cancelDidPress:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
+    self.navigationItem.hidesBackButton = YES;
     
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
@@ -144,15 +140,9 @@
     photoContainer.layer.shouldRasterize = YES;
     photoContainer.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
-    // Camera
+    // Camera-
     buttonTakePhoto.enabled = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
     buttonChoosePhoto.enabled = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
-    
-    // Page control
-    UIPageControl *pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(485.0f, 642.0f, 54.0f, 36.0f)];
-    pageControl.numberOfPages = 4;
-    pageControl.currentPage = 1;
-    [self.view addSubview:pageControl];
 }
 
 - (void)viewDidUnload {
@@ -203,17 +193,6 @@
 }
 
 #pragma mark - Navigation button handlers
-
-- (void)cancelDidPress:(id)sender {
-    // Load the login view controller
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-    loginController.delegate = appDelegate;
-    
-    // Transition to it
-    [appDelegate.transitionController transitionToViewController:loginController
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-}
 
 - (void)backDidPress:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

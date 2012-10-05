@@ -21,7 +21,14 @@
     UITextField *txtName;
     UITextField *txtEmail;
     UITextField *txtPassword;
+    UIActivityIndicatorView *activityEmailView;
     IBOutlet UITableView *groupedTableView;
+    IBOutlet UITableView *errorsTableView;
+    NSMutableArray *formErrors;
+    BOOL isKeyboardShown;
+    BOOL isEmailNotAvailable;
 }
+
+- (IBAction)signInDidPress:(id)sender;
 
 @end

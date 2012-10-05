@@ -1,431 +1,451 @@
 //
 //  PTLoginViewController.m
-//  PlayTell
+//  playtell-ducati
 //
-//  Created by Ricky Hussmann on 3/13/12.
-//  Copyright (c) 2012 PlayTell. All rights reserved.
+//  Created by Dimitry Bentsionov on 9/24/12.
+//  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import "AFNetworking.h"
-#import "Logging.h"
-#import "PTAppDelegate.h"
-#import "PTConcretePlaymateFactory.h"
-#import "PTLoginRequest.h"
+#import <QuartzCore/QuartzCore.h>
 #import "PTLoginViewController.h"
-#import "PTUpdateSettingsRequest.h"
-#import "PTUser.h"
-
-#import "NSDictionary+Util.h"
-#import "NSMutableURLRequest+POSTParameters.h"
-
-#import "UAirship.h"
-#import "UAPush.h"
-
-#import "TransitionController.h"
+#import "UIColor+HexColor.h"
+#import "PTContactsNavLongBackButton.h"
 #import "PTNewUserNavigationController.h"
-
-typedef void (^PTLoginSuccessBlock) (NSDictionary*);
-typedef void (^PTLoginFailureBlock) (NSError *);
+#import "PTAppDelegate.h"
+#import "TransitionController.h"
+#import "PTLoginRequest.h"
+#import "PTUser.h"
+#import "PTErrorTableCell.h"
 
 @interface PTLoginViewController ()
-- (NSString*)loginSettingsURL;
-- (NSString*)playdateSettingsURL;
-
-- (void)showPasswordErrorArrowIndicators;
-- (void)showError:(NSString*)errorMessage;
-- (void)showErrorExclamationAndText:(NSString*)errorText;
-
-- (void)activateNicknameField;
-- (void)activateEmailField;
-- (void)activatePasswordFields;
-- (void)deactivateAllFields;
-
-- (void)keyboardWasShown:(NSNotification*)keyboardNotification;
-- (void)keyboardWillHide:(NSNotification*)keyboardNotification;
-
-- (void)showConnectionError;
-- (void)showArrowIndicatorsForFields:(NSArray*)errorFields;
-- (void)resetErrorIndicators;
-- (void)hideErrorHeader;
-- (void)hideNicknameErrorArrowIndicator;
-- (void)hideEmailErrorArrowIndicator;
-- (void)hidePasswordErrorArrowIndicators;
-- (void)showNicknameErrorArrowIndicator;
-- (void)emphasizeNicknameText;
-- (void)emphasizeEmailText;
-- (void)showEmailErrorArrowIndicator;
-- (void)showPasswordErrorArrowIndicators;
-- (void)emphasizePasswordText;
-- (void)resetFontColors;
-
-- (void)requestSettingsUpdate;
-
-- (void)loginWithUsername:(NSString*)aUsername password:(NSString*)aPassword
-                 onSuccess:(PTLoginSuccessBlock)success onFailure:(PTLoginFailureBlock)failure;
-
-@property (nonatomic, retain) UIImage* fieldActive;
-@property (nonatomic, retain) UIImage* fieldInactive;
-@property (nonatomic, retain) UIImage* doubleFieldActive;
-@property (nonatomic, retain) UIImage* doubleFieldInactive;
-@property (nonatomic, retain) UITextField* activeTextField;
-
-@property (nonatomic, retain) NSString* tempUsername;
-@property (nonatomic, retain) NSString* tempUserId;
-@property (nonatomic, retain) NSString* tempToken;
 
 @end
 
 @implementation PTLoginViewController
-@synthesize nicknameField, emailField, scrollView;
-@synthesize passwordField, confirmPasswordField;
-@synthesize passwordFieldBackground;
-@synthesize errorHeaderBackground, errorExclamation, errorTextLabel;
-@synthesize fieldActive, fieldInactive, doubleFieldActive, doubleFieldInactive;
-@synthesize activeTextField;
-@synthesize tempUsername, tempUserId, tempToken;
 
-@synthesize nicknameError, emailError, firstPasswordError, secondPasswordError;
 @synthesize delegate;
+@synthesize initialEmailAddress;
 
-- (IBAction)doneButtonPressed:(id)sender {
-    BOOL errorOcurred = NO;
-    [self resetErrorIndicators];
-    
-    if (![self.nicknameField.text length]) {
-        [self showNicknameErrorArrowIndicator];
-        errorOcurred = YES;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Keyboard notifications
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
+
+        // Errors container
+        formErrors = [NSMutableArray array];
+        
+        // Textfield notification
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textfieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
     }
-
-    if (![self.emailField.text length]) {
-        [self showEmailErrorArrowIndicator];
-        errorOcurred = YES;
-    }
-
-    if (![self.passwordField.text length]) {
-        [self showPasswordErrorArrowIndicators];
-        errorOcurred = YES;
-    }
-
-    [self.activeTextField resignFirstResponder];
-    if (!errorOcurred) {
-        [self loginWithUsername:self.emailField.text password:@"rg" onSuccess:^(NSDictionary *response) {
-            NSString *authToken = [response valueForKey:@"token"];
-            NSNumber *userId = [response valueForKey:@"user_id"];
-            self.tempToken = authToken;
-            self.tempUserId = [userId stringValue];
-            self.tempUsername = self.emailField.text;
-            [self requestSettingsUpdate];
-        } onFailure:^(NSError *error) {
-            [self showError:error.localizedDescription];
-        }];
-    } else {
-        [self showError:@"Required fields missing"];
-    }
-}
-
--(void)resetErrorIndicators {
-    [self hideErrorHeader];
-    [self hideNicknameErrorArrowIndicator];
-    [self hideEmailErrorArrowIndicator];
-    [self hidePasswordErrorArrowIndicators];
-    [self resetFontColors];
-}
-
-- (void)showNicknameErrorArrowIndicator {
-    self.nicknameError.hidden = NO;
-}
-
-- (void)showEmailErrorArrowIndicator {
-    self.emailError.hidden = NO;
-}
-
-- (void)showPasswordErrorArrowIndicators {
-    self.firstPasswordError.hidden = NO;
-    self.secondPasswordError.hidden = NO;
-}
-
-- (void)emphasizePasswordText {
-    self.passwordField.textColor = UIColorFromRGB(0x88331C);
-    self.confirmPasswordField.textColor = UIColorFromRGB(0x88331C);
-}
-
-- (void)hideErrorHeader {
-    self.errorHeaderBackground.hidden = YES;
-    self.errorTextLabel.hidden = YES;
-    self.errorExclamation.hidden = YES;
-}
-
-- (void)hideNicknameErrorArrowIndicator {
-    self.nicknameError.hidden = YES;
-}
-
-- (void)hideEmailErrorArrowIndicator {
-    self.emailError.hidden = YES;
-}
-
-- (void)hidePasswordErrorArrowIndicators {
-    self.firstPasswordError.hidden = YES;
-    self.secondPasswordError.hidden = YES;
-}
-
-- (void)requestSettingsUpdate {
-
-    PTUpdateSettingsRequest* updateRequest = [[PTUpdateSettingsRequest alloc] init];
-    [updateRequest updateSettingsWithEmail:self.emailField.text
-                                  password:self.passwordField.text
-                      passwordConfirmation:self.confirmPasswordField.text
-                                 authToken:self.tempToken
-                                 onSuccess:^(NSDictionary *result)
-    {
-        [[PTUser currentUser] setAuthToken:[result valueForKey:@"token"]];
-        if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
-            [self.delegate loginControllerDidLogin:self];
-        }
-    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        [self showError:@"Unable to update settings"];
-    }];
-}
-
-- (NSString*)loginSettingsURL {
-    return [NSString stringWithFormat:@"%@/api/update_settings.json", ROOT_URL];
-}
-
-- (void)showArrowIndicatorsForFields:(NSArray*)errorFields {
-    for (NSString* errorField in errorFields) {
-        if ([errorField isEqualToString:@"password"]) {
-            [self showPasswordErrorArrowIndicators];
-            [self emphasizePasswordText];
-        } else if ([errorField isEqualToString:@"username"]) {
-            [self showNicknameErrorArrowIndicator];
-            [self emphasizeNicknameText];
-        } else if ([errorField isEqualToString:@"email"]) {
-            [self showEmailErrorArrowIndicator];
-        }
-    }
-}
-
-- (void)emphasizeNicknameText {
-    self.nicknameField.textColor = UIColorFromRGB(0x88331C);
-}
-
-- (void)emphasizeEmailText {
-    self.emailField.textColor = UIColorFromRGB(0x88331C);
-}
-
--(void)showErrorsForMessages:(NSArray*)errorMessages {
-    NSString* concatendatedString = @"";
-    for (NSString* message in errorMessages) {
-        if ([concatendatedString length] > 0) {
-            concatendatedString = [concatendatedString stringByAppendingString:@" "];
-        }
-        concatendatedString = [concatendatedString stringByAppendingString:message];
-    }
-    [self showError:concatendatedString];
-}
-
-- (NSString*)playdateSettingsURL {
-    return [NSString stringWithFormat:@"%@/api/playdatephotos.json",
-            ROOT_URL];
-}
-
-- (IBAction)testShowErrors:(id)sender {
-    [self.activeTextField resignFirstResponder];
-    [self showPasswordErrorArrowIndicators];
-    [self showError:@"Test error"];
-}
-
-- (void)showError:(NSString*)errorMessage {
-
-    CGRect exclamationRect = self.errorExclamation.frame;
-    CGSize textSize = [errorMessage sizeWithFont:self.errorTextLabel.font
-                                        forWidth:453.0 - (exclamationRect.size.width*2.0)
-                                   lineBreakMode:UILineBreakModeTailTruncation];
-    CGRect errorTextRect = self.errorTextLabel.frame;
-    errorTextRect.size.width = textSize.width;
-    self.errorTextLabel.frame = errorTextRect;
-
-    CGRect bannerFrameOriginal = self.errorHeaderBackground.frame;
-    CGRect bannerFrameNoHeight = bannerFrameOriginal;
-    bannerFrameNoHeight.size.height = 0.0;
-
-    CGPoint errorTextCenter = self.errorTextLabel.center;
-    errorTextCenter.x = CGRectGetMidX(self.view.bounds) + exclamationRect.size.width/2.0;
-
-    self.errorHeaderBackground.hidden = NO;
-    self.errorHeaderBackground.frame = bannerFrameNoHeight;
-    self.errorTextLabel.center = errorTextCenter;
-
-    exclamationRect.origin.x = self.errorTextLabel.frame.origin.x - exclamationRect.size.width - 5.0;
-    self.errorExclamation.frame = exclamationRect;
-    [UIView animateWithDuration:0.5 animations:^{
-        self.errorHeaderBackground.frame = bannerFrameOriginal;
-    } completion:^(BOOL finished) {
-        [self showErrorExclamationAndText:errorMessage];
-    }];
-}
-
-- (void)showErrorExclamationAndText:(NSString*)errorText {
-    self.errorExclamation.hidden = NO;
-    self.errorExclamation.alpha = 0.0;
-    self.errorTextLabel.hidden = NO;
-    self.errorTextLabel.alpha = 0.0;
-    self.errorTextLabel.text = errorText;
-
-    [UIView animateWithDuration:0.5 animations:^{
-        self.errorExclamation.alpha = 1.0;
-        self.errorTextLabel.alpha = 1.0;
-    }];
-}
-
-- (void)loginWithUsername:(NSString*)aUsername
-                 password:(NSString*)aPassword
-                onSuccess:(PTLoginSuccessBlock)success
-                onFailure:(PTLoginFailureBlock)failure {
-
-    PTLoginRequest* loginRequest = [[PTLoginRequest alloc] init];
-    [loginRequest loginWithUsername:aUsername password:aPassword pushToken:[[UAirship shared] deviceToken]
-                          onSuccess:^(NSDictionary *result)
-    {
-        LogInfo(@"Login result: %@", result);
-        NSString* token = [result valueForKey:@"token"];
-        NSNumber* userID = [result valueForKey:@"user_id"];
-        NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
-        [[PTUser currentUser] setUsername:aUsername];
-        [[PTUser currentUser] setEmail:aUsername];
-        [[PTUser currentUser] setAuthToken:token];
-        [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-        [[PTUser currentUser] setPhotoURL:photoURL];
-        LogInfo(@"Current user: %@", [PTUser currentUser]);
-        // Update UA token with this user's id
-        [[UAPush shared] updateAlias:[userID stringValue]];
-        success(result);
-    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError* error, id JSON) {
-        failure(error);
-    }];
-}
-
-- (void)showConnectionError {
-    [self showError:@"There seems to be a problem connecting..."];
+    return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.fieldActive = [UIImage imageNamed:@"form-field-depressed.png"];
-    self.fieldInactive = [UIImage imageNamed:@"form-field.png"];
-    self.doubleFieldActive = [UIImage imageNamed:@"dual-form-field-depressed.png"];
-    self.doubleFieldInactive = [UIImage imageNamed:@"dual-form-field.png"];
-
-    self.emailField.textColor = UIColorFromRGB(0x397684);
-    self.nicknameField.textColor = UIColorFromRGB(0x397684);
-    self.passwordField.textColor = UIColorFromRGB(0x397684);
-    self.confirmPasswordField.textColor = UIColorFromRGB(0x397684);
-    self.errorTextLabel.textColor = UIColorFromRGB(0x88331C);
     
-    UIButton *signUpButton = (UIButton *)[self.view viewWithTag:100];
-    [signUpButton addTarget:self action:@selector(signUpDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    // Background
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg.png"]];
+    
+    // Nav setup
+    self.title = @"Sign in to PlayTell";
+    navigationBar.tintColor = [UIColor colorFromHex:@"#2e4857"];
+    navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
+    
+    // Nav buttons
+    PTContactsNavLongBackButton *buttonBackView = [PTContactsNavLongBackButton buttonWithType:UIButtonTypeCustom];
+    buttonBackView.frame = CGRectMake(0.0f, 0.0f, 165.0f, 33.0f);
+    [buttonBackView setTitle:@"Create New Account" forState:UIControlStateNormal];
+    [buttonBackView addTarget:self action:@selector(createNewAccountDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
+    [navigationBar.topItem setRightBarButtonItem:buttonBack];
+    
+    // Content container style
+    contentContainer.backgroundColor = [UIColor clearColor];
+    
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:contentContainer.bounds
+                                                   byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                         cornerRadii:CGSizeMake(4.0f, 4.0f)];
+    
+    // Create the shadow layer
+    CAShapeLayer *shadowLayer = [CAShapeLayer layer];
+    [shadowLayer setFrame:contentContainer.bounds];
+    [shadowLayer setMasksToBounds:NO];
+    [shadowLayer setShadowPath:maskPath.CGPath];
+    shadowLayer.shadowColor = [UIColor blackColor].CGColor;
+    shadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    shadowLayer.shadowOpacity = 0.2f;
+    shadowLayer.shadowRadius = 10.0f;
+    
+    CALayer *roundedLayer = [CALayer layer];
+    [roundedLayer setFrame:contentContainer.bounds];
+    [roundedLayer setBackgroundColor:[UIColor colorFromHex:@"#e4ecef"].CGColor];
+    
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.frame = contentContainer.bounds;
+    maskLayer.path = maskPath.CGPath;
+    roundedLayer.mask = maskLayer;
+    
+    [contentContainer.layer insertSublayer:shadowLayer atIndex:0];
+    [contentContainer.layer insertSublayer:roundedLayer atIndex:1];
+    
+    // Create the mom/kid layers
+    CALayer *momLayer = [CALayer layer];
+    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - 280.0f, 170.0f, 280.0f);
+    momLayer.contents = (id)[UIImage imageNamed:@"mom"].CGImage;
+    CALayer *kidLayer = [CALayer layer];
+    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - 135.0f + 1.0f, contentContainer.bounds.size.height - 203.0f, 135.0f, 203.0f);
+    kidLayer.contents = (id)[UIImage imageNamed:@"kid"].CGImage;
+    [roundedLayer addSublayer:momLayer];
+    [roundedLayer addSublayer:kidLayer];
+    
+    // Init the top shadow line
+    topShadow = [[UIView alloc] initWithFrame:CGRectMake(-20.0f, -20.0f, 1024.0f + 40.0f, 20.0f)];
+    topShadow.backgroundColor = [UIColor whiteColor];
+    topShadow.layer.shadowColor = [UIColor blackColor].CGColor;
+    topShadow.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    topShadow.layer.shadowOpacity = 0.9f;
+    topShadow.layer.shadowRadius = 5.0f;
+    topShadow.alpha = 0.0f;
+    [self.view insertSubview:topShadow aboveSubview:contentContainer];
+    
+    // Textboxes and its container
+    groupedTableView.backgroundView = nil;
+    txtEmail = [[UITextField alloc] init];
+    txtEmail.text = self.initialEmailAddress == nil ? @"" : self.initialEmailAddress;
+    if (self.initialEmailAddress != nil) {
+        txtEmail.textColor = [UIColor colorFromHex:@"#38e51e"];
+    }
+    txtPassword = [[UITextField alloc] init];
+    txtPassword.text = @"";
+    activityEmailView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    
+    // Errors table view
+    errorsTableView.backgroundColor = [UIColor clearColor];
+    
+    // Sign in button
+    buttonSignIn.enabled = NO;
 }
 
-- (void)signUpDidPress:(id)sender {
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)dealloc {
+    // Notifications cleanup
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Validators
+
+- (void)validateEmailQuietly:(BOOL)skipErrors {
+    [self clearErrorsWithType:@"email"];
+
+    // Verify email string
+    NSString *emailRegEx =
+    @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+    @"~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+    @"x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+    @"z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+    @"]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+    @"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+    @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+    if (![emailTest evaluateWithObject:txtEmail.text]) {
+        [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"email", @"type", @"Email is invalid", @"message", nil]];
+    }
+
+    [self updateTableViewQuietly:skipErrors];
+}
+
+- (void)validatePasswordQuietly:(BOOL)skipErrors {
+    [self clearErrorsWithType:@"password"];
+
+    // Verify password string
+    if (txtPassword.text.length < 2) {
+        [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"password", @"type", @"Password must be 2 characters or more", @"message", nil]];
+    }
+    
+    [self updateTableViewQuietly:skipErrors];
+}
+
+- (void)clearErrorsWithType:(NSString *)type {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type != %@", type];
+    formErrors = [NSMutableArray arrayWithArray:[formErrors filteredArrayUsingPredicate:predicate]];
+    [self updateTableViewQuietly:NO];
+}
+
+- (NSInteger)totalErrorsWithType:(NSString *)type {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"type = %@", type];
+    NSMutableArray *newErrors = [NSMutableArray arrayWithArray:[formErrors filteredArrayUsingPredicate:predicate]];
+    return [newErrors count];
+}
+
+- (void)updateTableViewQuietly:(BOOL)skipErrors {
+    if (skipErrors == NO) {
+        // Sort the errors: email -> password
+        [formErrors sortUsingComparator:^NSComparisonResult(NSDictionary *err1, NSDictionary *err2) {
+            // Email
+            if ([[err1 objectForKey:@"type"] isEqualToString:@"email"]) {
+                if ([[err2 objectForKey:@"type"] isEqualToString:@"email"]) {
+                    return NSOrderedSame;
+                } else if ([[err2 objectForKey:@"type"] isEqualToString:@"password"]) {
+                    return NSOrderedAscending;
+                }
+            }
+            
+            // Password
+            if ([[err1 objectForKey:@"type"] isEqualToString:@"password"]) {
+                if ([[err2 objectForKey:@"type"] isEqualToString:@"password"]) {
+                    return NSOrderedSame;
+                } else if ([[err2 objectForKey:@"type"] isEqualToString:@"email"]) {
+                    return NSOrderedDescending;
+                }
+            }
+            
+            // Default case. Shouldn't happen.
+            return NSOrderedSame;
+        }];
+        [errorsTableView reloadData];
+        
+        
+        // Update text colors for each textbox
+        txtEmail.textColor = ([self totalErrorsWithType:@"email"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#38e51e"];
+        txtPassword.textColor = ([self totalErrorsWithType:@"password"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#38e51e"];
+    }
+    
+    // Enable next button
+    buttonSignIn.enabled = (![txtEmail.text isEqualToString:@""] && ![txtPassword.text isEqualToString:@""] && [formErrors count] == 0);
+}
+
+#pragma mark - Keyboard notification handlers
+
+- (void)keyboardWillShow {
+    [UIView animateWithDuration:0.2f animations:^{
+        contentContainer.frame = CGRectOffset(contentContainer.frame, 0.0f, -80.0f);
+        topShadow.alpha = 1.0f;
+    }];
+}
+
+- (void)keyboardWillHide {
+    [UIView animateWithDuration:0.2f animations:^{
+        contentContainer.frame = CGRectOffset(contentContainer.frame, 0.0f, 80.0f);
+        topShadow.alpha = 0.0f;
+    }];
+}
+
+#pragma mark - Button handlers
+
+- (IBAction)signInDidPress:(id)sender {
+    // End editing & show activity
+    [self.view endEditing:YES];
+    [activityEmailView startAnimating];
+    txtEmail.enabled = NO;
+    txtPassword.enabled = NO;
+    
+    // API login request
+    PTLoginRequest *loginRequest = [[PTLoginRequest alloc] init];
+    [loginRequest loginWithUsername:txtEmail.text
+                           password:txtPassword.text
+                          pushToken:@""
+                          onSuccess:^(NSDictionary *result) {
+//                              NSLog(@"Login result: %@", result);
+                              NSString* token = [result valueForKey:@"token"];
+                              NSNumber* userID = [result valueForKey:@"user_id"];
+                              NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              
+                              [[PTUser currentUser] setUsername:txtEmail.text];
+                              [[PTUser currentUser] setEmail:txtEmail.text];
+                              [[PTUser currentUser] setAuthToken:token];
+                              [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
+                              [[PTUser currentUser] setPhotoURL:photoURL];
+                              
+//                              NSLog(@"Current user: %@", [PTUser currentUser]);
+                              // TODO: Register here for notifications??
+                              
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [activityEmailView stopAnimating];
+
+                                  if (self.delegate && [self.delegate respondsToSelector:@selector(loginControllerDidLogin:)]) {
+                                      [self.delegate loginControllerDidLogin:self];
+                                  }
+                              });
+                          }
+                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                              NSLog(@"Error: %@", JSON);
+                              NSString *errorMsg = [JSON objectForKey:@"message"];
+                              if ([errorMsg isEqualToString:@"User cannot be found."]) {
+                                  [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"email", @"type", @"Email entered doesn't appear to be an existing user", @"message", nil]];
+                              } else if ([errorMsg isEqualToString:@"Invalid password."]) {
+                                  [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"password", @"type", @"Password is invalid. Please try again", @"message", nil]];
+                              }
+     
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [self updateTableViewQuietly:NO];
+
+                                  [activityEmailView stopAnimating];
+                                  txtEmail.enabled = YES;
+                                  txtPassword.enabled = YES;
+                              });
+                          }];
+}
+
+- (void)createNewAccountDidPress:(id)sender {
+    // Load the create new user nav
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
     
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    // Transition to it
     [appDelegate.transitionController transitionToViewController:newUserNavigationController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
-- (void)resetFontColors {
-    self.emailField.textColor = UIColorFromRGB(0x397684);
-    self.nicknameField.textColor = UIColorFromRGB(0x397684);
-    self.passwordField.textColor = UIColorFromRGB(0x397684);
-    self.confirmPasswordField.textColor = UIColorFromRGB(0x397684);
-    self.errorTextLabel.textColor = UIColorFromRGB(0x88331C);
+#pragma mark - Textfield delegates & notification handler
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+//    switch (textField.tag) {
+//        case 0: // Email
+//            [self clearErrorsWithType:@"email"];
+//            break;
+//        case 1: // Password
+//            [self clearErrorsWithType:@"password"];
+//            break;
+//    }
+//    
+//    // Disable sign in button for now
+//    buttonSignIn.enabled = NO;
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    self.fieldActive =  nil;
-    self.fieldInactive = nil;
-    self.doubleFieldActive =  nil;
-    self.doubleFieldInactive = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)keyboardWasShown:(NSNotification*)keyboardNotification {
-    NSDictionary* info = [keyboardNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
-    self.scrollView.contentInset = contentInsets;
-    self.scrollView.scrollIndicatorInsets = contentInsets;
-
-    // TODO : this is hardcoded to 180 pixels at the moment. Does it need to be more
-    // dynamic
-    [self.scrollView setContentOffset:CGPointMake(0, 180.0) animated:YES];
-}
-
-- (void)keyboardWillHide:(NSNotification*)keyboardNotification {
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    self.scrollView.contentInset = contentInsets;
-    self.scrollView.scrollIndicatorInsets = contentInsets;
-    [self.activeTextField resignFirstResponder];
-    self.activeTextField = nil;
-
-    [self deactivateAllFields];
-}
-
-#pragma mark - UITextFieldDelegate methods
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    self.activeTextField = textField;
-    if (textField == self.nicknameField) {
-        [self activateNicknameField];
-    } else if (textField == self.emailField) {
-        [self activateEmailField];
-    } else {
-        [self activatePasswordFields];
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    switch (textField.tag) {
+        case 0: // Email
+            [self validateEmailQuietly:NO];
+            break;
+        case 1: // Password
+            [self validatePasswordQuietly:NO];
+            // Submit form?
+            if ([formErrors count] == 0) {
+                [self signInDidPress:nil];
+            }
+            break;
     }
 }
 
-- (void)deactivateAllFields {
-    [self.nicknameField setBackground:self.fieldInactive];
-    [self.emailField setBackground:self.fieldInactive];
-    [self.passwordFieldBackground setImage:self.doubleFieldInactive];
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    switch (textField.tag) {
+        case 0: // Email
+            [txtPassword becomeFirstResponder];
+            break;
+        case 1: // Passowrd
+            [txtPassword resignFirstResponder];
+            break;
+    }
+    
+    return YES;
 }
 
-- (void)activateNicknameField {
-    [self.nicknameField setBackground:self.fieldActive];
-    [self.emailField setBackground:self.fieldInactive];
-    [self.passwordFieldBackground setImage:self.doubleFieldInactive];
+- (void)textfieldDidChange:(NSNotification *)notification {
+    UITextField *textField = (UITextField *)notification.object;
+    switch (textField.tag) {
+        case 0: // Email
+            [self validateEmailQuietly:YES];
+            break;
+        case 1: // Password
+            [self validatePasswordQuietly:YES];
+            break;
+    }
 }
 
-- (void)activateEmailField {
-    [self.nicknameField setBackground:self.fieldInactive];
-    [self.emailField setBackground:self.fieldActive];
-    [self.passwordFieldBackground setImage:self.doubleFieldInactive];
+#pragma mark - Grouped table view delegates
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (tableView.tag == 0) { // Textbox table view
+        return 2;
+    } else { // Errors table view
+        return [formErrors count];
+    }
 }
 
-- (void)activatePasswordFields {
-    [self.nicknameField setBackground:self.fieldInactive];
-    [self.emailField setBackground:self.fieldInactive];
-    [self.passwordFieldBackground setImage:self.doubleFieldActive];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == 0) { // Textbox table view
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TextFieldCell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TextFieldCell"];
+        }
+        
+        switch (indexPath.row) {
+            case 0: {
+                UIView *txtEmailContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 220.0f, 21.0f)];
+                txtEmail.frame = CGRectMake(0.0f, 0.0f, 220.0f, 21.0f);
+                txtEmail.font = [UIFont systemFontOfSize:14.0f];
+                txtEmail.placeholder = @"Email";
+                txtEmail.autocorrectionType = UITextAutocorrectionTypeNo;
+                [txtEmail setClearButtonMode:UITextFieldViewModeNever];
+                txtEmail.keyboardType = UIKeyboardTypeEmailAddress;
+                txtEmail.returnKeyType = UIReturnKeyNext;
+                txtEmail.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+                txtEmail.tag = 0;
+                txtEmail.delegate = self;
+                
+                activityEmailView.frame = CGRectMake(200.0f, 1.0f, 20.0f, 20.0f);
+                activityEmailView.hidesWhenStopped = YES;
+                
+                [txtEmailContainer addSubview:txtEmail];
+                [txtEmailContainer addSubview:activityEmailView];
+                cell.accessoryView = txtEmailContainer;
+                break;
+            }
+            case 1: {
+                txtPassword.frame = CGRectMake(0.0f, 0.0f, 220.0f, 21.0f);
+                txtPassword.font = [UIFont systemFontOfSize:14.0f];
+                txtPassword.secureTextEntry = YES;
+                txtPassword.placeholder = @"Password";
+                txtPassword.autocorrectionType = UITextAutocorrectionTypeNo;
+                [txtPassword setClearButtonMode:UITextFieldViewModeNever];
+                txtPassword.returnKeyType = UIReturnKeyDone;
+                txtPassword.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                txtPassword.tag = 1;
+                txtPassword.delegate = self;
+                cell.accessoryView = txtPassword;
+                break;
+            }
+        }
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    } else { // Errors table view
+        PTErrorTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTErrorTableCell"];
+        if (cell == nil) {
+            cell = [[PTErrorTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"PTErrorTableCell"];
+        }
+        
+        // Get the error
+        NSDictionary *errorDescription = [formErrors objectAtIndex:indexPath.row];
+        cell.textLabel.text = [errorDescription objectForKey:@"message"];
+        return cell;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == 0) { // Textbox table view
+        return 44.0f;
+    } else { // Errors table view
+        return 24.0f;
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+// The following implementation gets rid of empty cells
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return [UIView new];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.0f;
 }
 
 @end

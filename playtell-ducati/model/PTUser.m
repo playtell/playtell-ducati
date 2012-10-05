@@ -73,4 +73,12 @@ static PTUser* instance = nil;
     return [description stringByAppendingFormat:@", token=%@", self.authToken];
 }
 
+- (void)resetUser {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:PT_USERNAME_KEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:PT_TOKEN_KEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:PT_USER_ID_KEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:PT_PHOTO_URL_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 @end
