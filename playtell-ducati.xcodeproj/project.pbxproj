@@ -133,11 +133,11 @@
 		23B500961612402F008D9D14 /* invite-more.png in Resources */ = {isa = PBXBuildFile; fileRef = 23B500921612402F008D9D14 /* invite-more.png */; };
 		23B500971612402F008D9D14 /* invite-more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23B500931612402F008D9D14 /* invite-more@2x.png */; };
 		23B5009A1612405D008D9D14 /* PTContactsInviteMoreButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 23B500991612405D008D9D14 /* PTContactsInviteMoreButton.m */; };
+		23BE484315FA8865005BF396 /* endCallButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484115FA8865005BF396 /* endCallButton.png */; };
+		23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484215FA8865005BF396 /* endCallButton@2x.png */; };
 		23C443D215C3244F009536D8 /* PTContactsGetRelatedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */; };
 		23C64E5A161B3D9600C629A2 /* ipad-phone.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E58161B3D9600C629A2 /* ipad-phone.png */; };
 		23C64E5B161B3D9600C629A2 /* ipad-phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */; };
-		23BE484315FA8865005BF396 /* endCallButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484115FA8865005BF396 /* endCallButton.png */; };
-		23BE484415FA8865005BF396 /* endCallButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484215FA8865005BF396 /* endCallButton@2x.png */; };
 		23C7314415862C7D00B9A9E6 /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
 		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
 		23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */; };
@@ -158,15 +158,15 @@
 		23D78D7115D5882300CC284B /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D78D7015D5882300CC284B /* MBProgressHUD.m */; };
 		23D78D7C15D58EE000CC284B /* contactsSelectedNone.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D78D7B15D58EE000CC284B /* contactsSelectedNone.png */; };
 		23D78D7F15D592E500CC284B /* PTContactsTableMsgCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D78D7E15D592E500CC284B /* PTContactsTableMsgCell.m */; };
+		23DAE25A15F939C3008D7524 /* friendfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25615F939C3008D7524 /* friendfinger.png */; };
+		23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25715F939C3008D7524 /* friendfinger@2x.png */; };
+		23DAE26015F93D98008D7524 /* yourfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25E15F93D98008D7524 /* yourfinger.png */; };
+		23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25F15F93D98008D7524 /* yourfinger@2x.png */; };
 		23DCD059160262960085B0C1 /* PTNewUserBirthdateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DCD057160262960085B0C1 /* PTNewUserBirthdateViewController.m */; };
 		23DCD05A160262960085B0C1 /* PTNewUserBirthdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23DCD058160262960085B0C1 /* PTNewUserBirthdateViewController.xib */; };
 		23DF5FA015EE9477004210FE /* UIColor+ColorFromHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */; };
 		23E69D7F15D053A400FD8698 /* buttonSendInviteHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E69D7B15D053A400FD8698 /* buttonSendInviteHighlighted.png */; };
 		23E69D8015D053A400FD8698 /* buttonSendInviteNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E69D7C15D053A400FD8698 /* buttonSendInviteNormal.png */; };
-		23DAE25A15F939C3008D7524 /* friendfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25615F939C3008D7524 /* friendfinger.png */; };
-		23DAE25B15F939C3008D7524 /* friendfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25715F939C3008D7524 /* friendfinger@2x.png */; };
-		23DAE26015F93D98008D7524 /* yourfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25E15F93D98008D7524 /* yourfinger.png */; };
-		23DAE26115F93D98008D7524 /* yourfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25F15F93D98008D7524 /* yourfinger@2x.png */; };
 		23F199371586B9F000DC2E16 /* cover_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199361586B9F000DC2E16 /* cover_loading.png */; };
 		23F199391586BB7200DC2E16 /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
 		23F1E55F1610E9E900EE023B /* PTLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23F1E55D1610E9E900EE023B /* PTLoginViewController.m */; };
@@ -886,12 +886,12 @@
 		23B500931612402F008D9D14 /* invite-more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite-more@2x.png"; sourceTree = "<group>"; };
 		23B500981612405D008D9D14 /* PTContactsInviteMoreButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsInviteMoreButton.h; sourceTree = "<group>"; };
 		23B500991612405D008D9D14 /* PTContactsInviteMoreButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsInviteMoreButton.m; sourceTree = "<group>"; };
+		23BE484115FA8865005BF396 /* endCallButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endCallButton.png; sourceTree = "<group>"; };
+		23BE484215FA8865005BF396 /* endCallButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "endCallButton@2x.png"; sourceTree = "<group>"; };
 		23C443D015C3244F009536D8 /* PTContactsGetRelatedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsGetRelatedRequest.h; sourceTree = "<group>"; };
 		23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsGetRelatedRequest.m; sourceTree = "<group>"; };
 		23C64E58161B3D9600C629A2 /* ipad-phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-phone.png"; sourceTree = "<group>"; };
 		23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-phone@2x.png"; sourceTree = "<group>"; };
-		23BE484115FA8865005BF396 /* endCallButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = endCallButton.png; sourceTree = "<group>"; };
-		23BE484215FA8865005BF396 /* endCallButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "endCallButton@2x.png"; sourceTree = "<group>"; };
 		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
 		23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerTapRequest.h; sourceTree = "<group>"; };
 		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
@@ -921,6 +921,10 @@
 		23D78D7B15D58EE000CC284B /* contactsSelectedNone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contactsSelectedNone.png; sourceTree = "<group>"; };
 		23D78D7D15D592E500CC284B /* PTContactsTableMsgCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsTableMsgCell.h; sourceTree = "<group>"; };
 		23D78D7E15D592E500CC284B /* PTContactsTableMsgCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableMsgCell.m; sourceTree = "<group>"; };
+		23DAE25615F939C3008D7524 /* friendfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friendfinger.png; sourceTree = "<group>"; };
+		23DAE25715F939C3008D7524 /* friendfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friendfinger@2x.png"; sourceTree = "<group>"; };
+		23DAE25E15F93D98008D7524 /* yourfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yourfinger.png; sourceTree = "<group>"; };
+		23DAE25F15F93D98008D7524 /* yourfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yourfinger@2x.png"; sourceTree = "<group>"; };
 		23DCD056160262960085B0C1 /* PTNewUserBirthdateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNewUserBirthdateViewController.h; sourceTree = "<group>"; };
 		23DCD057160262960085B0C1 /* PTNewUserBirthdateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNewUserBirthdateViewController.m; sourceTree = "<group>"; };
 		23DCD058160262960085B0C1 /* PTNewUserBirthdateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTNewUserBirthdateViewController.xib; sourceTree = "<group>"; };
@@ -928,10 +932,6 @@
 		23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHex.m"; sourceTree = "<group>"; };
 		23E69D7B15D053A400FD8698 /* buttonSendInviteHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteHighlighted.png; sourceTree = "<group>"; };
 		23E69D7C15D053A400FD8698 /* buttonSendInviteNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteNormal.png; sourceTree = "<group>"; };
-		23DAE25615F939C3008D7524 /* friendfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friendfinger.png; sourceTree = "<group>"; };
-		23DAE25715F939C3008D7524 /* friendfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friendfinger@2x.png"; sourceTree = "<group>"; };
-		23DAE25E15F93D98008D7524 /* yourfinger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yourfinger.png; sourceTree = "<group>"; };
-		23DAE25F15F93D98008D7524 /* yourfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yourfinger@2x.png"; sourceTree = "<group>"; };
 		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_loading.png; sourceTree = "<group>"; };
 		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23F1E55C1610E9E900EE023B /* PTLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoginViewController.h; sourceTree = "<group>"; };
@@ -3523,10 +3523,11 @@
 			children = (
 				23F1E5551610E86A00EE023B /* login */,
 				23424C2315FFBAD000ECA190 /* new user */,
-				23AD27E715DA9F4000279018 /* PTPlaydateDelegate.h */,
 				8A62E3A215E7EA4F0077CBB6 /* games */,
+				23391EA815B7535800761268 /* contact import */,
 				F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */,
 				F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */,
+				23AD27E715DA9F4000279018 /* PTPlaydateDelegate.h */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
 				237B24AE157D191500FC288E /* PTDateViewController.m */,
 				237B24AF157D191500FC288E /* PTDateViewController.xib */,
@@ -3540,7 +3541,6 @@
 				F4EAC41315866DE200BE086B /* PTLoadingViewController.h */,
 				F4EAC41415866DE200BE086B /* PTLoadingViewController.m */,
 				F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */,
-				23391EA815B7535800761268 /* contact import */,
 				23AD27EC15DA9FCB00279018 /* PTPlaydateEndViewController.h */,
 				23AD27ED15DA9FCC00279018 /* PTPlaydateEndViewController.m */,
 				23AD27EE15DA9FCC00279018 /* PTPlaydateEndViewController.xib */,
