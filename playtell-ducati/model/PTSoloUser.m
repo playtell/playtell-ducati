@@ -60,12 +60,12 @@
 }
 
 - (NSURL*)photoURL {
-    return [[NSBundle mainBundle] URLForResource:@"solo-bot-profile"
+    return [[NSBundle mainBundle] URLForResource:@"Solo-profile-pic"
                                    withExtension:@"png"];
 }
 
 - (UIImage*)userPhoto {
-    return [UIImage imageNamed:@"solo-bot-profile"];
+    return [UIImage imageNamed:@"Solo-profile-pic"];
 }
 
 - (NSString*)email {
@@ -208,7 +208,7 @@
 #pragma mark - Video loading convenience methods
 
 - (void)playIntroVideoWithChatController:(PTChatViewController*)chatController {
-    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_HiToybox"
+    NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_Hi"
                                               withExtension:@"mp4"];
     [chatController playMovieURLInLeftPane:introURL];
 }

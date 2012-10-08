@@ -596,6 +596,8 @@
 		F4EAC41615866DE200BE086B /* PTLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC41415866DE200BE086B /* PTLoadingViewController.m */; };
 		F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */; };
 		F4EAC4471586AA1500BE086B /* PTCheckForPlaydateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */; };
+		F4F0F352161CB9EA00250CCB /* Solo-profile-pic.png in Resources */ = {isa = PBXBuildFile; fileRef = F4F0F350161CB9EA00250CCB /* Solo-profile-pic.png */; };
+		F4F0F353161CB9EA00250CCB /* Solo-profile-pic@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4F0F351161CB9EA00250CCB /* Solo-profile-pic@2X.png */; };
 		F4FB354C15E2CE1D006FD40E /* PTChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -1460,6 +1462,8 @@
 		F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoadingViewController.xib; sourceTree = "<group>"; };
 		F4EAC4451586AA1500BE086B /* PTCheckForPlaydateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTCheckForPlaydateRequest.h; sourceTree = "<group>"; };
 		F4EAC4461586AA1500BE086B /* PTCheckForPlaydateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCheckForPlaydateRequest.m; sourceTree = "<group>"; };
+		F4F0F350161CB9EA00250CCB /* Solo-profile-pic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Solo-profile-pic.png"; sourceTree = "<group>"; };
+		F4F0F351161CB9EA00250CCB /* Solo-profile-pic@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Solo-profile-pic@2X.png"; sourceTree = "<group>"; };
 		F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatViewController.h; sourceTree = "<group>"; };
 		F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -2275,6 +2279,8 @@
 			children = (
 				F44E88CD1615528900B998AD /* solo-bot-profile.png */,
 				F44E88CE1615528A00B998AD /* solo-bot-profile@2x.png */,
+				F4F0F350161CB9EA00250CCB /* Solo-profile-pic.png */,
+				F4F0F351161CB9EA00250CCB /* Solo-profile-pic@2X.png */,
 				F44CFA30160ABB7C0089CCA0 /* NUX */,
 				23BE484115FA8865005BF396 /* endCallButton.png */,
 				23BE484215FA8865005BF396 /* endCallButton@2x.png */,
@@ -3673,6 +3679,8 @@
 				F44E88CF1615528A00B998AD /* solo-bot-profile.png in Resources */,
 				F44E88D01615528A00B998AD /* solo-bot-profile@2x.png in Resources */,
 				F48541D01617B392003E78E6 /* Solo_HiToybox.mp4 in Resources */,
+				F4F0F352161CB9EA00250CCB /* Solo-profile-pic.png in Resources */,
+				F4F0F353161CB9EA00250CCB /* Solo-profile-pic@2X.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

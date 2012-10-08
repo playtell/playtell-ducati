@@ -281,6 +281,8 @@
     buttonRect.origin = [self.view convertPoint:buttonRect.origin
                                        fromView:self.scrollView];
     playmateImageView.frame = buttonRect;
+    playmateImageView.layer.cornerRadius = 6.0;
+    playmateImageView.clipsToBounds = YES;
     [self.view insertSubview:playmateImageView belowSubview:self.chatController.view];
     
     [UIView animateWithDuration:1.0 animations:^{
