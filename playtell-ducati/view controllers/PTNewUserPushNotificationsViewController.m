@@ -105,6 +105,19 @@
 
     // Show creating account view
     viewAccountCreating.hidden = NO;
+    
+    // Top labels green color
+    NSArray *childViews1 = viewPushNotificationInfo.subviews;
+    NSArray *childViews2 = viewAccountSuccess.subviews;
+    NSMutableSet *allChildViews = [NSMutableSet setWithArray:childViews1];
+    [allChildViews addObjectsFromArray:childViews2];
+    for (UIView *childView in [allChildViews allObjects]) {
+        if (childView.tag != 5) {
+            continue;
+        }
+        UILabel *childLbl = (UILabel *)childView;
+        childLbl.textColor = [UIColor colorFromHex:@"#90b81c"];
+    }
 }
 
 - (void)viewDidUnload {

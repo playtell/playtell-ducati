@@ -18,17 +18,26 @@
 
 NSString *backFilename = @"card-back.png";
 
-@synthesize initiator_id, playmate_id, playdate_id, totalNumCards, cardsLeftOnBoard, cardsOnBoard, isMyTurn, isOneCardAlreadyFlipped, board_id;
+@synthesize initiator_id;
+@synthesize playmate_id;
+@synthesize playdate_id;
+@synthesize totalNumCards;
+@synthesize cardsLeftOnBoard;
+@synthesize cardsOnBoard;
+@synthesize isMyTurn;
+@synthesize isOneCardAlreadyFlipped;
+@synthesize board_id;
 
 - (id)initMemoryGameBoardWithNumCards:(int)numCards
-                               isMyTurn:(BOOL)myTurn
-                               playdate:(int)playdateId
-                              initiator:(int)initiatorId
-                               playmate:(int)playmateId
+                             isMyTurn:(BOOL)myTurn
+                             playdate:(int)playdateId
+                            initiator:(int)initiatorId
+                             playmate:(int)playmateId
                               boardId:(int)boardId
-                               filenameDict:(NSArray *)allFilenames
-{
-    //set instance vars
+                         filenameDict:(NSArray *)allFilenames {
+    
+    NSLog(@"initMemoryGameBoardWithNumCards: %i", numCards);
+    // Set instance vars
     [self setTotalNumCards:numCards];
     [self setPlaydate_id:playdateId];
     [self setInitiator_id:initiatorId];
@@ -37,7 +46,6 @@ NSString *backFilename = @"card-back.png";
     [self setIsOneCardAlreadyFlipped:NO];
     [self setCardsLeftOnBoard:numCards];
     [self setBoard_id:boardId];
-
     [self setCardsOnBoard:[self initializeCardsOnBoard:allFilenames]];
 
     return self;

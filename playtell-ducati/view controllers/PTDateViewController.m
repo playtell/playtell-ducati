@@ -602,55 +602,54 @@
 - (IBAction)playMemoryGame:(id)sender {
     int numCards = NUM_MEMORY_CARDS;
     
-    // ##start MEMORY API CALL ##
+    // Find playmate user id
     PTPlaymate *playmate;
-    PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
-    
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator. Playmate is playmate.");
         playmate = self.playdate.playmate;
-        
     } else {
-        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
         playmate = self.playdate.initiator;
     }
+
+    PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
                                  auth_token:[[PTUser currentUser] authToken]
-                               playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
-                               initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
-                                  theme_ID:@"19"
+                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                                initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
+                                   theme_ID:@"19"
                             num_total_cards:[NSString stringWithFormat:@"%d", numCards]
-                                 onSuccess:^(NSDictionary *result) {
+                                  onSuccess:^(NSDictionary *result) {
+                                      // Get response parameters
+                                      NSString *board_id = [result valueForKey:@"board_id"];
+                                      NSString *filenames = [result valueForKey:@"filename_dump"];
+                                      filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
+                                      NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
+                                      
+                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                                      
-                                     NSLog(@"%@", result);
-                                     
-                                     //get response parameters
-                                     NSString *board_id = [result valueForKey:@"board_id"];
-                                     
-                                     NSString *filenames = [result valueForKey:@"filename_dump"];
-                                     filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
-                                     NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
-                                                                          
-                                     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-                                     
-                                     PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:YES boardID:[board_id integerValue]  playmateID:playmate.userID  initiatorID:[[PTUser currentUser] userID] allFilenames:allFilenames numCards:numCards];
+                                      PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc]
+                                                                         initializeWithmyTurn:YES
+                                                                         boardID:[board_id integerValue]
+                                                                         playmateID:playmate.userID
+                                                                         initiatorID:[[PTUser currentUser] userID]
+                                                                         allFilenames:allFilenames
+                                                                         numCards:numCards];
 #if !(TARGET_IPHONE_SIMULATOR)
-                                     [memoryVC setChatController:self.chatController];
+                                      [memoryVC setChatController:self.chatController];
 #endif
                                      
-                                     CGRect imageframe = CGRectMake(0,0,1024,768);
-                                     UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-                                     splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-                                     //bring up the view controller of the new game!
-                                     [appDelegate.transitionController loadGame:memoryVC
-                                                                    withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
-
+                                      // Init game splash
+                                      UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+                                      splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                      
+                                      // Bring up the view controller of the new game
+                                      [appDelegate.transitionController loadGame:memoryVC
+                                                                     withOptions:UIViewAnimationOptionTransitionCurlUp
+                                                                      withSplash:splash];
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"%@", error);
+        NSLog(@"New game API error: %@", error);
         NSLog(@"%@", request);
-        NSLog(@"%@", JSON);}];
-    
-    // ##end MEMORY API CALL ##
+        NSLog(@"%@", JSON);
+    }];
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
@@ -876,8 +875,6 @@
 
 
 - (void)pusherPlayDateMemoryNewGame:(NSNotification *)notification {
-    //check here to make sure it's coming from the other player
-    
     NSDictionary *eventData = notification.userInfo;
     NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
     NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
@@ -885,34 +882,35 @@
     NSString *filenames = [eventData objectForKey:@"filename_dump"];
     filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
     NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
-    NSLog(@"Pusher new memory request: filenames are as follows: %@", allFilenames);
     
     PTPlaymate *playmate;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator. Playmate is playmate.");
         playmate = self.playdate.playmate;
-        
     } else {
-        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
         playmate = self.playdate.initiator;
     }
     
-    //if we did not init new game but there is a pusher for new game on our playdate....
+    // Someone invited us to play
     if (initiator_id != [[PTUser currentUser] userID]) {
-        
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        
-        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:YES boardID:board_id playmateID:playmate.userID  initiatorID:[[PTUser currentUser] userID] allFilenames:allFilenames numCards:numCards];
+        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:NO
+                                                                                        boardID:board_id
+                                                                                     playmateID:[[PTUser currentUser] userID]
+                                                                                    initiatorID:playmate.userID
+                                                                                   allFilenames:allFilenames
+                                                                                       numCards:numCards];
 #if !(TARGET_IPHONE_SIMULATOR)
         [memoryVC setChatController:self.chatController];
 #endif
         
-        CGRect imageframe = CGRectMake(0,0,1024,768);
-        UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
         splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-        //bring up the view controller of the new game!
+
+        // Bring up the view controller of the new game
         [appDelegate.transitionController loadGame:memoryVC
-                                       withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
     }
 }
 

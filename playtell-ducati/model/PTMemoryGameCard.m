@@ -16,25 +16,23 @@
 
 @synthesize boardIndex, coordinates, cardHeight, cardWidth, isBackUp, cardDisabled, card, front, back;
 
-- (id) initWithFrontFilename:(NSString *)front_filename
-                  backFilename:(NSString *)back_filename
-                    indexOnBoard:(int)board_index
-               numberOfCards:(int)num_cards
-{
+- (id)initWithFrontFilename:(NSString *)front_filename
+               backFilename:(NSString *)back_filename
+               indexOnBoard:(int)board_index
+              numberOfCards:(int)num_cards {
+
     //create "card" UIBUtton
     [self setCard:[UIButton buttonWithType:UIButtonTypeCustom]];
     [self setBack:[UIImage imageNamed:back_filename]];
     [self setFront:[UIImage imageNamed:front_filename]];
     [[self card] setBackgroundImage:[self back] forState:UIControlStateNormal];
-    
     [[self card] addTarget:self action:@selector(cardTouched:) forControlEvents:UIControlEventTouchUpInside];
-    
     [[self card] setTag:board_index];
-        
+
     //set up the card object
     [self setBoardIndex:board_index];
     [self setIsBackUp:YES];
-      
+
     //set these based on the num cards
     [self setCardWidth:164];
     [self setCardHeight:225];
@@ -46,13 +44,13 @@
     //set coordinates
     [self setCardWidth:[self cardWidth]];
     [self setCardHeight:[self cardHeight]];
-    [self setCoordinates:[[PTMemoryCardCoordinate alloc] initWithNumCards:num_cards index:[self boardIndex]]];
-    
+    [self setCoordinates:[[PTMemoryCardCoordinate alloc] initWithNumCards:num_cards
+                                                                    index:[self boardIndex]]];
+
     return self;
 }
 
-- (void)flipCardAnimation
-{
+- (void)flipCardAnimation {
     UIImage *otherSideImage;
     otherSideImage = (self.isBackUp) ? self.front : self.back;
     
@@ -65,17 +63,14 @@
                     completion:^(BOOL finished){
                         [[self card] setBackgroundImage:otherSideImage forState:UIControlStateNormal];
                     }];
+
     ([self isBackUp]) ? [self setIsBackUp:NO] : [self setIsBackUp:YES];
 }
 
-// ## GAMEPLAY METHODS START ##
-- (IBAction)cardTouched:(id)sender
-{
+- (IBAction)cardTouched:(id)sender {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [[[appDelegate memoryViewController] board] playTurn:self];
     [self flipCardAnimation];
 }
-
-
 
 @end

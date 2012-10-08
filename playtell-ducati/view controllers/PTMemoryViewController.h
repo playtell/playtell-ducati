@@ -13,10 +13,10 @@
 
 
 @interface PTMemoryViewController : UIViewController {
-    IBOutlet UIButton *closeMemory;
+    IBOutlet UIButton *endPlaydate;
     
     //communication variables
-    int board_id;
+//    int board_id;
     BOOL board_enabled;
     
     NSArray *board_buttons, *board_turn_indicators;
@@ -25,14 +25,13 @@
 
 // Board stuff
 @property (nonatomic) PTPlaydate *playdate;
-@property (nonatomic, retain) IBOutlet UIButton *closeMemory;
 
 // Chat view controller
 @property (nonatomic, strong) PTChatViewController* chatController;
 
 @property (nonatomic, strong) PTMemoryGameBoard *board;
 
-@property (nonatomic) int board_id;
+//@property (nonatomic) int board_id;
 
 - (id) initializeWithmyTurn:(BOOL)myTurn
                     boardID:(int)board_id
