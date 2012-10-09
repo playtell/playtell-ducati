@@ -94,7 +94,7 @@
                                                                cornerRadii:CGSizeMake(6.0, 6.0)];
         CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
         shapeLayer.path = cornerPath.CGPath;
-        innerView.layer.mask = shapeLayer;
+//        innerView.layer.mask = shapeLayer;
         innerView.layer.masksToBounds = YES;
         [self addSubview:innerView];
 
@@ -400,8 +400,9 @@
 
     self.rightImageView.image = anImage;
     self.rightImageView.frame = [[self class] rectForLeftView];
-    self.rightImageView.layer.borderWidth = 6.0;
-    self.rightImageView.layer.borderColor = [self photoBorderColor].CGColor;
+    self.rightImageView.layer.borderWidth = 1.0;
+    self.rightImageView.layer.cornerRadius = 10.0;
+    self.rightImageView.layer.borderColor = [UIColor darkGrayColor].CGColor;
     [self.theRightView addSubview:self.rightImageView];
 }
 
@@ -412,12 +413,8 @@
     self.leftVideoView = aView;
     [aView removeAllGestureRecognizers];
 
-    UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
-                                                     byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft
-                                                           cornerRadii:CGSizeMake(6.0, 6.0)];
-    CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
-    shapeLayer.path = cornerPath.CGPath;
     [self.theLeftView removeFromSuperview];
+    [self.theLeftView removeAllSubviews];
 
     [self.leftImageView removeFromSuperview];
     [self.theLeftView addSubview:aView];
@@ -430,14 +427,10 @@
     aView.frame = viewFrame;
     self.rightVideoView = aView;
     [aView removeAllGestureRecognizers];
+    aView.layer.cornerRadius = 6.0;
+    aView.clipsToBounds = YES;
 
-    UIBezierPath* cornerPath = [UIBezierPath bezierPathWithRoundedRect:aView.bounds
-                                                     byRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight
-                                                           cornerRadii:CGSizeMake(6.0, 6.0)];
-    CAShapeLayer* shapeLayer = [[CAShapeLayer alloc] init];
-    shapeLayer.path = cornerPath.CGPath;
     [self.theRightView removeFromSuperview];
-    //self.theRightView.layer.mask = shapeLayer;
 
     [self.rightImageView removeFromSuperview];
     [self.theRightView addSubview:aView];

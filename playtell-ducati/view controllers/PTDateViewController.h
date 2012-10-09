@@ -6,15 +6,30 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "PTPageView.h"
 #import "PTBookView.h"
-#import "PTBooksScrollView.h"
 #import "PTBooksParentView.h"
+#import "PTBooksScrollView.h"
+#import "PTChatViewController.h"
+#import "PTPageView.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
 #import "PTPlaydateDelegate.h"
 #import "PTPlaydateEndViewController.h"
+#import "PTPlaymate.h"
+
+#import <UIKit/UIKit.h>
+
+@class PTDateViewController;
+
+@protocol PTDateViewControllerDelegate <NSObject>
+- (void)dateViewController:(PTDateViewController *)controller didTurnBookToPage:(NSUInteger)pageNumber;
+- (void)dateViewController:(PTDateViewController *)controller didOpenBookWithID:(NSUInteger)bookID;
+- (void)dateViewcontrollerWillCloseBook:(PTDateViewController *)controller;
+- (void)dateViewControllerWillAppear:(PTDateViewController *)controller;
+- (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller;
+- (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf;
+- (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller;
+@end
 
 @interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate> {
     // Playdate
@@ -58,10 +73,18 @@
 @property (nonatomic, retain) IBOutlet UIButton *button2;
 
 @property (nonatomic, retain) IBOutlet UIView *endPlaydatePopup;
+@property (nonatomic, strong) PTChatViewController* chatController;
+@property (nonatomic, weak) NSObject<PTDateViewControllerDelegate> *delegate;
+
+- (id)initWithPlaymate:(PTPlaymate*)aPlaymate
+    chatViewController:(PTChatViewController*)chatController;
+
 - (IBAction)playdateDisconnect:(id)sender;
 - (IBAction)playTictactoe:(id)sender;
 
 - (IBAction)endPlaydateHandle:(id)sender;
 - (void)openBookAfterNavigation;
+
+- (UIView*)openBookView;
 
 @end

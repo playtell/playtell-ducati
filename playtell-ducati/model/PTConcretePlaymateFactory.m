@@ -6,19 +6,22 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
 #import "Logging.h"
 #import "PTAllFriendsRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTSoloUser.h"
 #import "PTUser.h"
 
 @interface PTConcretePlaymateFactory ()
+@property (nonatomic, retain) NSArray* robotPlaymates;
 @property (nonatomic, retain) NSMutableArray* playmates;
 @end
 
 static PTConcretePlaymateFactory* sharedInstance = nil;
 
 @implementation PTConcretePlaymateFactory
-@synthesize playmates;
+@synthesize playmates, robotPlaymates=_robotPlaymates;
 
 + (PTConcretePlaymateFactory*)sharedFactory {
     if(!sharedInstance) {
@@ -80,6 +83,15 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
                             token:(NSString*)token
                           success:(void(^)(void))success
                           failure:(void(^)(NSError* error))failure {
+    
+    if (!token || [token isEqualToString:@""]) {
+        self.playmates = self.robotPlaymates;
+        if (success) {
+            success();
+        }
+        return;
+    }
+    
     PTAllFriendsRequest* request = [[PTAllFriendsRequest alloc] init];
     [request allFriendsWithUserID:ID
                         authToken:token
@@ -94,8 +106,20 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
 
             PTPlaymate* playmateObject = [[PTPlaymate alloc] initWithDictionary:playmate];
             [self.playmates addObject:playmateObject];
+            
+            NSURLRequest* urlRequest = [NSURLRequest requestWithURL:playmateObject.photoURL];
+            AFImageRequestOperation* reqeust;
+            reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                        success:^(UIImage *image)
+            {
+                LogTrace(@"Fetched image for %@", playmateObject.username);
+                playmateObject.userPhoto = image;
+            }];
+            [reqeust start];
         }
-
+        NSArray* robots = [self robotPlaymates];
+        self.playmates = [robots arrayByAddingObjectsFromArray:self.playmates];
+        
         if (success) {
             success();
         }
@@ -105,6 +129,14 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
             failure(error);
         }
     }];
+}
+
+- (NSArray*)robotPlaymates {
+    if (!_robotPlaymates) {
+        PTSoloUser* solo = [[PTSoloUser alloc] init];
+        self.robotPlaymates = [NSArray arrayWithObject:solo];
+    }
+    return _robotPlaymates;
 }
 
 @end

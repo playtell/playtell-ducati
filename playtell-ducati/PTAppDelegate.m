@@ -10,6 +10,7 @@
 #import "Crittercism.h"
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTChatViewController.h"
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
@@ -42,6 +43,7 @@
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
 @synthesize phone;
+@synthesize chatController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -67,9 +69,7 @@
 #endif
     
     [self setupPushNotifications:launchOptions];
-#if !(TARGET_IPHONE_SIMULATOR)
     [PTVideoPhone sharedPhone];
-#endif
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
@@ -90,6 +90,9 @@
     
     [self.window makeKeyAndVisible];
 
+    // Create the ChatHUD
+    self.chatController = [[PTChatViewController alloc] initWithNullPlaymate];
+    
     return YES;
 }
 
@@ -126,6 +129,22 @@
      }];
 }
 
+- (void)runNewUserWorkflow {
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:0
+                                         token:nil
+                                       success:^
+     {
+         self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+         self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         [self.transitionController transitionToViewController:self.dialpadController
+                                                   withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         NSAssert(NO, @"Failed to load playmates");
+     }];
+}
+
 - (void)setupPushNotifications:(NSDictionary*)theLaunchOptions {
     [self registerForAPNS];
     [self registerForUrbanAirshipNotifications:theLaunchOptions];
@@ -147,6 +166,11 @@
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {
     // Transition to the Dialpad
     [self runLoggedInWorkflow];
+}
+
+- (void)createNewAccount:(PTLoginViewController*)controller {
+    // Run the new user workflow
+    [self runNewUserWorkflow];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

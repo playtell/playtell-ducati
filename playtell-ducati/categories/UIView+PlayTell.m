@@ -22,10 +22,7 @@
 }
 
 - (void)removeAllSubviews {
-    NSArray* subviews = [self.subviews copy];
-    for (UIView* subview in subviews) {
-        [subview removeFromSuperview];
-    }
+    [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 - (void)removeAllGestureRecognizers {

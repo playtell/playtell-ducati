@@ -22,7 +22,6 @@
 @end
 
 @implementation PTLoginViewController
-
 @synthesize delegate;
 @synthesize initialEmailAddress;
 
@@ -41,6 +40,13 @@
     }
     return self;
 }
+
+- (IBAction)createAccount:(id)sender {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(createNewAccount:)]) {
+        [self.delegate createNewAccount:self];
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];

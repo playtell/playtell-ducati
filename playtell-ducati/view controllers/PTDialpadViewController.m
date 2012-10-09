@@ -9,26 +9,31 @@
 
 #import "Logging.h"
 #import "PTAppDelegate.h"
+#import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTContactImportViewController.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTFriendshipAcceptRequest.h"
+#import "PTFriendshipDeclineRequest.h"
+#import "PTNewUserNavigationController.h"
+#import "PTNullPlaymate.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
+#import "PTPlaydateDetailsRequest.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
 #import "PTPlaymateView.h"
+#import "PTSoloUser.h"
 #import "PTUser.h"
-#import "TransitionController.h"
-#import "PTPlaydateDetailsRequest.h"
 #import "PTUsersGetStatusRequest.h"
-#import "UIView+PlayTell.h"
-#import "PTFriendshipAcceptRequest.h"
-#import "PTFriendshipDeclineRequest.h"
-#import "PTContactImportViewController.h"
-#import "PTNewUserNavigationController.h"
+#import "TransitionController.h"
+
+#import "PTPlaydate+InitatorChecking.h"
 #import "UIColor+ColorFromHex.h"
+#import "UIView+PlayTell.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
@@ -42,6 +47,7 @@
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @property (nonatomic, retain) PTDateViewController* dateController;
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
+@property (nonatomic, retain) PTChatViewController* chatController;
 @end
 
 @implementation PTDialpadViewController
@@ -54,6 +60,7 @@
 @synthesize dateController;
 @synthesize loadingView;
 @synthesize audioPlayer;
+@synthesize chatController;
 
 - (void)loadView {
     [super loadView];
@@ -79,7 +86,12 @@
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
     [self.view addSubview:self.scrollView];
-    
+
+    // Get the ChatViewController
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.chatController = appDelegate.chatController;
+    [self.chatController connectToPlaceholderOpenTokSession];
+
     // Add all playmates to the dialpad
     [self drawPlaymates];
     
@@ -102,7 +114,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    if ([[PTUser currentUser] isLoggedIn]) {
+        [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+    }
     
     UIView* background = [self.view viewWithTag:666];
     CGRect backgroundFrame = self.view.frame;
@@ -159,6 +173,9 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
+
+    [self.chatController setLeftViewAsPlaceholder];
+    [self.view addSubview:self.chatController.view];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -489,13 +506,79 @@
     }
 }
 
+
 - (void)initiatePlaydateRequestWithPlaymate:(PTPlaymate *)playmate {
     LOGMETHOD;
     // Initiate playdate request
-    [self joinPlaydate];
+    // TODO This check needs to go away at some point...
+    
+    UIImage *playmateImage = [playmate userPhoto];
+    UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
+    CGRect buttonRect = CGRectZero;
+    buttonRect.origin = [self.view convertPoint:buttonRect.origin
+                                       fromView:self.scrollView];
+    playmateImageView.frame = buttonRect;
+    playmateImageView.layer.cornerRadius = 6.0;
+    playmateImageView.clipsToBounds = YES;
+    [self.view insertSubview:playmateImageView belowSubview:self.chatController.view];
+    
+    [UIView animateWithDuration:1.0 animations:^{
+        CGRect imageViewFrame = playmateImageView.frame;
+        imageViewFrame.origin = CGPointMake(312, -1);
+        playmateImageView.frame = imageViewFrame;
+    } completion:^(BOOL finished) {
+        self.chatController.playmate = playmate;
+        [playmateImageView removeFromSuperview];
 
+        [self initiatePlaydateWithPlaymate:playmate];
+
+        // If the user is logged in and the
+        if ([[PTUser currentUser] isLoggedIn] && ![playmate isARobot]) {
+            PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+            [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:playmate.userID]
+                                                  authToken:[[PTUser currentUser] authToken]
+                                                  onSuccess:^(NSDictionary *result)
+             {
+                 LogInfo(@"playdateCreateWithFriend response: %@", result);
+                 PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                                playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+                 self.chatController.playdate = aPlaydate;
+                 [self.chatController connectToOpenTokSession];
+                 [self.dateController setPlaydate:aPlaydate];
+                 self.dateController = nil;
+             } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                 LogError(@"playdateCreateWithFriend failed: %@", error);
+             }];
+            LogInfo(@"Requesting playdate...");
+            [self.chatController setLoadingViewForPlaymate:playmate];
+        }
+    }];
+}
+
+//
+// Intended to be called only from playmateClicked:
+//
+- (void)initiatePlaydateWithPlaymate:(PTPlaymate*)aPlaymate {
+    if ([aPlaymate isARobot]) {
+        PTSoloUser* robot = (PTSoloUser*)aPlaymate;
+        [robot resetScriptState];
+        self.dateController = [[PTDateViewController alloc] initWithPlaymate:aPlaymate
+                                                          chatViewController:self.chatController];
+        robot.dateController = self.dateController;
+    } else {
+        self.dateController = [[PTDateViewController alloc] initWithPlaymate:aPlaymate
+                                                          chatViewController:self.chatController];
+    }
+    
+    if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    }
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:self.dateController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
     PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:playmate.userID]
+    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:aPlaymate.userID]
                                           authToken:[[PTUser currentUser] authToken]
                                           onSuccess:^(NSDictionary *result)
      {
@@ -525,8 +608,20 @@
         [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     }
     
+    PTPlaymate* otherPlaymate;
+    if ([self.requestedPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        otherPlaymate = [self.requestedPlaydate playmate];
+    } else {
+        otherPlaymate = [self.requestedPlaydate initiator];
+    }
+
+    self.chatController.playdate = self.requestedPlaydate;
+    [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+    [self.chatController connectToOpenTokSession];
+    
     self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
                                                                  bundle:nil];
+    
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
     

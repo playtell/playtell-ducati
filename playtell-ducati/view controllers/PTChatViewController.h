@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import "PTChatHUDView.h"
 #import "PTPlaydate.h"
 #import "PTPlaymate.h"
 #import "PTVideoPhone.h"
@@ -17,6 +16,15 @@
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
+- (id)initWithNullPlaymate;
+
+- (void)setLeftViewAsPlaceholder;
+- (void)connectToOpenTokSession;
+- (void)connectToPlaceholderOpenTokSession;
+
+- (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate;
+- (void)playMovieURLInLeftPane:(NSURL*)movieURL;
+- (void)stopPlayingMovies;
 
 @property (nonatomic, readonly) UIView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;
