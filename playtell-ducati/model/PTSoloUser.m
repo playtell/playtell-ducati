@@ -195,11 +195,10 @@
 }
 
 - (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf {
-    // Hit rect should be centered at 641.0f, 365.0f
+    // Hit rect should be centered at 253.0f, 352.0f
     // The rect width and height is 104.0f
     //
-    // In the future, the hit
-    // 253.0f, 352.0f
+    // TODO In the future, the hit area should be calculated programmtically
     CGRect touchHereHitArea = CGRectMake(253.0f - 52.0f,
                                          352.0f - 52.0f,
                                          104.0f,
