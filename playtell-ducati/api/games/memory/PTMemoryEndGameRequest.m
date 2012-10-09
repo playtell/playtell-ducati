@@ -15,7 +15,7 @@
 - (void)endGameWithBoardId:(NSString *)boardId
                  authToken:(NSString *)token
                     userId:(NSString *)userId
-                playdateId:(NSString*)playdateId
+                playdateId:(NSString *)playdateId
                  onSuccess:(PTMemoryEndGameRequestSuccessBlock)success
                  onFailure:(PTMemoryEndGameRequestFailureBlock)failure
 {

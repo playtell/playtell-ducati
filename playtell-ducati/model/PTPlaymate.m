@@ -14,6 +14,8 @@
 @synthesize userID;
 @synthesize photoURL;
 @synthesize userPhoto;
+@synthesize friendshipStatus;
+@synthesize userStatus;
 
 - (BOOL)isARobot {
     return NO;
@@ -25,6 +27,8 @@
         email = [anEmail copy];
         username = [aName copy];
         userID = aUserID;
+        friendshipStatus = @"confirmed";
+        userStatus = @"available";
     }
     return self;
 }
@@ -33,6 +37,8 @@
     if (self = [super init]) {
         self.email = [playmateDictionary valueForKey:@"email"];
         self.username = [playmateDictionary valueForKey:@"displayName"];
+        self.friendshipStatus = [playmateDictionary valueForKey:@"friendshipStatus"];
+        self.userStatus = [playmateDictionary valueForKey:@"userStatus"];
         self.userID = [[playmateDictionary valueForKey:@"id"] unsignedIntValue];
 
         NSURL* url = [NSURL URLWithString:[playmateDictionary valueForKey:@"profilePhoto"]];
@@ -42,7 +48,7 @@
 }
 
 - (NSString*)description {
-    return [NSString stringWithFormat:@"Username: %@, Email: %@, UserID: %u", self.username, self.email, self.userID];
+    return [NSString stringWithFormat:@"Username: %@, Email: %@, UserID: %u, FriendshipStatus: %@ UserStatus: %@", self.username, self.email, self.userID, self.friendshipStatus, self.userStatus];
 }
 
 @end

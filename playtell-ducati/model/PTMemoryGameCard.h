@@ -7,49 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PTMemoryCardCoordinate.h"
 
 @interface PTMemoryGameCard : NSObject
 {
-    int artwork_index; //id of artwork, used for matching
-    int theme_id;
     int boardIndex; //index in board's card array
-
-    UIImageView *faceDown;
-    UIImageView *faceUp;
-    NSString *faceDownFilename;
-    
-    BOOL isFaceDown;
-    
-    float boardX;
-    float boardY;
+    UIButton *card;
+    UIImage *back, *front;
+    BOOL isBackUp, cardDisabled; //cards are disabled once they form part of a match
+    float cardWidth, cardHeight;
+    PTMemoryCardCoordinate *coordinates;
 }
 
-@property int artwork_index, boardIndex, theme_id, board_id;
+@property int boardIndex;
+@property float cardWidth, cardHeight;
+@property BOOL isBackUp, cardDisabled;
+@property UIButton *card;
+@property UIImage *back, *front;
+@property PTMemoryCardCoordinate *coordinates;
 
-@property float boardX, boardY;
-@property BOOL isFaceDown;
-@property UIImageView *faceDown, *faceUp;
-@property NSString *faceDownFilename;
-
-- (void) initWithTheme:(int)themeId
-               artwork:(int)artworkIndex;
-
-- (void) placeOnBoard;
-
-- (void) flip;
-
-- (void) enlarge;
-
-- (void) floatToMiddle; //preceeds stashInDeck
-
-- (void) stashInDeck:(int)player_id;
-
-- (void) shake;
-
-- (void) glow;
-
-- (void) removeFromPlay;
-
-//TODO, figure out notyourturn strategy
+- (id) initWithFrontFilename:(NSString *)front_filename
+                backFilename:(NSString *)back_filename
+                indexOnBoard:(int)board_index
+               numberOfCards:(int)num_cards;
+- (void)flipCardAnimation;
 
 @end

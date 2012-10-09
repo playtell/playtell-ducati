@@ -50,6 +50,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define HALF_SPACE_HEIGHT 90
 #define HALF_SPACE_WIDTH 93
 
+
 #define VISUAL_GAP_BETWEEN_SPACES_NON_RETNA 11 //in pixels
 
 //you win status codes
@@ -82,9 +83,11 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #define CARD_WIDTH 170
 #define CARD_HEIGHT 238
 
-#define MEMORY_Y_ROW_0 255
-#define MEMORY_X_COL_0 257
-#define MEMORY_Y_ROW_1 512
-#define MEMORY_X_COL_1 767
+#define NUM_MEMORY_CARDS 6
+
+#define MATCH_FOUND 0
+#define MATCH_ERROR 1
+#define FLIP_FIRST_CARD 2
+#define MATCH_WINNER 3
 
 #endif

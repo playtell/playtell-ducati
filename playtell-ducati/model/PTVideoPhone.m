@@ -68,6 +68,7 @@ static PTVideoPhone* instance = nil;
     
     self.session = [[OTSession alloc] initWithSessionId:aSession
                                                delegate:self];
+
     [self.session connectWithApiKey:kApiKey
                               token:aToken];
 

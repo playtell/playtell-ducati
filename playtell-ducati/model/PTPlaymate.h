@@ -19,5 +19,7 @@
 @property (nonatomic, assign) NSUInteger userID;
 @property (nonatomic, retain) UIImage* userPhoto;
 @property (nonatomic, readonly) BOOL isARobot;
+@property (nonatomic, readwrite) NSString* friendshipStatus; // Possible: confirmed, pending-you, pending-them
+@property (nonatomic, readwrite) NSString* userStatus; // Possible: available, playdate, pending
 
 @end

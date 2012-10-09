@@ -14,6 +14,10 @@ extern NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent;
 extern NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent;
 extern NSString* const PTPlayTellPusherDidReceivePlaydateEndedEvent;
 
+extern NSString* const PTPlayTellPusherDidReceiveFriendshipRequestEvent;
+extern NSString* const PTPlayTellPusherDidReceiveFriendshipAcceptEvent;
+extern NSString* const PTPlayTellPusherDidReceiveFriendshipDeclineEvent;
+
 extern NSString* const PTPlaydateKey;
 
 @interface PTPlayTellPusher : NSObject

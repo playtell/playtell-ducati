@@ -6,15 +6,18 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PTBookView.h"
+#import "PTBooksParentView.h"
+#import "PTBooksScrollView.h"
 #import "PTChatViewController.h"
 #import "PTPageView.h"
-#import "PTBookView.h"
-#import "PTBooksScrollView.h"
-#import "PTBooksParentView.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
+#import "PTPlaydateDelegate.h"
+#import "PTPlaydateEndViewController.h"
 #import "PTPlaymate.h"
+
+#import <UIKit/UIKit.h>
 
 @class PTDateViewController;
 
@@ -28,7 +31,7 @@
 - (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller;
 @end
 
-@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate> {
+@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate> {
     // Playdate
     PTPlaydate *playdate;
     IBOutlet UIButton *endPlaydate;
@@ -36,6 +39,7 @@
     IBOutlet UIButton *endPlaydateForreal;
     IBOutlet UIView *endPlaydatePopup;
     UIPopoverController *playdateEndPopover;
+    PTPlaydateEndViewController *playdateEndViewController;
     
     // Books
     PTBooksParentView *booksParentView;

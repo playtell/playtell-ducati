@@ -45,7 +45,7 @@
 
 //GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
-#import "PTMemoryGameViewController.h"
+#import "PTMemoryViewController.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
@@ -86,7 +86,6 @@
     self.chatController = appDelegate.chatController;
 //    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
-//#endif
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -154,6 +153,27 @@
 //#endif
 }
 
+- (void)setPlaymatePhoto {
+    // Pick out the other user
+#if !(TARGET_IPHONE_SIMULATOR)
+    if (self.playdate) {
+        PTPlaymate* otherUser;
+        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+            otherUser = self.playdate.playmate;
+        } else {
+            otherUser = self.playdate.initiator;
+        }
+        
+        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
+        [self.chatView setLoadingImageForLeftView:otherUserPhoto
+                                      loadingText:otherUser.username];
+    } else {
+        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
+                                      loadingText:@""];
+    }
+#endif
+}
+
 - (UIImage*)placeholderImage {
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
@@ -204,7 +224,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateFingerEnd:) name:@"PlayDateFingerEnd" object:nil];
     //listen for tictactoe game
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeNewGame:) name:@"PlayDateTictactoeNewGame" object:nil];
-
+    //listen for memory game
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryNewGame:) name:@"PlayDateMemoryNewGame" object:nil];
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -352,7 +373,7 @@
         // Book cover pages load
         [coversToLoad addObject:bookId];
     }
-    
+        
     //TODO we need to incorporate an API call here to load games from the API
     xPos += (booksScrollView.frame.size.width * .75);
     UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
@@ -364,14 +385,14 @@
     [booksScrollView addSubview:tttBookView];
     xPos += booksScrollView.frame.size.width;
     
-//    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 150.0f, 300.0f, 225)]; // 800x600
-//    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-//    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                                                                    action:@selector(memoryTapped:)];
-//    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
-//    memoryBookView.userInteractionEnabled = YES;
-//    [booksScrollView addSubview:memoryBookView];
-//    xPos += booksScrollView.frame.size.width;
+    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
+    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
+    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(memoryTapped:)];
+    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
+    memoryBookView.userInteractionEnabled = YES;
+    [booksScrollView addSubview:memoryBookView];
+    xPos = booksScrollView.frame.size.width + xPos;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
@@ -413,11 +434,11 @@
     [super viewWillAppear:animated];
 
     // If the chat controller has been created, go ahead an add it
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     if (self.chatController) {
         [self.view addSubview:self.chatController.view];
     }
-//#endif
+#endif
     
     // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
     // notifications at the time of backgrounding.
@@ -445,9 +466,9 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [self removePlaymateFromChatHUD];
-//#endif
+#endif
 }
 
 - (void)removePlaymateFromChatHUD {
@@ -492,6 +513,10 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self setCurrentUserPhoto];
+    [self setPlaymatePhoto];
+#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -506,9 +531,9 @@
         LogInfo(@"Unsubscribing from channel: %@", self.playdate.pusherChannelName);
         [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
     }
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
     [[PTVideoPhone sharedPhone] disconnect];
-//#endif
+#endif
 }
 
 - (void)transitionToDialpad {
@@ -520,6 +545,42 @@
     }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)playdateDisconnect:(id)sender {    
+//    // Notify server of disconnect
+//    [self disconnectPusherAndChat];
+//    if (self.playdate) {
+//        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+//        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+//                                                          authToken:[[PTUser currentUser] authToken]
+//                                                          onSuccess:^(NSDictionary* result)
+//        {
+//            // We delay moving to the dialpad because it will be checking for
+//            // playdates when it appears
+//            [self transitionToDialpad];
+//        }
+//                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+//        {
+//            [self transitionToDialpad];
+//        }];
+//    }
+}
+
+- (IBAction)endPlaydatePopupToggle:(id)sender {
+//    if (endPlaydatePopup.hidden) {
+//        endPlaydatePopup.hidden = NO;
+//    } else {
+//        endPlaydatePopup.hidden = YES;
+//    }
+    if (playdateEndViewController == nil || playdateEndPopover == nil) {
+        playdateEndViewController = [[PTPlaydateEndViewController alloc] initWithNibName:@"PTPlaydateEndViewController" bundle:nil];
+        playdateEndViewController.delegate = self;
+        playdateEndPopover = [[UIPopoverController alloc] initWithContentViewController:playdateEndViewController];
+        playdateEndPopover.popoverContentSize = CGSizeMake(205.0f, 60.0f);
+    }
+
+    [playdateEndPopover presentPopoverFromRect:endPlaydate.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 }
 
 - (IBAction)playTictactoe:(id)sender {
@@ -547,9 +608,9 @@
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                   
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
          [tictactoeVc setChatController:self.chatController];
-//#endif
+#endif
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -572,76 +633,56 @@
 }
 
 - (IBAction)playMemoryGame:(id)sender {
+    int numCards = NUM_MEMORY_CARDS;
     
-    // ##start MEMORY API CALL ##
-    PTPlaymate *aPlaymate;
-    PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
-    
+    // Find playmate user id
+    PTPlaymate *playmate;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        LogInfo(@"Current user is initator. Playmate is playmate.");
-        aPlaymate = self.playdate.playmate;
-        
+        playmate = self.playdate.playmate;
     } else {
-        LogInfo(@"Current user is NOT initiator. Playmate is initiator");
-        aPlaymate = self.playdate.initiator;
+        playmate = self.playdate.initiator;
     }
+
+    PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
                                  auth_token:[[PTUser currentUser] authToken]
-                               playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
-                               initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
-                                  theme_ID:@"19"
-                           num_total_cards:@"4"
-                                 onSuccess:^(NSDictionary *result) {
+                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                                initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
+                                   theme_ID:@"19"
+                            num_total_cards:[NSString stringWithFormat:@"%d", numCards]
+                                  onSuccess:^(NSDictionary *result) {
+                                      // Get response parameters
+                                      NSString *board_id = [result valueForKey:@"board_id"];
+                                      NSString *filenames = [result valueForKey:@"filename_dump"];
+                                      filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
+                                      NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
+                                      
+                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                                      
-                                     NSLog(@"%@", result);
+                                      PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc]
+                                                                         initializeWithmyTurn:YES
+                                                                         boardID:[board_id integerValue]
+                                                                         playmateID:playmate.userID
+                                                                         initiatorID:[[PTUser currentUser] userID]
+                                                                         allFilenames:allFilenames
+                                                                         numCards:numCards];
+#if !(TARGET_IPHONE_SIMULATOR)
+                                      [memoryVC setChatController:self.chatController];
+#endif
                                      
-                                     //get response parameters
-                                     NSString *board_id = [result valueForKey:@"board_id"];
-//                                     NSDictionary *filenameArray = [result valueForKey:@"filename_dump"];
-                                                                         
-                                    PTMemoryGameViewController *memoryVc = [[PTMemoryGameViewController alloc] initWithPlaydate:self.playdate myTurn:YES boardID:[board_id intValue] playmateID:aPlaymate.userID initiatorID:[[PTUser currentUser] userID]];
-                                     
-//                            #if !(TARGET_IPHONE_SIMULATOR)
-                                    [memoryVc setChatController:self.chatController];
-//                            #endif
-                                     //    [appDelegate.transitionController loadGame:memoryGameVc withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash gameType:MEMORY];3
-                                                                         
-                                    CGRect imageframe = CGRectMake(0,0,1024,768);
-                                    
-                                    UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
-                                    splash.image = [UIImage imageNamed:@"Memory-cover.png"];
-                                    
-                                    //bring up the view controller of the new game!
-                                     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-                                    [appDelegate.transitionController loadGame:memoryVc
-                                                                   withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+                                      // Init game splash
+                                      UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+                                      splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                      
+                                      // Bring up the view controller of the new game
+                                      [appDelegate.transitionController loadGame:memoryVC
+                                                                     withOptions:UIViewAnimationOptionTransitionCurlUp
+                                                                      withSplash:splash];
     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"%@", error);
+        NSLog(@"New game API error: %@", error);
         NSLog(@"%@", request);
-        NSLog(@"%@", JSON);}];
-    
-    // ##end MEMORY API CALL ##
-}
-     
-
-- (IBAction)playdateDisconnect:(id)sender {
-    // Notify server of disconnect
-    [self disconnectPusherAndChat];
-    if (self.playdate) {
-        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
-        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
-                                                          authToken:[[PTUser currentUser] authToken]
-                                                          onSuccess:^(NSDictionary* result)
-        {
-            // We delay moving to the dialpad because it will be checking for
-            // playdates when it appears
-            [self transitionToDialpad];
-        }
-                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
-        {
-            [self transitionToDialpad];
-        }];
-    }
+        NSLog(@"%@", JSON);
+    }];
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
@@ -671,6 +712,14 @@
              [self transitionToDialpad];
          }];
     }
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self.chatView removeFromSuperview];
+    self.chatView = nil;
+#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -851,9 +900,9 @@
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-//#if !(TARGET_IPHONE_SIMULATOR)
+#if !(TARGET_IPHONE_SIMULATOR)
         [tictactoeVc setChatController:self.chatController];
-//#endif
+#endif
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:NO];
         tictactoeVc.board_id = board_id;
@@ -868,6 +917,47 @@
         //bring up the view controller of the new game!
         [appDelegate.transitionController loadGame:tictactoeVc
                                                          withOptions:UIViewAnimationOptionTransitionCrossDissolve withSplash:splash];
+    }
+}
+
+
+- (void)pusherPlayDateMemoryNewGame:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger board_id = [[eventData objectForKey:@"board_id"] integerValue];
+    NSInteger numCards = [[eventData objectForKey:@"num_cards"] integerValue];
+    NSString *filenames = [eventData objectForKey:@"filename_dump"];
+    filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
+    NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
+    
+    PTPlaymate *playmate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        playmate = self.playdate.playmate;
+    } else {
+        playmate = self.playdate.initiator;
+    }
+    
+    // Someone invited us to play
+    if (initiator_id != [[PTUser currentUser] userID]) {
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:NO
+                                                                                        boardID:board_id
+                                                                                     playmateID:[[PTUser currentUser] userID]
+                                                                                    initiatorID:playmate.userID
+                                                                                   allFilenames:allFilenames
+                                                                                       numCards:numCards];
+#if !(TARGET_IPHONE_SIMULATOR)
+        [memoryVC setChatController:self.chatController];
+#endif
+        
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+
+        // Bring up the view controller of the new game
+        [appDelegate.transitionController loadGame:memoryVC
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
     }
 }
 
@@ -1379,6 +1469,32 @@
     
     // Clear from memory
     fingerView = nil;
+}
+
+#pragma mark -
+#pragma mark Playdate delegates
+
+- (void)playdateShouldEnd {
+    // Dismiss popover
+    [playdateEndPopover dismissPopoverAnimated:NO];
+
+    // Notify server of disconnect
+    [self disconnectPusherAndChat];
+    if (self.playdate) {
+        PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
+        [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
+                                                          authToken:[[PTUser currentUser] authToken]
+                                                          onSuccess:^(NSDictionary* result)
+         {
+             // We delay moving to the dialpad because it will be checking for
+             // playdates when it appears
+             [self transitionToDialpad];
+         }
+                                                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+         {
+             [self transitionToDialpad];
+         }];
+    }
 }
 
 @end

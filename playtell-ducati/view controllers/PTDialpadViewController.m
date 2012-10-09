@@ -12,8 +12,12 @@
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
+#import "PTContactImportViewController.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTFriendshipAcceptRequest.h"
+#import "PTFriendshipDeclineRequest.h"
+#import "PTNewUserNavigationController.h"
 #import "PTNullPlaymate.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
@@ -21,12 +25,14 @@
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
+#import "PTPlaymateView.h"
 #import "PTSoloUser.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
 #import "TransitionController.h"
 
 #import "PTPlaydate+InitatorChecking.h"
+#import "UIColor+ColorFromHex.h"
 #import "UIView+PlayTell.h"
 
 #import <AVFoundation/AVFoundation.h>
@@ -35,8 +41,8 @@
 #define kAnimationRotateDeg 1.0
 
 @interface PTDialpadViewController ()
-@property (nonatomic, retain) PTPlaymateButton* selectedButton;
-@property (nonatomic, retain) NSDictionary* userButtonHash;
+@property (nonatomic, retain) PTPlaymateView* selectedPlaymateView;
+@property (nonatomic, retain) NSMutableDictionary* playmateViews;
 @property (nonatomic, retain) PTPlaydate* requestedPlaydate;
 @property (nonatomic, retain) UITapGestureRecognizer* cancelPlaydateRecognizer;
 @property (nonatomic, retain) PTDateViewController* dateController;
@@ -47,14 +53,59 @@
 @implementation PTDialpadViewController
 @synthesize scrollView;
 @synthesize playmates;
-@synthesize selectedButton;
-@synthesize userButtonHash;
+@synthesize selectedPlaymateView;
+@synthesize playmateViews;
 @synthesize requestedPlaydate;
 @synthesize cancelPlaydateRecognizer;
 @synthesize dateController;
 @synthesize loadingView;
 @synthesize audioPlayer;
 @synthesize chatController;
+
+- (void)loadView {
+    [super loadView];
+    self.view.frame = CGRectMake(0, 0, 1024, 748);
+    
+    UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
+    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
+    background.tag = 666;
+    [self.view addSubview:background];
+    
+    NSString* welcomeText = @"Who will you play with today?";
+    CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
+                               constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
+    CGRect welcomeLabelRect;
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 55,
+                                  labelSize.width, labelSize.height);
+    UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
+    welcomeLabel.text = welcomeText;
+    welcomeLabel.font = [self welcomeTextFont];
+    welcomeLabel.textColor = [UIColor colorFromHex:@"#000000" alpha:0.8f];
+    welcomeLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:welcomeLabel];
+    
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
+    [self.view addSubview:self.scrollView];
+    
+    // Add all playmates to the dialpad
+    [self drawPlaymates];
+    
+    // Setup dialing ringer
+    [self setupRinger];
+    
+    // TEMP
+    UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
+    contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
+    [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:contactButton];
+    
+    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+    logoutButton.frame = CGRectMake(210.0f, 695.0f, 170.0f, 35.0f);
+    [logoutButton addTarget:self action:@selector(logoutDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:logoutButton];
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -81,14 +132,29 @@
                                              selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
                                                  name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceiveFriendshipRequestNotification:)
+                                                 name:PTPlayTellPusherDidReceiveFriendshipRequestEvent
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceiveFriendshipAcceptNotification:)
+                                                 name:PTPlayTellPusherDidReceiveFriendshipAcceptEvent
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceiveFriendshipDeclineNotification:)
+                                                 name:PTPlayTellPusherDidReceiveFriendshipDeclineEvent
+                                               object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(checkForPendingPlaydateOnForegrounding:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    if (self.selectedButton) {
-        [self deactivatePlaymateButton];
+    if (self.selectedPlaymateView) {
+        [self deactivatePlaymateView];
     }
     
     // Check now for any pending playdates, and register to be notified
@@ -105,6 +171,275 @@
 
     [self.chatController setLeftViewAsPlaceholder];
     [self.view addSubview:self.chatController.view];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self deactivatePlaymateView];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    // Fade-in all playmate views
+    [UIView animateWithDuration:0.7f
+                     animations:^{
+                         for (id key in [self.playmateViews allKeys]) {
+                             PTPlaymateView *playmateView = [self.playmateViews objectForKey:key];
+                             playmateView.alpha = 1.0f;
+                         }
+                     }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    // Hide all playmate views
+    for (id key in [self.playmateViews allKeys]) {
+        PTPlaymateView *playmateView = [self.playmateViews objectForKey:key];
+        playmateView.alpha = 0.0f;
+    }
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setupRinger];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+}
+
+- (void)drawPlaymates {
+    // Define grid vars
+    const NSInteger totalPlaymates = [self.playmates count];
+    const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
+    const CGSize itemSize = CGSizeMake(200, 150);
+    const NSInteger itemsPerRow = 4;
+    const CGFloat gridSpace = (self.view.bounds.size.width - gridMargin.left - gridMargin.right - ((CGFloat)itemsPerRow)*itemSize.width)/(CGFloat)(itemsPerRow - 1);
+    const NSInteger totalRows = totalPlaymates/itemsPerRow + MIN(totalPlaymates%itemsPerRow, 1);
+    
+    // Set scroll view content size
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, gridMargin.top + ((CGFloat)totalRows)*(gridSpace + itemSize.height));
+    
+    // Draw all items
+    self.playmateViews = [NSMutableDictionary dictionary];
+    for (int row=0; row<totalRows; row++) {
+        for (int cell=0; cell<itemsPerRow; cell++) {
+            NSUInteger playmateIndex = (row*itemsPerRow) + cell;
+            if (playmateIndex >= totalPlaymates) {
+                break;
+            }
+            
+            // Build item frame
+            CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
+            CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+            
+            // Add a playmate view
+            PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
+            PTPlaymateView *playmateView = [[PTPlaymateView alloc] initWithFrame:itemFrame playmate:playmate];
+            [playmateView hideAnimated:NO];
+            playmateView.delegate = self;
+            [self.scrollView addSubview:playmateView];
+            
+            // Save playmate view to hash for easy retrieval
+            [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
+        }
+    }
+    
+    //    // TODO : revist the naming of these variables..
+    //    NSUInteger numPlaymates = self.playmates.count + 1;
+    //
+    //    CGFloat margin = 70;
+    //    const CGFloat leftMargin = margin;
+    //    const CGFloat rightMargin = margin;
+    //    const CGFloat topMargin = 30;
+    //    CGFloat rowSpacing = 10;
+    //    const NSUInteger itemsPerRow = 4;
+    //    const CGSize buttonSize = CGSizeMake(200, 150);
+    
+    //    CGFloat W = self.view.bounds.size.width;
+    //    CGFloat interCellPadding = (W - leftMargin - rightMargin - ((CGFloat)itemsPerRow)*buttonSize.width)/(CGFloat)(itemsPerRow - 1);
+    
+    // Testing...
+    //    rowSpacing = interCellPadding;
+    //    NSUInteger numRows = numPlaymates/itemsPerRow + MIN(numPlaymates%itemsPerRow, 1);
+    
+    //    NSMutableDictionary* playmatesAndButtons = [NSMutableDictionary dictionary];
+    //    for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
+    //        for (int cellIndex = 0; cellIndex < itemsPerRow; cellIndex++) {
+    //            NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
+    //            if (playmateIndex >= numPlaymates) {
+    //                continue;
+    //            }
+    //
+    //            CGFloat cellX = leftMargin + ((CGFloat)cellIndex)*(buttonSize.width + interCellPadding);
+    //            CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
+    //
+    //            UIButton* button;
+    //            if (playmateIndex == numPlaymates - 1) {
+    //                button = [UIButton buttonWithType:UIButtonTypeCustom];
+    //                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
+    //                [button setImage:[UIImage imageNamed:@"add-family.png"] forState:UIControlStateNormal];
+    //                [playmatesAndButtons setObject:button
+    //                                        forKey:@"AddUserButton"];
+    //                CGRect buttonFrame = button.frame;
+    //                buttonFrame.origin = CGPointMake(cellX, cellY);
+    //                button.frame = buttonFrame;
+    //                [self.scrollView addSubview:button];
+    //            } else {
+    //                PTPlaymate* currentPlaymate = [self.playmates objectAtIndex:playmateIndex];
+    //                PTPlaymateView *currentPlaymateView = [[PTPlaymateView alloc] initWithFrame:CGRectMake(cellX, cellY, buttonSize.width, buttonSize.height) playmate:currentPlaymate];
+    ////                button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
+    ////                [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
+    ////                [playmatesAndButtons setObject:button
+    ////                                        forKey:[self stringFromUInt:currentPlaymate.userID]];
+    //                [self.scrollView addSubview:currentPlaymateView];
+    //            }
+    //        }
+    //    }
+    //    TODO: Rewrite as self.playmateViews
+    //    self.userButtonHash = [NSDictionary dictionaryWithDictionary:playmatesAndButtons];
+    
+    //    self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
+    
+    //    // Get a list of all playmate ids and get their current status
+    //    NSMutableArray *ids = [[NSMutableArray alloc] init];
+    //    for (NSString *key in [self.userButtonHash allKeys]) {
+    //        if (![key isEqualToString:@"AddUserButton"]) {
+    //            [ids addObject:key];
+    //        }
+    //    }
+    //    PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
+    //    [usersGetStatusRequest usersGetStatusForUserIds:ids
+    //                                          authToken:[[PTUser currentUser] authToken]
+    //                                            success:^(NSDictionary *result) {
+    //                                                NSArray *statuses = [result objectForKey:@"status"];
+    //                                                for (NSDictionary *userStatus in statuses) {
+    //                                                    NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
+    //                                                    NSString *user_status = [userStatus objectForKey:@"status"];
+    //                                                    PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
+    //                                                    if (button == nil) {
+    //                                                        return;
+    //                                                    }
+    //                                                    if ([user_status isEqualToString:@"pending"]) {
+    //                                                        [button setPending];
+    //                                                    } else if ([user_status isEqualToString:@"playdate"]) {
+    //                                                        [button setPlaydating];
+    //                                                    }
+    //                                                }
+    //                                            }
+    //                                            failure:nil
+    //     ];
+}
+
+- (void)addNewPlaymate {
+    // Define grid vars
+    const NSInteger totalPlaymates = [self.playmates count];
+    const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
+    const CGSize itemSize = CGSizeMake(200, 150);
+    const NSInteger itemsPerRow = 4;
+    const CGFloat gridSpace = (self.view.bounds.size.width - gridMargin.left - gridMargin.right - ((CGFloat)itemsPerRow)*itemSize.width)/(CGFloat)(itemsPerRow - 1);
+    const NSInteger totalRows = totalPlaymates/itemsPerRow + MIN(totalPlaymates%itemsPerRow, 1);
+    
+    // Set scroll view content size
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, gridMargin.top + ((CGFloat)totalRows)*(gridSpace + itemSize.height));
+    
+    // Find new locations for all playmate views
+    NSMutableDictionary *playmateViewLocations = [NSMutableDictionary dictionary];
+    PTPlaymateView *addedPlaymateView;
+    for (int row=0; row<totalRows; row++) {
+        for (int cell=0; cell<itemsPerRow; cell++) {
+            NSUInteger playmateIndex = (row*itemsPerRow) + cell;
+            if (playmateIndex >= totalPlaymates) {
+                break;
+            }
+            
+            // Build item frame
+            CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
+            CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+            
+            // Check if playmate view exists
+            PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
+            PTPlaymateView *playmateView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playmate.userID]];
+            if (playmateView != nil) {
+                // If view exists, save its new frame to a hash we'll reuse later for animations
+                [playmateViewLocations setObject:playmateView
+                                          forKey:[NSValue valueWithCGRect:itemFrame]];
+            } else {
+                // If view doesn't exist, it's the one that was just added (via friend request)
+                playmateView = [[PTPlaymateView alloc] initWithFrame:itemFrame playmate:playmate];
+                [playmateView hideAnimated:NO];
+                playmateView.delegate = self;
+                [self.scrollView addSubview:playmateView];
+                
+                // Save playmate view to hash for easy retrieval
+                [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
+                addedPlaymateView = playmateView;
+            }
+        }
+    }
+    
+    // Animate each playmate view to its new location
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         for (NSValue *playmateFrameObj in playmateViewLocations) {
+                             PTPlaymateView *playmateView = [playmateViewLocations objectForKey:playmateFrameObj];
+                             playmateView.frame = [playmateFrameObj CGRectValue];
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         if (addedPlaymateView != nil) {
+                             [addedPlaymateView showAnimated:YES];
+                         }
+                     }];
+}
+
+- (void)refreshPlaymateViews {
+    // Define grid vars
+    const NSInteger totalPlaymates = [self.playmates count];
+    const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
+    const CGSize itemSize = CGSizeMake(200, 150);
+    const NSInteger itemsPerRow = 4;
+    const CGFloat gridSpace = (self.view.bounds.size.width - gridMargin.left - gridMargin.right - ((CGFloat)itemsPerRow)*itemSize.width)/(CGFloat)(itemsPerRow - 1);
+    const NSInteger totalRows = totalPlaymates/itemsPerRow + MIN(totalPlaymates%itemsPerRow, 1);
+    
+    // Set scroll view content size
+    self.scrollView.contentSize = CGSizeMake(self.view.bounds.size.width, gridMargin.top + ((CGFloat)totalRows)*(gridSpace + itemSize.height));
+    
+    // Find new locations for all playmate views
+    NSMutableDictionary *playmateViewLocations = [NSMutableDictionary dictionary];
+    for (int row=0; row<totalRows; row++) {
+        for (int cell=0; cell<itemsPerRow; cell++) {
+            NSUInteger playmateIndex = (row*itemsPerRow) + cell;
+            if (playmateIndex >= totalPlaymates) {
+                break;
+            }
+            
+            // Build item frame
+            CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
+            CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+            
+            // Check if playmate view exists
+            PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
+            PTPlaymateView *playmateView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playmate.userID]];
+            if (playmateView != nil) {
+                // Save new frame to a hash we'll use later for animations
+                [playmateViewLocations setObject:playmateView
+                                          forKey:[NSValue valueWithCGRect:itemFrame]];
+            }
+        }
+    }
+    
+    // Animate each playmate view to its new location
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         for (NSValue *playmateFrameObj in playmateViewLocations) {
+                             PTPlaymateView *playmateView = [playmateViewLocations objectForKey:playmateFrameObj];
+                             playmateView.frame = [playmateFrameObj CGRectValue];
+                         }
+                     }];
 }
 
 - (void)loadPlaydateDataFromPushNotification {
@@ -166,118 +501,15 @@
     }
 }
 
-- (void)drawPlaymates {
-    // TODO : revist the naming of these variables...
-    //
-    // The dialpad should have at least 9 buttons. If not, pad
-    // it out with null buttons.
-    NSUInteger numButtons = MAX(self.playmates.count + 1, 9);
-    NSUInteger addFriendsIndex = MAX(self.playmates.count, 5);
-    
-    const CGFloat leftMargin = 202;
-    const CGFloat rightMargin = 200;
-    const CGFloat topMargin = 100;
-    CGFloat rowSpacing = 10;
-    const NSUInteger itemsPerRow = 3;
-    const CGSize buttonSize = CGSizeMake(201, 151);
-    
-    CGFloat W = 1024;
-    CGFloat interCellPadding = (W - leftMargin - rightMargin - ((CGFloat)itemsPerRow)*buttonSize.width)/(CGFloat)(itemsPerRow - 1);
-    
-    // Testing...
-    rowSpacing = interCellPadding;
-    NSUInteger numRows = numButtons/itemsPerRow + MIN(numButtons%itemsPerRow, 1);
-    
-    NSMutableDictionary* playmatesAndButtons = [NSMutableDictionary dictionary];
-    for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
-        for (int cellIndex = 0; cellIndex < itemsPerRow; cellIndex++) {
-            NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
-            if (playmateIndex >= numButtons) {
-                continue;
-            }
-            
-            CGFloat cellX = leftMargin + ((CGFloat)cellIndex)*(buttonSize.width + interCellPadding);
-            CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
-            
-            UIButton* button;
-            if (playmateIndex == addFriendsIndex) {
-                button = [UIButton buttonWithType:UIButtonTypeCustom];
-                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
-                [button setImage:[UIImage imageNamed:@"add-family.png"] forState:UIControlStateNormal];
-                [playmatesAndButtons setObject:button
-                                        forKey:@"AddUserButton"];
-            } else if (playmateIndex < playmates.count) {
-                PTPlaymate* currentPlaymate = [self.playmates objectAtIndex:playmateIndex];
-                button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
-                [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-                [playmatesAndButtons setObject:button
-                                        forKey:[self stringFromUInt:currentPlaymate.userID]];
-            } else if (playmateIndex >= self.playmates.count && playmateIndex < addFriendsIndex) {
-                button = [PTPlaymateButton playmateButtonWithPlaymate:[[PTNullPlaymate alloc] init]];
-                button.layer.borderWidth = 1.0f;
-                button.layer.borderColor = [UIColor colorWithRed:1.0f
-                                                           green:1.0f
-                                                            blue:1.0f
-                                                           alpha:0.7f].CGColor;
-                button.layer.shadowOpacity = 0.0f;
-                button.enabled = NO;
-            } else {
-                button = [UIButton buttonWithType:UIButtonTypeCustom];
-                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
-                [button setImage:[UIImage imageNamed:@"dialpad-pending"]
-                        forState:UIControlStateNormal];
-                button.enabled = NO;
-            }
-            
-            CGRect buttonFrame = button.frame;
-            buttonFrame.origin = CGPointMake(cellX, cellY);
-            button.frame = buttonFrame;
-            [self.scrollView addSubview:button];
-        }
-    }
-    self.userButtonHash = [NSDictionary dictionaryWithDictionary:playmatesAndButtons];
 
-    self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
-    NSLog(@"Number of rows: %u", numRows);
-    
-    // Get a list of all playmate ids and get their current status
-    NSMutableArray *ids = [[NSMutableArray alloc] init];
-    for (NSString *key in [self.userButtonHash allKeys]) {
-        if (![key isEqualToString:@"AddUserButton"]) {
-            [ids addObject:key];
-        }
-    }
-    if ([[PTUser currentUser] isLoggedIn]) {
-        PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
-        [usersGetStatusRequest usersGetStatusForUserIds:ids
-                                              authToken:[[PTUser currentUser] authToken]
-                                                success:^(NSDictionary *result) {
-                                                    NSArray *statuses = [result objectForKey:@"status"];
-                                                    for (NSDictionary *userStatus in statuses) {
-                                                        NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
-                                                        NSString *user_status = [userStatus objectForKey:@"status"];
-                                                        PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
-                                                        if (button == nil) {
-                                                            return;
-                                                        }
-                                                        if ([user_status isEqualToString:@"pending"]) {
-                                                            [button setPending];
-                                                        } else if ([user_status isEqualToString:@"playdate"]) {
-                                                            [button setPlaydating];
-                                                        }
-                                                    }
-                                                }
-                                                failure:nil];
-    }
-}
-
-- (void)playmateClicked:(PTPlaymateButton*)sender {
+- (void)initiatePlaydateRequestWithPlaymate:(PTPlaymate *)playmate {
+    LOGMETHOD;
     // Initiate playdate request
     // TODO This check needs to go away at some point...
     
-    UIImage *playmateImage = [sender.playmate userPhoto];
+    UIImage *playmateImage = [playmate userPhoto];
     UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
-    CGRect buttonRect = sender.frame;
+    CGRect buttonRect = CGRectZero;
     buttonRect.origin = [self.view convertPoint:buttonRect.origin
                                        fromView:self.scrollView];
     playmateImageView.frame = buttonRect;
@@ -290,15 +522,15 @@
         imageViewFrame.origin = CGPointMake(312, -1);
         playmateImageView.frame = imageViewFrame;
     } completion:^(BOOL finished) {
-        self.chatController.playmate = sender.playmate;
+        self.chatController.playmate = playmate;
         [playmateImageView removeFromSuperview];
 
-        [self initiatePlaydateWithPlaymate:sender.playmate];
+        [self initiatePlaydateWithPlaymate:playmate];
 
         // If the user is logged in and the
-        if ([[PTUser currentUser] isLoggedIn] && ![sender.playmate isARobot]) {
+        if ([[PTUser currentUser] isLoggedIn] && ![playmate isARobot]) {
             PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-            [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:sender.playmate.userID]
+            [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:playmate.userID]
                                                   authToken:[[PTUser currentUser] authToken]
                                                   onSuccess:^(NSDictionary *result)
              {
@@ -313,7 +545,7 @@
                  LogError(@"playdateCreateWithFriend failed: %@", error);
              }];
             LogInfo(@"Requesting playdate...");
-            [self.chatController setLoadingViewForPlaymate:sender.playmate];
+            [self.chatController setLoadingViewForPlaymate:playmate];
         }
     }];
 }
@@ -340,10 +572,32 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:self.dateController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:aPlaymate.userID]
+                                          authToken:[[PTUser currentUser] authToken]
+                                          onSuccess:^(NSDictionary *result)
+     {
+         LogInfo(@"playdateCreateWithFriend response: %@", result);
+         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+         [self.dateController setPlaydate:aPlaydate];
+         self.dateController = nil;
+     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"playdateCreateWithFriend failed: %@", error);
+     }
+     ];
+    LogInfo(@"Requesting playdate...");
 }
 
 - (void)joinPlaydate {
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
+    // Hide the shim
+    [UIView animateWithDuration:0.5f animations:^{
+        shimView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        shimView.hidden = YES;
+    }];
+    
     // Unsubscribe from rendezvous channel
     if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
         [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
@@ -364,25 +618,37 @@
                                                                  bundle:nil];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:self.dateController
-                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-
+    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    
     if (self.requestedPlaydate) {
         [self.dateController setPlaydate:self.requestedPlaydate];
         self.requestedPlaydate = nil;
         self.dateController = nil;
     }
-
+    
     [self endRinging];
+}
+
+#pragma mark - Ringer methods
+
+- (void)setupRinger {
+    NSError *playerError;
+    NSURL *ringtone = [[NSBundle mainBundle] URLForResource:@"ringtone-connecting" withExtension:@"mp3"];
+    AVAudioPlayer *thePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:ringtone error:&playerError];
+    thePlayer.volume = 0.25;
+    thePlayer.numberOfLoops = 4;
+    self.audioPlayer = thePlayer;
+}
+
+- (void)beginRinging {
+    [self.audioPlayer play];
 }
 
 - (void)endRinging {
     [self.audioPlayer stop];
 }
 
-- (NSString*)stringFromUInt:(NSUInteger)number {
-    return [NSString stringWithFormat:@"%u", number];
-}
+#pragma mark - Pusher notification handlers
 
 - (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
@@ -397,14 +663,17 @@
     } else {
         // Mark players in this playdate as 'pending' in dialpad
 
-        // Find appropriate playmate buttons
-        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
-        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
-        if (button_player1) {
-            [button_player1 setPlaydating];
+        // Find appropriate playmate views
+        PTPlaymateView *playmateView1 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.initiator.userID]];
+        PTPlaymate *playmate1 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.initiator.userID];
+        if (playmateView1 != nil && playmate1 != nil && [playmate1.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView1 showUserInPlaydateAnimated:YES];
         }
-        if (button_player2) {
-            [button_player2 setPlaydating];
+
+        PTPlaymateView *playmateView2 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.playmate.userID]];
+        PTPlaymate *playmate2 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.playmate.userID];
+        if (playmateView2 != nil && playmate2 != nil && [playmate2.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView2 showUserInPlaydateAnimated:YES];
         }
     }
 }
@@ -417,14 +686,17 @@
     if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
         // Mark players in this playdate as 'in playdate' in dialpad
         
-        // Find appropriate playmate buttons
-        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
-        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
-        if (button_player1) {
-            [button_player1 setPlaydating];
+        // Find appropriate playmate views
+        PTPlaymateView *playmateView1 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.initiator.userID]];
+        PTPlaymate *playmate1 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.initiator.userID];
+        if (playmateView1 != nil && playmate1 != nil && [playmate1.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView1 showUserInPlaydateAnimated:YES];
         }
-        if (button_player2) {
-            [button_player2 setPlaydating];
+        
+        PTPlaymateView *playmateView2 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.playmate.userID]];
+        PTPlaymate *playmate2 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.playmate.userID];
+        if (playmateView2 != nil && playmate2 != nil && [playmate2.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView2 showUserInPlaydateAnimated:YES];
         }
     }
 }
@@ -437,64 +709,199 @@
     if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {
         // Mark players in this playdate as active in dialpad
         
-        // Find appropriate playmate buttons
-        PTPlaymateButton *button_player1 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.initiator.userID]];
-        PTPlaymateButton *button_player2 = [self.userButtonHash objectForKey:[self stringFromUInt:playdate.playmate.userID]];
-        if (button_player1) {
-            [button_player1 setNormal];
+        // Find appropriate playmate views
+        PTPlaymateView *playmateView1 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.initiator.userID]];
+        PTPlaymate *playmate1 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.initiator.userID];
+        if (playmateView1 != nil && playmate1 != nil && [playmate1.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView1 hideUserInPlaydateAnimated:YES];
         }
-        if (button_player2) {
-            [button_player2 setNormal];
+        
+        PTPlaymateView *playmateView2 = [self.playmateViews objectForKey:[NSNumber numberWithInteger:playdate.playmate.userID]];
+        PTPlaymate *playmate2 = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:playdate.playmate.userID];
+        if (playmateView2 != nil && playmate2 != nil && [playmate2.friendshipStatus isEqualToString:@"confirmed"]) {
+            [playmateView2 hideUserInPlaydateAnimated:YES];
+        }
+    }
+}
+
+- (void)pusherDidReceiveFriendshipRequestNotification:(NSNotification*)note {
+    PTPlaymate *friend = [note.userInfo objectForKey:@"friend"];
+    PTPlaymate *initiator = [note.userInfo objectForKey:@"initiator"];
+    
+    // We requested someone's friendship
+    if (initiator.userID == [[PTUser currentUser] userID]) {
+        NSLog(@"We requested (%@)'s friendship", friend.username);
+    }
+
+    // Someone requested our friendship
+    if (friend.userID == [[PTUser currentUser] userID]) {
+        // Add new playmate to the factory
+        [[PTConcretePlaymateFactory sharedFactory] addPlaymate:initiator];
+        
+        // Add new playmate to the dialpad
+        [self addNewPlaymate];
+    }
+}
+
+- (void)pusherDidReceiveFriendshipAcceptNotification:(NSNotification*)note {
+    NSNumber *initiator = [note.userInfo objectForKey:@"initiatorID"];
+    NSNumber *friend = [note.userInfo objectForKey:@"friendID"];
+    
+    // We accepted someone's friendship (we're NOT the initiator of the friendship)
+    if ([friend integerValue] == [[PTUser currentUser] userID]) {
+        NSLog(@"We accepted someone's friendship (%i)!", [initiator integerValue]);
+        // Find friend's playmate obj and playmate view
+        PTPlaymateView *playmateView = [self.playmateViews objectForKey:initiator];
+        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[initiator integerValue]];
+        if (playmateView != nil && playmate != nil) {
+            // Update playmate friendship status
+            playmate.friendshipStatus = @"confirmed";
+            // Update playmate view to reflect change
+            [playmateView hideFriendshipConfirmationAnimated:YES];
+        }
+    }
+    
+    // Someone accepted our friendship (we're the initiator of the friendship)
+    if ([initiator integerValue] == [[PTUser currentUser] userID]) {
+        NSLog(@"Someone (%i) accepted our friendship!", [friend integerValue]);
+        // Find friend's playmate obj and playmate view
+        PTPlaymateView *playmateView = [self.playmateViews objectForKey:friend];
+        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[friend integerValue]];
+        if (playmateView != nil && playmate != nil) {
+            // Update playmate friendship status
+            playmate.friendshipStatus = @"confirmed";
+            // Update playmate view to reflect change
+            [playmateView hideFriendshipAwaitingAnimated:YES];
+        }
+    }
+}
+
+- (void)pusherDidReceiveFriendshipDeclineNotification:(NSNotification*)note {
+    NSNumber *initiator = [note.userInfo objectForKey:@"initiatorID"];
+    NSNumber *friend = [note.userInfo objectForKey:@"friendID"];
+    
+    // We declined someone's friendship (we're NOT the initiator of the friendship)
+    if ([friend integerValue] == [[PTUser currentUser] userID]) {
+        NSLog(@"We declined someone's friendship (%i)!", [initiator integerValue]);
+        // Find friend's playmate obj and playmate view
+        PTPlaymateView *playmateView = [self.playmateViews objectForKey:initiator];
+        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[initiator integerValue]];
+        if (playmateView != nil && playmate != nil) {
+            // Delete this playmate obj from factory
+            [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
+
+            // Delete playmate view and move all others to reflect this change
+            [UIView animateWithDuration:0.3f
+                             animations:^{
+                                 playmateView.alpha = 0.0f;
+                             } completion:^(BOOL finished) {
+                                 [self refreshPlaymateViews];
+                             }];
+        }
+    }
+    
+    // Someone declined our friendship (we're the initiator of the friendship)
+    if ([initiator integerValue] == [[PTUser currentUser] userID]) {
+        NSLog(@"Someone (%i) declined our friendship!", [friend integerValue]);
+        // Find friend's playmate obj and playmate view
+        PTPlaymateView *playmateView = [self.playmateViews objectForKey:friend];
+        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[friend integerValue]];
+        if (playmateView != nil && playmate != nil) {
+            // Delete this playmate obj from factory
+            [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
+            
+            // Delete playmate view and move all others to reflect this change
+            [UIView animateWithDuration:0.3f
+                             animations:^{
+                                 playmateView.alpha = 0.0f;
+                             } completion:^(BOOL finished) {
+                                 [self refreshPlaymateViews];
+                             }];
         }
     }
 }
 
 - (void)notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel {
-    PTPlaymateButton* button = [self.userButtonHash valueForKey:[self stringFromUInt:self.requestedPlaydate.initiator.userID]];
-    [self activatePlaymateButton:button];
+    // Find the playmate view
+    PTPlaymateView *playmateView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:self.requestedPlaydate.initiator.userID]];
+    if (!playmateView) {
+        return;
+    }
+    
+    // Start shaking playmate view + show shim
+    [self activatePlaymateView:playmateView];
+    
+    // Start playing ringing sound
     [self beginRinging];
 
+    // Unsubscribe from rendezvous channel
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
     
+    // Starting listening to end playdate event
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(playmateEndedPlaydate:)
                                                  name:@"PlayDateEndPlaydate"
                                                object:nil];
 }
 
-- (void)activatePlaymateButton:(PTPlaymateButton*)button {
-    CGRect newFrame = [self.view convertRect:button.frame fromView:button.superview];
-    button.frame = newFrame;
-    [self.view addSubview:button];
+- (void)activatePlaymateView:(PTPlaymateView *)playmateView {
+    // Init the shim (if needed)
+    if (shimView == nil) {
+        shimView = [[UIView alloc] initWithFrame:self.view.bounds];
+        shimView.backgroundColor = [UIColor blackColor];
+        shimView.layer.zPosition = 100;
+        shimView.hidden = YES;
+        [self.view addSubview:shimView];
 
-    UIView* backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
-    backgroundView.backgroundColor = [UIColor blackColor];
-    backgroundView.alpha = 0.0;
-    backgroundView.tag = 669;
-
-    [self.view insertSubview:backgroundView belowSubview:button];
-    [UIView animateWithDuration:0.7 animations:^{
-        backgroundView.alpha = 0.7;
-    }];
-
-//    [self.scrollView bringSubviewToFront:button];
-    self.selectedButton = button;
-    button.isActivated = YES;
-
-    [button removeTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [button addTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
+        // Add shim tap recognizer
+        UITapGestureRecognizer *shimTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ignorePlaydateRequest:)];
+        [shimView addGestureRecognizer:shimTapRecognizer];
+    }
     
-    [UIView animateWithDuration:0.5 animations:^{
-        [button setRequestingPlaydate];
+    // Put the playmate view above the shim
+    CGRect newFrame = [self.view convertRect:playmateView.frame fromView:playmateView.superview];
+    playmateView.frame = newFrame;
+    [self.view addSubview:playmateView];
+    
+    // Show the shim
+    playmateView.layer.zPosition = 500;
+    shimView.alpha = 0.0f;
+    shimView.hidden = NO;
+    [UIView animateWithDuration:0.5f animations:^{
+        shimView.alpha = 0.7f;
     }];
-    [self shakeButton:button];
 
-    self.cancelPlaydateRecognizer.enabled = YES;
+    // Store view for future access
+    self.selectedPlaymateView = playmateView;
+    
+    // Shake the playmate view
+    [playmateView beginShake];
 }
 
-- (void)beginRinging {
-    [self.audioPlayer play];
+- (void)deactivatePlaymateView {
+    if (self.selectedPlaymateView == nil) {
+        return;
+    }
+    
+    // Stop shaking playmate view
+    [self.selectedPlaymateView stopShake];
+    
+    // Hide the shim
+    self.selectedPlaymateView.layer.zPosition = 0;
+    [UIView animateWithDuration:0.5f animations:^{
+        shimView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        shimView.hidden = YES;
+        
+        // Put back in the dialpad scroll view (behind shim)
+        CGRect newFrame = [self.scrollView convertRect:self.selectedPlaymateView.frame fromView:self.view];
+        self.selectedPlaymateView.frame = newFrame;
+        [self.scrollView addSubview:self.selectedPlaymateView];
+        
+        // Clear out reference
+        self.selectedPlaymateView = nil;
+    }];
 }
 
 - (void)playmateEndedPlaydate:(NSNotification*)note {
@@ -503,102 +910,36 @@
                                                   object:nil];
     [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.requestedPlaydate.pusherChannelName];
     [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
-    [self deactivatePlaymateButton];
+    
+    // Stop playmate view shaking + hide shim
+    [self deactivatePlaymateView];
+    
+    // Stop ringing sound
     [self endRinging];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self deactivatePlaymateButton];
-}
-
-- (void)deactivatePlaymateButton {
-    self.selectedButton.transform = CGAffineTransformIdentity;
-    [self.selectedButton.layer removeAllAnimations];
-    self.selectedButton.isActivated = NO;
-    [self.selectedButton resetButton];
-
-    CGRect newFrame = [self.scrollView convertRect:self.selectedButton.frame fromView:self.view];
-    self.selectedButton.frame = newFrame;
-    [self.scrollView addSubview:self.selectedButton];
-
-    [self.selectedButton removeTarget:self action:@selector(joinPlaydate) forControlEvents:UIControlEventTouchUpInside];
-    [self.selectedButton addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-
-    self.selectedButton = nil;
-
-    UIView* backgroundView = [self.view viewWithTag:669];
-    [backgroundView removeFromSuperview];
-
-    self.cancelPlaydateRecognizer.enabled = NO;
-}
-
-- (void)loadView {
-    [super loadView];
-    self.view.frame = CGRectMake(0, 0, 1024, 768);
-
-    UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
-    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
-    background.tag = 666;
-    [self.view addSubview:background];
-
-    NSString* welcomeText = @"Choose a Friend For A Playdate";
-    CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
-                               constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
-    CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - round(labelSize.width/2.0), 170,
-                                  labelSize.width, labelSize.height);
-    UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
-    welcomeLabel.text = welcomeText;
-    welcomeLabel.font = [self welcomeTextFont];
-    welcomeLabel.textColor = [UIColor blackColor];
-    welcomeLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:welcomeLabel];
-
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
-    self.scrollView.scrollEnabled = NO;
-    [self.view addSubview:self.scrollView];
-
-    self.cancelPlaydateRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
-    [self.view addGestureRecognizer:self.cancelPlaydateRecognizer];
-    self.cancelPlaydateRecognizer.enabled = NO;
-    self.cancelPlaydateRecognizer.delegate = self;
-    
-//    PTChatViewController* aChatController = [[PTChatViewController alloc] initWithNullPlaymate];
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    self.chatController = appDelegate.chatController;
-    [self.chatController connectToPlaceholderOpenTokSession];
-    
-    [self drawPlaymates];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self setupRinger];
-}
-
-- (void)setupRinger {
-    NSError *playerError;
-    NSURL *ringtone = [[NSBundle mainBundle] URLForResource:@"ringtone-connecting" withExtension:@"mp3"];
-    AVAudioPlayer *thePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:ringtone error:&playerError];
-    thePlayer.volume = 0.25;
-    thePlayer.numberOfLoops = 4;
-    self.audioPlayer = thePlayer;
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
+- (void)loadContactImportController:(id)sender {
+     PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+     
+     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+     [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (UIFont*)welcomeTextFont {
-    return [UIFont fontWithName:@"MarkerFelt-Thin" size:24.0];
+    return [UIFont fontWithName:@"HelveticaNeue-Light" size:28.0];
 }
 
-- (void)viewTapped:(UIGestureRecognizer*)recognizers {
+- (void)ignorePlaydateRequest:(UIGestureRecognizer*)tapRecognizer {
+    NSLog(@"ignorePlaydateRequest");
     LOGMETHOD;
-    [self deactivatePlaymateButton];
+    // Stop shaking + hide shim
+    [self deactivatePlaymateView];
+    
+    // Stop ringing sound
     [self endRinging];
+    
+    // Notify server of playdate denial
     PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
     [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:self.requestedPlaydate.playdateID]
                                                       authToken:[[PTUser currentUser] authToken]
@@ -608,36 +949,77 @@
     self.requestedPlaydate = nil;
 }
 
-- (void)shakeButton:(PTPlaymateButton *)sender {
-    // Begin snip
-    NSInteger randomInt = arc4random()%500;
-    float r = (randomInt/500.0)+0.5;
-
-    CGAffineTransform leftWobble = CGAffineTransformMakeRotation(degreesToRadians( (kAnimationRotateDeg * -1.0) - r ));
-    CGAffineTransform rightWobble = CGAffineTransformMakeRotation(degreesToRadians( kAnimationRotateDeg + r ));
-
-    sender.transform = leftWobble;  // starting point
-
-    [[sender layer] setAnchorPoint:CGPointMake(0.5, 0.5)];
-
-    [UIView animateWithDuration:0.1
-                          delay:0
-                        options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionRepeat | UIViewAnimationOptionAutoreverse
-                     animations:^{
-                         [UIView setAnimationRepeatCount:NSNotFound];
-                         sender.transform = rightWobble; }
-                     completion:nil];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
-#pragma mark - UIGestureRecognizerDelegate methods
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    CGPoint touchLocation = [touch locationInView:self.view];
+#pragma mark - Playmate delegates
 
-    return !CGRectContainsPoint(self.selectedButton.frame, touchLocation);
+- (void)playmateDidTouch:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
+    // Are we trying to respond to an incoming playdate request?
+    if (self.selectedPlaymateView == playmateView) {
+        [self joinPlaydate];
+        return;
+    }
+    
+    // We are initiating a playdate request
+    [self initiatePlaydateRequestWithPlaymate:playmate];
+}
+
+- (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
+    NSLog(@"API: Friendship accepting with playmate: %i", playmate.userID);
+    PTFriendshipAcceptRequest *friendshipAcceptRequest = [[PTFriendshipAcceptRequest alloc] init];
+    [friendshipAcceptRequest acceptFriendshipWith:playmate.userID
+                                        authToken:[[PTUser currentUser] authToken]
+                                          success:nil // Don't need since Pusher will notify the client of this and will handle UI changes
+                                          failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  // Show alert
+                                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                                  message:@"Could not accept friendship at this time. Please try again later."
+                                                                                                 delegate:nil
+                                                                                        cancelButtonTitle:@"Ok"
+                                                                                        otherButtonTitles:nil];
+                                                  [alert show];
+                                                  
+                                                  // Enable confirmation buttons again
+                                                  [playmateView enableFriendshipConfirmationButtons];
+                                              });
+                                          }];
+}
+
+- (void)playmateDidDeclineFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
+    NSLog(@"API: Friendship declining with playmate: %i", playmate.userID);
+    PTFriendshipDeclineRequest *friendshipDeclineRequest = [[PTFriendshipDeclineRequest alloc] init];
+    [friendshipDeclineRequest declineFriendshipFrom:playmate.userID
+                                          authToken:[[PTUser currentUser] authToken]
+                                            success:nil // Don't need since Pusher will notify the client of this and will handle UI changes
+                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    // Show alert
+                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                                    message:@"Could not accept friendship at this time. Please try again later."
+                                                                                                   delegate:nil
+                                                                                          cancelButtonTitle:@"Ok"
+                                                                                          otherButtonTitles:nil];
+                                                    [alert show];
+                                                    
+                                                    // Enable confirmation buttons again
+                                                    [playmateView enableFriendshipConfirmationButtons];
+                                                });
+                                            }];
+}
+
+#pragma mark - Temp
+
+- (void)logoutDidPress:(id)sender {
+    // Clear out current user values
+    [[PTUser currentUser] resetUser];
+    
+    // Load new user workflow
+    PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:newUserNavigationController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 @end

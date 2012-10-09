@@ -14,6 +14,7 @@
 #import "PTConcretePlaymateFactory.h"
 #import "PTDateViewController.h"
 #import "PTDiagnosticViewController.h"
+#import "PTMemoryViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTLoadingViewController.h"
 #import "PTPlayTellPusher.h"
@@ -25,6 +26,7 @@
 #import "TransitionController.h"
 #import "UAPush.h"
 #import "UAirship.h"
+#import "PTNewUserNavigationController.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -36,6 +38,7 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize dateViewController = _dateViewController;
+@synthesize memoryViewController = _memoryViewController;
 @synthesize transitionController = _transitionController;
 @synthesize dialpadController = _dialpadController;
 @synthesize client;
@@ -70,13 +73,17 @@
 
     TransitionController* transitionController;
     if ([[PTUser currentUser] isLoggedIn]) {
+        // Register for push noticication only if logged in
+        [self setupPushNotifications:launchOptions];
+
         PTLoadingViewController* loadingView = [[PTLoadingViewController alloc] initWithNibName:@"PTLoadingViewController" bundle:nil];
         transitionController = [[TransitionController alloc] initWithViewController:loadingView];
         [self runLoggedInWorkflow];
     } else {
-        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-        loginController.delegate = self;
-        transitionController = [[TransitionController alloc] initWithViewController:loginController];
+//        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
+//        loginController.delegate = self;
+        PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+        transitionController = [[TransitionController alloc] initWithViewController:newUserNavigationController];
     }
     self.transitionController = transitionController;
     self.window.rootViewController = self.transitionController;
@@ -193,6 +200,14 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     // Updates the device token and registers the token with UA
     [[UAirship shared] registerDeviceToken:deviceToken];
+    
+    // Notify of successfull push notification registration request
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    // Notify of failed push notification registration request
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidFail" object:nil];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -203,5 +218,13 @@
         [self.dialpadController loadPlaydateDataFromPushNotification];
     }
 }
+
+- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return UIInterfaceOrientationMaskAll;
+}
+
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+//    return [FBSession.activeSession handleOpenURL:url];
+//}
 
 @end

@@ -55,6 +55,15 @@
     return self;
 }
 
+- (NSString*)friendshipStatus {
+    return @"confirmed";
+}
+
+- (NSString*)userStatus {
+    return @"available";
+}
+
+
 - (BOOL)isARobot {
     return YES;
 }

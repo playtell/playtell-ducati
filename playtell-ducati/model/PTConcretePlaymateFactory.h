@@ -18,5 +18,7 @@
                             token:(NSString*)token
                           success:(void(^)(void))success
                           failure:(void(^)(NSError* error))failure;
+- (void)addPlaymate:(PTPlaymate *)playmate;
+- (void)removePlaymateUsingId:(NSUInteger)playmateId;
 
 @end

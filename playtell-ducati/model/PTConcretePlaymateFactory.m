@@ -14,11 +14,11 @@
 #import "PTUser.h"
 
 @interface PTConcretePlaymateFactory ()
-@property (nonatomic, retain) NSArray* playmates;
 @property (nonatomic, retain) NSArray* robotPlaymates;
+@property (nonatomic, retain) NSMutableArray* playmates;
 @end
 
-static PTConcretePlaymateFactory* sharedInstance =  nil;
+static PTConcretePlaymateFactory* sharedInstance = nil;
 
 @implementation PTConcretePlaymateFactory
 @synthesize playmates, robotPlaymates=_robotPlaymates;
@@ -40,6 +40,7 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
     for (PTPlaymate* playmate in self.playmates) {
         if (playmate.userID == playmateId) {
             returnPlaymate = playmate;
+            break;
         }
     }
     return returnPlaymate;
@@ -55,6 +56,7 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
     for (PTPlaymate* playmate in self.playmates) {
         if ([[playmate.username lowercaseString] isEqualToString:[username lowercaseString]]) {
             returnPlaymate = playmate;
+            break;
         }
     }
     return returnPlaymate;
@@ -62,6 +64,19 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
 
 - (NSArray*)allPlaymates {
     return self.playmates;
+}
+
+- (void)addPlaymate:(PTPlaymate *)playmate {
+    [self.playmates insertObject:playmate atIndex:0];
+}
+
+- (void)removePlaymateUsingId:(NSUInteger)playmateId {
+    PTPlaymate *playmate = [self playmateWithId:playmateId];
+    if (playmate == nil) {
+        return;
+    }
+    
+    [self.playmates removeObject:playmate];
 }
 
 - (void)refreshPlaymatesForUserID:(NSUInteger)ID
@@ -83,14 +98,14 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
                           success:^(NSDictionary *result)
     {
         NSArray* friends = [result valueForKey:@"friends"];
-        NSMutableArray* playmateList = [NSMutableArray arrayWithCapacity:friends.count];
+        self.playmates = [NSMutableArray array];
         for (NSDictionary* playmate in friends) {
-            LogTrace(@"id: %@, email: %@, displayName: %@, profilePhoto: %@",
-                     [playmate valueForKey:@"id"], [playmate valueForKey:@"email"],
-                     [playmate valueForKey:@"displayName"], [playmate valueForKey:@"profilePhoto"]);
+//            LogTrace(@"id: %@, email: %@, displayName: %@, profilePhoto: %@",
+//                     [playmate valueForKey:@"id"], [playmate valueForKey:@"email"],
+//                     [playmate valueForKey:@"displayName"], [playmate valueForKey:@"profilePhoto"]);
 
             PTPlaymate* playmateObject = [[PTPlaymate alloc] initWithDictionary:playmate];
-            [playmateList addObject:playmateObject];
+            [self.playmates addObject:playmateObject];
             
             NSURLRequest* urlRequest = [NSURLRequest requestWithURL:playmateObject.photoURL];
             AFImageRequestOperation* reqeust;
@@ -101,10 +116,9 @@ static PTConcretePlaymateFactory* sharedInstance =  nil;
                 playmateObject.userPhoto = image;
             }];
             [reqeust start];
-
         }
         NSArray* robots = [self robotPlaymates];
-        self.playmates = [robots arrayByAddingObjectsFromArray:playmateList];
+        self.playmates = [robots arrayByAddingObjectsFromArray:self.playmates];
         
         if (success) {
             success();

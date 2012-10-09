@@ -21,6 +21,10 @@ NSString* const PTPlayTellPusherDidReceivePlaydateJoinedEvent = @"PTPlayTellPush
 NSString* const PTPlayTellPusherDidReceivePlaydateRequestedEvent = @"PTPlayTellPusherDidReceivePlaydateRequestedEvent";
 NSString* const PTPlayTellPusherDidReceivePlaydateEndedEvent = @"PTPlayTellPusherDidReceivePlaydateEndedEvent";
 
+NSString* const PTPlayTellPusherDidReceiveFriendshipRequestEvent = @"PTPlayTellPusherDidReceiveFriendshipRequestEvent";
+NSString* const PTPlayTellPusherDidReceiveFriendshipAcceptEvent = @"PTPlayTellPusherDidReceiveFriendshipAcceptEvent";
+NSString* const PTPlayTellPusherDidReceiveFriendshipDeclineEvent = @"PTPlayTellPusherDidReceiveFriendshipDeclineEvent";
+
 NSString* const PTPlaydateKey = @"PTPlaydateKey";
 
 @interface PTPlayTellPusher () <PTPusherDelegate, PTPusherPresenceChannelDelegate>
@@ -64,6 +68,8 @@ static PTPlayTellPusher* instance = nil;
 
 - (void)subscribeToRendezvousChannel {
     self.rendezvousChannel = [self.pusherClient subscribeToPresenceChannelNamed:@"rendezvous-channel" delegate:self];
+    
+    // Playdate-related events
     [self.rendezvousChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
         LogInfo(@"Playdate joined: %@", channelEvent);
         PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
@@ -93,6 +99,29 @@ static PTPlayTellPusher* instance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateEndedEvent
                                                             object:self
                                                           userInfo:info];
+    }];
+    
+    // Friendship-related events
+    [self.rendezvousChannel bindToEventNamed:@"friendship_requested" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        //LogInfo(@"Friendship requested: %@", channelEvent);
+        PTPlaymate *initiator = [[PTPlaymate alloc] initWithDictionary:[channelEvent.data objectForKey:@"initiator"]];
+        PTPlaymate *friend = [[PTPlaymate alloc] initWithDictionary:[channelEvent.data objectForKey:@"friend"]];
+        NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:initiator, @"initiator", friend, @"friend", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceiveFriendshipRequestEvent
+                                                            object:self
+                                                          userInfo:info];
+    }];
+    [self.rendezvousChannel bindToEventNamed:@"friendship_accepted" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        //LogInfo(@"Friendship accepted: %@", channelEvent);
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceiveFriendshipAcceptEvent
+                                                            object:self
+                                                          userInfo:channelEvent.data];
+    }];
+    [self.rendezvousChannel bindToEventNamed:@"friendship_denied" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        //LogInfo(@"Friendship denied: %@", channelEvent);
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceiveFriendshipDeclineEvent
+                                                            object:self
+                                                          userInfo:channelEvent.data];
     }];
 }
 
@@ -170,7 +199,6 @@ static PTPlayTellPusher* instance = nil;
     
 
     // ## GAMES START ##
-    
     // tictactoe_new_game
     [aPlaydateChannel bindToEventNamed:@"games_tictactoe_new_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
@@ -193,6 +221,30 @@ static PTPlayTellPusher* instance = nil;
     [aPlaydateChannel bindToEventNamed:@"games_tictactoe_place_piece" handleWithBlock:^(PTPusherEvent *channelEvent) {
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateTictactoePlacePiece" object:self userInfo:eventData];
+    }];
+    
+    //memory game start
+    [aPlaydateChannel bindToEventNamed:@"games_memory_new_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMemoryNewGame" object:self userInfo:eventData];
+    }];
+    
+    // tictactoe_refresh_game
+    [aPlaydateChannel bindToEventNamed:@"games_memory_refresh_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMemoryRefreshGame" object:self userInfo:eventData];
+    }];
+    
+    // tictactoe_end_game
+    [aPlaydateChannel bindToEventNamed:@"games_memory_end_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMemoryEndGame" object:self userInfo:eventData];
+    }];
+    
+    // tictactoe_piece_placed
+    [aPlaydateChannel bindToEventNamed:@"games_memory_play_turn" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMemoryPlayTurn" object:self userInfo:eventData];
     }];
 
     self.isSubscribedToPlaydateChannel = YES;
