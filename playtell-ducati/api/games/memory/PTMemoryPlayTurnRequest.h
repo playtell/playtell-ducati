@@ -13,14 +13,13 @@ typedef void (^PTMemoryPlayTurnRequestFailureBlock) (NSURLRequest* request, NSHT
 
 @interface PTMemoryPlayTurnRequest : PTRequest
 
-- (void)placePieceWithCoordinates:(NSString *)coordinates
-                        authToken:(NSString *)token
-                          user_id:(NSString *)user_id
-                         board_id:(NSString *)board_id
-                      playdate_id:(NSString *)playdate_id
-                      card1_index:(NSString *)card1_index
-                      card2_index:(NSString *)card2_index
-                        onSuccess:(PTMemoryPlayTurnRequestSuccessBlock)success
-                        onFailure:(PTMemoryPlayTurnRequestFailureBlock)failure;
+- (void)placePieceAuthToken:(NSString *)token
+                    user_id:(NSInteger)user_id
+                   board_id:(NSInteger)board_id
+                playdate_id:(NSInteger)playdate_id
+                card1_index:(NSNumber *)card1_index
+                card2_index:(NSNumber *)card2_index
+                  onSuccess:(PTMemoryPlayTurnRequestSuccessBlock)success
+                  onFailure:(PTMemoryPlayTurnRequestFailureBlock)failure;
 
 @end

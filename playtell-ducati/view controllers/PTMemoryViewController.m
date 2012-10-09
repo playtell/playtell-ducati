@@ -11,70 +11,47 @@
 #import "TransitionController.h"
 #import "PTPlaydate.h"
 #import "PTMemoryGameCard.h"
-#import "PTMemoryGameBoard.h"
 #import "PTUser.h"
 #import "PTDialpadViewController.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTMemoryEndGameRequest.h"
 #import "PTMemoryRefreshGameRequest.h"
+#import "PTMemoryPlayTurnRequest.h"
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
 @interface PTMemoryViewController ()
-    @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
-    @property (nonatomic, weak) OTPublisher* myPublisher;   @property (nonatomic, retain) AVAudioPlayer* winPlayer;
-    @property (nonatomic, retain) AVAudioPlayer* lossPlayer;
-    @property (nonatomic, retain) AVAudioPlayer* xWritePlayer;
-    @property (nonatomic, retain) AVAudioPlayer* oWritePlayer;
-    @property (nonatomic, retain) AVAudioPlayer* missPlayer;
-    @property (nonatomic, retain) PTDateViewController* dateController;
-    @property (nonatomic, retain) AVAudioPlayer* strikeoutPlayer;
 @end
 
 @implementation PTMemoryViewController
 
-@synthesize winPlayer;
-@synthesize lossPlayer;
-@synthesize xWritePlayer;
-@synthesize oWritePlayer;
-@synthesize missPlayer;
-@synthesize strikeoutPlayer;
-@synthesize dateController;
-@synthesize playmateSubscriber;
-@synthesize myPublisher;
-@synthesize board;
-@synthesize playdate;
 @synthesize chatController;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (id)initWithNibName:(NSString *)nibNameOrNil
+               bundle:(NSBundle *)nibBundleOrNil
+             playdate:(PTPlaydate *)_playdate
+               myTurn:(BOOL)myTurn
+              boardID:(NSInteger)_boardID
+           playmateID:(NSInteger)_playmateID
+          initiatorID:(NSInteger)_initiatorID
+         allFilenames:(NSArray *)_filenames
+             numCards:(NSInteger)_numCards {
+    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        // Store data
+        playdate = _playdate;
+        boardID = _boardID;
+        playmateID = _playmateID;
+        initiatorID = _initiatorID;
+        filenames = _filenames;
+        numCards = _numCards;
+        isMyTurn = myTurn;
+        
+        // Blank card indices
+        cardIndex1 = nil;
+        cardIndex2 = nil;
     }
-    return self;
-}
-
-- (id)initializeWithmyTurn:(BOOL)myTurn
-                   boardID:(int)board_id
-                playmateID:(int)playmate_id
-               initiatorID:(int)initiator_id
-              allFilenames:(NSArray *)filenames
-                  numCards:(int)num_cards {
-    NSLog(@"InitializeWithmyTurn: %i (board_id: %i) (playmate_id: %i) (initiator_id: %i) (num_cards: %i)", myTurn, board_id, playmate_id, initiator_id, num_cards);
-
-    //this will contain arrays of individual elements, like UIButtons for cards
-    //NSMutableArray *allVisualsCurrentlyOnBoard = [[NSMutableArray alloc] init];
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    self.playdate = appDelegate.dateViewController.playdate;
-    
-    //initialize the memoryBoard object
-    PTMemoryGameBoard *gameBoard = [[PTMemoryGameBoard alloc] initMemoryGameBoardWithNumCards:num_cards
-                                                                                     isMyTurn:myTurn
-                                                                                     playdate:self.playdate.playdateID
-                                                                                    initiator:initiator_id
-                                                                                     playmate:playmate_id
-                                                                                      boardId:board_id
-                                                                                 filenameDict:filenames];
-    [self setBoard:gameBoard];
     
     return self;
 }
@@ -82,39 +59,59 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Save current view controller instance to delegate
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    appDelegate.memoryViewController = self;
-    
     // Add cards to board
-    NSMutableArray *cardsOnBoard = [[self board] cardsOnBoard];
-    int count = [cardsOnBoard count];
-    for (int i = 0; i < count; i ++) {
-        // Set frame for UIButton
-        PTMemoryGameCard *cardObject = [cardsOnBoard objectAtIndex:i];
-        [cardObject.card setFrame:CGRectMake([[cardObject coordinates] boardX],
-                                             [[cardObject coordinates] boardY],
-                                             [cardObject cardWidth],
-                                             [cardObject cardHeight])];
-        
-        [self.view addSubview:cardObject.card];
+    cards = [NSMutableArray arrayWithCapacity:[filenames count]];
+    for (int i=0; i<[filenames count]; i++) {
+        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i]
+                                                                    backFilename:@"card-back.png"
+                                                                    indexOnBoard:i
+                                                                   numberOfCards:numCards];
+        [card.card setFrame:CGRectMake(card.coordinates.boardX,
+                                       card.coordinates.boardY,
+                                       card.size.width,
+                                       card.size.height)];
+        card.card.hidden = YES;
+        card.card.alpha = 0.0f;
+        card.delegate = self;
+        [self.view addSubview:card.card];
+        [cards addObject:card];
     }
+
+    // Display chat HUD?
 #if !(TARGET_IPHONE_SIMULATOR)
     [self.view addSubview:self.chatController.view];
 #endif
-    [self initGameVisually];
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
     endPlaydate.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
     endPlaydate.layer.shadowOpacity = 0.2f;
     endPlaydate.layer.shadowRadius = 6.0f;
+    
+    // Listen to pusher events
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryPlayTurn:) name:@"PlayDateMemoryPlayTurn" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryEndGame:) name:@"PlayDateMemoryEndGame" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryRefreshGame:) name:@"PlayDateMemoryRefreshGame" object:nil];
+    
+    // Setup sounds
+    [self setupSounds];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    // Show all cards
+    for (PTMemoryGameCard *card in cards) {
+        card.card.hidden = NO;
+    }
+    [UIView animateWithDuration:0.4f animations:^{
+        for (PTMemoryGameCard *card in cards) {
+            card.card.hidden = NO;
+            card.card.alpha = 1.0f;
+        }
+    }];
 }
 
 - (void)dealloc {
@@ -126,177 +123,56 @@
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
-- (void)initGameVisually {
-    [self setupSounds];
-    //listen for tictactoe pusher calls
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryPlayTurn:) name:@"PlayDateMemoryPlacePiece" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryEndGame:) name:@"PlayDateMemoryEndGame" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryRefreshGame:) name:@"PlayDateMemoryRefreshGame" object:nil];
+#pragma mark - Card methods
 
-    //add board buttons to nsdictionary so they can be disabled
-    board_cards = [[NSMutableArray alloc] initWithArray:[[self board] cardsOnBoard]];
+- (PTMemoryGameCard *)getCardByIndex:(NSInteger)index {
+    if (index < [cards count]) {
+        return (PTMemoryGameCard *)[cards objectAtIndex:index];
+    }
+    return nil;
 }
 
-//- (void)createTurnIndicators:(bool)i_am_x {
-////    CGRect opponentPlaceholderX = CGRectMake(254, 19, 35, 45);
-////    CGRect youPlaceholderX = CGRectMake(733, 19, 35, 45);
-////    CGRect opponentPlaceholderO = CGRectMake(249, 21.25, 39, 41);
-//    CGRect opponentO = CGRectMake(250, 14, 47, 55);
-//    CGRect opponentX = CGRectMake(250, 11.25, 43, 59);
-////    CGRect youPlaceholderO = CGRectMake(730, 19, 39, 41);
-//    CGRect youO = CGRectMake(725, 15, 47, 55);
-//    CGRect youX = CGRectMake(728, 10, 43, 59);
-//    
-//    if (!i_am_x) {
-//        UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:youO];
-//        UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponentX];
-//        
-//        youIndicator.image = [UIImage imageNamed:@"memory-turn-indicator.png"];
-//        opponentIndicator.image = [UIImage imageNamed:@"memory-turn-indicator.png"];
-//        
-//        [self.view addSubview:youIndicator];
-//        [self.view addSubview:opponentIndicator];
-//        
-//        self->board_turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, nil];
-//    } else {
-//        UIImageView* youIndicator = [[UIImageView alloc] initWithFrame:youX];
-//        UIImageView* opponentIndicator = [[UIImageView alloc] initWithFrame:opponentO];
-//        
-//        youIndicator.image = [UIImage imageNamed:@"memory-turn-indicator.png"];
-//        opponentIndicator.image = [UIImage imageNamed:@"memory-turn-indicator.png"];
-//        
-//        [self.view addSubview:youIndicator];
-//        [self.view addSubview:opponentIndicator];
-//        
-//        self->board_turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, nil];
-//    }
-//}
-//
-//- (void)updateTurnIndicators:(BOOL)myTurn {
-//    UIImageView *youIndicator = [self->board_turn_indicators objectAtIndex:0];
-//    UIImageView *opponentIndicator = [self->board_turn_indicators objectAtIndex:1];
-//    opponentIndicator.hidden = YES;
-//    youIndicator.hidden = YES;
-//    
-//    if (myTurn) {
-//        youIndicator.hidden = NO;
-//        //animate it
-//        [UIView beginAnimations:@"bounce" context:nil];
-//        [UIView setAnimationRepeatCount:2];
-//        [UIView setAnimationRepeatAutoreverses:YES];
-//        youIndicator.center = CGPointMake(youIndicator.center.x, youIndicator.center.y + 10);
-//        [UIView commitAnimations];
-//        [UIView beginAnimations:@"bounce" context:nil];
-//        [UIView setAnimationRepeatCount:2];
-//        [UIView setAnimationRepeatAutoreverses:YES];
-//        youIndicator.center = CGPointMake(youIndicator.center.x, youIndicator.center.y - 10);
-//        [UIView commitAnimations];
-//    } else {
-//        opponentIndicator.hidden = NO;
-//        //animate it!
-//        [UIView beginAnimations:@"bounce" context:nil];
-//        [UIView setAnimationRepeatCount:2];
-//        [UIView setAnimationRepeatAutoreverses:YES];
-//        opponentIndicator.center = CGPointMake(opponentIndicator.center.x, opponentIndicator.center.y + 10);
-//        [UIView commitAnimations];
-//        [UIView beginAnimations:@"bounce" context:nil];
-//        [UIView setAnimationRepeatCount:2];
-//        [UIView setAnimationRepeatAutoreverses:YES];
-//        opponentIndicator.center = CGPointMake(opponentIndicator.center.x, opponentIndicator.center.y - 10);
-//        [UIView commitAnimations];
-//    }
-//}
-//
-//- (void)disableBoard {
-//    board_enabled = NO;
-//    //flip the board over, disable the buttons
-//    
-//    [self updateTurnIndicators:NO];
-//}
-//
-//- (void)enableBoard {
-//    board_enabled = YES;
-//    
-//    //change opacity of all the cards!!!
-//    
-//    //flip the board over, enable the buttons
-//    [self updateTurnIndicators:YES];
-//}
-//
-//- (void)reAddToBoard:(BOOL)myTurn {
-//    NSEnumerator *e = [board_cards objectEnumerator];
-//    UIImageView *currentObject;
-//    while (currentObject = [e nextObject]) {
-//        if (!myTurn) {
-//            currentObject.alpha = .5;
-//        } else {
-//            currentObject.alpha = 1;
-//        }
-//        [self.view addSubview:currentObject];
-//    }
-//}
-//                                                  
-//- (void)clearBoard {
-//    NSEnumerator *e = [board_cards objectEnumerator];
-//    UIImageView *currentObject;
-//    while (currentObject = [e nextObject]) {
-//        [currentObject removeFromSuperview];
-//    }
-//}
+- (void)disableCards {
+    for (PTMemoryGameCard *card in cards) {
+        card.card.enabled = NO;
+    }
+}
+
+- (void)enableCards {
+    for (PTMemoryGameCard *card in cards) {
+        card.card.enabled = YES;
+    }
+}
 
 #pragma mark - Sound methods
 
 - (void)beginSound:(id)soundId {
     int theSound = [(NSNumber *)soundId integerValue];
-    
-    if (theSound == X_SOUND) {
-        [self.xWritePlayer play];
-    }
 
-    if (theSound == O_SOUND) {
-        [self.oWritePlayer play];
-    }
-
-    if (theSound == MISS_SOUND) {
-        [self.missPlayer play];
-    }
-
-    if (theSound == STRIKEOUT_SOUND) {
-        [self.strikeoutPlayer play];
-    }
-
-    if (theSound == WIN_SOUND) {
-        [self.winPlayer play];
-    }
-
-    if (theSound == LOSS_SOUND) {
-        [self.lossPlayer play];
+    switch (theSound) {
+        case MISS_SOUND:
+            [soundMiss play];
+            break;
+        case WIN_SOUND:
+            [soundWin play];
+            break;
+        case LOSS_SOUND:
+            [soundLoss play];
+            break;
     }
 }
 
 - (void)endSound:(int)theSound {
-    if (theSound == X_SOUND) {
-        [self.xWritePlayer stop];
-    }
-    
-    if (theSound == O_SOUND) {
-        [self.oWritePlayer stop];
-    }
-
-    if (theSound == MISS_SOUND) {
-        [self.missPlayer stop];
-    }
-
-    if (theSound == STRIKEOUT_SOUND) {
-        [self.strikeoutPlayer stop];
-    }
-
-    if (theSound == WIN_SOUND) {
-        [self.winPlayer stop];
-    }
-
-    if (theSound == LOSS_SOUND) {
-        [self.lossPlayer stop];
+    switch (theSound) {
+        case MISS_SOUND:
+            [soundMiss stop];
+            break;
+        case WIN_SOUND:
+            [soundWin stop];
+            break;
+        case LOSS_SOUND:
+            [soundLoss stop];
+            break;
     }
 }
 
@@ -304,35 +180,20 @@
     NSError *playerError;
     NSURL *win = [[NSBundle mainBundle] URLForResource:@"winner-applause" withExtension:@"wav"];
     NSURL *loss = [[NSBundle mainBundle] URLForResource:@"winner-gong" withExtension:@"aiff"];
-    NSURL *xWrite = [[NSBundle mainBundle] URLForResource:@"X-Pen" withExtension:@"wav"];
-    NSURL *oWrite = [[NSBundle mainBundle] URLForResource:@"O-Pen" withExtension:@"mp3"];
     NSURL *miss = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
-    NSURL *strikeout = [[NSBundle mainBundle] URLForResource:@"sword-hit" withExtension:@"wav"];
     
+    soundWin = [[AVAudioPlayer alloc] initWithContentsOfURL:win error:&playerError];
+    soundLoss = [[AVAudioPlayer alloc] initWithContentsOfURL:loss error:&playerError];
+    soundMiss = [[AVAudioPlayer alloc] initWithContentsOfURL:miss error:&playerError];
     
-    self.winPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:win error:&playerError];
-    self.lossPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:loss error:&playerError];
-    self.xWritePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:xWrite error:&playerError];
-    self.oWritePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:oWrite error:&playerError];
-    self.missPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:miss error:&playerError];
-    self.strikeoutPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:strikeout error:&playerError];
+    soundWin.volume = 0.75f;
+    soundWin.numberOfLoops = .5f;
     
-    self.winPlayer.volume = 0.75;
-    self.winPlayer.numberOfLoops = .5;
+    soundMiss.volume = 0.75f;
+    soundMiss.numberOfLoops = .5f;
     
-    self.lossPlayer.volume = 0.75;
-    self.lossPlayer.numberOfLoops = .5;
-    
-    self.xWritePlayer.volume = 0.75;
-    self.xWritePlayer.numberOfLoops = .5;
-    self.oWritePlayer.volume = 0.5;
-    self.oWritePlayer.numberOfLoops = .5;
-    
-    self.missPlayer.volume = 0.75;
-    self.missPlayer.numberOfLoops = .5;
-    
-    self.strikeoutPlayer.volume = 0.75;
-    self.strikeoutPlayer.numberOfLoops = .5;
+    soundMiss.volume = 0.75f;
+    soundMiss.numberOfLoops = .5f;
 }
 
 #pragma mark - Game update UI methods
@@ -370,53 +231,80 @@
     [self.view addSubview:defeat];
 }
 
-- (void)updateUIWithStatus:(int)status
-               card1Index:(int)card1_index
-                card2Index:(int)card2_index
-                 winStatus:(int)winStatus
-             isCurrentUser:(BOOL)isCurrentUser {
+- (void)handleGameTurnWithStatusCode:(NSInteger)statusCode
+                          playmateId:(NSInteger)currentPlayerId
+                                turn:(NSInteger)whoseTurn {
+//#define MATCH_FOUND 0
+//#define MATCH_ERROR 1
+//#define FLIP_FIRST_CARD 2
+//#define MATCH_WINNER 3
 
-    if (card2_index == -1) {
-        
-    } else {
-        
-    }
+    NSLog(@"Status code: %i", statusCode);
+    switch (statusCode) {
+        // Match found!
+        case MATCH_FOUND: {
+            NSLog(@"Match found! Disabling cards. Updating score. Same user can continue.");
+            // TODO: Disable both cards (aka. take them out of the game)
 
-    if (status == FLIP_FIRST_CARD) {
-        PTMemoryGameCard *cardToFlip = [[[self board] cardsOnBoard] objectAtIndex:card1_index];
-        [cardToFlip flipCardAnimation];
+            // Reset card indices
+            cardIndex1 = nil;
+            cardIndex2 = nil;
+
+            // TODO: Update score
+            // TODO: Keep the user the same
+            break;
+        }
+        
+        // Cards do not match
+        case MATCH_ERROR: {
+            NSLog(@"Cards not matched. Flipping them back. Switching turn.");
+            // Flip both cards back
+            PTMemoryGameCard *card1 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex1 integerValue]];
+            PTMemoryGameCard *card2 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex2 integerValue]];
+            [card1 flipCardDelayed:YES];
+            [card2 flipCardDelayed:YES];
+            
+            // Reset card indices
+            cardIndex1 = nil;
+            cardIndex2 = nil;
+            
+            // Switch whose turn it is
+            isMyTurn = !isMyTurn;
+            // TODO: Visually let person know it's their turn now
+            if (isMyTurn == YES) {
+                // ...
+            }
+            NSLog(@"Is it your turn? %@", isMyTurn ? @"YES" : @"NO");
+            break;
+        }
+            
+        // First card was flipped
+        case FLIP_FIRST_CARD: {
+            // This case will never occur since this function isn't called until both cards are flipped!
+            break;
+        }
+            
+        // Match won!
+        case MATCH_WINNER: {
+            // TODO: Show winner/loser views
+            // TODO: Update scores
+            // TODO: Start new game after timeout?
+            NSLog(@"Match won!");
+            break;
+        }
     }
-//    if (status == PLACED_SUCCESS) {
-//        [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-//        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
-//        (isCurrentUser) ? [self performSelector:@selector(disableBoard) withObject:nil afterDelay:.1] : [self performSelector:@selector(enableBoard) withObject:nil afterDelay:.1];
-//    }
-//    if (status == PLACED_WON) {
-//        [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-//        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
-//        [self performSelector:@selector(slashAnimate:) withObject:(id)[NSNumber numberWithInt:winStatus] afterDelay:.4];
-//        
-//        (isCurrentUser) ? [self performSelector:@selector(displayYouWin) withObject:nil afterDelay:1.2] : [self performSelector:@selector(displayYouLost) withObject:nil afterDelay:1.2];
-//    }
-//    if (status == PLACED_CATS) {
-//        [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
-//        (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
-//        
-//        [self performSelector:@selector(displayCats:) withObject:(id)[NSNumber numberWithBool:isCurrentUser] afterDelay:1.2];
-//    }
 }
+
 
 #pragma mark - End game methods
 
 - (IBAction)endGame:(id)sender {
-    NSString *boardID = [NSString stringWithFormat:@"%d", self.board.board_id];
-    
     // API call to end the game
     PTMemoryEndGameRequest *endGameRequest = [[PTMemoryEndGameRequest alloc] init];
-    [endGameRequest endGameWithBoardId:boardID
+    [endGameRequest endGameWithBoardId:[NSString stringWithFormat:@"%i", boardID]
                              authToken:[[PTUser currentUser] authToken]
                                 userId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
-                            playdateId:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
+                            playdateId:[NSString stringWithFormat:@"%d", playdate.playdateID]
                              onSuccess:nil
                              onFailure:nil];
     
@@ -438,25 +326,36 @@
     }
 }
 
--(void)pusherPlayDateMemoryPlayTurn:(NSNotification *)notification {
+- (void)pusherPlayDateMemoryPlayTurn:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
-    int placement_code = [[eventData objectForKey:@"placement_status"] integerValue];
-    int playmateId = [[eventData objectForKey:@"playmate_id"] integerValue];
-    int card1Index = [[eventData objectForKey:@"card1_index"] integerValue];
-    int card2Index = [[eventData objectForKey:@"card2_index"] integerValue];
+    NSLog(@"pusherPlayDateMemoryPlayTurn: %@", eventData);
+    NSInteger statusCode = [[eventData objectForKey:@"status"] integerValue];
+    NSInteger currentPlayerId = [[eventData objectForKey:@"playmate_id"] integerValue];
+    NSInteger whoseTurn = [[eventData objectForKey:@"turn"] integerValue];
 
-    if (playmateId != [[PTUser currentUser] userID]) { //if we weren't the ones who just placed!
-        int win_code = YOU_DID_NOT_WIN_YET;
-        
-        if (placement_code == MATCH_WINNER) {
-            win_code = [[eventData objectForKey:@"win_code"] integerValue];
+    // Verify that it wasn't us who took this turn
+    if (currentPlayerId != [[PTUser currentUser] userID]) {
+        // Update card indices
+        NSNumber *card1 = [eventData objectForKey:@"card1_index"];
+        NSNumber *card2 = [eventData objectForKey:@"card2_index"];
+        cardIndex1 = [card1 isKindOfClass:[NSNull class]] ? nil : card1; // Save nils, not NSNull class
+        cardIndex2 = [card2 isKindOfClass:[NSNull class]] ? nil : card2; // Save nils, not NSNull class
+
+        // Flip the appropriate card
+        PTMemoryGameCard *card;
+        if (cardIndex2 == nil) {
+            card = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex1 integerValue]];
+        } else {
+            card = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex2 integerValue]];
         }
-        [self updateUIWithStatus:placement_code
-                      card1Index:card1Index
-                      card2Index:card2Index
-                       winStatus:win_code
-                   isCurrentUser:NO];
-        NSLog(@"Incoming place_piece pusher request...");
+        [card flipCard];
+        
+        // Now that 2 cards have been flipped, verify next steps
+        if (cardIndex1 != nil && cardIndex2 != nil) {
+            [self handleGameTurnWithStatusCode:statusCode
+                                    playmateId:currentPlayerId
+                                          turn:whoseTurn];
+        }
     }
 }
 
@@ -465,7 +364,7 @@
 - (IBAction)endPlaydateHandle:(id)sender {
     // Notify server of disconnect
     [self disconnectPusherAndChat];
-    if (self.playdate) {
+    if (playdate) {
         PTPlaydateDisconnectRequest *playdateDisconnectRequest = [[PTPlaydateDisconnectRequest alloc] init];
         [playdateDisconnectRequest playdateDisconnectWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                                           authToken:[[PTUser currentUser] authToken]
@@ -485,8 +384,8 @@
 - (void)disconnectPusherAndChat {
     // Unsubscribe from playdate channel
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    if (self.playdate) {
-        [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:self.playdate.pusherChannelName];
+    if (playdate) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromPlaydateChannel:playdate.pusherChannelName];
     }
 #if !(TARGET_IPHONE_SIMULATOR)
     [[PTVideoPhone sharedPhone] disconnect];
@@ -500,6 +399,65 @@
     }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+#pragma mark - Memory Game delegates
+
+- (BOOL)memoryGameCardShouldFlip:(NSInteger)index {
+    // Is it my turn?
+    if (isMyTurn == NO) {
+        return NO;
+    }
+    
+    // Are both cards already flipped?
+    if (cardIndex1 != nil && cardIndex2 != nil) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+- (void)memoryGameCardDidFlip:(NSInteger)index {
+    // Flipped card
+//    PTMemoryGameCard *card = [self getCardByIndex:index];
+    
+    // Card 1 or card 2?
+    if (cardIndex1 == nil) {
+        cardIndex1 = [NSNumber numberWithInteger:index];
+    } else if (cardIndex2 == nil) {
+        cardIndex2 = [NSNumber numberWithInteger:index];
+    } else if (cardIndex1 != nil && cardIndex2 != nil) {
+        // Shouldn't happen (cards will be disabled), but just in case
+        return;
+    }
+
+    // API request to record the turn
+    PTMemoryPlayTurnRequest *memoryPlayTurnRequest = [[PTMemoryPlayTurnRequest alloc] init];
+    [memoryPlayTurnRequest placePieceAuthToken:[PTUser currentUser].authToken
+                                       user_id:[PTUser currentUser].userID
+                                      board_id:boardID
+                                   playdate_id:playdate.playdateID
+                                   card1_index:cardIndex1
+                                   card2_index:cardIndex2
+                                     onSuccess:^(NSDictionary *result) {
+                                         NSLog(@"Success API: %@", result);
+
+                                         // Get needed data
+                                         NSInteger statusCode = [[result objectForKey:@"status"] integerValue];
+                                         NSInteger currentPlayerId = [[result objectForKey:@"playmate_id"] integerValue];
+                                         NSInteger whoseTurn = [[result objectForKey:@"turn"] integerValue];
+                                         
+                                         // Now that 2 cards have been flipped, verify next steps
+                                         if (cardIndex1 != nil && cardIndex2 != nil) {
+                                             [self handleGameTurnWithStatusCode:statusCode
+                                                                     playmateId:currentPlayerId
+                                                                           turn:whoseTurn];
+                                         }
+                                     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                         NSLog(@"FAIL API: %@", error);
+                                         NSLog(@"FAIL API: %@", JSON);
+                                         // TODO: How to handle?
+                                     }];
 }
 
 @end

@@ -625,14 +625,16 @@
                                       NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
                                       
                                       PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-                                     
-                                      PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc]
-                                                                         initializeWithmyTurn:YES
-                                                                         boardID:[board_id integerValue]
-                                                                         playmateID:playmate.userID
-                                                                         initiatorID:[[PTUser currentUser] userID]
-                                                                         allFilenames:allFilenames
-                                                                         numCards:numCards];
+                                      
+                                      PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initWithNibName:@"PTMemoryViewController"
+                                                                                                                  bundle:nil
+                                                                                                                playdate:self.playdate
+                                                                                                                  myTurn:YES
+                                                                                                                 boardID:[board_id integerValue]
+                                                                                                              playmateID:playmate.userID
+                                                                                                             initiatorID:[[PTUser currentUser] userID]
+                                                                                                            allFilenames:allFilenames
+                                                                                                                numCards:numCards];
 #if !(TARGET_IPHONE_SIMULATOR)
                                       [memoryVC setChatController:self.chatController];
 #endif
@@ -893,12 +895,17 @@
     // Someone invited us to play
     if (initiator_id != [[PTUser currentUser] userID]) {
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initializeWithmyTurn:NO
-                                                                                        boardID:board_id
-                                                                                     playmateID:[[PTUser currentUser] userID]
-                                                                                    initiatorID:playmate.userID
-                                                                                   allFilenames:allFilenames
-                                                                                       numCards:numCards];
+        
+        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initWithNibName:@"PTMemoryViewController"
+                                                                                    bundle:nil
+                                                                                  playdate:self.playdate
+                                                                                    myTurn:NO
+                                                                                   boardID:board_id
+                                                                                playmateID:[[PTUser currentUser] userID]
+                                                                               initiatorID:playmate.userID
+                                                                              allFilenames:allFilenames
+                                                                                  numCards:numCards];
+
 #if !(TARGET_IPHONE_SIMULATOR)
         [memoryVC setChatController:self.chatController];
 #endif

@@ -10,9 +10,8 @@
 
 @interface PTMemoryCardCoordinate : NSObject
 
--(id) initWithNumCards:(int)numberCards index:(int)the_index;
+- (id)initWithNumCards:(int)numberCards index:(int)the_index;
 
 @property (nonatomic, readwrite) int index, numCards, boardX, boardY;
-
 
 @end

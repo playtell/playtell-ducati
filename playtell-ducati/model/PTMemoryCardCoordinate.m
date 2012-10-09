@@ -10,11 +10,9 @@
 
 @implementation PTMemoryCardCoordinate
 
-
 @synthesize index, numCards, boardX, boardY;
 
-
--(id) initWithNumCards:(int)numberCards index:(int)the_index {
+- (id)initWithNumCards:(int)numberCards index:(int)the_index {
     self.index = the_index;
     self.numCards = numberCards;
     
@@ -23,8 +21,7 @@
     return self;
 }
 
-- (void)setBoardCoordinates
-{
+- (void)setBoardCoordinates {
     if (self.numCards == 4) {
         if (self.index == 0) {
             self.boardX = 96;

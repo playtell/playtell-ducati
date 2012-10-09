@@ -8,28 +8,29 @@
 
 #import <Foundation/Foundation.h>
 #import "PTMemoryCardCoordinate.h"
+#import "PTMemoryGameDelegate.h"
 
-@interface PTMemoryGameCard : NSObject
-{
-    int boardIndex; //index in board's card array
+@interface PTMemoryGameCard : NSObject {
+    NSInteger boardIndex; // Index in board's card array
     UIButton *card;
     UIImage *back, *front;
-    BOOL isBackUp, cardDisabled; //cards are disabled once they form part of a match
-    float cardWidth, cardHeight;
+    BOOL isBackShown;
+    BOOL isCardEnabled;
+    CGSize size;
     PTMemoryCardCoordinate *coordinates;
+    id<PTMemoryGameDelegate> delegate;
 }
 
-@property int boardIndex;
-@property float cardWidth, cardHeight;
-@property BOOL isBackUp, cardDisabled;
-@property UIButton *card;
-@property UIImage *back, *front;
-@property PTMemoryCardCoordinate *coordinates;
+@property (nonatomic, retain) UIButton *card;
+@property (nonatomic, retain) PTMemoryCardCoordinate *coordinates;
+@property (nonatomic) CGSize size;
+@property (nonatomic, retain) id<PTMemoryGameDelegate> delegate;
 
-- (id) initWithFrontFilename:(NSString *)front_filename
-                backFilename:(NSString *)back_filename
-                indexOnBoard:(int)board_index
-               numberOfCards:(int)num_cards;
-- (void)flipCardAnimation;
+- (id)initWithFrontFilename:(NSString *)front_filename
+               backFilename:(NSString *)back_filename
+               indexOnBoard:(NSInteger)board_index
+              numberOfCards:(NSInteger)num_cards;
+- (void)flipCard;
+- (void)flipCardDelayed:(BOOL)doDelay;
 
 @end

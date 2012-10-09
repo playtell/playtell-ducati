@@ -384,7 +384,7 @@
                 [txtEmail setClearButtonMode:UITextFieldViewModeNever];
                 txtEmail.keyboardType = UIKeyboardTypeEmailAddress;
                 txtEmail.returnKeyType = UIReturnKeyNext;
-                txtEmail.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+                txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 txtEmail.tag = 0;
                 txtEmail.delegate = self;
                 

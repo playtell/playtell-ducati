@@ -12,24 +12,22 @@
 
 @implementation PTMemoryPlayTurnRequest
 
-- (void)placePieceWithCoordinates:(NSString *)coordinates
-                        authToken:(NSString *)token
-                          user_id:(NSString *)user_id
-                         board_id:(NSString *)board_id
-                      playdate_id:(NSString *)playdate_id
-                      card1_index:(NSString *)card1_index
-                      card2_index:(NSString *)card2_index
-                        onSuccess:(PTMemoryPlayTurnRequestSuccessBlock)success
-                        onFailure:(PTMemoryPlayTurnRequestFailureBlock)failure
-{
+- (void)placePieceAuthToken:(NSString *)token
+                    user_id:(NSInteger)user_id
+                   board_id:(NSInteger)board_id
+                playdate_id:(NSInteger)playdate_id
+                card1_index:(NSNumber *)card1_index
+                card2_index:(NSNumber *)card2_index
+                  onSuccess:(PTMemoryPlayTurnRequestSuccessBlock)success
+                  onFailure:(PTMemoryPlayTurnRequestFailureBlock)failure {
+
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    coordinates, @"coordinates",
                                     token, @"authentication_token",
-                                    user_id, @"user_id",
-                                    playdate_id, @"playdate_id",
+                                    [NSNumber numberWithInteger:user_id], @"user_id",
+                                    [NSNumber numberWithInteger:board_id], @"board_id",
+                                    [NSNumber numberWithInteger:playdate_id], @"playdate_id",
                                     card1_index, @"card1_index",
                                     card2_index, @"card2_index",
-                                    board_id, @"board_id",
                                     nil];
     
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/memory/play_turn", ROOT_URL]];

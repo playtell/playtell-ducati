@@ -9,41 +9,51 @@
 #import <UIKit/UIKit.h>
 #import "PTChatViewController.h"
 #import "PTPlaydate.h"
-#import "PTMemoryGameBoard.h"
+#import "PTMemoryGameDelegate.h"
 
+@interface PTMemoryViewController : UIViewController <PTMemoryGameDelegate> {
+    // Game data
+    PTPlaydate *playdate;
+    NSInteger boardID;
+    NSInteger playmateID;
+    NSInteger initiatorID;
+    NSArray *filenames;
+    NSInteger numCards;
+    BOOL isMyTurn;
 
-@interface PTMemoryViewController : UIViewController {
+    // End playdate button
     IBOutlet UIButton *endPlaydate;
     
-    //communication variables
-//    int board_id;
-    BOOL board_enabled;
+    NSArray *board_buttons;
+    NSArray *turn_indicators;
+    NSMutableArray *cards;
     
-    NSArray *board_buttons, *board_turn_indicators;
-    NSMutableArray *board_cards;
+    // Card indices
+    NSNumber *cardIndex1;
+    NSNumber *cardIndex2;
+    
+    // Sounds
+    AVAudioPlayer* soundWin;
+    AVAudioPlayer* soundLoss;
+    AVAudioPlayer* soundMiss;
 }
 
-// Board stuff
-@property (nonatomic) PTPlaydate *playdate;
-
-// Chat view controller
 @property (nonatomic, strong) PTChatViewController* chatController;
 
-@property (nonatomic, strong) PTMemoryGameBoard *board;
+- (id)initWithNibName:(NSString *)nibNameOrNil
+               bundle:(NSBundle *)nibBundleOrNil
+             playdate:(PTPlaydate *)_playdate
+               myTurn:(BOOL)myTurn
+              boardID:(NSInteger)_boardID
+           playmateID:(NSInteger)_playmateID
+          initiatorID:(NSInteger)_initiatorID
+         allFilenames:(NSArray *)_filenames
+             numCards:(NSInteger)_numCards;
 
-//@property (nonatomic) int board_id;
-
-- (id) initializeWithmyTurn:(BOOL)myTurn
-                    boardID:(int)board_id
-                 playmateID:(int)playmate_id
-                initiatorID:(int)initiator_id
-               allFilenames:(NSArray *)filenames
-                   numCards:(int)num_cards;
-
-- (void)updateUIWithStatus:(int)status
-                 card1Index:(int)card1_index
-                 card2Index:(int)card2_index
-                  winStatus:(int)winStatus
-             isCurrentUser:(BOOL)isCurrentUser;
+//- (void)updateUIWithStatus:(int)status
+//                 card1Index:(int)card1_index
+//                 card2Index:(int)card2_index
+//                  winStatus:(int)winStatus
+//             isCurrentUser:(BOOL)isCurrentUser;
 
 @end
