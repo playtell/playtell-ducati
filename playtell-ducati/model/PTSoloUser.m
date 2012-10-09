@@ -122,7 +122,7 @@
         
         self.friendTooltip.alpha = 0.0f;
         [self.friendTooltip addToView:controller.view
-                     withCaretAtPoint:CGPointMake(855.0f, 525.0f)];
+                     withCaretAtPoint:CGPointMake(855.0f - 143.0, 525.0f - 152.0)];
         
         self.closeTooltip.alpha = 0.0f;
         [self.closeTooltip addToView:controller.view
@@ -149,7 +149,7 @@
 - (void)addMeTouchTooltipAndStartVideoWithController:(PTDateViewController*)controller {
     self.touchTooltip.alpha = 0.0f;
     [self.touchTooltip addToView:controller.view
-                withCaretAtPoint:CGPointMake(641.0f, 365.0f)];
+                withCaretAtPoint:CGPointMake(253.0f, 352.0f)];
     
     [UIView animateWithDuration:0.5 animations:^{
         self.touchTooltip.alpha = 1.0;
@@ -198,9 +198,10 @@
     // Hit rect should be centered at 641.0f, 365.0f
     // The rect width and height is 104.0f
     //
-    // In the future, the hit 
-    CGRect touchHereHitArea = CGRectMake(641.0f - 52.0f,
-                                         365.0f - 52.0f,
+    // In the future, the hit
+    // 253.0f, 352.0f
+    CGRect touchHereHitArea = CGRectMake(253.0f - 52.0f,
+                                         352.0f - 52.0f,
                                          104.0f,
                                          104.0f);
     

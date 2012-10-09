@@ -1776,7 +1776,7 @@
 		F4A9D8BB157814EF0015D977 /* contact-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-info.png"; sourceTree = "<group>"; };
 		F4A9D8BC157814EF0015D977 /* create-password.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "create-password.png"; sourceTree = "<group>"; };
 		F4A9D8BD157814EF0015D977 /* done-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "done-press.png"; sourceTree = "<group>"; };
-		F4A9D8BE157814EF0015D977 /* done.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = done.png; path = "/Users/rhussmann/Code/playtell-ducati/playtell-ducati/artwork/done.png"; sourceTree = "<absolute>"; };
+		F4A9D8BE157814EF0015D977 /* done.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = done.png; sourceTree = "<group>"; };
 		F4A9D8BF157814EF0015D977 /* dual-form-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dual-form-field.png"; sourceTree = "<group>"; };
 		F4A9D8C0157814EF0015D977 /* error-alert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error-alert.png"; sourceTree = "<group>"; };
 		F4A9D8C1157814EF0015D977 /* error-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error-header.png"; sourceTree = "<group>"; };
