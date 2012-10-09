@@ -86,7 +86,12 @@
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
     [self.view addSubview:self.scrollView];
-    
+
+    // Get the ChatViewController
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.chatController = appDelegate.chatController;
+    [self.chatController connectToPlaceholderOpenTokSession];
+
     // Add all playmates to the dialpad
     [self drawPlaymates];
     

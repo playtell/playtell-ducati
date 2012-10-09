@@ -477,6 +477,69 @@
 		F4A94EC11623C44A000D428F /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94EB81623C44A000D428F /* AFURLConnectionOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F4A94EC21623C44A000D428F /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94EB91623C44A000D428F /* AFXMLRequestOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F4A94EC31623C44A000D428F /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94EBA1623C44A000D428F /* UIImageView+AFNetworking.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		F4A94F18162478AC000D428F /* logo_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = F468877515812A060086D351 /* logo_loading.gif */; };
+		F4A94F1916247A2E000D428F /* page_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199381586BB7200DC2E16 /* page_loading.png */; };
+		F4A94F1A16247A3B000D428F /* profile_default_2.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8FF157A88870015D977 /* profile_default_2.png */; };
+		F4A94F1B16247A49000D428F /* login_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8C3157814EF0015D977 /* login_bg.png */; };
+		F4A94F1C16247A5F000D428F /* 144.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D61C1576BA370015D977 /* 144.png */; };
+		F4A94F1D16247A6B000D428F /* 72.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D61A1576BA330015D977 /* 72.png */; };
+		F4A94F1E16247A90000D428F /* add-family.png in Resources */ = {isa = PBXBuildFile; fileRef = F4E6DA131585346600BDEF0A /* add-family.png */; };
+		F4A94F1F16247B4C000D428F /* dual-form-field.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BF157814EF0015D977 /* dual-form-field.png */; };
+		F4A94F2016247B53000D428F /* dual-form-field-depressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */; };
+		F4A94F2116247B56000D428F /* done.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BE157814EF0015D977 /* done.png */; };
+		F4A94F2216247B59000D428F /* done-press.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BD157814EF0015D977 /* done-press.png */; };
+		F4A94F2316247B5D000D428F /* dialpad-pending.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A90159CB09800677E03 /* dialpad-pending.png */; };
+		F4A94F2416247B60000D428F /* dialad-live.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D41A8D159CAEF900677E03 /* dialad-live.png */; };
+		F4A94F2516247B63000D428F /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */; };
+		F4A94F2616247B66000D428F /* date_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 232265A4157D4D8800D5A960 /* date_bg.png */; };
+		F4A94F2716247B6A000D428F /* create-password.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BC157814EF0015D977 /* create-password.png */; };
+		F4A94F2816247B6D000D428F /* crank-nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C7314315862C7D00B9A9E6 /* crank-nav.png */; };
+		F4A94F2916247B71000D428F /* cover_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = 23F199361586B9F000DC2E16 /* cover_loading.png */; };
+		F4A94F2A16247B74000D428F /* contact-info.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BB157814EF0015D977 /* contact-info.png */; };
+		F4A94F2B16247B77000D428F /* CloseBookPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDF159234FE00525588 /* CloseBookPressed.png */; };
+		F4A94F2C16247B7A000D428F /* CloseBookNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE0159234FE00525588 /* CloseBookNormal.png */; };
+		F4A94F2D16247B7E000D428F /* border.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8BA157814EF0015D977 /* border.png */; };
+		F4A94F2E16247B82000D428F /* arrow-error.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8B9157814EF0015D977 /* arrow-error.png */; };
+		F4A94F2F16247B9C000D428F /* EndCallCrankNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDB1592338100525588 /* EndCallCrankNormal.png */; };
+		F4A94F3016247BAB000D428F /* EndCallCrankPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FDA1592338100525588 /* EndCallCrankPressed.png */; };
+		F4A94F3116247BBA000D428F /* EndPlaydatePopupBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE41592393100525588 /* EndPlaydatePopupBg.png */; };
+		F4A94F3216247BD0000D428F /* EndPlaydatePopupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23866FE31592393100525588 /* EndPlaydatePopupButton.png */; };
+		F4A94F3316247BE1000D428F /* error-alert.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8C0157814EF0015D977 /* error-alert.png */; };
+		F4A94F3416247BF1000D428F /* error-header.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8C1157814EF0015D977 /* error-header.png */; };
+		F4A94F3516247C01000D428F /* form-field-depressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8D31578157F0015D977 /* form-field-depressed.png */; };
+		F4A94F3616247C24000D428F /* form-field.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A9D8C2157814EF0015D977 /* form-field.png */; };
+		F4A94F3816247C8C000D428F /* PTDialpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94F3716247C8B000D428F /* PTDialpadViewController.m */; };
+		F4A94F5116247CF7000D428F /* allow-push.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F3B16247CF7000D428F /* allow-push.png */; };
+		F4A94F5216247CF7000D428F /* allow-push@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F3C16247CF7000D428F /* allow-push@2X.png */; };
+		F4A94F5316247CF8000D428F /* b-day.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F3D16247CF7000D428F /* b-day.png */; };
+		F4A94F5416247CF8000D428F /* b-day@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F3E16247CF7000D428F /* b-day@2X.png */; };
+		F4A94F5516247CF8000D428F /* buddy-point.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F3F16247CF7000D428F /* buddy-point.png */; };
+		F4A94F5616247CF8000D428F /* buddy-point@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4016247CF7000D428F /* buddy-point@2X.png */; };
+		F4A94F5716247CF8000D428F /* close-activity.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4116247CF7000D428F /* close-activity.png */; };
+		F4A94F5816247CF8000D428F /* close-activity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4216247CF7000D428F /* close-activity@2x.png */; };
+		F4A94F5916247CF8000D428F /* end-call.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4316247CF7000D428F /* end-call.png */; };
+		F4A94F5A16247CF8000D428F /* end-call@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4416247CF7000D428F /* end-call@2X.png */; };
+		F4A94F5B16247CF8000D428F /* invite-fam.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4516247CF7000D428F /* invite-fam.png */; };
+		F4A94F5C16247CF8000D428F /* invite-fam@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4616247CF7000D428F /* invite-fam@2X.png */; };
+		F4A94F5D16247CF8000D428F /* invite-one-person.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4716247CF7000D428F /* invite-one-person.png */; };
+		F4A94F5E16247CF8000D428F /* invite-one-person@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4816247CF7000D428F /* invite-one-person@2X.png */; };
+		F4A94F5F16247CF8000D428F /* invite_buddies.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4916247CF7000D428F /* invite_buddies.png */; };
+		F4A94F6016247CF8000D428F /* invite_buddies@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4A16247CF7000D428F /* invite_buddies@2X.png */; };
+		F4A94F6116247CF8000D428F /* point-here.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4B16247CF7000D428F /* point-here.png */; };
+		F4A94F6216247CF8000D428F /* point-here@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4C16247CF7000D428F /* point-here@2X.png */; };
+		F4A94F6316247CF8000D428F /* test-call.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4D16247CF7000D428F /* test-call.png */; };
+		F4A94F6416247CF8000D428F /* test-call@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4E16247CF7000D428F /* test-call@2X.png */; };
+		F4A94F6516247CF8000D428F /* turn-page.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F4F16247CF7000D428F /* turn-page.png */; };
+		F4A94F6616247CF8000D428F /* turn-page@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F5016247CF7000D428F /* turn-page@2X.png */; };
+		F4A94F6916247D77000D428F /* Solo-profile-pic.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F6716247D77000D428F /* Solo-profile-pic.png */; };
+		F4A94F6A16247D77000D428F /* Solo-profile-pic@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F6816247D77000D428F /* Solo-profile-pic@2X.png */; };
+		F4A94F7B16247EB3000D428F /* Solo_Book.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7416247EB3000D428F /* Solo_Book.mp4 */; };
+		F4A94F7C16247EB3000D428F /* Solo_Games.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7516247EB3000D428F /* Solo_Games.mp4 */; };
+		F4A94F7D16247EB3000D428F /* Solo_Hi.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7616247EB3000D428F /* Solo_Hi.mp4 */; };
+		F4A94F7E16247EB3000D428F /* Solo_HiToybox.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7716247EB3000D428F /* Solo_HiToybox.mp4 */; };
+		F4A94F7F16247EB3000D428F /* Solo_MePoint.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7816247EB3000D428F /* Solo_MePoint.mp4 */; };
+		F4A94F8016247EB3000D428F /* Solo_Toybox.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7916247EB3000D428F /* Solo_Toybox.mp4 */; };
+		F4A94F8116247EB3000D428F /* Solo_YouPoint.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F4A94F7A16247EB3000D428F /* Solo_YouPoint.mp4 */; };
 		F4A9D5D51576B5950015D977 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D41576B5950015D977 /* UIKit.framework */; };
 		F4A9D5D71576B5950015D977 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D61576B5950015D977 /* Foundation.framework */; };
 		F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D5D81576B5950015D977 /* CoreGraphics.framework */; };
@@ -673,7 +736,7 @@
 		F4A9D8EC1579218E0015D977 /* PTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EB1579218E0015D977 /* PTUser.m */; };
 		F4A9D8EF15796EA70015D977 /* PTUpdateSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */; };
 		F4A9D8F515798DBF0015D977 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D8F415798DBF0015D977 /* libicucore.dylib */; };
-		F4A9D8F8157A86620015D977 /* PTDialpadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */; };
+		F4A9D8F8157A86620015D977 /* page_loading.png in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8F7157A864B0015D977 /* page_loading.png */; };
 		F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */; };
 		F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */; };
 		F4A9D902157A92F90015D977 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4A9D901157A92F80015D977 /* QuartzCore.framework */; };
@@ -753,7 +816,7 @@
 		231786BD161A2365006BCF6B /* text-error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-error@2x.png"; sourceTree = "<group>"; };
 		231786C5161A2632006BCF6B /* PTErrorTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTErrorTableCell.h; sourceTree = "<group>"; };
 		231786C6161A2632006BCF6B /* PTErrorTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTErrorTableCell.m; sourceTree = "<group>"; };
-		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = date_bg.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/date_bg.png"; sourceTree = "<absolute>"; };
+		232265A4157D4D8800D5A960 /* date_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date_bg.png; sourceTree = "<group>"; };
 		23263E8515F67ADD0080463A /* PTFriendshipAcceptRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendshipAcceptRequest.h; sourceTree = "<group>"; };
 		23263E8615F67ADD0080463A /* PTFriendshipAcceptRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTFriendshipAcceptRequest.m; sourceTree = "<group>"; };
 		23263E8915F67AF50080463A /* PTFriendshipDeclineRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTFriendshipDeclineRequest.h; sourceTree = "<group>"; };
@@ -853,12 +916,12 @@
 		238409F91601074F0031EF97 /* PTNewUserPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTNewUserPhotoViewController.xib; sourceTree = "<group>"; };
 		23840A0016021F890031EF97 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		23840A0116021F890031EF97 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
-		23866FDA1592338100525588 /* EndCallCrankPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EndCallCrankPressed.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/EndCallCrankPressed.png"; sourceTree = "<absolute>"; };
-		23866FDB1592338100525588 /* EndCallCrankNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EndCallCrankNormal.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/EndCallCrankNormal.png"; sourceTree = "<absolute>"; };
-		23866FDF159234FE00525588 /* CloseBookPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloseBookPressed.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/CloseBookPressed.png"; sourceTree = "<absolute>"; };
-		23866FE0159234FE00525588 /* CloseBookNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloseBookNormal.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/CloseBookNormal.png"; sourceTree = "<absolute>"; };
-		23866FE31592393100525588 /* EndPlaydatePopupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EndPlaydatePopupButton.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/EndPlaydatePopupButton.png"; sourceTree = "<absolute>"; };
-		23866FE41592393100525588 /* EndPlaydatePopupBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = EndPlaydatePopupBg.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/EndPlaydatePopupBg.png"; sourceTree = "<absolute>"; };
+		23866FDA1592338100525588 /* EndCallCrankPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndCallCrankPressed.png; sourceTree = "<group>"; };
+		23866FDB1592338100525588 /* EndCallCrankNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndCallCrankNormal.png; sourceTree = "<group>"; };
+		23866FDF159234FE00525588 /* CloseBookPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseBookPressed.png; sourceTree = "<group>"; };
+		23866FE0159234FE00525588 /* CloseBookNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseBookNormal.png; sourceTree = "<group>"; };
+		23866FE31592393100525588 /* EndPlaydatePopupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupButton.png; sourceTree = "<group>"; };
+		23866FE41592393100525588 /* EndPlaydatePopupBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = EndPlaydatePopupBg.png; sourceTree = "<group>"; };
 		2387FCDF1590FCF500B1FB55 /* PTPlaydateDetailsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDetailsRequest.h; sourceTree = "<group>"; };
 		2387FCE01590FCF500B1FB55 /* PTPlaydateDetailsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateDetailsRequest.m; sourceTree = "<group>"; };
 		23A1EAA915ED2594000FED09 /* PTPlaymateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateView.h; sourceTree = "<group>"; };
@@ -890,7 +953,7 @@
 		23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsGetRelatedRequest.m; sourceTree = "<group>"; };
 		23C64E58161B3D9600C629A2 /* ipad-phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-phone.png"; sourceTree = "<group>"; };
 		23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-phone@2x.png"; sourceTree = "<group>"; };
-		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "crank-nav.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/crank-nav.png"; sourceTree = "<absolute>"; };
+		23C7314315862C7D00B9A9E6 /* crank-nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "crank-nav.png"; sourceTree = "<group>"; };
 		23C731491586891C00B9A9E6 /* PTPlaydateFingerTapRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerTapRequest.h; sourceTree = "<group>"; };
 		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
 		23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerEndRequest.h; sourceTree = "<group>"; };
@@ -910,8 +973,8 @@
 		23CC06B815CA8BF7003CAA11 /* PTContactsTableRemoveCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableRemoveCell.m; sourceTree = "<group>"; };
 		23CC06BA15CA8CD9003CAA11 /* buttonRemoveHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonRemoveHighlighted.png; sourceTree = "<group>"; };
 		23CC06BB15CA8CD9003CAA11 /* buttonRemoveNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonRemoveNormal.png; sourceTree = "<group>"; };
-		23D41A8D159CAEF900677E03 /* dialad-live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dialad-live.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/dialad-live.png"; sourceTree = "<absolute>"; };
-		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dialpad-pending.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/dialpad-pending.png"; sourceTree = "<absolute>"; };
+		23D41A8D159CAEF900677E03 /* dialad-live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialad-live.png"; sourceTree = "<group>"; };
+		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialpad-pending.png"; sourceTree = "<group>"; };
 		23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUsersGetStatusRequest.h; sourceTree = "<group>"; };
 		23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUsersGetStatusRequest.m; sourceTree = "<group>"; };
 		23D78D6F15D5882300CC284B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -930,8 +993,8 @@
 		23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHex.m"; sourceTree = "<group>"; };
 		23E69D7B15D053A400FD8698 /* buttonSendInviteHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteHighlighted.png; sourceTree = "<group>"; };
 		23E69D7C15D053A400FD8698 /* buttonSendInviteNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteNormal.png; sourceTree = "<group>"; };
-		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cover_loading.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/cover_loading.png"; sourceTree = "<absolute>"; };
-		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page_loading.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/page_loading.png"; sourceTree = "<absolute>"; };
+		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_loading.png; sourceTree = "<group>"; };
+		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23F1E55C1610E9E900EE023B /* PTLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoginViewController.h; sourceTree = "<group>"; };
 		23F1E55D1610E9E900EE023B /* PTLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTLoginViewController.m; sourceTree = "<group>"; };
 		23F1E55E1610E9E900EE023B /* PTLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoginViewController.xib; sourceTree = "<group>"; };
@@ -1239,7 +1302,7 @@
 		F468876F158129800086D351 /* PTChatHUDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDView.m; sourceTree = "<group>"; };
 		F4688772158129C00086D351 /* UIImageView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+PlayTell.h"; sourceTree = "<group>"; };
 		F4688773158129C00086D351 /* UIImageView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+PlayTell.m"; sourceTree = "<group>"; };
-		F468877515812A060086D351 /* logo_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = logo_loading.gif; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/logo_loading.gif"; sourceTree = "<absolute>"; };
+		F468877515812A060086D351 /* logo_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = logo_loading.gif; sourceTree = "<group>"; };
 		F4688779158138190086D351 /* PTVideoPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTVideoPhone.h; sourceTree = "<group>"; };
 		F468877A158138190086D351 /* PTVideoPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTVideoPhone.m; sourceTree = "<group>"; };
 		F468878115813A880086D351 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1283,6 +1346,38 @@
 		F4A94EB81623C44A000D428F /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
 		F4A94EB91623C44A000D428F /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		F4A94EBA1623C44A000D428F /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		F4A94F3716247C8B000D428F /* PTDialpadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDialpadViewController.m; sourceTree = "<group>"; };
+		F4A94F3B16247CF7000D428F /* allow-push.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "allow-push.png"; sourceTree = "<group>"; };
+		F4A94F3C16247CF7000D428F /* allow-push@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "allow-push@2X.png"; sourceTree = "<group>"; };
+		F4A94F3D16247CF7000D428F /* b-day.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "b-day.png"; sourceTree = "<group>"; };
+		F4A94F3E16247CF7000D428F /* b-day@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "b-day@2X.png"; sourceTree = "<group>"; };
+		F4A94F3F16247CF7000D428F /* buddy-point.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "buddy-point.png"; sourceTree = "<group>"; };
+		F4A94F4016247CF7000D428F /* buddy-point@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "buddy-point@2X.png"; sourceTree = "<group>"; };
+		F4A94F4116247CF7000D428F /* close-activity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-activity.png"; sourceTree = "<group>"; };
+		F4A94F4216247CF7000D428F /* close-activity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-activity@2x.png"; sourceTree = "<group>"; };
+		F4A94F4316247CF7000D428F /* end-call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call.png"; sourceTree = "<group>"; };
+		F4A94F4416247CF7000D428F /* end-call@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call@2X.png"; sourceTree = "<group>"; };
+		F4A94F4516247CF7000D428F /* invite-fam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite-fam.png"; sourceTree = "<group>"; };
+		F4A94F4616247CF7000D428F /* invite-fam@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite-fam@2X.png"; sourceTree = "<group>"; };
+		F4A94F4716247CF7000D428F /* invite-one-person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite-one-person.png"; sourceTree = "<group>"; };
+		F4A94F4816247CF7000D428F /* invite-one-person@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite-one-person@2X.png"; sourceTree = "<group>"; };
+		F4A94F4916247CF7000D428F /* invite_buddies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = invite_buddies.png; sourceTree = "<group>"; };
+		F4A94F4A16247CF7000D428F /* invite_buddies@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "invite_buddies@2X.png"; sourceTree = "<group>"; };
+		F4A94F4B16247CF7000D428F /* point-here.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "point-here.png"; sourceTree = "<group>"; };
+		F4A94F4C16247CF7000D428F /* point-here@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "point-here@2X.png"; sourceTree = "<group>"; };
+		F4A94F4D16247CF7000D428F /* test-call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "test-call.png"; sourceTree = "<group>"; };
+		F4A94F4E16247CF7000D428F /* test-call@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "test-call@2X.png"; sourceTree = "<group>"; };
+		F4A94F4F16247CF7000D428F /* turn-page.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "turn-page.png"; sourceTree = "<group>"; };
+		F4A94F5016247CF7000D428F /* turn-page@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "turn-page@2X.png"; sourceTree = "<group>"; };
+		F4A94F6716247D77000D428F /* Solo-profile-pic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Solo-profile-pic.png"; path = "../Solo-profile-pic.png"; sourceTree = "<group>"; };
+		F4A94F6816247D77000D428F /* Solo-profile-pic@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Solo-profile-pic@2X.png"; path = "../Solo-profile-pic@2X.png"; sourceTree = "<group>"; };
+		F4A94F7416247EB3000D428F /* Solo_Book.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_Book.mp4; sourceTree = "<group>"; };
+		F4A94F7516247EB3000D428F /* Solo_Games.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_Games.mp4; sourceTree = "<group>"; };
+		F4A94F7616247EB3000D428F /* Solo_Hi.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_Hi.mp4; sourceTree = "<group>"; };
+		F4A94F7716247EB3000D428F /* Solo_HiToybox.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_HiToybox.mp4; sourceTree = "<group>"; };
+		F4A94F7816247EB3000D428F /* Solo_MePoint.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_MePoint.mp4; sourceTree = "<group>"; };
+		F4A94F7916247EB3000D428F /* Solo_Toybox.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_Toybox.mp4; sourceTree = "<group>"; };
+		F4A94F7A16247EB3000D428F /* Solo_YouPoint.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Solo_YouPoint.mp4; sourceTree = "<group>"; };
 		F4A9D5D01576B5950015D977 /* playtell-ducati.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playtell-ducati.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4A9D5D41576B5950015D977 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F4A9D5D61576B5950015D977 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1293,9 +1388,9 @@
 		F4A9D5E21576B5950015D977 /* playtell-ducati-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "playtell-ducati-Prefix.pch"; sourceTree = "<group>"; };
 		F4A9D5E31576B5950015D977 /* PTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTAppDelegate.h; sourceTree = "<group>"; };
 		F4A9D5E41576B5950015D977 /* PTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTAppDelegate.m; sourceTree = "<group>"; };
-		F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/Default-Landscape~ipad.png"; sourceTree = "<absolute>"; };
-		F4A9D61A1576BA330015D977 /* 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 72.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/72.png"; sourceTree = "<absolute>"; };
-		F4A9D61C1576BA370015D977 /* 144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 144.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/144.png"; sourceTree = "<absolute>"; };
+		F4A9D6091576B8B00015D977 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
+		F4A9D61A1576BA330015D977 /* 72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 72.png; path = ../../72.png; sourceTree = "<group>"; };
+		F4A9D61C1576BA370015D977 /* 144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 144.png; path = ../../144.png; sourceTree = "<group>"; };
 		F4A9D61F1576C1B50015D977 /* CHANGELOG */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		F4A9D6211576C1B50015D977 /* UAAnalytics+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UAAnalytics+Internal.h"; sourceTree = "<group>"; };
 		F4A9D6221576C1B50015D977 /* UAAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAAnalytics.h; sourceTree = "<group>"; };
@@ -1676,21 +1771,21 @@
 		F4A9D8AA1577FCDD0015D977 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		F4A9D8B615780C360015D977 /* NSMutableURLRequest+POSTParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableURLRequest+POSTParameters.h"; sourceTree = "<group>"; };
 		F4A9D8B715780C360015D977 /* NSMutableURLRequest+POSTParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableURLRequest+POSTParameters.m"; sourceTree = "<group>"; };
-		F4A9D8B9157814EF0015D977 /* arrow-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow-error.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/arrow-error.png"; sourceTree = "<absolute>"; };
-		F4A9D8BA157814EF0015D977 /* border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = border.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/border.png"; sourceTree = "<absolute>"; };
-		F4A9D8BB157814EF0015D977 /* contact-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact-info.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/contact-info.png"; sourceTree = "<absolute>"; };
-		F4A9D8BC157814EF0015D977 /* create-password.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "create-password.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/create-password.png"; sourceTree = "<absolute>"; };
-		F4A9D8BD157814EF0015D977 /* done-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "done-press.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/done-press.png"; sourceTree = "<absolute>"; };
-		F4A9D8BE157814EF0015D977 /* done.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = done.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/done.png"; sourceTree = "<absolute>"; };
-		F4A9D8BF157814EF0015D977 /* dual-form-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dual-form-field.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/dual-form-field.png"; sourceTree = "<absolute>"; };
-		F4A9D8C0157814EF0015D977 /* error-alert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "error-alert.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/error-alert.png"; sourceTree = "<absolute>"; };
-		F4A9D8C1157814EF0015D977 /* error-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "error-header.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/error-header.png"; sourceTree = "<absolute>"; };
-		F4A9D8C2157814EF0015D977 /* form-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "form-field.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/form-field.png"; sourceTree = "<absolute>"; };
-		F4A9D8C3157814EF0015D977 /* login_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = login_bg.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/login_bg.png"; sourceTree = "<absolute>"; };
+		F4A9D8B9157814EF0015D977 /* arrow-error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-error.png"; sourceTree = "<group>"; };
+		F4A9D8BA157814EF0015D977 /* border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = border.png; sourceTree = "<group>"; };
+		F4A9D8BB157814EF0015D977 /* contact-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-info.png"; sourceTree = "<group>"; };
+		F4A9D8BC157814EF0015D977 /* create-password.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "create-password.png"; sourceTree = "<group>"; };
+		F4A9D8BD157814EF0015D977 /* done-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "done-press.png"; sourceTree = "<group>"; };
+		F4A9D8BE157814EF0015D977 /* done.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = done.png; path = "/Users/rhussmann/Code/playtell-ducati/playtell-ducati/artwork/done.png"; sourceTree = "<absolute>"; };
+		F4A9D8BF157814EF0015D977 /* dual-form-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dual-form-field.png"; sourceTree = "<group>"; };
+		F4A9D8C0157814EF0015D977 /* error-alert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error-alert.png"; sourceTree = "<group>"; };
+		F4A9D8C1157814EF0015D977 /* error-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error-header.png"; sourceTree = "<group>"; };
+		F4A9D8C2157814EF0015D977 /* form-field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form-field.png"; sourceTree = "<group>"; };
+		F4A9D8C3157814EF0015D977 /* login_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_bg.png; sourceTree = "<group>"; };
 		F4A9D8D01578153E0015D977 /* PTTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTTextField.h; sourceTree = "<group>"; };
 		F4A9D8D11578153E0015D977 /* PTTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTTextField.m; sourceTree = "<group>"; };
-		F4A9D8D31578157F0015D977 /* form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "form-field-depressed.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/form-field-depressed.png"; sourceTree = "<absolute>"; };
-		F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dual-form-field-depressed.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/dual-form-field-depressed.png"; sourceTree = "<absolute>"; };
+		F4A9D8D31578157F0015D977 /* form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form-field-depressed.png"; sourceTree = "<group>"; };
+		F4A9D8D5157815990015D977 /* dual-form-field-depressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dual-form-field-depressed.png"; sourceTree = "<group>"; };
 		F4A9D8E01579096F0015D977 /* PTRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTRequest.h; sourceTree = "<group>"; };
 		F4A9D8E11579096F0015D977 /* PTRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTRequest.m; sourceTree = "<group>"; };
 		F4A9D8E31579098E0015D977 /* PTLoginRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoginRequest.h; sourceTree = "<group>"; };
@@ -1703,12 +1798,12 @@
 		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
 		F4A9D8F415798DBF0015D977 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTDialpadViewController.h; sourceTree = "<group>"; };
-		F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PTDialpadViewController.m; sourceTree = "<group>"; };
+		F4A9D8F7157A864B0015D977 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page_loading.png; path = ../artwork/page_loading.png; sourceTree = "<group>"; };
 		F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateButton.h; sourceTree = "<group>"; };
 		F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateButton.m; sourceTree = "<group>"; };
 		F4A9D8FC157A86C20015D977 /* UIView+PlayTell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+PlayTell.h"; sourceTree = "<group>"; };
 		F4A9D8FD157A86C20015D977 /* UIView+PlayTell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+PlayTell.m"; sourceTree = "<group>"; };
-		F4A9D8FF157A88870015D977 /* profile_default_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = profile_default_2.png; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/profile_default_2.png"; sourceTree = "<absolute>"; };
+		F4A9D8FF157A88870015D977 /* profile_default_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_default_2.png; sourceTree = "<group>"; };
 		F4A9D901157A92F80015D977 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F4A9D903157AAAC40015D977 /* PTPlaydate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydate.h; sourceTree = "<group>"; };
 		F4A9D904157AAAC40015D977 /* PTPlaydate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydate.m; sourceTree = "<group>"; };
@@ -1725,7 +1820,7 @@
 		F4E6DA0015825EC900BDEF0A /* PTAllFriendsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllFriendsRequest.m; sourceTree = "<group>"; };
 		F4E6DA0F15850B1600BDEF0A /* PTConcretePlaymateFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTConcretePlaymateFactory.h; sourceTree = "<group>"; };
 		F4E6DA1015850B1600BDEF0A /* PTConcretePlaymateFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTConcretePlaymateFactory.m; sourceTree = "<group>"; };
-		F4E6DA131585346600BDEF0A /* add-family.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "add-family.png"; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/artwork/add-family.png"; sourceTree = "<absolute>"; };
+		F4E6DA131585346600BDEF0A /* add-family.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add-family.png"; sourceTree = "<group>"; };
 		F4EAC41315866DE200BE086B /* PTLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoadingViewController.h; sourceTree = "<group>"; };
 		F4EAC41415866DE200BE086B /* PTLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTLoadingViewController.m; sourceTree = "<group>"; };
 		F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTLoadingViewController.xib; sourceTree = "<group>"; };
@@ -2715,6 +2810,59 @@
 			name = audio;
 			sourceTree = "<group>";
 		};
+		F4A94F3916247CF5000D428F /* NUX */ = {
+			isa = PBXGroup;
+			children = (
+				F4A94F6716247D77000D428F /* Solo-profile-pic.png */,
+				F4A94F6816247D77000D428F /* Solo-profile-pic@2X.png */,
+				F4A94F3A16247CF7000D428F /* Tool Tips */,
+			);
+			path = NUX;
+			sourceTree = "<group>";
+		};
+		F4A94F3A16247CF7000D428F /* Tool Tips */ = {
+			isa = PBXGroup;
+			children = (
+				F4A94F3B16247CF7000D428F /* allow-push.png */,
+				F4A94F3C16247CF7000D428F /* allow-push@2X.png */,
+				F4A94F3D16247CF7000D428F /* b-day.png */,
+				F4A94F3E16247CF7000D428F /* b-day@2X.png */,
+				F4A94F3F16247CF7000D428F /* buddy-point.png */,
+				F4A94F4016247CF7000D428F /* buddy-point@2X.png */,
+				F4A94F4116247CF7000D428F /* close-activity.png */,
+				F4A94F4216247CF7000D428F /* close-activity@2x.png */,
+				F4A94F4316247CF7000D428F /* end-call.png */,
+				F4A94F4416247CF7000D428F /* end-call@2X.png */,
+				F4A94F4516247CF7000D428F /* invite-fam.png */,
+				F4A94F4616247CF7000D428F /* invite-fam@2X.png */,
+				F4A94F4716247CF7000D428F /* invite-one-person.png */,
+				F4A94F4816247CF7000D428F /* invite-one-person@2X.png */,
+				F4A94F4916247CF7000D428F /* invite_buddies.png */,
+				F4A94F4A16247CF7000D428F /* invite_buddies@2X.png */,
+				F4A94F4B16247CF7000D428F /* point-here.png */,
+				F4A94F4C16247CF7000D428F /* point-here@2X.png */,
+				F4A94F4D16247CF7000D428F /* test-call.png */,
+				F4A94F4E16247CF7000D428F /* test-call@2X.png */,
+				F4A94F4F16247CF7000D428F /* turn-page.png */,
+				F4A94F5016247CF7000D428F /* turn-page@2X.png */,
+			);
+			path = "Tool Tips";
+			sourceTree = "<group>";
+		};
+		F4A94F7316247EB0000D428F /* video */ = {
+			isa = PBXGroup;
+			children = (
+				F4A94F7416247EB3000D428F /* Solo_Book.mp4 */,
+				F4A94F7516247EB3000D428F /* Solo_Games.mp4 */,
+				F4A94F7616247EB3000D428F /* Solo_Hi.mp4 */,
+				F4A94F7716247EB3000D428F /* Solo_HiToybox.mp4 */,
+				F4A94F7816247EB3000D428F /* Solo_MePoint.mp4 */,
+				F4A94F7916247EB3000D428F /* Solo_Toybox.mp4 */,
+				F4A94F7A16247EB3000D428F /* Solo_YouPoint.mp4 */,
+			);
+			path = video;
+			sourceTree = "<group>";
+		};
 		F4A9D5C51576B5950015D977 = {
 			isa = PBXGroup;
 			children = (
@@ -2786,6 +2934,7 @@
 				F4A9D5DB1576B5950015D977 /* Supporting Files */,
 				F4A9D61E1576C1B50015D977 /* urban airship */,
 				F4A9D88C1577FBB40015D977 /* view controllers */,
+				F4A94F7316247EB0000D428F /* video */,
 				F4A9D8CF1578153E0015D977 /* views */,
 			);
 			path = "playtell-ducati";
@@ -2805,6 +2954,7 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				F4A94F3916247CF5000D428F /* NUX */,
 				237651D9161A167D0000A4D5 /* new user */,
 				230AA55F15C85F1B004EAD7D /* contacts */,
 				8A0CE6CF160D0B2A00C0FD1A /* playtell */,
@@ -3525,13 +3675,13 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				23391EA815B7535800761268 /* contact import */,
+				8A62E3A215E7EA4F0077CBB6 /* games */,
 				23F1E5551610E86A00EE023B /* login */,
 				23424C2315FFBAD000ECA190 /* new user */,
-				8A62E3A215E7EA4F0077CBB6 /* games */,
-				23391EA815B7535800761268 /* contact import */,
+				F4A9D8F7157A864B0015D977 /* page_loading.png */,
 				F4FB354A15E2CE1D006FD40E /* PTChatViewController.h */,
 				F4FB354B15E2CE1D006FD40E /* PTChatViewController.m */,
-				23AD27E715DA9F4000279018 /* PTPlaydateDelegate.h */,
 				237B24AD157D191400FC288E /* PTDateViewController.h */,
 				237B24AE157D191500FC288E /* PTDateViewController.m */,
 				237B24AF157D191500FC288E /* PTDateViewController.xib */,
@@ -3539,15 +3689,16 @@
 				F4E3EAE7157FAAD300A218EC /* PTDiagnosticViewController.m */,
 				F4E3EAE8157FAAD300A218EC /* PTDiagnosticViewController.xib */,
 				F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */,
-				F4A9D8F7157A864B0015D977 /* PTDialpadViewController.m */,
-				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
-				F420B7401585BA1800DCAF10 /* TransitionController.m */,
+				F4A94F3716247C8B000D428F /* PTDialpadViewController.m */,
 				F4EAC41315866DE200BE086B /* PTLoadingViewController.h */,
 				F4EAC41415866DE200BE086B /* PTLoadingViewController.m */,
 				F4EAC41515866DE200BE086B /* PTLoadingViewController.xib */,
+				23AD27E715DA9F4000279018 /* PTPlaydateDelegate.h */,
 				23AD27EC15DA9FCB00279018 /* PTPlaydateEndViewController.h */,
 				23AD27ED15DA9FCC00279018 /* PTPlaydateEndViewController.m */,
 				23AD27EE15DA9FCC00279018 /* PTPlaydateEndViewController.xib */,
+				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
+				F420B7401585BA1800DCAF10 /* TransitionController.m */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -4269,6 +4420,68 @@
 				23A90AA9161F74E300CA6954 /* account-creation-success@2x.png in Resources */,
 				23A90AAA161F74E300CA6954 /* push-notification-info.png in Resources */,
 				23A90AAB161F74E300CA6954 /* push-notification-info@2x.png in Resources */,
+				F4A94F18162478AC000D428F /* logo_loading.gif in Resources */,
+				F4A94F1916247A2E000D428F /* page_loading.png in Resources */,
+				F4A94F1A16247A3B000D428F /* profile_default_2.png in Resources */,
+				F4A94F1B16247A49000D428F /* login_bg.png in Resources */,
+				F4A94F1C16247A5F000D428F /* 144.png in Resources */,
+				F4A94F1D16247A6B000D428F /* 72.png in Resources */,
+				F4A94F1E16247A90000D428F /* add-family.png in Resources */,
+				F4A94F1F16247B4C000D428F /* dual-form-field.png in Resources */,
+				F4A94F2016247B53000D428F /* dual-form-field-depressed.png in Resources */,
+				F4A94F2116247B56000D428F /* done.png in Resources */,
+				F4A94F2216247B59000D428F /* done-press.png in Resources */,
+				F4A94F2316247B5D000D428F /* dialpad-pending.png in Resources */,
+				F4A94F2416247B60000D428F /* dialad-live.png in Resources */,
+				F4A94F2516247B63000D428F /* Default-Landscape~ipad.png in Resources */,
+				F4A94F2616247B66000D428F /* date_bg.png in Resources */,
+				F4A94F2716247B6A000D428F /* create-password.png in Resources */,
+				F4A94F2816247B6D000D428F /* crank-nav.png in Resources */,
+				F4A94F2916247B71000D428F /* cover_loading.png in Resources */,
+				F4A94F2A16247B74000D428F /* contact-info.png in Resources */,
+				F4A94F2B16247B77000D428F /* CloseBookPressed.png in Resources */,
+				F4A94F2C16247B7A000D428F /* CloseBookNormal.png in Resources */,
+				F4A94F2D16247B7E000D428F /* border.png in Resources */,
+				F4A94F2E16247B82000D428F /* arrow-error.png in Resources */,
+				F4A94F2F16247B9C000D428F /* EndCallCrankNormal.png in Resources */,
+				F4A94F3016247BAB000D428F /* EndCallCrankPressed.png in Resources */,
+				F4A94F3116247BBA000D428F /* EndPlaydatePopupBg.png in Resources */,
+				F4A94F3216247BD0000D428F /* EndPlaydatePopupButton.png in Resources */,
+				F4A94F3316247BE1000D428F /* error-alert.png in Resources */,
+				F4A94F3416247BF1000D428F /* error-header.png in Resources */,
+				F4A94F3516247C01000D428F /* form-field-depressed.png in Resources */,
+				F4A94F3616247C24000D428F /* form-field.png in Resources */,
+				F4A94F5116247CF7000D428F /* allow-push.png in Resources */,
+				F4A94F5216247CF7000D428F /* allow-push@2X.png in Resources */,
+				F4A94F5316247CF8000D428F /* b-day.png in Resources */,
+				F4A94F5416247CF8000D428F /* b-day@2X.png in Resources */,
+				F4A94F5516247CF8000D428F /* buddy-point.png in Resources */,
+				F4A94F5616247CF8000D428F /* buddy-point@2X.png in Resources */,
+				F4A94F5716247CF8000D428F /* close-activity.png in Resources */,
+				F4A94F5816247CF8000D428F /* close-activity@2x.png in Resources */,
+				F4A94F5916247CF8000D428F /* end-call.png in Resources */,
+				F4A94F5A16247CF8000D428F /* end-call@2X.png in Resources */,
+				F4A94F5B16247CF8000D428F /* invite-fam.png in Resources */,
+				F4A94F5C16247CF8000D428F /* invite-fam@2X.png in Resources */,
+				F4A94F5D16247CF8000D428F /* invite-one-person.png in Resources */,
+				F4A94F5E16247CF8000D428F /* invite-one-person@2X.png in Resources */,
+				F4A94F5F16247CF8000D428F /* invite_buddies.png in Resources */,
+				F4A94F6016247CF8000D428F /* invite_buddies@2X.png in Resources */,
+				F4A94F6116247CF8000D428F /* point-here.png in Resources */,
+				F4A94F6216247CF8000D428F /* point-here@2X.png in Resources */,
+				F4A94F6316247CF8000D428F /* test-call.png in Resources */,
+				F4A94F6416247CF8000D428F /* test-call@2X.png in Resources */,
+				F4A94F6516247CF8000D428F /* turn-page.png in Resources */,
+				F4A94F6616247CF8000D428F /* turn-page@2X.png in Resources */,
+				F4A94F6916247D77000D428F /* Solo-profile-pic.png in Resources */,
+				F4A94F6A16247D77000D428F /* Solo-profile-pic@2X.png in Resources */,
+				F4A94F7B16247EB3000D428F /* Solo_Book.mp4 in Resources */,
+				F4A94F7C16247EB3000D428F /* Solo_Games.mp4 in Resources */,
+				F4A94F7D16247EB3000D428F /* Solo_Hi.mp4 in Resources */,
+				F4A94F7E16247EB3000D428F /* Solo_HiToybox.mp4 in Resources */,
+				F4A94F7F16247EB3000D428F /* Solo_MePoint.mp4 in Resources */,
+				F4A94F8016247EB3000D428F /* Solo_Toybox.mp4 in Resources */,
+				F4A94F8116247EB3000D428F /* Solo_YouPoint.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4279,7 +4492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4A9D8F8157A86620015D977 /* PTDialpadViewController.m in Sources */,
+				F4A9D8F8157A86620015D977 /* page_loading.png in Sources */,
 				F4A9D5E11576B5950015D977 /* main.m in Sources */,
 				F4A9D5E51576B5950015D977 /* PTAppDelegate.m in Sources */,
 				F4A9D72E1576C1B50015D977 /* UABeveledLoadingIndicator.m in Sources */,
@@ -4457,6 +4670,7 @@
 				F4A94EC11623C44A000D428F /* AFURLConnectionOperation.m in Sources */,
 				F4A94EC21623C44A000D428F /* AFXMLRequestOperation.m in Sources */,
 				F4A94EC31623C44A000D428F /* UIImageView+AFNetworking.m in Sources */,
+				F4A94F3816247C8C000D428F /* PTDialpadViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
