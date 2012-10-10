@@ -166,7 +166,6 @@
 		8A1B91BC16160E6600B4BF46 /* UIImageView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B91BB16160E6600B4BF46 /* UIImageView+Animations.m */; };
 		8A34AEC715E4B762002B13F5 /* PTTictactoeEndGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC615E4B762002B13F5 /* PTTictactoeEndGameRequest.m */; };
 		8A34AECA15E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A34AEC915E4CBF2002B13F5 /* PTTictactoeRefreshGameRequest.m */; };
-		8A51067B15FA5DBE000EC244 /* PTDateViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 237B24AD157D191400FC288E /* PTDateViewController.h */; };
 		8A5AC2C016028859000BA3F6 /* memory-title.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A5AC2BE16028859000BA3F6 /* memory-title.png */; };
 		8A5AC2C116028859000BA3F6 /* memory-title@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A5AC2BF16028859000BA3F6 /* memory-title@2X.png */; };
 		8A5AC2C416028875000BA3F6 /* memory-winner.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A5AC2C216028875000BA3F6 /* memory-winner.png */; };
@@ -4540,7 +4539,6 @@
 				F4A9D8FB157A86A20015D977 /* PTPlaymateButton.m in Sources */,
 				F4A9D8FE157A86C20015D977 /* UIView+PlayTell.m in Sources */,
 				F4A9D905157AAAC40015D977 /* PTPlaydate.m in Sources */,
-				8A51067B15FA5DBE000EC244 /* PTDateViewController.h in Sources */,
 				F4A9D909157AB17F0015D977 /* PTMockPlaymateFactory.m in Sources */,
 				237B24B0157D191500FC288E /* PTDateViewController.m in Sources */,
 				F4A9D90C157ABB070015D977 /* PTPlayTellPusher.m in Sources */,

@@ -21,7 +21,8 @@
 static PTConcretePlaymateFactory* sharedInstance = nil;
 
 @implementation PTConcretePlaymateFactory
-@synthesize playmates, robotPlaymates=_robotPlaymates;
+@synthesize playmates;
+@synthesize robotPlaymates = _robotPlaymates;
 
 + (PTConcretePlaymateFactory*)sharedFactory {
     if(!sharedInstance) {
@@ -85,7 +86,7 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
                           failure:(void(^)(NSError* error))failure {
     
     if (!token || [token isEqualToString:@""]) {
-        self.playmates = self.robotPlaymates;
+        self.playmates = [NSMutableArray arrayWithArray:self.robotPlaymates];
         if (success) {
             success();
         }
@@ -118,7 +119,7 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
             [reqeust start];
         }
         NSArray* robots = [self robotPlaymates];
-        self.playmates = [robots arrayByAddingObjectsFromArray:self.playmates];
+        self.playmates = [NSMutableArray arrayWithArray:[robots arrayByAddingObjectsFromArray:self.playmates]];
         
         if (success) {
             success();

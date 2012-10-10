@@ -611,17 +611,17 @@
     int numCards = NUM_MEMORY_CARDS;
     
     // Find playmate user id
-    PTPlaymate *playmate;
+    PTPlaymate *aPlaymate;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        playmate = self.playdate.playmate;
+        aPlaymate = self.playdate.playmate;
     } else {
-        playmate = self.playdate.initiator;
+        aPlaymate = self.playdate.initiator;
     }
 
     PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
                                  auth_token:[[PTUser currentUser] authToken]
-                                playmate_id:[NSString stringWithFormat:@"%d", playmate.userID]
+                                playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
                                 initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                    theme_ID:@"19"
                             num_total_cards:[NSString stringWithFormat:@"%d", numCards]
@@ -639,7 +639,7 @@
                                                                                                                 playdate:self.playdate
                                                                                                                   myTurn:YES
                                                                                                                  boardID:[board_id integerValue]
-                                                                                                              playmateID:playmate.userID
+                                                                                                              playmateID:aPlaymate.userID
                                                                                                              initiatorID:[[PTUser currentUser] userID]
                                                                                                             allFilenames:allFilenames
                                                                                                                 numCards:numCards];
@@ -899,11 +899,11 @@
     filenames = [filenames substringWithRange:NSMakeRange(2, [filenames length] - 4)];
     NSArray *allFilenames = [filenames componentsSeparatedByString:@"\",\""];
     
-    PTPlaymate *playmate;
+    PTPlaymate *aPlaymate;
     if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        playmate = self.playdate.playmate;
+        aPlaymate = self.playdate.playmate;
     } else {
-        playmate = self.playdate.initiator;
+        aPlaymate = self.playdate.initiator;
     }
     
     // Someone invited us to play
@@ -916,7 +916,7 @@
                                                                                     myTurn:NO
                                                                                    boardID:board_id
                                                                                 playmateID:[[PTUser currentUser] userID]
-                                                                               initiatorID:playmate.userID
+                                                                               initiatorID:aPlaymate.userID
                                                                               allFilenames:allFilenames
                                                                                   numCards:numCards];
 
