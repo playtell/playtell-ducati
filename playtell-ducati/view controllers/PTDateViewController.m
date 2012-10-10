@@ -153,27 +153,6 @@
 //#endif
 }
 
-- (void)setPlaymatePhoto {
-    // Pick out the other user
-#if !(TARGET_IPHONE_SIMULATOR)
-    if (self.playdate) {
-        PTPlaymate* otherUser;
-        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-            otherUser = self.playdate.playmate;
-        } else {
-            otherUser = self.playdate.initiator;
-        }
-        
-        UIImage* otherUserPhoto = (otherUser.userPhoto) ? otherUser.userPhoto : [self placeholderImage];
-        [self.chatView setLoadingImageForLeftView:otherUserPhoto
-                                      loadingText:otherUser.username];
-    } else {
-        [self.chatView setLoadingImageForLeftView:[self placeholderImage]
-                                      loadingText:@""];
-    }
-#endif
-}
-
 - (UIImage*)placeholderImage {
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
@@ -513,10 +492,6 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
-#if !(TARGET_IPHONE_SIMULATOR)
-    [self setCurrentUserPhoto];
-    [self setPlaymatePhoto];
-#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -714,14 +689,6 @@
              [self transitionToDialpad];
          }];
     }
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-#if !(TARGET_IPHONE_SIMULATOR)
-    [self.chatView removeFromSuperview];
-    self.chatView = nil;
-#endif
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
