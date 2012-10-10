@@ -507,7 +507,8 @@
 }
 
 
-- (void)initiatePlaydateRequestWithPlaymate:(PTPlaymate *)playmate {
+- (void)initiatePlaydateRequestWithPlaymate:(PTPlaymate *)playmate
+                                       view:(PTPlaymateView *)playmateView {
     LOGMETHOD;
     // Initiate playdate request
     // TODO This check needs to go away at some point...
@@ -515,8 +516,9 @@
     UIImage *playmateImage = [playmate userPhoto];
     UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
     CGRect buttonRect = CGRectZero;
-    buttonRect.origin = [self.view convertPoint:buttonRect.origin
+    buttonRect.origin = [self.view convertPoint:playmateView.frame.origin
                                        fromView:self.scrollView];
+    buttonRect.size = playmateImageView.frame.size;
     playmateImageView.frame = buttonRect;
     playmateImageView.layer.cornerRadius = 6.0;
     playmateImageView.clipsToBounds = YES;
@@ -953,7 +955,7 @@
     }
     
     // We are initiating a playdate request
-    [self initiatePlaydateRequestWithPlaymate:playmate];
+    [self initiatePlaydateRequestWithPlaymate:playmate view:playmateView];
 }
 
 - (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
