@@ -75,7 +75,7 @@
     CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
                                constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
     CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 55,
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 155,
                                   labelSize.width, labelSize.height);
     UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
     welcomeLabel.text = welcomeText;
@@ -84,7 +84,7 @@
     welcomeLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:welcomeLabel];
     
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 115, 1024, 633)];
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 200, 1024, 548)];
     [self.view addSubview:self.scrollView];
 
     // Get the ChatViewController
