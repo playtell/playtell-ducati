@@ -11,8 +11,7 @@
 @class PTLoginViewController;
 
 @protocol PTLoginViewControllerDelegate <NSObject>
-- (void)loginControllerDidLogin:(PTLoginViewController*)controller;
-- (void)createNewAccount:(PTLoginViewController*)controller;
+    - (void)loginControllerDidLogin:(PTLoginViewController*)controller;
 @end
 
 @interface PTLoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
@@ -39,9 +38,6 @@
 @property (nonatomic) id<PTLoginViewControllerDelegate> delegate;
 @property (nonatomic, strong) NSString *initialEmailAddress;
 
-- (IBAction)doneButtonPressed:(id)sender;
-- (IBAction)createAccount:(id)sender;
-- (IBAction)testShowErrors:(id)sender;
 - (IBAction)signInDidPress:(id)sender;
 
 @end
