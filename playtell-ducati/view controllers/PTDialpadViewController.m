@@ -577,21 +577,6 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:self.dateController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-    PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-    [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:aPlaymate.userID]
-                                          authToken:[[PTUser currentUser] authToken]
-                                          onSuccess:^(NSDictionary *result)
-     {
-         LogInfo(@"playdateCreateWithFriend response: %@", result);
-         PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                        playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-         [self.dateController setPlaydate:aPlaydate];
-         self.dateController = nil;
-     } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         LogError(@"playdateCreateWithFriend failed: %@", error);
-     }
-     ];
-    LogInfo(@"Requesting playdate...");
 }
 
 - (void)joinPlaydate {
