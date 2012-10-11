@@ -423,6 +423,12 @@
     }
 #endif
     
+    // Subscribe to playmate joined events so we can use analytics
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(pusherDidReceivePlaydateJoinedNotification:)
+                                                 name:PTPlayTellPusherDidReceivePlaydateJoinedEvent
+                                               object:nil];
+    
     // Subscribe to backgrounding notifications, so we can subscribe to foregrounding
     // notifications at the time of backgrounding.
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -727,6 +733,16 @@
 
 #pragma mark -
 #pragma mark Pusher notification handlers
+
+- (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
+    PTPlaydate* joinedPlaydate = [[note userInfo] valueForKey:PTPlaydateKey];
+    
+    // Make sure the information is about this playdate
+    if (joinedPlaydate.initiator.userID == [[PTUser currentUser] userID] && joinedPlaydate.playmate.userID == playmate.userID) {
+        // Send analytics event for joining a playdate
+        [PTAnalytics sendEventNamed:EventPlaymateJoinedMyPlaydate withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
+    }
+}
 
 - (void)pusherPlayDateTurnPage:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
