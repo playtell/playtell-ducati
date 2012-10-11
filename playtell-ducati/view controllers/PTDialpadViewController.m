@@ -8,6 +8,7 @@
 //
 
 #import "Logging.h"
+#import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
@@ -548,6 +549,9 @@
                  [self.chatController connectToOpenTokSession];
                  [self.dateController setPlaydate:aPlaydate];
                  self.dateController = nil;
+                 
+                 // Send analytics an event for creating a playdate
+                 [PTAnalytics sendEventNamed:EventPlaydateCreated withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
              } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                  LogError(@"playdateCreateWithFriend failed: %@", error);
              }];
@@ -619,6 +623,9 @@
     }
     
     [self endRinging];
+    
+    // Send analytics event for joining a playdate
+    [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
 }
 
 #pragma mark - Ringer methods

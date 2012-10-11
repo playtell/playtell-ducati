@@ -9,6 +9,7 @@
 #import "AFImageRequestOperation.h"
 #import "Crittercism.h"
 #import "Logging.h"
+#import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "PTChatViewController.h"
 #import "PTConcretePlaymateFactory.h"
@@ -47,6 +48,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Setup analytics
+    [PTAnalytics startAnalytics];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone]; //set status bar hidden
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -98,6 +102,9 @@
 
 - (void)runLoggedInWorkflow {
     PTUser* currentUser = [PTUser currentUser];
+    
+    // Set the username in analytics
+    [PTAnalytics setUniqueId:currentUser.username];
 
     // Fetch the current users's photo
     NSURLRequest* urlRequest = [NSURLRequest requestWithURL:currentUser.photoURL];
@@ -195,6 +202,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     [UAirship land];
+    [PTAnalytics flush];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

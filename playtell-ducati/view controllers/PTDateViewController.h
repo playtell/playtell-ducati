@@ -64,6 +64,10 @@
     
     // Fingers
     NSMutableDictionary *fingerViews;
+    
+    // Analytics
+    NSDate *bookStart;
+    NSDate *playdateStart;
 }
 
 @property (nonatomic) PTPlaydate *playdate;

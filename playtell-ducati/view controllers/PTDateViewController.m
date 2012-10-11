@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Logging.h"
+#import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
 
@@ -86,6 +87,9 @@
     self.chatController = appDelegate.chatController;
 //    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
+    
+    // Set the start time for use with analytics
+    playdateStart = [NSDate date];
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -437,6 +441,9 @@
 }
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
+    // We don't want to record an interrupted session in analytics, so clear the start time
+    bookStart = nil;
+    playdateStart = nil;
     
     // Subscribe to foregrounding changes. The date controller will need to check the validity
     // of the current playdate any time it re-enters the foreground (as the playmate may have
@@ -512,6 +519,22 @@
 }
 
 - (void)transitionToDialpad {
+    // Send analytics an event for playdate ending
+    if (playdateStart) {
+        NSTimeInterval interval = fabs([playdateStart timeIntervalSinceNow]);
+        playdateStart = nil;
+        
+        PTPlaymate *partner;
+        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+            partner = self.playdate.playmate;
+        } else {
+            partner = self.playdate.initiator;
+        }
+        
+        [PTAnalytics sendEventNamed:EventPlaydateEnded withProperties:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:interval], PropDuration,
+                                         partner.username, PropPlaymateId, nil]];
+    }
+    
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController connectToPlaceholderOpenTokSession];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -578,6 +601,10 @@
      {
          NSLog(@"%@", result);  //TODOGIANCARLO valueforkey@"games"
          
+         // Send analytics an event for starting the game
+         [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Tictactoe", PropGameName,
+                                          aPlaymate.username, PropPlaymateId, nil]];
+         
          NSString *board_id = [result valueForKey:@"board_id"];
          
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -626,6 +653,9 @@
                                    theme_ID:@"19"
                             num_total_cards:[NSString stringWithFormat:@"%d", numCards]
                                   onSuccess:^(NSDictionary *result) {
+                                      // Send analytics an event for starting the game
+                                      [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Memory", PropGameName, aPlaymate.username, PropPlaymateId, nil]];
+                                      
                                       // Get response parameters
                                       NSString *board_id = [result valueForKey:@"board_id"];
                                       NSString *filenames = [result valueForKey:@"filename_dump"];
@@ -1219,11 +1249,31 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewController:didOpenBookWithID:)]) {
         [self.delegate dateViewController:self didOpenBookWithID:[bookId integerValue]];
     }
+    
+    // Record the time of book opening for analytics
+    bookStart = [NSDate date];
 }
 
 - (void)bookClosedWithId:(NSNumber *)bookId AndView:(PTBookView *)bookView {
     isBookOpen = NO;
     [booksParentView setIsBookOpen:NO];
+    
+    // Send analytics an event for book closing
+    if (bookStart) {
+        NSTimeInterval interval = fabs([bookStart timeIntervalSinceNow]);
+        bookStart = nil;
+        
+        PTPlaymate *partner;
+        if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+            partner = self.playdate.playmate;
+        } else {
+            partner = self.playdate.initiator;
+        }
+        
+        [PTAnalytics sendEventNamed:EventBookRead withProperties:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:interval], PropDuration,
+                                         partner.username, PropPlaymateId,
+                                         bookId, PropBookId, nil]];
+    }
 }
 
 - (void)beginBookPageLoading {
