@@ -408,7 +408,6 @@
                 txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 txtEmail.tag = 0;
                 txtEmail.delegate = self;
-                txtEmail.text = @"dimitry@playtell.com";
                 
                 activityEmailView.frame = CGRectMake(200.0f, 1.0f, 20.0f, 20.0f);
                 activityEmailView.hidesWhenStopped = YES;
@@ -429,7 +428,6 @@
                 txtPassword.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 txtPassword.tag = 1;
                 txtPassword.delegate = self;
-                txtPassword.text = @"ng";
                 cell.accessoryView = txtPassword;
                 break;
             }

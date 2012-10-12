@@ -19,6 +19,19 @@
 #import "PTNewUserBirthdateViewController.h"
 #import "UIImage+Resize.h"
 
+// iOS 6 hack to make UIImagePickerController work in landscape
+
+@interface NonRotatingUIImagePickerController : UIImagePickerController
+@end
+
+@implementation NonRotatingUIImagePickerController
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+@end
+
+// End hack
+
 @interface PTNewUserPhotoViewController ()
 
 @end
@@ -38,7 +51,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
         
         // Camera control
-        camera = [[UIImagePickerController alloc] init];
+        camera = [[NonRotatingUIImagePickerController alloc] init];
         camera.delegate = self;
         camera.allowsEditing = YES;
         self.cameraPopoverController = [[UIPopoverController alloc] initWithContentViewController:camera];

@@ -84,10 +84,11 @@
 
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
+//    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
     
     [self setupRinger];
-//    [self beginRinging];
+    [self beginRinging];
     
     // Set the start time for use with analytics
     playdateStart = [NSDate date];
