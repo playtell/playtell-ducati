@@ -59,28 +59,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Setup tooltips
+    ttWaitYourTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 260.0f, 168.0f)];
+    ttWaitYourTurn.center = CGPointMake([UIScreen mainScreen].bounds.size.height / 2.0f, [UIScreen mainScreen].bounds.size.width / 2.0f);
+    ttWaitYourTurn.image = [UIImage imageNamed:@"wait-your-turn.png"];
+    ttWaitYourTurn.hidden = YES;
+    [self.view addSubview:ttWaitYourTurn];
+    
+    // Winner/loser views
+    winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 503.0f, 394.0f)];
+    winnerView.center = ttWaitYourTurn.center;
+    winnerView.image = [UIImage imageNamed:@"winner.png"];
+    winnerView.alpha = 0.0f;
+    loserView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 503.0f, 394.0f)];
+    loserView.center = ttWaitYourTurn.center;
+    loserView.image = [UIImage imageNamed:@"defeated.png"];
+    loserView.alpha = 0.0f;
+    
     // Add cards to board
-    cards = [NSMutableArray arrayWithCapacity:[filenames count]];
-    for (int i=0; i<[filenames count]; i++) {
-        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i]
-                                                                    backFilename:@"card-back.png"
-                                                                    indexOnBoard:i
-                                                                   numberOfCards:numCards];
-        [card.card setFrame:CGRectMake(card.coordinates.boardX,
-                                       card.coordinates.boardY,
-                                       card.size.width,
-                                       card.size.height)];
-        card.card.hidden = YES;
-        card.card.alpha = 0.0f;
-        card.delegate = self;
-        [self.view addSubview:card.card];
-        [cards addObject:card];
-    }
+    [self setupCards];
 
     // Display chat HUD?
-#if !(TARGET_IPHONE_SIMULATOR)
     [self.view addSubview:self.chatController.view];
-#endif
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -95,6 +95,13 @@
     
     // Setup sounds
     [self setupSounds];
+    
+    // Whose turn is it?
+    if ([PTUser currentUser].userID == initiatorID) {
+        [scoreViewMe showYourTurn:YES delay:YES];
+    } else {
+        [scoreViewOpponent showYourTurn:YES delay:YES];
+    }
 }
 
 - (void)viewDidUnload {
@@ -103,15 +110,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     // Show all cards
-    for (PTMemoryGameCard *card in cards) {
-        card.card.hidden = NO;
-    }
-    [UIView animateWithDuration:0.4f animations:^{
-        for (PTMemoryGameCard *card in cards) {
-            card.card.hidden = NO;
-            card.card.alpha = 1.0f;
-        }
-    }];
+    [self showCards];
 }
 
 - (void)dealloc {
@@ -123,7 +122,60 @@
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
+#pragma mark - Tooltip methods
+
+- (void)showWaitYourTurn {
+    [ttWaitYourTurn.layer removeAllAnimations];
+    ttWaitYourTurn.alpha = 0.0f;
+    ttWaitYourTurn.hidden = NO;
+    [UIView animateWithDuration:0.4f animations:^{
+        ttWaitYourTurn.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        [self performSelector:@selector(hideWaitYourTurn) withObject:nil afterDelay:2.0f];
+    }];
+}
+
+- (void)hideWaitYourTurn {
+    [ttWaitYourTurn.layer removeAllAnimations];
+    [UIView animateWithDuration:0.4f animations:^{
+        ttWaitYourTurn.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        ttWaitYourTurn.hidden = YES;
+    }];
+}
+
 #pragma mark - Card methods
+
+- (void)setupCards {
+    cards = [NSMutableArray arrayWithCapacity:[filenames count]];
+    for (int i=0; i<[filenames count]; i++) {
+        PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i]
+                                                                    backFilename:@"card-back.png"
+                                                                    indexOnBoard:i
+                                                                   numberOfCards:numCards];
+        [card setFrame:CGRectMake(card.coordinates.boardX,
+                                  card.coordinates.boardY,
+                                  card.size.width,
+                                  card.size.height)];
+        card.containerView.hidden = YES;
+        card.containerView.alpha = 0.0f;
+        card.delegate = self;
+        [self.view insertSubview:card.containerView belowSubview:ttWaitYourTurn];
+        [cards addObject:card];
+    }
+}
+
+- (void)showCards {
+    for (PTMemoryGameCard *card in cards) {
+        card.containerView.hidden = NO;
+    }
+    [UIView animateWithDuration:0.4f animations:^{
+        for (PTMemoryGameCard *card in cards) {
+            card.containerView.hidden = NO;
+            card.containerView.alpha = 1.0f;
+        }
+    }];
+}
 
 - (PTMemoryGameCard *)getCardByIndex:(NSInteger)index {
     if (index < [cards count]) {
@@ -134,14 +186,21 @@
 
 - (void)disableCards {
     for (PTMemoryGameCard *card in cards) {
-        card.card.enabled = NO;
+        [card disableCard];
     }
 }
 
 - (void)enableCards {
     for (PTMemoryGameCard *card in cards) {
-        card.card.enabled = YES;
+        [card enableCard];
     }
+}
+
+- (void)removeCards {
+    for (PTMemoryGameCard *card in cards) {
+        [card.containerView removeFromSuperview];
+    }
+    cards = nil;
 }
 
 #pragma mark - Sound methods
@@ -199,59 +258,70 @@
 #pragma mark - Game update UI methods
 
 - (void)displayYouWin {
-    CGRect imageframe = CGRectMake(297,262,503,407);
-    UIImageView *win = [[UIImageView alloc] initWithFrame:imageframe];
-    
-    win.image = [UIImage imageNamed:@"winner.png"];
-    [self beginSound:(id)[NSNumber numberWithInt:WIN_SOUND]];
-    
-    //Set alpha
-    win.alpha = 1;
-    win.animationDuration = 5.75;
-    [win startAnimating];
-    
-    //fade screen here
-    [self.view addSubview:win];
-    [self performSelector:@selector(newGame) withObject:nil afterDelay:2.0];
+    [self.view addSubview:winnerView];
+    [UIView animateWithDuration:0.4f animations:^{
+        winnerView.alpha = 1.0f;
+    }];
 }
 
 - (void)displayYouLost {
-    CGRect imageframe = CGRectMake(297,292,503,394);
-    UIImageView *defeat = [[UIImageView alloc] initWithFrame:imageframe];
-    
-    defeat.image = [UIImage imageNamed:@"defeated.png"];
-    [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
-    
-    defeat.animationDuration = 5.75;
-    //Set alpha
-    defeat.alpha = 1;
-    [defeat startAnimating];
-    
-    //TODOGIANCARLO fade screen here
-    [self.view addSubview:defeat];
+    [self.view addSubview:loserView];
+    [UIView animateWithDuration:0.4f animations:^{
+        loserView.alpha = 1.0f;
+    }];
+}
+
+- (void)resetGame {
+    // Since inititor may have changed, find out real playmate
+    // It changes if user that won wasn't the original initiator
+    // If they won, they should be the new initiator so they can have the first turn
+    NSInteger newPlaymateId;
+    if ([PTUser currentUser].userID == initiatorID) {
+        newPlaymateId = playmateID;
+    } else {
+        newPlaymateId = initiatorID;
+    }
+
+    // API call to reset the game
+    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    PTMemoryRefreshGameRequest *memoryRefreshGameRequest = [[PTMemoryRefreshGameRequest alloc] init];
+    [memoryRefreshGameRequest refreshBoardWithPlaydateId:[NSNumber numberWithInteger:playdate.playdateID]
+                                               authToken:[PTUser currentUser].authToken
+                                             playmate_id:[NSString stringWithFormat:@"%i", newPlaymateId]
+                                             initiatorId:[NSString stringWithFormat:@"%i", [PTUser currentUser].userID]
+                                               onSuccess:nil
+                                                theme_ID:@"19"
+                                         num_total_cards:[NSString stringWithFormat:@"%i", randNumCards]
+                                         already_playing:@"YES"
+                                               onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                   NSLog(@"Error: %@", error);
+                                                   NSLog(@"Error: %@", JSON);
+                                               }];
 }
 
 - (void)handleGameTurnWithStatusCode:(NSInteger)statusCode
                           playmateId:(NSInteger)currentPlayerId
-                                turn:(NSInteger)whoseTurn {
-//#define MATCH_FOUND 0
-//#define MATCH_ERROR 1
-//#define FLIP_FIRST_CARD 2
-//#define MATCH_WINNER 3
+                                turn:(NSInteger)whoseTurn
+                      initiatorScore:(NSInteger)initiatorScore
+                       playmateScore:(NSInteger)playmateScore
+                            winnerId:(NSNumber *)winnderId {
 
-    NSLog(@"Status code: %i", statusCode);
     switch (statusCode) {
         // Match found!
         case MATCH_FOUND: {
             NSLog(@"Match found! Disabling cards. Updating score. Same user can continue.");
-            // TODO: Disable both cards (aka. take them out of the game)
+            // Disable both cards (aka. take them out of the game)
+            PTMemoryGameCard *card1 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex1 integerValue]];
+            PTMemoryGameCard *card2 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex2 integerValue]];
+            [card1 jumpUpDownDelayed:YES];
+            [card2 jumpUpDownDelayed:YES];
 
             // Reset card indices
             cardIndex1 = nil;
             cardIndex2 = nil;
 
-            // TODO: Update score
-            // TODO: Keep the user the same
+            // Update score
+            [self updateScoresWithInitiatorScore:initiatorScore playmateScore:playmateScore];
             break;
         }
         
@@ -261,8 +331,8 @@
             // Flip both cards back
             PTMemoryGameCard *card1 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex1 integerValue]];
             PTMemoryGameCard *card2 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex2 integerValue]];
-            [card1 flipCardDelayed:YES];
-            [card2 flipCardDelayed:YES];
+            [card1 jumpLeftRightDelayed:YES];
+            [card2 jumpLeftRightDelayed:YES];
             
             // Reset card indices
             cardIndex1 = nil;
@@ -270,9 +340,14 @@
             
             // Switch whose turn it is
             isMyTurn = !isMyTurn;
-            // TODO: Visually let person know it's their turn now
+
+            // Visually let person know it's their turn now
             if (isMyTurn == YES) {
-                // ...
+                [scoreViewMe showYourTurn:YES delay:YES];
+                [scoreViewOpponent showYourTurn:NO delay:YES];
+            } else {
+                [scoreViewMe showYourTurn:NO delay:YES];
+                [scoreViewOpponent showYourTurn:YES delay:YES];
             }
             NSLog(@"Is it your turn? %@", isMyTurn ? @"YES" : @"NO");
             break;
@@ -286,15 +361,49 @@
             
         // Match won!
         case MATCH_WINNER: {
-            // TODO: Show winner/loser views
-            // TODO: Update scores
-            // TODO: Start new game after timeout?
             NSLog(@"Match won!");
+            // Disable both cards (aka. take them out of the game)
+            PTMemoryGameCard *card1 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex1 integerValue]];
+            PTMemoryGameCard *card2 = (PTMemoryGameCard *)[cards objectAtIndex:[cardIndex2 integerValue]];
+            [card1 jumpUpDown];
+            [card2 jumpUpDown];
+
+            // Show winner/loser views
+            if ([winnderId integerValue] == [PTUser currentUser].userID) {
+                [self displayYouWin];
+            } else {
+                [self displayYouLost];
+            }
+
+            // Update scores
+            [self updateScoresWithInitiatorScore:initiatorScore playmateScore:playmateScore];
+
+            // Start new game after timeout (let the winner fire off new game call!)
+            if ([winnderId integerValue] == [PTUser currentUser].userID) {
+                [self performSelector:@selector(resetGame) withObject:nil afterDelay:5.0f];
+            }
             break;
         }
     }
 }
 
+- (void)updateScoresWithInitiatorScore:(NSInteger)initiatorScore playmateScore:(NSInteger)playmateScore {
+    NSInteger scoreMe;
+    NSInteger scoreOpponent;
+    
+    // Which score is which?
+    if ([PTUser currentUser].userID == initiatorID) {
+        scoreMe = initiatorScore;
+        scoreOpponent = playmateScore;
+    } else {
+        scoreMe = playmateScore;
+        scoreOpponent = initiatorScore;
+    }
+    
+    // Update labels
+    [scoreViewMe setScore:scoreMe];
+    [scoreViewOpponent setScore:scoreOpponent];
+}
 
 #pragma mark - End game methods
 
@@ -328,7 +437,6 @@
 
 - (void)pusherPlayDateMemoryPlayTurn:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
-    NSLog(@"pusherPlayDateMemoryPlayTurn: %@", eventData);
     NSInteger statusCode = [[eventData objectForKey:@"status"] integerValue];
     NSInteger currentPlayerId = [[eventData objectForKey:@"playmate_id"] integerValue];
     NSInteger whoseTurn = [[eventData objectForKey:@"turn"] integerValue];
@@ -352,11 +460,67 @@
         
         // Now that 2 cards have been flipped, verify next steps
         if (cardIndex1 != nil && cardIndex2 != nil) {
+            NSInteger initiatorScore = [[eventData objectForKey:@"initiator_score"] integerValue];
+            NSInteger playmateScore = [[eventData objectForKey:@"playmate_score"] integerValue];
+            NSNumber *winnerId = [eventData objectForKey:@"winner_id"];
             [self handleGameTurnWithStatusCode:statusCode
                                     playmateId:currentPlayerId
-                                          turn:whoseTurn];
+                                          turn:whoseTurn
+                                initiatorScore:initiatorScore
+                                 playmateScore:playmateScore
+                                      winnerId:winnerId];
         }
     }
+}
+
+- (void)pusherPlayDateMemoryRefreshGame:(NSNotification *)notification {
+    // Hide winner/loser
+    [UIView animateWithDuration:0.4f
+                     animations:^{
+                         winnerView.alpha = 0.0f;
+                         loserView.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [winnerView removeFromSuperview];
+                         [loserView removeFromSuperview];
+                     }];
+    
+    // Reset all UIViews
+    [self removeCards]; // TODO: Make fadeout
+    [scoreViewMe setScore:0];
+    [scoreViewMe showYourTurn:NO delay:NO];
+    [scoreViewOpponent setScore:0];
+    [scoreViewOpponent showYourTurn:NO delay:NO];
+    
+    // Store data
+    NSDictionary *eventData = notification.userInfo;
+    boardID = [[eventData objectForKey:@"board_id"] integerValue];
+    playmateID = [[eventData objectForKey:@"playmate_id"] integerValue];
+    initiatorID = [[eventData objectForKey:@"initiator_id"] integerValue];
+    numCards = [[eventData objectForKey:@"num_cards"] integerValue];
+    isMyTurn = ([PTUser currentUser].userID == initiatorID);
+    
+    // Store filenames
+    NSString *filenamesStr = [eventData valueForKey:@"filename_dump"];
+    filenamesStr = [filenamesStr substringWithRange:NSMakeRange(2, [filenamesStr length] - 4)];
+    filenames = [filenamesStr componentsSeparatedByString:@"\",\""];
+    
+    // Blank card indices
+    cardIndex1 = nil;
+    cardIndex2 = nil;
+    
+    // Show whose turn
+    if ([PTUser currentUser].userID == initiatorID) {
+        [scoreViewMe showYourTurn:YES delay:NO];
+    } else {
+        [scoreViewOpponent showYourTurn:YES delay:NO];
+    }
+    
+    // Setup the cards
+    [self setupCards];
+    
+    // Show all cards
+    [self showCards];
 }
 
 #pragma mark - End playdate methods
@@ -406,6 +570,7 @@
 - (BOOL)memoryGameCardShouldFlip:(NSInteger)index {
     // Is it my turn?
     if (isMyTurn == NO) {
+        [self showWaitYourTurn];
         return NO;
     }
     
@@ -440,8 +605,6 @@
                                    card1_index:cardIndex1
                                    card2_index:cardIndex2
                                      onSuccess:^(NSDictionary *result) {
-                                         NSLog(@"Success API: %@", result);
-
                                          // Get needed data
                                          NSInteger statusCode = [[result objectForKey:@"status"] integerValue];
                                          NSInteger currentPlayerId = [[result objectForKey:@"playmate_id"] integerValue];
@@ -449,9 +612,15 @@
                                          
                                          // Now that 2 cards have been flipped, verify next steps
                                          if (cardIndex1 != nil && cardIndex2 != nil) {
+                                             NSInteger initiatorScore = [[result objectForKey:@"initiator_score"] integerValue];
+                                             NSInteger playmateScore = [[result objectForKey:@"playmate_score"] integerValue];
+                                             NSNumber *winnerId = [result objectForKey:@"winner_id"];
                                              [self handleGameTurnWithStatusCode:statusCode
                                                                      playmateId:currentPlayerId
-                                                                           turn:whoseTurn];
+                                                                           turn:whoseTurn
+                                                                 initiatorScore:initiatorScore
+                                                                  playmateScore:playmateScore
+                                                                       winnerId:winnerId];
                                          }
                                      } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                          NSLog(@"FAIL API: %@", error);

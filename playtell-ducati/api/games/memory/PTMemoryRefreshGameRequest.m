@@ -20,8 +20,8 @@
                           theme_ID:(NSString *)theme_id
                    num_total_cards:(NSString *)num_total_cards
                    already_playing:(NSString *)already_playing
-                         onFailure:(PTMemoryRefreshGameRequestFailureBlock)failure
-{
+                         onFailure:(PTMemoryRefreshGameRequestFailureBlock)failure {
+
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     playdate_id, @"playdate_id",
                                     token, @"authentication_token",

@@ -646,7 +646,7 @@
 }
 
 - (IBAction)playMemoryGame:(id)sender {
-    int numCards = NUM_MEMORY_CARDS;
+//    int numCards = NUM_MEMORY_CARDS;
     
     // Find playmate user id
     PTPlaymate *aPlaymate;
@@ -655,6 +655,8 @@
     } else {
         aPlaymate = self.playdate.initiator;
     }
+    
+    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
 
     PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
@@ -662,7 +664,7 @@
                                 playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
                                 initiatorId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                                    theme_ID:@"19"
-                            num_total_cards:[NSString stringWithFormat:@"%d", numCards]
+                            num_total_cards:[NSString stringWithFormat:@"%d", randNumCards]
                                   onSuccess:^(NSDictionary *result) {
                                       // Send analytics an event for starting the game
                                       [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Memory", PropGameName, aPlaymate.username, PropPlaymateId, nil]];
@@ -683,7 +685,7 @@
                                                                                                               playmateID:aPlaymate.userID
                                                                                                              initiatorID:[[PTUser currentUser] userID]
                                                                                                             allFilenames:allFilenames
-                                                                                                                numCards:numCards];
+                                                                                                                numCards:randNumCards];
 #if !(TARGET_IPHONE_SIMULATOR)
                                       [memoryVC setChatController:self.chatController];
 #endif

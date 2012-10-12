@@ -16,6 +16,7 @@
 
 #import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
+#import "UIColor+ColorFromHex.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -127,6 +128,7 @@
                                               success:^(OTPublisher* publisher)
           {
               LogDebug(@"Connected to OpenTok session");
+              NSLog(@"====================================== DONE");
               [self.chatView setRightView:publisher.view];
           } failure:^(NSError* error) {
               LogError(@"Error connecting to OpenTok session: %@", error);
@@ -201,31 +203,23 @@
 - (UIView*)playmatePlaceholderView {
     CGRect dummyFrame = CGRectMake(0, 0, 200, 150);
     UIView *dummyBackground = [[UIView alloc] initWithFrame:dummyFrame];
-    dummyBackground.backgroundColor = [UIColor colorWithRed:0.0f
-                                                      green:0.0f
-                                                       blue:0.0f
-                                                      alpha:0.2f];
-    dummyBackground.layer.cornerRadius = 10.0;
-    dummyBackground.layer.borderColor = [UIColor whiteColor].CGColor;
-    dummyBackground.layer.borderWidth = 6.0;
+    dummyBackground.backgroundColor = [UIColor whiteColor];
     
-    CGSize maxTextSize = CGSizeMake(200.0, CGFLOAT_MAX);
-    NSString* playmateText = NSLocalizedString(@"Playmate",
-                                               @"Playmate placeholder string displayed in chat HUD.");
-    UIFont* textFont = [UIFont fontWithName:@"HelveticaNeue-Bold"
-                                       size:18.0f];
-    CGSize textSize = [playmateText sizeWithFont:textFont
-                               constrainedToSize:maxTextSize];
-    CGRect textFrame = CGRectMake(roundf(CGRectGetMidX(dummyFrame)) - roundf(textSize.width/2.0),
-                                  CGRectGetMaxY(dummyFrame) - 6.0 - textSize.height - 5.0,
-                                  textSize.width,
-                                  textSize.height);
-    UILabel *textLabel = [[UILabel alloc] initWithFrame:textFrame];
-    textLabel.backgroundColor = [UIColor clearColor];
-    textLabel.font = textFont;
-    textLabel.text = playmateText;
-    [dummyBackground addSubview:textLabel];
+    UIView *dummyContent = [[UIView alloc] initWithFrame:CGRectMake(3.0f, 3.0f, dummyFrame.size.width-6.0f, dummyFrame.size.height-6.0f)];
+    dummyContent.backgroundColor = [UIColor colorFromHex:@"#545c60"];
+    dummyContent.layer.cornerRadius = 10.0f;
+    
+    UILabel *lblName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 122.0f, dummyBackground.bounds.size.width-20.0f, 18.0f)];
+    lblName.backgroundColor = [UIColor clearColor];
+    lblName.text = @"Playmate";
+    lblName.textColor = [UIColor whiteColor];
+    lblName.textAlignment = UITextAlignmentCenter;
+    lblName.font = [UIFont boldSystemFontOfSize:15.0f];
+    lblName.shadowColor = [UIColor colorFromHex:@"#000000" alpha:0.6f];
+    lblName.shadowOffset = CGSizeMake(0.0f, 1.0f);
 
+    [dummyBackground addSubview:dummyContent];
+    [dummyBackground addSubview:lblName];
     return dummyBackground;
 }
 

@@ -333,9 +333,9 @@
         [errorsTableView reloadData];
         
         // Update text colors for each textbox
-        txtName.textColor = ([self totalErrorsWithType:@"name"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#38e51e"];
-        txtEmail.textColor = ([self totalErrorsWithType:@"email"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#38e51e"];
-        txtPassword.textColor = ([self totalErrorsWithType:@"password"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#38e51e"];
+        txtName.textColor = ([self totalErrorsWithType:@"name"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#113441"];
+        txtEmail.textColor = ([self totalErrorsWithType:@"email"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#113441"];
+        txtPassword.textColor = ([self totalErrorsWithType:@"password"] > 0) ? [UIColor colorFromHex:@"#f92401"] : [UIColor colorFromHex:@"#113441"];
     }
     
     // Enable next button
@@ -478,7 +478,7 @@
         switch (indexPath.row) {
             case 0: {
                 txtName.frame = CGRectMake(0.0f, 0.0f, 220.0f, 21.0f);
-                txtName.font = [UIFont systemFontOfSize:14.0f];
+                txtName.font = [UIFont boldSystemFontOfSize:16.0f];
                 txtName.placeholder = @"Full Name";
                 txtName.autocorrectionType = UITextAutocorrectionTypeNo;
                 [txtName setClearButtonMode:UITextFieldViewModeNever];
@@ -492,7 +492,7 @@
             case 1: {
                 UIView *txtEmailContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 220.0f, 21.0f)];
                 txtEmail.frame = CGRectMake(0.0f, 0.0f, 220.0f, 21.0f);
-                txtEmail.font = [UIFont systemFontOfSize:14.0f];
+                txtEmail.font = [UIFont boldSystemFontOfSize:16.0f];
                 txtEmail.placeholder = @"Email";
                 txtEmail.autocorrectionType = UITextAutocorrectionTypeNo;
                 [txtEmail setClearButtonMode:UITextFieldViewModeNever];
@@ -512,7 +512,7 @@
             }
             case 2: {
                 txtPassword.frame = CGRectMake(0.0f, 0.0f, 220.0f, 21.0f);
-                txtPassword.font = [UIFont systemFontOfSize:14.0f];
+                txtPassword.font = [UIFont boldSystemFontOfSize:16.0f];
                 txtPassword.secureTextEntry = YES;
                 txtPassword.placeholder = @"Password";
                 txtPassword.autocorrectionType = UITextAutocorrectionTypeNo;

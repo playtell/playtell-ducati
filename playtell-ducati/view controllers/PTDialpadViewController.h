@@ -15,6 +15,7 @@
     NSInteger playdateRequestedViaPushId;
     UIView *loadingView;
     UIView *shimView; // Shim used behind ringing playmate view
+    UIView *signUpBubbleContainer; // SHown only when user isn't logged in
 }
 
 @property (nonatomic, strong) UIScrollView* scrollView;

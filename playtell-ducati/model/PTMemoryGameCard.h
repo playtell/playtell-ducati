@@ -19,8 +19,12 @@
     CGSize size;
     PTMemoryCardCoordinate *coordinates;
     id<PTMemoryGameDelegate> delegate;
+    NSInteger animationCount;
+    UIImageView *placeholderView;
+    UIView *containerView;
 }
 
+@property (nonatomic, retain) UIView *containerView;
 @property (nonatomic, retain) UIButton *card;
 @property (nonatomic, retain) PTMemoryCardCoordinate *coordinates;
 @property (nonatomic) CGSize size;
@@ -30,7 +34,14 @@
                backFilename:(NSString *)back_filename
                indexOnBoard:(NSInteger)board_index
               numberOfCards:(NSInteger)num_cards;
+- (void)setFrame:(CGRect)frame;
 - (void)flipCard;
 - (void)flipCardDelayed:(BOOL)doDelay;
+- (void)disableCard;
+- (void)enableCard;
+- (void)jumpUpDown;
+- (void)jumpLeftRight;
+- (void)jumpLeftRightDelayed:(BOOL)doDelay;
+- (void)jumpUpDownDelayed:(BOOL)doDelay;
 
 @end
