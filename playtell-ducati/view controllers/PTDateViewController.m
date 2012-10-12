@@ -546,6 +546,9 @@
                                          partner.username, PropPlaymateId, nil]];
     }
     
+    // Shutoff the ringer
+    [self endRinging];
+    
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController connectToPlaceholderOpenTokSession];
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -1494,11 +1497,15 @@
 }
 
 - (void)beginRinging {
-    [self.audioPlayer play];
+    if (self.audioPlayer) {
+        [self.audioPlayer play];
+    }
 }
 
 - (void)endRinging {
-    [self.audioPlayer stop];
+    if (self.audioPlayer) {
+        [self.audioPlayer stop];
+    }
 }
 
 #pragma mark -
