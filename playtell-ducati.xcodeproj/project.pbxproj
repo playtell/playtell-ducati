@@ -162,6 +162,8 @@
 		23C26E73162857F900A338EB /* PTPlaymateAddView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C26E72162857F900A338EB /* PTPlaymateAddView.m */; };
 		23C26E7716285CAF00A338EB /* playmate-add-friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E7516285CAF00A338EB /* playmate-add-friends.png */; };
 		23C26E7816285CAF00A338EB /* playmate-add-friends@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E7616285CAF00A338EB /* playmate-add-friends@2x.png */; };
+		23C26E791628644E00A338EB /* yourfinger.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25E15F93D98008D7524 /* yourfinger.png */; };
+		23C26E7A1628644E00A338EB /* yourfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23DAE25F15F93D98008D7524 /* yourfinger@2x.png */; };
 		23C443D215C3244F009536D8 /* PTContactsGetRelatedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */; };
 		23C64E5A161B3D9600C629A2 /* ipad-phone.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E58161B3D9600C629A2 /* ipad-phone.png */; };
 		23C64E5B161B3D9600C629A2 /* ipad-phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */; };
@@ -4750,6 +4752,8 @@
 				1A6E984F1626E16100E63F6C /* README.md in Resources */,
 				23C26E7716285CAF00A338EB /* playmate-add-friends.png in Resources */,
 				23C26E7816285CAF00A338EB /* playmate-add-friends@2x.png in Resources */,
+				23C26E791628644E00A338EB /* yourfinger.png in Resources */,
+				23C26E7A1628644E00A338EB /* yourfinger@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
