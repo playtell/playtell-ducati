@@ -197,7 +197,11 @@
     }
     
     [self.chatController setLeftViewAsPlaceholder];
-    [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
+    if (signUpBubbleContainer != nil) {
+        [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
+    } else {
+        [self.view addSubview:self.chatController.view];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
