@@ -159,6 +159,18 @@ static PTPlayTellPusher* instance = nil;
     [aPlaydateChannel bindToEventNamed:@"pusher:subscription_succeeded" handleWithBlock:^(PTPusherEvent *channelEvent) {
         LogInfo(@"Playdate -> pusher:subscription_succeeded");
     }];
+    
+    // Playmate joined
+    [aPlaydateChannel bindToEventNamed:@"playdate_joined" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        LogInfo(@"Playdate joined: %@", channelEvent);
+        PTPlaydate* playdate = [[PTPlaydate alloc] initWithDictionary:channelEvent.data
+                                                      playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+        
+        NSDictionary* info = [NSDictionary dictionaryWithObject:playdate forKey:PTPlaydateKey];
+        [[NSNotificationCenter defaultCenter] postNotificationName:PTPlayTellPusherDidReceivePlaydateJoinedEvent
+                                                            object:self
+                                                          userInfo:info];
+    }];
 
     // Change book
     [aPlaydateChannel bindToEventNamed:@"change_book" handleWithBlock:^(PTPusherEvent *channelEvent) {

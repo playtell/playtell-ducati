@@ -7,6 +7,7 @@
 //
 
 #import "Logging.h"
+#import "PTAnalytics.h"
 #import "PTCloseActivityTooltip.h"
 #import "PTEndCallToolTip.h"
 #import "PTFriendTouchTooltip.h"
@@ -124,13 +125,8 @@
         [self.friendTooltip addToView:controller.view
                      withCaretAtPoint:CGPointMake(855.0f - 143.0, 525.0f - 152.0)];
         
-        self.closeTooltip.alpha = 0.0f;
-        [self.closeTooltip addToView:controller.view
-                    withCaretAtPoint:CGPointMake(934.0f, 35.0f)];
-        
         [UIView animateWithDuration:0.5 animations:^{
             self.friendTooltip.alpha = 1.0;
-            self.closeTooltip.alpha = 1.0;
         }];
         [self playSecondVideoWithChatController:controller.chatController];
         self.isTouchTipsVisibile = YES;
@@ -157,6 +153,15 @@
 }
 
 - (void)dateViewController:(PTDateViewController *)controller didOpenBookWithID:(NSUInteger)bookID {
+    if (self.closeTooltip.superview != controller.view) {
+        [self.closeTooltip addToView:controller.view
+                    withCaretAtPoint:CGPointMake(934.0f, 35.0f)];
+    }
+    self.closeTooltip.alpha = 0.0f;
+    [UIView animateWithDuration:0.5f animations:^{
+        self.closeTooltip.alpha = 1.0f;
+    }];
+     
     if (self.isFirstBookOpened) {
         return;
     }
@@ -179,7 +184,7 @@
         self.closeTooltip.alpha = 0.0f;
         self.endCallTooltip.alpha = 1.0f;
     } completion:^(BOOL finished) {
-        [self.closeTooltip removeFromSuperview];
+        //[self.closeTooltip removeFromSuperview];
     }];
     
     [self.touchTooltip removeFromSuperview];
@@ -187,11 +192,23 @@
 }
 
 - (void)dateViewControllerWillAppear:(PTDateViewController *)controller {
+    // Analytics
+    [PTAnalytics sendEventNamed:EventNUXStarted];
+    tutorialStart = [NSDate date];
+    
     [self playIntroVideoWithChatController:controller.chatController];
 }
 
 - (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller {
     [controller.chatController stopPlayingMovies];
+    
+    // Analytics
+    if (tutorialStart) {
+        NSTimeInterval interval = fabs([tutorialStart timeIntervalSinceNow]);
+        tutorialStart = nil;
+        
+        [PTAnalytics sendEventNamed:EventNUXEnded withProperties:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:interval], PropDuration, nil]];
+    }
 }
 
 - (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf {
@@ -206,6 +223,15 @@
     
     if (self.touchTooltip.superview && initiatedBySelf && CGRectContainsPoint(touchHereHitArea, point)) {
         [self playYouTouchVideoWithChatController:controller.chatController];
+        
+        // Remove the touch tooltips
+        [UIView animateWithDuration:0.5f animations:^{
+            self.touchTooltip.alpha = 0.0f;
+            self.friendTooltip.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            [self.touchTooltip removeFromSuperview];
+            [self.friendTooltip removeFromSuperview];
+        }];
     }
 }
 
