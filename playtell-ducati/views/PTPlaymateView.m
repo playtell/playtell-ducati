@@ -61,12 +61,14 @@
         [profilePhotoView addGestureRecognizer:tapRecognizer];
         
         // Init the name label
-        lblName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 122.0f, self.bounds.size.width-20.0f, 18.0f)];
+        lblName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 112.0f, self.bounds.size.width-20.0f, 33.0f)];
         lblName.backgroundColor = [UIColor clearColor];
         lblName.text = playmate.username;
         lblName.textColor = [UIColor whiteColor];
         lblName.textAlignment = UITextAlignmentCenter;
-        lblName.font = [UIFont boldSystemFontOfSize:15.0f];
+        lblName.font = [UIFont boldSystemFontOfSize:30.0f];
+        lblName.minimumFontSize = 15.0f;
+        lblName.adjustsFontSizeToFitWidth = YES;
         lblName.shadowColor = [UIColor colorFromHex:@"#000000" alpha:0.6f];
         lblName.shadowOffset = CGSizeMake(0.0f, 1.0f);
         [self insertSubview:lblName aboveSubview:contentsView];
