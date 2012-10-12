@@ -27,6 +27,7 @@
 #import "PTPlaymate.h"
 #import "PTPlaymateButton.h"
 #import "PTPlaymateView.h"
+#import "PTPlaymateAddView.h"
 #import "PTSoloUser.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
@@ -114,12 +115,12 @@
     // Setup dialing ringer
     [self setupRinger];
     
-    // TEMP
-    UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
-    contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
-    [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:contactButton];
+//    // TEMP
+//    UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
+//    contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
+//    [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:contactButton];
     
 //    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 //    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
@@ -249,6 +250,9 @@
         PTPlaymateView *playmateView = [self.playmateViews objectForKey:key];
         playmateView.alpha = 0.0f;
     }
+    
+    // Hide sign-up bubble
+    signUpBubbleContainer.alpha = 0.0f;
 }
 
 - (void)viewDidLoad {
@@ -262,7 +266,8 @@
 
 - (void)drawPlaymates {
     // Define grid vars
-    const NSInteger totalPlaymates = [self.playmates count];
+    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
+    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -277,13 +282,30 @@
     for (int row=0; row<totalRows; row++) {
         for (int cell=0; cell<itemsPerRow; cell++) {
             NSUInteger playmateIndex = (row*itemsPerRow) + cell;
-            if (playmateIndex >= totalPlaymates) {
-                break;
-            }
-            
+
             // Build item frame
             CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+            
+            // Are we at the last object in the grid?
+            if (drawPlaymateAddView == YES) {
+                if (playmateIndex == (totalPlaymates - 1)) {
+                    // Add "Import Friends" playmate view
+                    PTPlaymateAddView *playmateAddView = [[PTPlaymateAddView alloc] initWithFrame:itemFrame];
+                    [playmateAddView hideAnimated:NO];
+                    playmateAddView.delegate = self;
+                    [self.scrollView addSubview:playmateAddView];
+                    
+                    // Save playmate view to hash for easy retrieval
+                    [self.playmateViews setObject:playmateAddView forKey:[NSNumber numberWithInteger:-2]];
+                    break;
+                }
+            } else {
+                // No more playmates to add
+                if (playmateIndex >= totalPlaymates) {
+                    break;
+                }
+            }
             
             // Add a playmate view
             PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
@@ -296,96 +318,12 @@
             [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
         }
     }
-    
-    //    // TODO : revist the naming of these variables..
-    //    NSUInteger numPlaymates = self.playmates.count + 1;
-    //
-    //    CGFloat margin = 70;
-    //    const CGFloat leftMargin = margin;
-    //    const CGFloat rightMargin = margin;
-    //    const CGFloat topMargin = 30;
-    //    CGFloat rowSpacing = 10;
-    //    const NSUInteger itemsPerRow = 4;
-    //    const CGSize buttonSize = CGSizeMake(200, 150);
-    
-    //    CGFloat W = self.view.bounds.size.width;
-    //    CGFloat interCellPadding = (W - leftMargin - rightMargin - ((CGFloat)itemsPerRow)*buttonSize.width)/(CGFloat)(itemsPerRow - 1);
-    
-    // Testing...
-    //    rowSpacing = interCellPadding;
-    //    NSUInteger numRows = numPlaymates/itemsPerRow + MIN(numPlaymates%itemsPerRow, 1);
-    
-    //    NSMutableDictionary* playmatesAndButtons = [NSMutableDictionary dictionary];
-    //    for (int rowIndex = 0; rowIndex < numRows; rowIndex++) {
-    //        for (int cellIndex = 0; cellIndex < itemsPerRow; cellIndex++) {
-    //            NSUInteger playmateIndex = (rowIndex*itemsPerRow) + cellIndex;
-    //            if (playmateIndex >= numPlaymates) {
-    //                continue;
-    //            }
-    //
-    //            CGFloat cellX = leftMargin + ((CGFloat)cellIndex)*(buttonSize.width + interCellPadding);
-    //            CGFloat cellY = topMargin + ((CGFloat)rowIndex)*(buttonSize.height + rowSpacing);
-    //
-    //            UIButton* button;
-    //            if (playmateIndex == numPlaymates - 1) {
-    //                button = [UIButton buttonWithType:UIButtonTypeCustom];
-    //                button.frame = CGRectMake(0, 0, buttonSize.width, buttonSize.height);
-    //                [button setImage:[UIImage imageNamed:@"add-family.png"] forState:UIControlStateNormal];
-    //                [playmatesAndButtons setObject:button
-    //                                        forKey:@"AddUserButton"];
-    //                CGRect buttonFrame = button.frame;
-    //                buttonFrame.origin = CGPointMake(cellX, cellY);
-    //                button.frame = buttonFrame;
-    //                [self.scrollView addSubview:button];
-    //            } else {
-    //                PTPlaymate* currentPlaymate = [self.playmates objectAtIndex:playmateIndex];
-    //                PTPlaymateView *currentPlaymateView = [[PTPlaymateView alloc] initWithFrame:CGRectMake(cellX, cellY, buttonSize.width, buttonSize.height) playmate:currentPlaymate];
-    ////                button = [PTPlaymateButton playmateButtonWithPlaymate:currentPlaymate];
-    ////                [button addTarget:self action:@selector(playmateClicked:) forControlEvents:UIControlEventTouchUpInside];
-    ////                [playmatesAndButtons setObject:button
-    ////                                        forKey:[self stringFromUInt:currentPlaymate.userID]];
-    //                [self.scrollView addSubview:currentPlaymateView];
-    //            }
-    //        }
-    //    }
-    //    TODO: Rewrite as self.playmateViews
-    //    self.userButtonHash = [NSDictionary dictionaryWithDictionary:playmatesAndButtons];
-    
-    //    self.scrollView.contentSize = CGSizeMake(W, topMargin + ((CGFloat)(numRows+1))*(rowSpacing + buttonSize.height));
-    
-    //    // Get a list of all playmate ids and get their current status
-    //    NSMutableArray *ids = [[NSMutableArray alloc] init];
-    //    for (NSString *key in [self.userButtonHash allKeys]) {
-    //        if (![key isEqualToString:@"AddUserButton"]) {
-    //            [ids addObject:key];
-    //        }
-    //    }
-    //    PTUsersGetStatusRequest *usersGetStatusRequest = [[PTUsersGetStatusRequest alloc] init];
-    //    [usersGetStatusRequest usersGetStatusForUserIds:ids
-    //                                          authToken:[[PTUser currentUser] authToken]
-    //                                            success:^(NSDictionary *result) {
-    //                                                NSArray *statuses = [result objectForKey:@"status"];
-    //                                                for (NSDictionary *userStatus in statuses) {
-    //                                                    NSInteger user_id = [[userStatus objectForKey:@"id"] integerValue];
-    //                                                    NSString *user_status = [userStatus objectForKey:@"status"];
-    //                                                    PTPlaymateButton *button = [self.userButtonHash objectForKey:[self stringFromUInt:user_id]];
-    //                                                    if (button == nil) {
-    //                                                        return;
-    //                                                    }
-    //                                                    if ([user_status isEqualToString:@"pending"]) {
-    //                                                        [button setPending];
-    //                                                    } else if ([user_status isEqualToString:@"playdate"]) {
-    //                                                        [button setPlaydating];
-    //                                                    }
-    //                                                }
-    //                                            }
-    //                                            failure:nil
-    //     ];
 }
 
 - (void)addNewPlaymate {
     // Define grid vars
-    const NSInteger totalPlaymates = [self.playmates count];
+    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
+    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -401,13 +339,28 @@
     for (int row=0; row<totalRows; row++) {
         for (int cell=0; cell<itemsPerRow; cell++) {
             NSUInteger playmateIndex = (row*itemsPerRow) + cell;
-            if (playmateIndex >= totalPlaymates) {
-                break;
-            }
-            
+
             // Build item frame
             CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+
+            // Are we at the last object in the grid?
+            if (drawPlaymateAddView == YES) {
+                if (playmateIndex == (totalPlaymates - 1)) {
+                    // Retrieve "Import Friends" playmate view
+                    PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
+                    if (playmateAddView != nil) {
+                        // If view exists, save its new frame to a hash we'll reuse later for animations
+                        [playmateViewLocations setObject:playmateAddView
+                                                  forKey:[NSValue valueWithCGRect:itemFrame]];
+                    }
+                }
+            } else {
+                // No more playmates to add
+                if (playmateIndex >= totalPlaymates) {
+                    break;
+                }
+            }
             
             // Check if playmate view exists
             PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
@@ -447,7 +400,8 @@
 
 - (void)refreshPlaymateViews {
     // Define grid vars
-    const NSInteger totalPlaymates = [self.playmates count];
+    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
+    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -462,13 +416,28 @@
     for (int row=0; row<totalRows; row++) {
         for (int cell=0; cell<itemsPerRow; cell++) {
             NSUInteger playmateIndex = (row*itemsPerRow) + cell;
-            if (playmateIndex >= totalPlaymates) {
-                break;
-            }
-            
+
             // Build item frame
             CGPoint itemOrigin = CGPointMake(gridMargin.left + ((CGFloat)cell)*(itemSize.width + gridSpace), gridMargin.top + ((CGFloat)row)*(itemSize.height + gridSpace));
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
+            
+            // Are we at the last object in the grid?
+            if (drawPlaymateAddView == YES) {
+                if (playmateIndex == (totalPlaymates - 1)) {
+                    // Retrieve "Import Friends" playmate view
+                    PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
+                    if (playmateAddView != nil) {
+                        // If view exists, save its new frame to a hash we'll reuse later for animations
+                        [playmateViewLocations setObject:playmateAddView
+                                                  forKey:[NSValue valueWithCGRect:itemFrame]];
+                    }
+                }
+            } else {
+                // No more playmates to add
+                if (playmateIndex >= totalPlaymates) {
+                    break;
+                }
+            }
             
             // Check if playmate view exists
             PTPlaymate* playmate = [self.playmates objectAtIndex:playmateIndex];
@@ -549,7 +518,6 @@
 //        [self checkForPendingPlaydatesAndNotifyUser]; TODOGIANCARLO fix this
     }
 }
-
 
 - (void)initiatePlaydateRequestWithPlaymate:(PTPlaymate *)playmate
                                        view:(PTPlaymateView *)playmateView {
@@ -961,14 +929,6 @@
     [self endRinging];
 }
 
-- (void)loadContactImportController:(id)sender {
-     PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
-     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
-     
-     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-     [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-}
-
 - (UIFont*)welcomeTextFont {
     return [UIFont fontWithName:@"HelveticaNeue-Light" size:28.0];
 }
@@ -1051,6 +1011,14 @@
                                                     [playmateView enableFriendshipConfirmationButtons];
                                                 });
                                             }];
+}
+
+- (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
+    PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - New user flow methods

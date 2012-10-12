@@ -58,4 +58,5 @@
 - (void)playmateDidTouch:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate;
 - (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate;
 - (void)playmateDidDeclineFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate;
+- (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView;
 @end

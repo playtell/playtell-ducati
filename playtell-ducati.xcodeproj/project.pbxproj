@@ -159,6 +159,9 @@
 		23C26E651628513B00A338EB /* sign-up-blank@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E611628513B00A338EB /* sign-up-blank@2x.png */; };
 		23C26E661628513B00A338EB /* sign-up-press-blank.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E621628513B00A338EB /* sign-up-press-blank.png */; };
 		23C26E671628513B00A338EB /* sign-up-press-blank@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E631628513B00A338EB /* sign-up-press-blank@2x.png */; };
+		23C26E73162857F900A338EB /* PTPlaymateAddView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C26E72162857F900A338EB /* PTPlaymateAddView.m */; };
+		23C26E7716285CAF00A338EB /* playmate-add-friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E7516285CAF00A338EB /* playmate-add-friends.png */; };
+		23C26E7816285CAF00A338EB /* playmate-add-friends@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C26E7616285CAF00A338EB /* playmate-add-friends@2x.png */; };
 		23C443D215C3244F009536D8 /* PTContactsGetRelatedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */; };
 		23C64E5A161B3D9600C629A2 /* ipad-phone.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E58161B3D9600C629A2 /* ipad-phone.png */; };
 		23C64E5B161B3D9600C629A2 /* ipad-phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */; };
@@ -1010,6 +1013,10 @@
 		23C26E611628513B00A338EB /* sign-up-blank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign-up-blank@2x.png"; sourceTree = "<group>"; };
 		23C26E621628513B00A338EB /* sign-up-press-blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign-up-press-blank.png"; sourceTree = "<group>"; };
 		23C26E631628513B00A338EB /* sign-up-press-blank@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sign-up-press-blank@2x.png"; sourceTree = "<group>"; };
+		23C26E71162857F900A338EB /* PTPlaymateAddView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateAddView.h; sourceTree = "<group>"; };
+		23C26E72162857F900A338EB /* PTPlaymateAddView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateAddView.m; sourceTree = "<group>"; };
+		23C26E7516285CAF00A338EB /* playmate-add-friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playmate-add-friends.png"; sourceTree = "<group>"; };
+		23C26E7616285CAF00A338EB /* playmate-add-friends@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "playmate-add-friends@2x.png"; sourceTree = "<group>"; };
 		23C443D015C3244F009536D8 /* PTContactsGetRelatedRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsGetRelatedRequest.h; sourceTree = "<group>"; };
 		23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsGetRelatedRequest.m; sourceTree = "<group>"; };
 		23C64E58161B3D9600C629A2 /* ipad-phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ipad-phone.png"; sourceTree = "<group>"; };
@@ -2243,6 +2250,8 @@
 		237651D9161A167D0000A4D5 /* new user */ = {
 			isa = PBXGroup;
 			children = (
+				23C26E7516285CAF00A338EB /* playmate-add-friends.png */,
+				23C26E7616285CAF00A338EB /* playmate-add-friends@2x.png */,
 				23C26E601628513B00A338EB /* sign-up-blank.png */,
 				23C26E611628513B00A338EB /* sign-up-blank@2x.png */,
 				23C26E621628513B00A338EB /* sign-up-press-blank.png */,
@@ -4013,6 +4022,8 @@
 				F4A9D8FA157A86A20015D977 /* PTPlaymateButton.m */,
 				23A1EAA915ED2594000FED09 /* PTPlaymateView.h */,
 				23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */,
+				23C26E71162857F900A338EB /* PTPlaymateAddView.h */,
+				23C26E72162857F900A338EB /* PTPlaymateAddView.m */,
 				237B249C157D182A00FC288E /* PTBooksParentView.h */,
 				237B249D157D182A00FC288E /* PTBooksParentView.m */,
 				237B249E157D182A00FC288E /* PTBooksScrollView.h */,
@@ -4737,6 +4748,8 @@
 				1A6E98391626E16100E63F6C /* project.png in Resources */,
 				1A6E98491626E16100E63F6C /* LICENSE in Resources */,
 				1A6E984F1626E16100E63F6C /* README.md in Resources */,
+				23C26E7716285CAF00A338EB /* playmate-add-friends.png in Resources */,
+				23C26E7816285CAF00A338EB /* playmate-add-friends@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4931,6 +4944,7 @@
 				1A6E984D1626E16100E63F6C /* NSData+MPBase64.m in Sources */,
 				1A6E984E1626E16100E63F6C /* Mixpanel.m in Sources */,
 				1A6E98591626E1D900E63F6C /* PTAnalytics.m in Sources */,
+				23C26E73162857F900A338EB /* PTPlaymateAddView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
