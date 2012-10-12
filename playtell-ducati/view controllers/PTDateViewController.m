@@ -52,6 +52,7 @@
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
 @property (nonatomic, weak) OTPublisher* myPublisher;
 @property (nonatomic, strong) PTPlaymate* playmate;
+@property (nonatomic, retain) AVAudioPlayer* audioPlayer;
 @end
 
 @implementation PTDateViewController
@@ -62,6 +63,7 @@
 @synthesize chatController;
 @synthesize playmate;
 @synthesize delegate;
+@synthesize audioPlayer;
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)aChatController {
@@ -87,6 +89,9 @@
     self.chatController = appDelegate.chatController;
 //    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
+    
+    [self setupRinger];
+    [self beginRinging];
     
     // Set the start time for use with analytics
     playdateStart = [NSDate date];
@@ -741,6 +746,8 @@
     if (joinedPlaydate.initiator.userID == [[PTUser currentUser] userID] && joinedPlaydate.playmate.userID == playmate.userID) {
         // Send analytics event for joining a playdate
         [PTAnalytics sendEventNamed:EventPlaymateJoinedMyPlaydate withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
+        
+        [self endRinging];
     }
 }
 
@@ -1471,6 +1478,25 @@
     
     // Notify delegate to start loading new page content
     [self pageTurnedTo:newPageNumber];
+}
+
+#pragma mark - Ringer methods
+
+- (void)setupRinger {
+    NSError *playerError;
+    NSURL *ringtone = [[NSBundle mainBundle] URLForResource:@"ringtone-connecting" withExtension:@"mp3"];
+    AVAudioPlayer *thePlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:ringtone error:&playerError];
+    thePlayer.volume = 0.25;
+    thePlayer.numberOfLoops = 4;
+    self.audioPlayer = thePlayer;
+}
+
+- (void)beginRinging {
+    [self.audioPlayer play];
+}
+
+- (void)endRinging {
+    [self.audioPlayer stop];
 }
 
 #pragma mark -
