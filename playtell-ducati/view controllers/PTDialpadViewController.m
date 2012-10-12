@@ -106,27 +106,12 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
     [self.chatController connectToPlaceholderOpenTokSession];
-    [self.chatController setLeftViewAsPlaceholder];
-    [self.view addSubview:self.chatController.view];
 
     // Add all playmates to the dialpad
     [self drawPlaymates];
     
     // Setup dialing ringer
     [self setupRinger];
-    
-//    // TEMP
-//    UIButton *contactButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [contactButton setTitle:@"Import Contacts" forState:UIControlStateNormal];
-//    contactButton.frame = CGRectMake(20.0f, 695.0f, 170.0f, 35.0f);
-//    [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:contactButton];
-    
-//    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
-//    logoutButton.frame = CGRectMake(210.0f, 695.0f, 170.0f, 35.0f);
-//    [logoutButton addTarget:self action:@selector(logoutDidPress:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:logoutButton];
     
     // Sign-up button
     if ([[PTUser currentUser] isLoggedIn] == NO) {
@@ -145,7 +130,7 @@
         [signUpButton addTarget:self action:@selector(signUpDidPress:) forControlEvents:UIControlEventTouchUpInside];
         [signUpBubbleContainer addSubview:signUpBubble];
         [signUpBubbleContainer addSubview:signUpButton];
-        [self.view insertSubview:signUpBubbleContainer aboveSubview:self.chatController.view];
+        [self.view addSubview:signUpBubbleContainer];
     }
 }
 
@@ -210,6 +195,9 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
+    
+    [self.chatController setLeftViewAsPlaceholder];
+    [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
