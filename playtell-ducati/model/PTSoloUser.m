@@ -7,6 +7,7 @@
 //
 
 #import "Logging.h"
+#import "PTAnalytics.h"
 #import "PTCloseActivityTooltip.h"
 #import "PTEndCallToolTip.h"
 #import "PTFriendTouchTooltip.h"
@@ -191,11 +192,23 @@
 }
 
 - (void)dateViewControllerWillAppear:(PTDateViewController *)controller {
+    // Analytics
+    [PTAnalytics sendEventNamed:EventNUXStarted];
+    tutorialStart = [NSDate date];
+    
     [self playIntroVideoWithChatController:controller.chatController];
 }
 
 - (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller {
     [controller.chatController stopPlayingMovies];
+    
+    // Analytics
+    if (tutorialStart) {
+        NSTimeInterval interval = fabs([tutorialStart timeIntervalSinceNow]);
+        tutorialStart = nil;
+        
+        [PTAnalytics sendEventNamed:EventNUXEnded withProperties:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:interval], PropDuration, nil]];
+    }
 }
 
 - (void)dateViewController:(PTDateViewController*)controller detectedGrandmaFingerAtPoint:(CGPoint)point isInitiatedBySelf:(BOOL)initiatedBySelf {
