@@ -18,6 +18,7 @@
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
 - (id)initWithNullPlaymate;
 
+- (void)configureForDialpad;
 - (void)setLeftViewAsPlaceholder;
 - (void)connectToOpenTokSession;
 - (void)connectToPlaceholderOpenTokSession;
