@@ -70,28 +70,28 @@
     
     [self setupPushNotifications:launchOptions];
     [PTVideoPhone sharedPhone];
+    
+    // Create the ChatHUD
+    self.chatController = [[PTChatViewController alloc] initWithNullPlaymate];
 
-    TransitionController* transitionController;
+    // Init transition controller
+    PTLoadingViewController* loadingView = [[PTLoadingViewController alloc] initWithNibName:@"PTLoadingViewController" bundle:nil];
+    self.transitionController = [[TransitionController alloc] initWithViewController:loadingView];
+    
+    // Set default controller
+    self.window.rootViewController = self.transitionController;
+    [self.window makeKeyAndVisible];
+
     if ([[PTUser currentUser] isLoggedIn]) {
         // Register for push noticication only if logged in
         [self setupPushNotifications:launchOptions];
 
-        PTLoadingViewController* loadingView = [[PTLoadingViewController alloc] initWithNibName:@"PTLoadingViewController" bundle:nil];
-        transitionController = [[TransitionController alloc] initWithViewController:loadingView];
+        // Run logged-in workflow
         [self runLoggedInWorkflow];
     } else {
-//        PTLoginViewController* loginController = [[PTLoginViewController alloc] initWithNibName:@"PTLoginViewController" bundle:nil];
-//        loginController.delegate = self;
-        PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
-        transitionController = [[TransitionController alloc] initWithViewController:newUserNavigationController];
+        // Run new user workflow
+        [self runNewUserWorkflow];
     }
-    self.transitionController = transitionController;
-    self.window.rootViewController = self.transitionController;
-    
-    [self.window makeKeyAndVisible];
-
-    // Create the ChatHUD
-    self.chatController = [[PTChatViewController alloc] initWithNullPlaymate];
     
     return YES;
 }
@@ -220,7 +220,7 @@
 }
 
 - (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    return UIInterfaceOrientationMaskAll;
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 //- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {

@@ -13,6 +13,8 @@
     UIBarButtonItem *buttonBack;
     UIBarButtonItem *buttonSend;
     NSMutableArray *contacts;
+    NSMutableArray *firstNames;
+    NSInteger firstNameIndex;
     IBOutlet UITableView *contactsTableView;
     IBOutlet UITextView *msgBody;
     IBOutlet UIView *contactsTableContainer;

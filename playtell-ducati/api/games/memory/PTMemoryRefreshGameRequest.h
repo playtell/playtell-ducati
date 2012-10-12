@@ -14,12 +14,12 @@ typedef void (^PTMemoryRefreshGameRequestFailureBlock) (NSURLRequest* request, N
 @interface PTMemoryRefreshGameRequest : PTRequest
 
 - (void)refreshBoardWithPlaydateId:(NSNumber*)playdate_id
-                     authToken:(NSString*)token
-                   playmate_id:(NSString *)playmate_id
-                   initiatorId:(NSString *)initiator_id
-                     onSuccess:(PTMemoryRefreshGameRequestSuccessBlock)success
-                      theme_ID:(NSString *)theme_id
-               num_total_cards:(NSString *)num_total_cards
+                         authToken:(NSString*)token
+                       playmate_id:(NSString *)playmate_id
+                       initiatorId:(NSString *)initiator_id
+                         onSuccess:(PTMemoryRefreshGameRequestSuccessBlock)success
+                          theme_ID:(NSString *)theme_id
+                   num_total_cards:(NSString *)num_total_cards
                    already_playing:(NSString *)already_playing
                          onFailure:(PTMemoryRefreshGameRequestFailureBlock)failure;
 

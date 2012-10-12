@@ -10,6 +10,7 @@
 #import "PTChatViewController.h"
 #import "PTPlaydate.h"
 #import "PTMemoryGameDelegate.h"
+#import "PTMemoryGameScoreView.h"
 
 @interface PTMemoryViewController : UIViewController <PTMemoryGameDelegate> {
     // Game data
@@ -36,6 +37,17 @@
     AVAudioPlayer* soundWin;
     AVAudioPlayer* soundLoss;
     AVAudioPlayer* soundMiss;
+    
+    // Score
+    IBOutlet PTMemoryGameScoreView *scoreViewMe;
+    IBOutlet PTMemoryGameScoreView *scoreViewOpponent;
+    
+    // Tooltip
+    UIImageView *ttWaitYourTurn;
+    
+    // Winner/loser
+    UIImageView *winnerView;
+    UIImageView *loserView;
 }
 
 @property (nonatomic, strong) PTChatViewController* chatController;

@@ -93,6 +93,7 @@
     
     // Name: Merge field label
     mergeFieldName.textColor = [UIColor colorFromHex:@"#3FA9F5"];
+    [self setupFirstNameLbl];
     
     // Links box
     linksBox.backgroundColor = [UIColor colorFromHex:@"#DCE2E5"];
@@ -138,6 +139,61 @@
 
 - (IBAction)didPressInviteMore:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - First name cycle
+
+- (void)setupFirstNameLbl {
+    // Get all first names
+    firstNames = [NSMutableArray array];
+    for (NSMutableDictionary *contact in contacts) {
+        NSString *name = [contact objectForKey:@"name"];
+        NSRange spaceLoc = [name rangeOfString:@" "];
+        NSString *firstName;
+        if (spaceLoc.location == NSNotFound) {
+            firstName = name;
+        } else {
+            firstName = [name substringToIndex:spaceLoc.location];
+        }
+        [firstNames addObject:firstName];
+    }
+    
+    // Set first name
+    firstNameIndex = 0;
+    mergeFieldName.text = [firstNames objectAtIndex:firstNameIndex];
+    
+    // Cycle through the name
+    if ([firstNames count] > 1) {
+        [self performSelector:@selector(showNextFirstName) withObject:nil afterDelay:2.0f];
+    }
+}
+
+- (void)showNextFirstName {
+    // Advance names index
+    firstNameIndex++;
+    if (firstNameIndex == [firstNames count]) {
+        firstNameIndex = 0;
+    }
+    
+    // Fade out, change name, fade in.
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         mergeFieldName.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         // Change the name
+                         mergeFieldName.text = [firstNames objectAtIndex:firstNameIndex];
+                         
+                         // Fade in
+                         [UIView animateWithDuration:0.5f
+                                          animations:^{
+                                              mergeFieldName.alpha = 1.0f;
+                                          }
+                                          completion:^(BOOL finished) {
+                                              // Show next name
+                                              [self performSelector:@selector(showNextFirstName) withObject:nil afterDelay:2.0f];
+                                          }];
+                     }];
 }
 
 #pragma mark - Temp UI Alert

@@ -62,6 +62,19 @@
 @synthesize audioPlayer;
 @synthesize chatController;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Bypass OpenTok permission dialog
+        NSString *otPublisherAccepted = [[NSUserDefaults standardUserDefaults] stringForKey:@"opentok.publisher.accepted"];
+        if (otPublisherAccepted == nil) {
+            [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"opentok.publisher.accepted"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    }
+    return self;
+}
+
 - (void)loadView {
     [super loadView];
     self.view.frame = CGRectMake(0, 0, 1024, 748);
@@ -75,7 +88,7 @@
     CGSize labelSize = [welcomeText sizeWithFont:[self welcomeTextFont]
                                constrainedToSize:CGSizeMake(1024, CGFLOAT_MAX)];
     CGRect welcomeLabelRect;
-    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 155,
+    welcomeLabelRect = CGRectMake(1024.0/2.0 - labelSize.width/2.0, 170,
                                   labelSize.width, labelSize.height);
     UILabel* welcomeLabel = [[UILabel alloc] initWithFrame:welcomeLabelRect];
     welcomeLabel.text = welcomeText;
@@ -91,6 +104,8 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
     [self.chatController connectToPlaceholderOpenTokSession];
+    [self.chatController setLeftViewAsPlaceholder];
+    [self.view addSubview:self.chatController.view];
 
     // Add all playmates to the dialpad
     [self drawPlaymates];
@@ -105,11 +120,31 @@
     [contactButton addTarget:self action:@selector(loadContactImportController:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:contactButton];
     
-    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
-    logoutButton.frame = CGRectMake(210.0f, 695.0f, 170.0f, 35.0f);
-    [logoutButton addTarget:self action:@selector(logoutDidPress:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:logoutButton];
+//    UIButton *logoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [logoutButton setTitle:@"Logout" forState:UIControlStateNormal];
+//    logoutButton.frame = CGRectMake(210.0f, 695.0f, 170.0f, 35.0f);
+//    [logoutButton addTarget:self action:@selector(logoutDidPress:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:logoutButton];
+    
+    // Sign-up button
+    if ([[PTUser currentUser] isLoggedIn] == NO) {
+        signUpBubbleContainer = [[UIView alloc] initWithFrame:CGRectMake(700.0f, 21.0f, 240.0f, 117.0)];
+        signUpBubbleContainer.alpha = 0.0f;
+        UIImageView *signUpBubble = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sign-up-join-bubble.png"]];
+        signUpBubble.frame = signUpBubbleContainer.bounds;
+        UIButton *signUpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        signUpButton.frame = CGRectMake(83.0f, 66.0f, 86.0f, 25.0f);
+        [signUpButton setBackgroundImage:[UIImage imageNamed:@"sign-up-blank.png"] forState:UIControlStateNormal];
+        [signUpButton setBackgroundImage:[UIImage imageNamed:@"sign-up-press-blank.png"] forState:UIControlStateHighlighted];
+        [signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+        signUpButton.titleLabel.font = [UIFont boldSystemFontOfSize:10.0f];
+        [signUpButton setTitleShadowColor:[UIColor colorFromHex:@"#000000" alpha:0.4f] forState:UIControlStateNormal];
+        signUpButton.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f);
+        [signUpButton addTarget:self action:@selector(signUpDidPress:) forControlEvents:UIControlEventTouchUpInside];
+        [signUpBubbleContainer addSubview:signUpBubble];
+        [signUpBubbleContainer addSubview:signUpButton];
+        [self.view insertSubview:signUpBubbleContainer aboveSubview:self.chatController.view];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -173,9 +208,6 @@
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
-
-    [self.chatController setLeftViewAsPlaceholder];
-    [self.view addSubview:self.chatController.view];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -190,11 +222,22 @@
     // Fade-in all playmate views
     [UIView animateWithDuration:0.7f
                      animations:^{
+                         // Playmate views
                          for (id key in [self.playmateViews allKeys]) {
                              PTPlaymateView *playmateView = [self.playmateViews objectForKey:key];
                              playmateView.alpha = 1.0f;
                          }
                      }];
+    
+    // Fly-in + fade-in sign-up bubble if user not logged in
+    if (signUpBubbleContainer != nil) {
+        signUpBubbleContainer.frame = CGRectOffset(signUpBubbleContainer.frame, 500.0f, 0.0f);
+        [UIView animateWithDuration:0.7f
+                         animations:^{
+                             signUpBubbleContainer.frame = CGRectOffset(signUpBubbleContainer.frame, -500.0f, 0.0f);
+                             signUpBubbleContainer.alpha = 1.0f;
+                         }];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -518,20 +561,21 @@
     CGRect buttonRect = CGRectZero;
     buttonRect.origin = [self.view convertPoint:playmateView.frame.origin
                                        fromView:self.scrollView];
-    buttonRect.size = playmateImageView.frame.size;
+    buttonRect.size = CGSizeMake(200.0f, 150.0f);//playmateImageView.frame.size;
     playmateImageView.frame = buttonRect;
-    playmateImageView.layer.cornerRadius = 6.0;
+    playmateImageView.layer.cornerRadius = 12.0;
     playmateImageView.clipsToBounds = YES;
-    [self.view insertSubview:playmateImageView belowSubview:self.chatController.view];
+    [self.view insertSubview:playmateImageView aboveSubview:self.chatController.view];
     
-    [UIView animateWithDuration:1.0 animations:^{
+    [UIView animateWithDuration:0.4f animations:^{
         CGRect imageViewFrame = playmateImageView.frame;
-        imageViewFrame.origin = CGPointMake(312, -1);
+        imageViewFrame.origin = CGPointMake(312.0f, 0.0f);
         playmateImageView.frame = imageViewFrame;
     } completion:^(BOOL finished) {
         self.chatController.playmate = playmate;
         [playmateImageView removeFromSuperview];
 
+        // Start the playdate
         [self initiatePlaydateWithPlaymate:playmate];
 
         // If the user is logged in and the
@@ -1000,6 +1044,18 @@
                                                     [playmateView enableFriendshipConfirmationButtons];
                                                 });
                                             }];
+}
+
+#pragma mark - New user flow methods
+
+- (void)signUpDidPress:(id)sender {
+    // Load the create new user nav
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    PTNewUserNavigationController *newUserNavigationController = [[PTNewUserNavigationController alloc] initWithDefaultViewController];
+    
+    // Transition to it
+    [appDelegate.transitionController transitionToViewController:newUserNavigationController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - Temp
