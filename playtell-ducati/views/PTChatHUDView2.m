@@ -94,12 +94,14 @@
 }
 
 - (void)setLeftView:(UIView*)aView {
+    [aView removeAllGestureRecognizers];
     [self.leftContainerView removeAllSubviews];
     aView.frame = [[self class] rectForLeftSubview];
     [self.leftContainerView addSubview:aView];
 }
 
 - (void)setRightView:(UIView*)aView {
+    [aView removeAllGestureRecognizers];
     [self.rightContainerView removeAllSubviews];
     aView.frame = [[self class] rectForRightSubview];
     [self.rightContainerView addSubview:aView];
