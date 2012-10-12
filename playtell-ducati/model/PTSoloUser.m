@@ -23,6 +23,7 @@
 @property (nonatomic, strong) PTFriendTouchTooltip *friendTooltip;
 @property (nonatomic, strong) PTCloseActivityTooltip *closeTooltip;
 @property (nonatomic, strong) PTEndCallTooltip* endCallTooltip;
+@property (nonatomic, assign) BOOL isIntroPlayed;
 @property (nonatomic, assign) BOOL isFirstBookOpened;
 @property (nonatomic, assign) BOOL isTouchTipsVisibile;
 @end
@@ -34,6 +35,7 @@
 @synthesize friendTooltip;
 @synthesize closeTooltip;
 @synthesize endCallTooltip;
+@synthesize isIntroPlayed;
 @synthesize isFirstBookOpened;
 @synthesize isTouchTipsVisibile;
 
@@ -92,6 +94,7 @@
 
 
 - (void)resetScriptState {
+    self.isIntroPlayed = NO;
     self.isFirstBookOpened = NO;
     self.isTouchTipsVisibile = NO;
 }
@@ -196,7 +199,9 @@
     [PTAnalytics sendEventNamed:EventNUXStarted];
     tutorialStart = [NSDate date];
     
-    [self playIntroVideoWithChatController:controller.chatController];
+    if (!self.isIntroPlayed) {
+        [self playIntroVideoWithChatController:controller.chatController];
+    }
 }
 
 - (void)dateViewControllerDidEndPlaydate:(PTDateViewController *)controller {
@@ -236,8 +241,11 @@
 }
 
 - (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller {
-    [self playNoGamesVideoWithChatController:controller.chatController];
-    return NO;
+    [self performSelector:@selector(playNoGamesVideoWithChatController:)
+               withObject:controller.chatController
+               afterDelay:3.0f];
+    //[self playNoGamesVideoWithChatController:controller.chatController];
+    return YES;
 }
 
 #pragma mark - Video loading convenience methods
@@ -246,6 +254,7 @@
     NSURL *introURL = [[NSBundle mainBundle] URLForResource:@"Solo_Hi"
                                               withExtension:@"mp4"];
     [chatController playMovieURLInLeftPane:introURL];
+    self.isIntroPlayed = YES;
 }
 
 - (void)playOpenedBookVideoWithChatController:(PTChatViewController*)chatController {
