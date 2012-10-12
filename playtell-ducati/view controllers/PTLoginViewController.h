@@ -33,6 +33,7 @@
     IBOutlet UITableView *errorsTableView;
     NSMutableArray *formErrors;
     IBOutlet UIButton *buttonSignIn;
+    BOOL isSigningIn;
 }
 
 @property (nonatomic) id<PTLoginViewControllerDelegate> delegate;

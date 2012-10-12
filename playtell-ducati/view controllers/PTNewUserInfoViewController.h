@@ -27,6 +27,7 @@
     NSMutableArray *formErrors;
     BOOL isKeyboardShown;
     BOOL isEmailNotAvailable;
+    BOOL hasNextBeenPressed;
 }
 
 - (IBAction)signInDidPress:(id)sender;

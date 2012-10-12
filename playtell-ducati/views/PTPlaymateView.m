@@ -99,6 +99,9 @@
         self.layer.shadowRadius = 1.0f;
         self.layer.shouldRasterize = YES;
         self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+        
+        // Not shaking by default
+        isShaking = NO;
     }
     return self;
 }
@@ -110,7 +113,8 @@
     }
     
     // If user is in playdate, don't do anything
-    if (isInPlaydate == YES) {
+    // Only exception is if they're shaking!
+    if (isInPlaydate == YES && isShaking == NO) {
         return;
     }
 
@@ -318,6 +322,8 @@
 }
 
 - (void)beginShake {
+    isShaking = YES;
+
     // Begin snip
     NSInteger randomInt = arc4random()%500;
     float r = (randomInt/500.0)+0.5;
@@ -341,6 +347,7 @@
 }
 
 - (void)stopShake {
+    isShaking = NO;
     self.transform = CGAffineTransformIdentity;
     [self.layer removeAllAnimations];
 }

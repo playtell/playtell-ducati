@@ -17,6 +17,7 @@
 #import "PTLoginRequest.h"
 #import "PTUser.h"
 #import "PTErrorTableCell.h"
+#import "UAirship.h"
 
 @interface PTLoginViewController ()
 
@@ -251,6 +252,11 @@
 }
 
 - (IBAction)signInDidPress:(id)sender {
+    if (isSigningIn == YES) {
+        return;
+    }
+    isSigningIn = YES;
+
     // End editing & show activity
     [self.view endEditing:YES];
     [activityEmailView startAnimating];
@@ -263,19 +269,20 @@
                            password:txtPassword.text
                           pushToken:@""
                           onSuccess:^(NSDictionary *result) {
-//                              NSLog(@"Login result: %@", result);
                               NSString* token = [result valueForKey:@"token"];
                               NSNumber* userID = [result valueForKey:@"user_id"];
                               NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
                               
+                              // Save logged-in status
                               [[PTUser currentUser] setUsername:txtEmail.text];
                               [[PTUser currentUser] setEmail:txtEmail.text];
                               [[PTUser currentUser] setAuthToken:token];
                               [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
                               [[PTUser currentUser] setPhotoURL:photoURL];
                               
-//                              NSLog(@"Current user: %@", [PTUser currentUser]);
-                              // TODO: Register here for notifications??
+                              // Get Urban Airship device token
+                              PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                              [appDelegate setupPushNotifications];
                               
                               dispatch_async(dispatch_get_main_queue(), ^{
                                   [activityEmailView stopAnimating];
@@ -287,6 +294,7 @@
                           }
                           onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                               NSLog(@"Error: %@", JSON);
+                              isSigningIn = NO;
                               NSString *errorMsg = [JSON objectForKey:@"message"];
                               if ([errorMsg isEqualToString:@"User cannot be found."]) {
                                   [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"email", @"type", @"Email entered doesn't appear to be an existing user", @"message", nil]];
@@ -400,6 +408,7 @@
                 txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 txtEmail.tag = 0;
                 txtEmail.delegate = self;
+                txtEmail.text = @"dimitry@playtell.com";
                 
                 activityEmailView.frame = CGRectMake(200.0f, 1.0f, 20.0f, 20.0f);
                 activityEmailView.hidesWhenStopped = YES;
@@ -420,6 +429,7 @@
                 txtPassword.autocapitalizationType = UITextAutocapitalizationTypeNone;
                 txtPassword.tag = 1;
                 txtPassword.delegate = self;
+                txtPassword.text = @"ng";
                 cell.accessoryView = txtPassword;
                 break;
             }

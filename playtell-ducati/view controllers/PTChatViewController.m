@@ -128,7 +128,6 @@
                                               success:^(OTPublisher* publisher)
           {
               LogDebug(@"Connected to OpenTok session");
-              NSLog(@"====================================== DONE");
               [self.chatView setRightView:publisher.view];
           } failure:^(NSError* error) {
               LogError(@"Error connecting to OpenTok session: %@", error);

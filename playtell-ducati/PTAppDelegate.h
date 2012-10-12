@@ -21,6 +21,7 @@
 @interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
     BOOL playdateRequestedViaPush;
     NSInteger playdateRequestedViaPushId;
+    NSDictionary *appLaunchOptions;
     
     // Tooltip
     BOOL ttInviteBuddiesShownThisInstance;
@@ -37,5 +38,6 @@
 
 - (void)runNewUserWorkflow;
 - (BOOL)shouldShowInviteBuddiesTooltip;
+- (void)setupPushNotifications;
 
 @end

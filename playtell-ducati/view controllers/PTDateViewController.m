@@ -79,19 +79,15 @@
 
 - (void)setPlaydate:(PTPlaydate *)aPlaydate {
     LogDebug(@"Setting playdate");
-    NSAssert(playdate == nil, @"Playdate already set");
-
     playdate = aPlaydate;
     [self wireUpwireUpPlaydateConnections];
-//#if !(TARGET_IPHONE_SIMULATOR)
-//    self.chatController = [[PTChatViewController alloc] initWithplaydate:self.playdate];
+
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
-//    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
     
     [self setupRinger];
-    [self beginRinging];
+//    [self beginRinging];
     
     // Set the start time for use with analytics
     playdateStart = [NSDate date];

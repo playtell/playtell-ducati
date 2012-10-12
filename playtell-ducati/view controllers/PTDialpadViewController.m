@@ -201,7 +201,7 @@
         // Otherwise there's playdate collision!
         // More than likely, this will return the same playdate
         // BUT loading playdate id passed via push to be safe
-//        [self checkForPendingPlaydatesAndNotifyUser]; // TODOGIANCARLO fix this
+        [self checkForPendingPlaydatesAndNotifyUser]; // TODOGIANCARLO fix this
     } else {
         [self loadPlaydateDataFromPushNotification];
     }
@@ -500,13 +500,15 @@
          // the same methods
          LogDebug(@"%@ received playdate on check: %@", NSStringFromSelector(_cmd), playdate);
          self.requestedPlaydate = playdate;
-         [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
+         });
      } failure:nil];
 }
 
 - (void)checkForPendingPlaydateOnForegrounding:(NSNotification*)note {
     if (playdateRequestedViaPush != YES) {
-//        [self checkForPendingPlaydatesAndNotifyUser]; TODOGIANCARLO fix this
+        [self checkForPendingPlaydatesAndNotifyUser]; // TODOGIANCARLO fix this
     }
 }
 
@@ -597,6 +599,9 @@
         shimView.hidden = YES;
     }];
     
+    // Stop ringing sound
+    [self endRinging];
+    
     // Unsubscribe from rendezvous channel
     if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
         [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
@@ -622,10 +627,7 @@
     if (self.requestedPlaydate) {
         [self.dateController setPlaydate:self.requestedPlaydate];
         self.requestedPlaydate = nil;
-        self.dateController = nil;
     }
-    
-    [self endRinging];
     
     // Send analytics event for joining a playdate
     [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];

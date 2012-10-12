@@ -167,6 +167,11 @@
     newUserNavigationController.currentUser.password = txtPassword.text;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    // Reset in case they hit back
+    hasNextBeenPressed = NO;
+}
+
 - (void)dealloc {
     // Notifications cleanup
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -368,6 +373,11 @@
 }
 
 - (void)nextDidPress:(id)sender {
+    if (hasNextBeenPressed == YES) {
+        // To avoid double press
+        return;
+    }
+    hasNextBeenPressed = YES;
     [self.view endEditing:YES]; // Hides the keyboard
     
     // Verify email availability
@@ -434,9 +444,6 @@
             [txtPassword becomeFirstResponder];
             break;
         case 2: // Password
-//            if (![txtName.text isEqualToString:@""] && ![txtEmail.text isEqualToString:@""] && ![txtPassword.text isEqualToString:@""]) {
-//                [self nextDidPress:nil];
-//            }
             [txtPassword resignFirstResponder];
             break;
     }

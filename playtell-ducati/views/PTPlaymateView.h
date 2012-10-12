@@ -34,6 +34,9 @@
     // In playdate
     UIView *inPlaydateView;
     BOOL isInPlaydate;
+    
+    // Shaking
+    BOOL isShaking;
 }
 
 @property (nonatomic, retain) id<PTPlaymateDelegate> delegate;

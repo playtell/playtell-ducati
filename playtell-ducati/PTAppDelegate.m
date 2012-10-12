@@ -28,6 +28,7 @@
 #import "UAPush.h"
 #import "UAirship.h"
 #import "PTNewUserNavigationController.h"
+#import "PTUpdateTokenRequest.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -71,8 +72,10 @@
                         andKey:@"suhjzchbzrertmd8yud6oma1lvqc"
                      andSecret:@"0mjxkxof9n45k3tzgzqylapf1c62naep"];
 #endif
-    
-    [self setupPushNotifications:launchOptions];
+
+    // Store launch options for later use by push notif.
+    appLaunchOptions = launchOptions;
+
     [PTVideoPhone sharedPhone];
     
     // Create the ChatHUD
@@ -88,7 +91,7 @@
 
     if ([[PTUser currentUser] isLoggedIn]) {
         // Register for push noticication only if logged in
-        [self setupPushNotifications:launchOptions];
+        [self setupPushNotifications];
 
         // Run logged-in workflow
         [self runLoggedInWorkflow];
@@ -155,9 +158,9 @@
      }];
 }
 
-- (void)setupPushNotifications:(NSDictionary*)theLaunchOptions {
+- (void)setupPushNotifications {
     [self registerForAPNS];
-    [self registerForUrbanAirshipNotifications:theLaunchOptions];
+    [self registerForUrbanAirshipNotifications:appLaunchOptions];
 }
 
 - (void)registerForAPNS {
@@ -204,14 +207,27 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    // Updates the device token and registers the token with UA
-    [[UAirship shared] registerDeviceToken:deviceToken];
-    
-    // Notify of successfull push notification registration request
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
+    // Register device if user is logged in
+    if ([[PTUser currentUser] isLoggedIn] == YES) {
+        // Updates the device token and registers the token with UA
+        [[UAirship shared] registerDeviceToken:deviceToken];
+        NSString *uaToken = [[UAirship shared] deviceToken];
+
+        // Save this token on our server
+        PTUpdateTokenRequest *updateTokenRequest = [[PTUpdateTokenRequest alloc] init];
+        [updateTokenRequest updateTokenWithToken:uaToken
+                                       authToken:[PTUser currentUser].authToken
+                                       onSuccess:nil
+                                       onFailure:nil];
+    } else {
+        // Notify of successfull push notification registration request
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
+    }
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"didFailToRegisterForRemoteNotificationsWithError");
     // Notify of failed push notification registration request
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidFail" object:nil];
 }

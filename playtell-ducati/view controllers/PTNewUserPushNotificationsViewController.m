@@ -19,6 +19,7 @@
 #import "PTUserCreateRequest.h"
 #import "PTLoginRequest.h"
 #import "PTUser.h"
+#import "UAirship.h"
 
 @interface PTNewUserPushNotificationsViewController ()
 
@@ -193,18 +194,20 @@
                            password:newUserNavigationController.currentUser.password
                           pushToken:@""
                           onSuccess:^(NSDictionary *result) {
-//                              NSLog(@"Login result: %@", result);
                               NSString* token = [result valueForKey:@"token"];
                               NSNumber* userID = [result valueForKey:@"user_id"];
                               NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
                               
+                              // Save logged-in status
                               [[PTUser currentUser] setUsername:newUserNavigationController.currentUser.email];
                               [[PTUser currentUser] setEmail:newUserNavigationController.currentUser.email];
                               [[PTUser currentUser] setAuthToken:token];
                               [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
                               [[PTUser currentUser] setPhotoURL:photoURL];
                               
-//                              NSLog(@"Current user: %@", [PTUser currentUser]);
+                              // Get Urban Airship device token
+                              PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                              [appDelegate setupPushNotifications];
 
                               dispatch_async(dispatch_get_main_queue(), ^{
                                   PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
