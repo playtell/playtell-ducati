@@ -134,12 +134,9 @@
 }
 
 - (void)setRightView:(UIView*)aView {
-<<<<<<< HEAD
     // Set new view's frame
-=======
     [aView removeAllGestureRecognizers];
     [self.rightContainerView removeAllSubviews];
->>>>>>> c55252a386a1aa0af29311f9e7e8af8a1f1a936e
     aView.frame = [[self class] rectForRightSubview];
     
     // Fadeout current subviews
