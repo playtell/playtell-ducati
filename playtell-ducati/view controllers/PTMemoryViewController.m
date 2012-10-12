@@ -62,18 +62,18 @@
     // Setup tooltips
     ttWaitYourTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 260.0f, 168.0f)];
     ttWaitYourTurn.center = CGPointMake([UIScreen mainScreen].bounds.size.height / 2.0f, [UIScreen mainScreen].bounds.size.width / 2.0f);
-    ttWaitYourTurn.image = [UIImage imageNamed:@"wait-your-turn.png"];
+    ttWaitYourTurn.image = [UIImage imageNamed:@"wait-your-turn"];
     ttWaitYourTurn.hidden = YES;
     [self.view addSubview:ttWaitYourTurn];
     
     // Winner/loser views
-    winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 503.0f, 394.0f)];
+    winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
     winnerView.center = ttWaitYourTurn.center;
-    winnerView.image = [UIImage imageNamed:@"winner.png"];
+    winnerView.image = [UIImage imageNamed:@"memory-win"];
     winnerView.alpha = 0.0f;
-    loserView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 503.0f, 394.0f)];
+    loserView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
     loserView.center = ttWaitYourTurn.center;
-    loserView.image = [UIImage imageNamed:@"defeated.png"];
+    loserView.image = [UIImage imageNamed:@"memory-loss"];
     loserView.alpha = 0.0f;
     
     // Add cards to board
@@ -150,7 +150,7 @@
     cards = [NSMutableArray arrayWithCapacity:[filenames count]];
     for (int i=0; i<[filenames count]; i++) {
         PTMemoryGameCard *card = [[PTMemoryGameCard alloc] initWithFrontFilename:[filenames objectAtIndex:i]
-                                                                    backFilename:@"card-back.png"
+                                                                    backFilename:@"card-back"
                                                                     indexOnBoard:i
                                                                    numberOfCards:numCards];
         [card setFrame:CGRectMake(card.coordinates.boardX,

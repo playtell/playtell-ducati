@@ -10,6 +10,7 @@
 #import "PTLoginViewController.h"
 #import "UIColor+HexColor.h"
 #import "PTContactsNavLongBackButton.h"
+#import "PTContactsNavCancelButton.h"
 #import "PTNewUserNavigationController.h"
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
@@ -54,6 +55,12 @@
     navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
     
     // Nav buttons
+    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
+    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
+    [buttonCancelView addTarget:self action:@selector(cancelDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
+    [navigationBar.topItem setLeftBarButtonItem:cancelButton];
+    
     PTContactsNavLongBackButton *buttonBackView = [PTContactsNavLongBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 165.0f, 33.0f);
     [buttonBackView setTitle:@"Create New Account" forState:UIControlStateNormal];
@@ -236,6 +243,12 @@
 }
 
 #pragma mark - Button handlers
+
+- (void)cancelDidPress:(id)sender {
+    // Load the dialpad with no signed-in user
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate runNewUserWorkflow];
+}
 
 - (IBAction)signInDidPress:(id)sender {
     // End editing & show activity

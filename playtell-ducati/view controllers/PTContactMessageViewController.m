@@ -7,6 +7,7 @@
 //
 
 #import "PTContactMessageViewController.h"
+#import "PTContactImportViewController.h"
 #import "PTContactsNavBackButton.h"
 #import "PTContactsNavSendButton.h"
 #import "PTContactsNavCancelButton.h"
@@ -134,10 +135,26 @@
 }
 
 - (void)didPressBack:(id)sender {
+    // Manually added last contact?
+    if ([self.navigationController.viewControllers count] == 2) {
+        // Pass current contact list back to import view controller to keep track of all contacts
+        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
+        importViewController.contacts = contacts;
+    }
+    
+    // Go back
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)didPressInviteMore:(id)sender {
+    // Manually added last contact?
+    if ([self.navigationController.viewControllers count] == 2) {
+        // Pass current contact list back to import view controller to keep track of all contacts
+        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
+        importViewController.contacts = contacts;
+    }
+
+    // Go back
     [self.navigationController popViewControllerAnimated:YES];
 }
 

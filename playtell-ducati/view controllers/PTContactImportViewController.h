@@ -23,7 +23,12 @@
     IBOutlet UIButton *buttonGoogle;
     IBOutlet UIButton *buttonAddressBook;
     BOOL isKeyboardShown;
+    
+    // Contacts
+    NSMutableArray *contacts;
 }
+
+@property (nonatomic, retain) NSMutableArray *contacts;
 
 - (IBAction)googleContactsStart:(id)sender;
 - (IBAction)googleLogout:(id)sender;

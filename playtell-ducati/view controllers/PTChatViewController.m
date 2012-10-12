@@ -203,23 +203,17 @@
 - (UIView*)playmatePlaceholderView {
     CGRect dummyFrame = CGRectMake(0, 0, 200, 150);
     UIView *dummyBackground = [[UIView alloc] initWithFrame:dummyFrame];
-    dummyBackground.backgroundColor = [UIColor whiteColor];
+    dummyBackground.backgroundColor = [UIColor colorFromHex:@"#2E4957"];
     
-    UIView *dummyContent = [[UIView alloc] initWithFrame:CGRectMake(3.0f, 3.0f, dummyFrame.size.width-6.0f, dummyFrame.size.height-6.0f)];
-    dummyContent.backgroundColor = [UIColor colorFromHex:@"#545c60"];
+    UIView *dummyContent = [[UIView alloc] initWithFrame:CGRectMake(7.0f, 7.0f, dummyFrame.size.width-14.0f, dummyFrame.size.height-14.0f)];
+    dummyContent.backgroundColor = [UIColor clearColor];
     dummyContent.layer.cornerRadius = 10.0f;
     
-    UILabel *lblName = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 122.0f, dummyBackground.bounds.size.width-20.0f, 18.0f)];
-    lblName.backgroundColor = [UIColor clearColor];
-    lblName.text = @"Playmate";
-    lblName.textColor = [UIColor whiteColor];
-    lblName.textAlignment = UITextAlignmentCenter;
-    lblName.font = [UIFont boldSystemFontOfSize:15.0f];
-    lblName.shadowColor = [UIColor colorFromHex:@"#000000" alpha:0.6f];
-    lblName.shadowOffset = CGSizeMake(0.0f, 1.0f);
-
+    UIImageView *placeholderBuddy = [[UIImageView alloc] initWithFrame:dummyContent.bounds];
+    placeholderBuddy.image = [UIImage imageNamed:@"placeholder-buddy"];
+    [dummyContent addSubview:placeholderBuddy];
+    
     [dummyBackground addSubview:dummyContent];
-    [dummyBackground addSubview:lblName];
     return dummyBackground;
 }
 

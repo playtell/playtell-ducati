@@ -25,6 +25,8 @@
 
 @implementation PTContactImportViewController
 
+@synthesize contacts;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -40,6 +42,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
         isKeyboardShown = NO;
+
+        // Contacts array
+        self.contacts = [NSMutableArray array];
     }
     return self;
 }
@@ -210,65 +215,6 @@
     [self.navigationController pushViewController:contactSelectViewController animated:YES];
 }
 
-- (void)getGoogleContacts2 {
-    NSURL *url = [NSURL URLWithString:@"https://www.google.com/m8/feeds/contacts/default/full?alt=json&max-results=2000"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    GTMHTTPFetcher* fetcher = [GTMHTTPFetcher fetcherWithRequest:request];
-    [fetcher setAuthorizer:googleAuth];
-    [fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
-        if (error == nil) {
-//            NSString *dataStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//            NSLog(@"------> Got contacts: %@", dataStr);
-            NSError *jsonError;
-            NSDictionary *contactsJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-            if (jsonError == nil) {
-                NSArray *entries = [[contactsJSON objectForKey:@"feed"] objectForKey:@"entry"];
-                NSMutableArray *contacts = [NSMutableArray array];
-                for (NSDictionary *entry in entries) {
-                    // Verify name exists
-                    if ([entry objectForKey:@"title"] == nil || [[[entry objectForKey:@"title"] objectForKey:@"$t"] length] == 0) {
-                        continue;
-                    }
-                    NSString *title = [[[entry objectForKey:@"title"] objectForKey:@"$t"] copy];
-                    
-                    // Verify at least one email exists
-                    if ([entry objectForKey:@"gd$email"] == nil) {
-                        continue;
-                    }
-                    NSArray *entryEmails = [entry objectForKey:@"gd$email"];
-                    for (NSDictionary *entryEmail in entryEmails) {
-                        // Save this contact
-                        NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 title,                                                  @"name",
-                                                 [[entryEmail objectForKey:@"address"] lowercaseString], @"email",
-                                                 @"Google Contacts",                                     @"source",
-                                                 nil];
-                        [contacts addObject:contact];
-                    }
-                    
-                }
-
-                NSLog(@"---> Contacts: %i", [contacts count]);
-                
-                // Load select controller
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController"
-                                                                                                                                 bundle:nil
-                                                                                                                           withContacts:contacts];
-                    contactSelectViewController.sourceType = @"Google Contacts";
-                    [self.navigationController pushViewController:contactSelectViewController animated:YES];
-                });
-            } else {
-                // TODO: Handle error
-                NSLog(@"JSON ERROR: %@", jsonError);
-            }
-        } else {
-            // TODO: Handle error
-            NSLog(@"ERROR: %@", error);
-        }
-    }];
-}
-
 - (IBAction)googleLogout:(id)sender {
     [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:@"PlayTellGoogleOAuth"];
     [GTMOAuth2ViewControllerTouch revokeTokenForGoogleAuthentication:googleAuth];
@@ -316,7 +262,7 @@
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex nPeople = ABAddressBookGetPersonCount(addressBook);
     
-    NSMutableArray *contacts = [NSMutableArray array];
+    NSMutableArray *abContacts = [NSMutableArray array];
     for (int i=0; i<nPeople; i++) {
         ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
         NSString *firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
@@ -335,7 +281,7 @@
                                          [[email copy] lowercaseString], @"email",
                                          @"iPad Address Book",           @"source",
                                          nil];
-                [contacts addObject:contact];
+                [abContacts addObject:contact];
             }
         }
         
@@ -343,18 +289,20 @@
         CFRelease(ref);
     }
     
-    NSLog(@"---> Got contacts: %i", [contacts count]);
+    NSLog(@"---> Got contacts: %i", [abContacts count]);
     
     // Load select controller
     PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc] initWithNibName:@"PTContactSelectViewController"
                                                                                                                  bundle:nil
-                                                                                                           withContacts:contacts];
+                                                                                                           withContacts:abContacts];
     contactSelectViewController.sourceType = @"Address Book";
     [self.navigationController pushViewController:contactSelectViewController animated:YES];
 }
 
 - (IBAction)manualInvite:(id)sender {
-    if ([textName.text isEqualToString:@""]) {
+    // Validate name
+    NSArray *nameParts = [textName.text componentsSeparatedByString:@" "];
+    if ([nameParts count] < 2) {
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:@"Invite error"
                               message:@"Please enter a full name"
@@ -363,7 +311,19 @@
                               otherButtonTitles:nil];
         [alert show];
         return;
-    } else if ([textEmail.text isEqualToString:@""]) {
+    }
+    
+    // Validate email
+    NSString *emailRegEx =
+    @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+    @"~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+    @"x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+    @"z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+    @"]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+    @"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+    @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+    if (![emailTest evaluateWithObject:textEmail.text]) {
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:@"Invite error"
                               message:@"Please enter an email"
@@ -373,9 +333,12 @@
         [alert show];
         return;
     }
+    
+    // Show compose msg view controller
     NSMutableDictionary *contact = [NSMutableDictionary dictionaryWithObjectsAndKeys:textName.text, @"name", textEmail.text, @"email", nil];
-    NSMutableArray *contacts = [NSMutableArray arrayWithObjects:contact, nil];
-    PTContactMessageViewController *contactMessageViewController = [[PTContactMessageViewController alloc] initWithNibName:@"PTContactMessageViewController" bundle:nil withContacts:contacts];
+    [self.contacts addObject:contact];
+
+    PTContactMessageViewController *contactMessageViewController = [[PTContactMessageViewController alloc] initWithNibName:@"PTContactMessageViewController" bundle:nil withContacts:self.contacts];
     [self.navigationController pushViewController:contactMessageViewController animated:YES];
 }
 

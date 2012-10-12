@@ -29,7 +29,7 @@
         [backgroundView addSubview:contentsView];
         
         // Init the photo view (and its container for shadow)
-        UIImage *profilePhotoImage = [UIImage imageNamed:@"playmate-add-friends"];
+        UIImage *profilePhotoImage = [UIImage imageNamed:@"playmate-add-3invite"];
         profilePhotoContainer = [[UIView alloc] initWithFrame:contentsView.bounds];
         profilePhotoContainer.layer.cornerRadius = 10.0f;
 
@@ -84,12 +84,13 @@
     [addFriendView addSubview:inviteBuddiesLbl];
     
     // Shift contents view down
-//    contentsView.alpha = 0.5f;
     contentsView.bounds = CGRectOffset(contentsView.bounds, 0.0f, -30.0f);
     
     // Add button to contents view
-    UIButton *addFriendsButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    addFriendsButton.frame = CGRectMake(82.0f, 43.0f, 29.0f, 29.0f);
+    UIButton *addFriendsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    addFriendsButton.frame = CGRectMake(67.0f, 28.0f, 58.0f, 58.0f);
+    [addFriendsButton setImage:[UIImage imageNamed:@"invite-button"] forState:UIControlStateNormal];
+    [addFriendsButton setImage:[UIImage imageNamed:@"invite-button-press"] forState:UIControlStateHighlighted];
     [contentsView addSubview:addFriendsButton];
     [addFriendsButton addTarget:self action:@selector(addFriendsDidPress:) forControlEvents:UIControlEventTouchUpInside];
 }

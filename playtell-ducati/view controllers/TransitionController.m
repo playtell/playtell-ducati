@@ -94,8 +94,6 @@ viewController = _viewController;
 - (void)transitionToViewController:(UIViewController *)aViewController
                        withOptions:(UIViewAnimationOptions)options
 {
-    NSLog(@"transitionToViewController:%@", aViewController);
-//    CGRect containerViewWithStatusbar = CGRectMake(0, 20, 1024, 748);
     CGRect containerViewWithoutStatusbar = CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f);
     aViewController.view.frame = containerViewWithoutStatusbar;
     [UIView transitionWithView:self.containerView

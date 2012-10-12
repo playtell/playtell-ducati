@@ -21,6 +21,9 @@
 @interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
     BOOL playdateRequestedViaPush;
     NSInteger playdateRequestedViaPushId;
+    
+    // Tooltip
+    BOOL ttInviteBuddiesShownThisInstance;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -31,5 +34,8 @@
 @property (strong, nonatomic) PTDateViewController *dateViewController;
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (strong, nonatomic) PTMemoryViewController *memoryViewController;
+
+- (void)runNewUserWorkflow;
+- (BOOL)shouldShowInviteBuddiesTooltip;
 
 @end

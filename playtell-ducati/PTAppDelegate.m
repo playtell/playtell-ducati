@@ -97,6 +97,9 @@
         [self runNewUserWorkflow];
     }
     
+    // Defaults
+    ttInviteBuddiesShownThisInstance = NO;
+    
     return YES;
 }
 
@@ -175,11 +178,6 @@
     [self runLoggedInWorkflow];
 }
 
-- (void)createNewAccount:(PTLoginViewController*)controller {
-    // Run the new user workflow
-    [self runNewUserWorkflow];
-}
-
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -234,5 +232,26 @@
 //- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 //    return [FBSession.activeSession handleOpenURL:url];
 //}
+
+#pragma mark - Tooltip helpers
+
+- (BOOL)shouldShowInviteBuddiesTooltip {
+    // Already shown once this instance?
+    if (ttInviteBuddiesShownThisInstance == YES) {
+        return NO;
+    }
+    
+    // Check how many times it's been shown overall
+    NSInteger numTTInviteBuddiesShown = [[NSUserDefaults standardUserDefaults] integerForKey:@"numTTInviteBuddiesShown"];
+    numTTInviteBuddiesShown++;
+    [[NSUserDefaults standardUserDefaults] setInteger:numTTInviteBuddiesShown forKey:@"numTTInviteBuddiesShown"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (numTTInviteBuddiesShown > 5) {
+        return NO;
+    }
+    
+    ttInviteBuddiesShownThisInstance = YES;
+    return YES;
+}
 
 @end

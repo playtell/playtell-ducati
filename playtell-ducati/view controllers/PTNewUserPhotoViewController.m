@@ -59,7 +59,11 @@
     self.title = @"Pick a photo";
     
     // Nav buttons
-    self.navigationItem.hidesBackButton = YES;
+    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
+    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
+    [buttonCancelView addTarget:self action:@selector(cancelDidPress:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
+    [self.navigationItem setLeftBarButtonItem:cancelButton];
     
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
@@ -193,6 +197,12 @@
 }
 
 #pragma mark - Navigation button handlers
+
+- (void)cancelDidPress:(id)sender {
+    // Load the dialpad with no signed-in user
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate runNewUserWorkflow];
+}
 
 - (void)backDidPress:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

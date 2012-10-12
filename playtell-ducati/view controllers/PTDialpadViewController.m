@@ -132,6 +132,16 @@
         [signUpBubbleContainer addSubview:signUpButton];
         [self.view addSubview:signUpBubbleContainer];
     }
+    
+    // "Invite Buddies" tooltip
+    if ([appDelegate shouldShowInviteBuddiesTooltip] == YES) {
+        PTPlaymateAddView *playmateAddView = (PTPlaymateAddView *)[self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
+        ttInviteBuddies = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tooltip-invite-buddies"]];
+        ttInviteBuddies.frame = CGRectMake(playmateAddView.frame.origin.x + 185.0f, playmateAddView.frame.origin.y + 50.0f, 244.0f, 76.0);
+        ttInviteBuddies.alpha = 0.0f;
+        [self.scrollView insertSubview:ttInviteBuddies aboveSubview:playmateAddView];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -232,6 +242,19 @@
                              signUpBubbleContainer.alpha = 1.0f;
                          }];
     }
+    
+    // Fly-in + fade-in "invite buddies" tooltip if it exists
+    if (ttInviteBuddies != nil) {
+        ttInviteBuddies.frame = CGRectOffset(ttInviteBuddies.frame, 500.0f, 0.0f);
+        [UIView animateWithDuration:0.7f
+                         animations:^{
+                             ttInviteBuddies.frame = CGRectOffset(ttInviteBuddies.frame, -500.0f, 0.0f);
+                             ttInviteBuddies.alpha = 1.0f;
+                         }
+                         completion:^(BOOL finished) {
+                             [self performSelector:@selector(hideInviteBuddiesTooltip) withObject:nil afterDelay:3.0f];
+                         }];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -258,8 +281,7 @@
 
 - (void)drawPlaymates {
     // Define grid vars
-    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
-    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
+    const NSInteger totalPlaymates = [self.playmates count] + 1; // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -280,23 +302,16 @@
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
             
             // Are we at the last object in the grid?
-            if (drawPlaymateAddView == YES) {
-                if (playmateIndex == (totalPlaymates - 1)) {
-                    // Add "Import Friends" playmate view
-                    PTPlaymateAddView *playmateAddView = [[PTPlaymateAddView alloc] initWithFrame:itemFrame];
-                    [playmateAddView hideAnimated:NO];
-                    playmateAddView.delegate = self;
-                    [self.scrollView addSubview:playmateAddView];
-                    
-                    // Save playmate view to hash for easy retrieval
-                    [self.playmateViews setObject:playmateAddView forKey:[NSNumber numberWithInteger:-2]];
-                    break;
-                }
-            } else {
-                // No more playmates to add
-                if (playmateIndex >= totalPlaymates) {
-                    break;
-                }
+            if (playmateIndex == (totalPlaymates - 1)) {
+                // Add "Import Friends" playmate view
+                PTPlaymateAddView *playmateAddView = [[PTPlaymateAddView alloc] initWithFrame:itemFrame];
+                [playmateAddView hideAnimated:NO];
+                playmateAddView.delegate = self;
+                [self.scrollView addSubview:playmateAddView];
+                
+                // Save playmate view to hash for easy retrieval
+                [self.playmateViews setObject:playmateAddView forKey:[NSNumber numberWithInteger:-2]];
+                break;
             }
             
             // Add a playmate view
@@ -314,8 +329,7 @@
 
 - (void)addNewPlaymate {
     // Define grid vars
-    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
-    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
+    const NSInteger totalPlaymates = [self.playmates count] + 1; // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -337,20 +351,13 @@
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
 
             // Are we at the last object in the grid?
-            if (drawPlaymateAddView == YES) {
-                if (playmateIndex == (totalPlaymates - 1)) {
-                    // Retrieve "Import Friends" playmate view
-                    PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
-                    if (playmateAddView != nil) {
-                        // If view exists, save its new frame to a hash we'll reuse later for animations
-                        [playmateViewLocations setObject:playmateAddView
-                                                  forKey:[NSValue valueWithCGRect:itemFrame]];
-                    }
-                }
-            } else {
-                // No more playmates to add
-                if (playmateIndex >= totalPlaymates) {
-                    break;
+            if (playmateIndex == (totalPlaymates - 1)) {
+                // Retrieve "Import Friends" playmate view
+                PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
+                if (playmateAddView != nil) {
+                    // If view exists, save its new frame to a hash we'll reuse later for animations
+                    [playmateViewLocations setObject:playmateAddView
+                                              forKey:[NSValue valueWithCGRect:itemFrame]];
                 }
             }
             
@@ -392,8 +399,7 @@
 
 - (void)refreshPlaymateViews {
     // Define grid vars
-    const BOOL drawPlaymateAddView = [[PTUser currentUser] isLoggedIn];
-    const NSInteger totalPlaymates = [self.playmates count] + (drawPlaymateAddView ? 1 : 0); // Extra one for PlaymateAddView (friend import flow)
+    const NSInteger totalPlaymates = [self.playmates count] + 1; // Extra one for PlaymateAddView (friend import flow)
     const UIEdgeInsets gridMargin = UIEdgeInsetsMake(30.0f, 70.0f, 0.0f, 70.0f);
     const CGSize itemSize = CGSizeMake(200, 150);
     const NSInteger itemsPerRow = 4;
@@ -414,20 +420,13 @@
             CGRect itemFrame = CGRectMake(itemOrigin.x, itemOrigin.y, itemSize.width, itemSize.height);
             
             // Are we at the last object in the grid?
-            if (drawPlaymateAddView == YES) {
-                if (playmateIndex == (totalPlaymates - 1)) {
-                    // Retrieve "Import Friends" playmate view
-                    PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
-                    if (playmateAddView != nil) {
-                        // If view exists, save its new frame to a hash we'll reuse later for animations
-                        [playmateViewLocations setObject:playmateAddView
-                                                  forKey:[NSValue valueWithCGRect:itemFrame]];
-                    }
-                }
-            } else {
-                // No more playmates to add
-                if (playmateIndex >= totalPlaymates) {
-                    break;
+            if (playmateIndex == (totalPlaymates - 1)) {
+                // Retrieve "Import Friends" playmate view
+                PTPlaymateView *playmateAddView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:-2]];
+                if (playmateAddView != nil) {
+                    // If view exists, save its new frame to a hash we'll reuse later for animations
+                    [playmateViewLocations setObject:playmateAddView
+                                              forKey:[NSValue valueWithCGRect:itemFrame]];
                 }
             }
             
@@ -1006,11 +1005,17 @@
 }
 
 - (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
-    PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    // Is the user logged in?
+    if ([[PTUser currentUser] isLoggedIn] == YES) {
+        PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+        
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    } else {
+        // If user isn't logged in, redirect them to sign-up form
+        [self signUpDidPress:nil];
+    }
 }
 
 #pragma mark - New user flow methods
@@ -1025,7 +1030,19 @@
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
-#pragma mark - Temp
+#pragma mark - Tooltip helpers
+
+- (void)hideInviteBuddiesTooltip {
+    [UIView animateWithDuration:0.4f
+                     animations:^{
+                         ttInviteBuddies.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [ttInviteBuddies removeFromSuperview];
+                     }];
+}
+
+#pragma mark - Logout flow (not called anywhere right now)
 
 - (void)logoutDidPress:(id)sender {
     // Clear out current user values
