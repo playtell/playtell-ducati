@@ -87,8 +87,10 @@
 //    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
     
-    [self setupRinger];
-    [self beginRinging];
+    if ([aPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        [self setupRinger];
+        [self beginRinging];
+    }
     
     // Set the start time for use with analytics
     playdateStart = [NSDate date];
