@@ -53,6 +53,7 @@
 @property (nonatomic, weak) OTPublisher* myPublisher;
 @property (nonatomic, strong) PTPlaymate* playmate;
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
+@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
 @end
 
 @implementation PTDateViewController
@@ -64,6 +65,7 @@
 @synthesize playmate;
 @synthesize delegate;
 @synthesize audioPlayer;
+@synthesize backgroundTask;
 
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)aChatController {
@@ -462,12 +464,44 @@
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dateControllerDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
 #if !(TARGET_IPHONE_SIMULATOR)
-    [self removePlaymateFromChatHUD];
+    backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Here goes your operation
+        [self removePlaymateFromChatHUD];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                // if you don't call endBackgroundTask, the OS will exit your app.
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    });
 #endif
 }
 
 - (void)removePlaymateFromChatHUD {
+    // Remove the chat hud from view
+    [self.chatController disconnectOpenTokSession];
+    [self.chatController.view removeFromSuperview];
+    [self.chatController setPlaymate:nil];
+    [self.chatController configureForDialpad];
+    
+    // We don't setup these, so not sure why these calls are in here
     if (self.playmateSubscriber) {
         [self.playmateSubscriber.view removeFromSuperview];
         self.playmateSubscriber = nil;
@@ -509,6 +543,28 @@
 //        }
         [self disconnectAndTransitionToDialpad];
     }];
+}
+
+- (void)dateControllerDidBecomeActive:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
+    
+#if !(TARGET_IPHONE_SIMULATOR)
+    PTPlaymate *partner;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        partner = self.playdate.playmate;
+    } else {
+        partner = self.playdate.initiator;
+    }
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.chatController = appDelegate.chatController;
+    [self.view addSubview:self.chatController.view];
+    [self.chatController setPlaymate:partner];
+    [self.chatController setLoadingViewForPlaymate:partner];
+    [self.chatController connectToOpenTokSession];
+#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
