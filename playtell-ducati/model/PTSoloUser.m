@@ -23,6 +23,7 @@
 @property (nonatomic, strong) PTFriendTouchTooltip *friendTooltip;
 @property (nonatomic, strong) PTCloseActivityTooltip *closeTooltip;
 @property (nonatomic, strong) PTEndCallTooltip* endCallTooltip;
+@property (nonatomic, strong) UIImageView *friendTouchImage;
 @property (nonatomic, assign) BOOL isIntroPlayed;
 @property (nonatomic, assign) BOOL isFirstBookOpened;
 @property (nonatomic, assign) BOOL isTouchTipsVisibile;
@@ -35,6 +36,7 @@
 @synthesize friendTooltip;
 @synthesize closeTooltip;
 @synthesize endCallTooltip;
+@synthesize friendTouchImage;
 @synthesize isIntroPlayed;
 @synthesize isFirstBookOpened;
 @synthesize isTouchTipsVisibile;
@@ -54,6 +56,8 @@
         self.closeTooltip = [[PTCloseActivityTooltip alloc] initWithWidth:225.0f];
         self.endCallTooltip = [[PTEndCallTooltip alloc] initWithWidth:206.0f];
         [self resetScriptState];
+        
+        self.friendTouchImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"friendfinger.png"]];
     }
     return self;
 }
@@ -127,9 +131,13 @@
         self.friendTooltip.alpha = 0.0f;
         [self.friendTooltip addToView:controller.view
                      withCaretAtPoint:CGPointMake(855.0f - 143.0, 525.0f - 152.0)];
+        self.friendTouchImage.frame = CGRectMake(694.0f, 365.0f, 57.0f, 57.0f);
+        self.friendTouchImage.alpha = 0.0f;
+        [controller.view addSubview:self.friendTouchImage];
         
         [UIView animateWithDuration:0.5 animations:^{
             self.friendTooltip.alpha = 1.0;
+            self.friendTouchImage.alpha = 1.0;
         }];
         [self playSecondVideoWithChatController:controller.chatController];
         self.isTouchTipsVisibile = YES;
@@ -192,6 +200,7 @@
     
     [self.touchTooltip removeFromSuperview];
     [self.friendTooltip removeFromSuperview];
+    [self.friendTouchImage removeFromSuperview];
 }
 
 - (void)dateViewControllerWillAppear:(PTDateViewController *)controller {
@@ -229,15 +238,23 @@
     if (self.touchTooltip.superview && initiatedBySelf && CGRectContainsPoint(touchHereHitArea, point)) {
         [self playYouTouchVideoWithChatController:controller.chatController];
         
-        // Remove the touch tooltips
-        [UIView animateWithDuration:0.5f animations:^{
-            self.touchTooltip.alpha = 0.0f;
-            self.friendTooltip.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            [self.touchTooltip removeFromSuperview];
-            [self.friendTooltip removeFromSuperview];
-        }];
+        [self performSelector:@selector(removeAllTouchViews)
+                   withObject:nil
+                   afterDelay:1.0f];
     }
+}
+
+- (void)removeAllTouchViews {
+    // Remove the touch tooltips
+    [UIView animateWithDuration:0.5f animations:^{
+        self.touchTooltip.alpha = 0.0f;
+        self.friendTooltip.alpha = 0.0f;
+        self.friendTouchImage.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self.touchTooltip removeFromSuperview];
+        [self.friendTooltip removeFromSuperview];
+        [self.friendTouchImage removeFromSuperview];
+    }];
 }
 
 - (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller {
