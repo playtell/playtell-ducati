@@ -119,6 +119,13 @@
     }
 }
 
+- (void)disconnectOpenTokSession {
+    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:nil];
+    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:nil];
+    [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:nil];
+    [[PTVideoPhone sharedPhone] disconnect];
+}
+
 - (void)connectToPlaceholderOpenTokSession {
     PTGetSampleOpenTokToken* getTokBoxSession = [[PTGetSampleOpenTokToken alloc] init];
     [getTokBoxSession requestOpenTokSessionAndTokenWithSuccess:^(NSString *openTokSession, NSString *openTokToken)

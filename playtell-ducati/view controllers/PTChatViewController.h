@@ -22,6 +22,7 @@
 - (void)setLeftViewAsPlaceholder;
 - (void)connectToOpenTokSession;
 - (void)connectToPlaceholderOpenTokSession;
+- (void)disconnectOpenTokSession;
 
 - (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate;
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL;
