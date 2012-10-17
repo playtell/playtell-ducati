@@ -18,6 +18,7 @@
 #import "PTDialpadViewController.h"
 #import "PTBookView.h"
 #import "PTPageView.h"
+#import "PTGameView.h"
 
 //MODELS
 #import "PTUser.h"
@@ -360,26 +361,48 @@
         // Book cover pages load
         [coversToLoad addObject:bookId];
     }
-        
-    //TODO we need to incorporate an API call here to load games from the API
-    xPos += (booksScrollView.frame.size.width * .75);
-    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
-    tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
-    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                action:@selector(ticTacToeTapped:)];
-    [tttBookView addGestureRecognizer:tapRecognizer];
-    tttBookView.userInteractionEnabled = YES;
-    [booksScrollView addSubview:tttBookView];
-    xPos += booksScrollView.frame.size.width;
     
-    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
-    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                                    action:@selector(memoryTapped:)];
-    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
-    memoryBookView.userInteractionEnabled = YES;
-    [booksScrollView addSubview:memoryBookView];
-    xPos = booksScrollView.frame.size.width + xPos;
+    // Load the game views (hardcoded for now)
+    gameList = [[NSMutableArray alloc] initWithCapacity:2];
+
+    PTGameView *gameView1 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                       gameId:1
+                                                     gameLogo:[UIImage imageNamed:@"Memory-logo"]];
+    [gameView1 setPosition:i];
+    [gameView1 setDelegate:self];
+    [booksScrollView addSubview:gameView1];
+    [gameList addObject:gameView1];
+    
+    xPos += booksScrollView.frame.size.width;
+    i++;
+    
+    PTGameView *gameView2 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                       gameId:2
+                                                     gameLogo:[UIImage imageNamed:@"TTT-logo"]];
+    [gameView2 setPosition:i];
+    [gameView2 setDelegate:self];
+    [booksScrollView addSubview:gameView2];
+    [gameList addObject:gameView2];
+    
+    //TODO we need to incorporate an API call here to load games from the API
+//    xPos += (booksScrollView.frame.size.width * .75);
+//    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
+//    tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
+//    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                                action:@selector(ticTacToeTapped:)];
+//    [tttBookView addGestureRecognizer:tapRecognizer];
+//    tttBookView.userInteractionEnabled = YES;
+//    [booksScrollView addSubview:tttBookView];
+//    xPos += booksScrollView.frame.size.width;
+//    
+//    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
+//    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
+//    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
+//                                                                                    action:@selector(memoryTapped:)];
+//    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
+//    memoryBookView.userInteractionEnabled = YES;
+//    [booksScrollView addSubview:memoryBookView];
+//    xPos = booksScrollView.frame.size.width + xPos;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
@@ -741,8 +764,7 @@
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
-#pragma mark -
-#pragma mark Pusher notification handlers
+#pragma mark - Pusher notification handlers
 
 - (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
     PTPlaydate* joinedPlaydate = [[note userInfo] valueForKey:PTPlaydateKey];
@@ -947,7 +969,6 @@
     }
 }
 
-
 - (void)pusherPlayDateMemoryNewGame:(NSNotification *)notification {
     NSDictionary *eventData = notification.userInfo;
     NSInteger initiator_id = [[eventData objectForKey:@"initiator_id"] integerValue];
@@ -1008,8 +1029,7 @@
     [self removeFingerAtPoint:point];
 }
 
-#pragma mark -
-#pragma mark Covers/pages loading
+#pragma mark - Covers/pages loading
 
 - (void)loadBookCovers {
     // Create a directory for each book, if needed
@@ -1117,72 +1137,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Web view helpers/delegates
-
-//- (BOOL)webView:(UIWebView *)thisWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-//    NSString *requestString = [[request URL] absoluteString];
-//    NSArray *components = [requestString componentsSeparatedByString:@":"];
-//    
-//    // Check if JavaScript said web page has been loaded and render it to bitmap
-//    if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"pageLoadFinished"]) {
-//        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
-//        NSInteger pageNum = [(NSString *)[components objectAtIndex:3] intValue];
-//        // Render page view to bitmap
-//        [self convertWebViewPageToBitmapWithBookId:bookId andPageNumber:pageNum];
-//        return NO;
-//    } else if ([components count] > 1 && [(NSString *)[components objectAtIndex:0] isEqualToString:@"playtell"] && [(NSString *)[components objectAtIndex:1] isEqualToString:@"coverLoadFinished"]) {
-//        NSInteger bookId = [(NSString *)[components objectAtIndex:2] intValue];
-//        // Render cover view to bitmap
-//        [self convertWebViewCoverToBitmapWithBookId:bookId];
-//        return NO;
-//    }
-//    
-//    return YES;
-//}
-
-//- (void)convertWebViewPageToBitmapWithBookId:(NSInteger)bookId andPageNumber:(NSInteger)pageNumber {
-//    // Generate bitmaps
-//    UIGraphicsBeginImageContext(webView.bounds.size);
-//    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//
-//    // Send the image to book
-//    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-//    [bookView setPageContentsWithImage:image];
-//    
-//    // Cache image locally
-//    NSString *imagePath = [self pageImagePathForBook:[NSNumber numberWithInteger:bookId] AndPageNumber:pageNumber];
-//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-//    [imageData writeToFile:imagePath atomically:YES];
-//    
-//    // Load next cover
-//    coversToLoadIndex++;
-//    if (coversToLoadIndex < [coversToLoad count]) {
-//        [self loadBookCoverFromFileOrURL];
-//    }
-//}
-//
-//- (void)convertWebViewCoverToBitmapWithBookId:(NSInteger)bookId {
-//    // Generate bitmaps
-//    UIGraphicsBeginImageContext(CGSizeMake(webView.bounds.size.width / 2.0f, webView.bounds.size.height));
-//    [webView.layer renderInContext:UIGraphicsGetCurrentContext()];
-//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//
-//    // Send the image to book
-//    PTBookView *bookView = [bookList objectAtIndex:coversToLoadIndex];
-//    [bookView setCoverContentsWithImage:image];
-//    
-//    // Cache image locally
-//    NSString *imagePath = [self coverImagePathForBook:[NSNumber numberWithInteger:bookId]];
-//    NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-//    [imageData writeToFile:imagePath atomically:YES];
-//    
-//    // Before loading next cover, load first page of this book
-//    [self loadFirstPageFromFileOrURL];
-//}
+#pragma mark - Documents filesys helpers
 
 - (NSString *)getDocumentsPath {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -1200,8 +1155,7 @@
     return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
 }
 
-#pragma mark -
-#pragma mark Books scroll delegates
+#pragma mark - Books scroll delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     // Adjust size/opacity of each book as they scroll
@@ -1209,15 +1163,24 @@
     CGFloat width = booksScrollView.frame.size.width;
     for (int i=0, l=[books count]; i<l; i++) {
         CGFloat pos = ABS(i * width - x);
-        if (pos <= (width * 3.0f)) { // Ignore all the books out of view (whole view fits about 3 books)
+        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
             CGFloat level = 1.0f - pos / width;
             [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
         }
     }
+    
+    // Same for each game
+    for (int i=0, l=[gameList count]; i<l; i++) {
+        int actual_i = i + [books count];
+        CGFloat pos = ABS(actual_i * width - x);
+        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
+            CGFloat level = 1.0f - pos / width;
+            [(PTGameView *)[gameList objectAtIndex:i] setFocusLevel:level];
+        }
+    }
 }
 
-#pragma mark -
-#pragma mark Book delegates
+#pragma mark - Book delegates
 
 - (void)bookFocusedWithId:(NSNumber *)bookId {
     currentBookId = [bookId copy];
@@ -1347,8 +1310,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Pages scroll delegates
+#pragma mark - Pages scroll delegates
 
 - (void)pageTurnedTo:(NSInteger)number {
     // Reset page loading from new page number
@@ -1508,8 +1470,7 @@
     }
 }
 
-#pragma mark -
-#pragma mark Grandma Finger
+#pragma mark - Grandma Finger
 
 - (void)addFingerAtPoint:(CGPoint)point initiatedBySelf:(BOOL)isInitiatedBySelf {
 
@@ -1546,8 +1507,7 @@
     fingerView = nil;
 }
 
-#pragma mark -
-#pragma mark Playdate delegates
+#pragma mark - Playdate delegates
 
 - (void)playdateShouldEnd {
     // Dismiss popover
@@ -1569,6 +1529,30 @@
          {
              [self transitionToDialpad];
          }];
+    }
+}
+
+#pragma mark - Games delegates
+
+- (void)gameFocusedWithId:(NSNumber *)gameId {
+    NSLog(@"gameFocusedWithId: %i", [gameId integerValue]);
+}
+
+- (void)gameTouchedWithId:(NSNumber *)gameId AndView:(PTGameView *)gameView {
+    NSLog(@"gameTouchedWithId: %i", [gameId integerValue]);
+    // Game selected, either focus it or open it
+    if ([gameView inFocus] == NO) {
+        // Bring game to focus
+        NSInteger position = [gameView getPosition];
+        CGPoint navigateTo = CGPointMake(booksScrollView.frame.size.width * position, 0.0f);
+        [booksScrollView setContentOffset:navigateTo animated:YES];
+    } else {
+        // Open specific book (ids are hardcoded)
+        if ([gameId integerValue] == 1) {
+            [self memoryTapped:nil];
+        } else if ([gameId integerValue] == 2) {
+            [self ticTacToeTapped:nil];
+        }
     }
 }
 

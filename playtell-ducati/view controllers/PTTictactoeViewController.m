@@ -147,8 +147,6 @@
                                 initiatorId:[NSNumber numberWithInt:[[PTUser currentUser] userID]]
                                  onSuccess:^(NSDictionary *result)
      {
-         NSLog(@"%@", result);
-         
          NSString *boardId = [result valueForKey:@"board_id"];
          int boardID = [boardId intValue];
          [self drawNewGame:boardID myTurn:YES initiator:[[PTUser currentUser] userID] playmate:[self getOtherUserID]];
@@ -199,7 +197,7 @@
     space.animationDuration = .1;
     space.alpha = (opaque) ? .5 : 1;
     space.animationRepeatCount = 1;
-    space.image = (kind == PIECE_X) ? [UIImage imageNamed:@"X_00015.png"] : [UIImage imageNamed:@"O_00015.png"];
+    space.image = (kind == PIECE_X) ? [UIImage imageNamed:@"X_00015"] : [UIImage imageNamed:@"O_00015"];
     
     [space startAnimating];
     // add the animation view to the main window
@@ -225,7 +223,7 @@
         array = [self buildImageArrayWithStart:0 end:14 unique_identifier:@"LR"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"LR_00014.png";
+        endingImageName = @"LR_00014";
         
         CGRect imageframe = CGRectMake(boardX,boardY,590,590);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -234,7 +232,7 @@
         array = [self buildImageArrayWithStart:2 end:14 unique_identifier:@"RL"];
         boardX = ROW_COORDINATE_0;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"RL_00014.png";   
+        endingImageName = @"RL_00014";
         
         CGRect imageframe = CGRectMake(boardX,boardY,590,590);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -243,7 +241,7 @@
         array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_0 - 10;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical_00015.png";
+        endingImageName = @"Vertical_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -252,7 +250,7 @@
         array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_1 - 10;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical_00015.png";
+        endingImageName = @"Vertical_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -261,7 +259,7 @@
         array = [self buildImageArrayWithStart:0 end:15 unique_identifier:@"Vertical"];
         boardX = ROW_COORDINATE_2 - 10;
         boardY = COL_COORDINATE_0;
-        endingImageName = @"Vertical_00015.png";
+        endingImageName = @"Vertical_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,200,576);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -270,7 +268,7 @@
         array = [self buildImageArrayWithStart:1 end:15 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_0 + 20;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal_00015.png";
+        endingImageName = @"Horizontal_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,588,98);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -279,7 +277,7 @@
         array = [self buildImageArrayWithStart:1 end:14 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_1 + 20;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal_00015.png";
+        endingImageName = @"Horizontal_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -288,7 +286,7 @@
         array = [self buildImageArrayWithStart:1 end:15 unique_identifier:@"Horizontal"];
         boardY = COL_COORDINATE_2 + 20;
         boardX = ROW_COORDINATE_0;
-        endingImageName = @"Horizontal_00015.png";
+        endingImageName = @"Horizontal_00015";
         
         CGRect imageframe = CGRectMake(boardX,boardY,594,99);
         slash = [[UIImageView alloc] initWithFrame:imageframe];
@@ -323,8 +321,8 @@
         UIImageView* youPlaceholder = [[UIImageView alloc] initWithFrame:youPlaceholderO];
         UIImageView* opponentPlaceholder = [[UIImageView alloc] initWithFrame:opponentPlaceholderX];
         
-        youIndicator.image = [UIImage imageNamed:@"o-turn.png"];                                                    
-        opponentIndicator.image = [UIImage imageNamed:@"x-turn.png"];
+        youIndicator.image = [UIImage imageNamed:@"o-turn"];
+        opponentIndicator.image = [UIImage imageNamed:@"x-turn"];
         youPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
         opponentPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
         
@@ -341,8 +339,8 @@
         UIImageView* youPlaceholder = [[UIImageView alloc] initWithFrame:youPlaceholderX];
         UIImageView* opponentPlaceholder = [[UIImageView alloc] initWithFrame:opponentPlaceholderO];
         
-        youIndicator.image = [UIImage imageNamed:@"x-turn.png"];
-        opponentIndicator.image = [UIImage imageNamed:@"o-turn.png"];
+        youIndicator.image = [UIImage imageNamed:@"x-turn"];
+        opponentIndicator.image = [UIImage imageNamed:@"o-turn"];
         youPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
         opponentPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
         
@@ -407,8 +405,6 @@
         if (placement_code == PLACED_WON) {
             win_code = [[eventData objectForKey:@"win_code"] integerValue];
         }
-        
-        NSLog(@"Incoming place_piece pusher request...");
         
         [self updateUIWithStatus:placement_code coordinates:pusherCoordinates winStatus:win_code isCurrentUser:NO];
     }
@@ -534,7 +530,7 @@
     //init board frame for first time
     CGRect imageframe = CGRectMake(212,193,601,575);
     board = [[UIImageView alloc] initWithFrame:imageframe];
-    board.image = [UIImage imageNamed:@"game-board-you.png"]; //init with normal board, flip once everything else initialized
+    board.image = [UIImage imageNamed:@"game-board-you"]; //init with normal board, flip once everything else initialized
     [self.view addSubview:board];
     
 #if !(TARGET_IPHONE_SIMULATOR)
@@ -542,6 +538,14 @@
 #endif
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];
+    
+    // Setup tooltips
+    ttWaitYourTurn = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 260.0f, 168.0f)];
+    ttWaitYourTurn.center = CGPointMake([UIScreen mainScreen].bounds.size.height / 2.0f, [UIScreen mainScreen].bounds.size.width / 2.0f);
+    ttWaitYourTurn.image = [UIImage imageNamed:@"wait-your-turn"];
+    ttWaitYourTurn.hidden = YES;
+    ttWaitYourTurn.layer.zPosition = 700;
+    [self.view addSubview:ttWaitYourTurn];
 }
 
 // ## Tictactoe methods start ##
@@ -598,7 +602,7 @@
     CGRect imageframe = CGRectMake(297,262,503,394);
     UIImageView *cats = [[UIImageView alloc] initWithFrame:imageframe];
     
-    cats.image = [UIImage imageNamed:@"cats-game.png"];
+    cats.image = [UIImage imageNamed:@"catsgame"];
     
     cats.animationDuration = 5.75;
     //Set alpha
@@ -617,7 +621,7 @@
     CGRect imageframe = CGRectMake(297,262,503,407);
     UIImageView *win = [[UIImageView alloc] initWithFrame:imageframe];
     
-    win.image = [UIImage imageNamed:@"winner.png"];
+    win.image = [UIImage imageNamed:@"winner"];
     [self beginSound:(id)[NSNumber numberWithInt:WIN_SOUND]];
 
     //Set alpha
@@ -635,7 +639,7 @@
     CGRect imageframe = CGRectMake(297,292,503,394);
     UIImageView *defeat = [[UIImageView alloc] initWithFrame:imageframe];
     
-    defeat.image = [UIImage imageNamed:@"defeated.png"];
+    defeat.image = [UIImage imageNamed:@"defeated"];
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
 
     defeat.animationDuration = 5.75;
@@ -677,7 +681,7 @@
                     animations:^{
                         [self removeButtons];
                         [self clearBoard];
-                        board.image = [UIImage imageNamed:@"game-board-opponent.png"];
+                        board.image = [UIImage imageNamed:@"game-board-opponent"];
                     }
                     completion:^(BOOL finished){
                         [self reAddButtons];
@@ -694,7 +698,7 @@
                     animations:^{
                         [self removeButtons];
                         [self clearBoard];
-                        board.image = [UIImage imageNamed:@"game-board-you.png"];
+                        board.image = [UIImage imageNamed:@"game-board-you"];
                     }
                     completion:^(BOOL finished){
                         [self reAddButtons];
@@ -712,10 +716,6 @@ userId:(NSString *)userID
     NSString *boardID = [NSString stringWithFormat:@"%d", self.board_id];
     
     PTTictactoePlacePieceRequest *placePieceRequest = [[PTTictactoePlacePieceRequest alloc] init];
-    NSLog(@"Auth token is :%@",[[PTUser currentUser] authToken] );
-    NSLog(@"user_id is :%@", userID);
-    NSLog(@"board_id is :%@",boardID);
-    NSLog(@"playdate_id is :%@",[NSString stringWithFormat:@"%d", self.playdate.playdateID]);
     [placePieceRequest placePieceWithCoordinates:coordinate.coordinateString
                                        authToken:[[PTUser currentUser] authToken]
                                     user_id:userID
@@ -732,7 +732,6 @@ userId:(NSString *)userID
                                                NSNumber *winCode = [result valueForKey:@"win_code"];
                                                win_code = [winCode intValue];
                                            }
-                                           NSLog(@"%@", result);
 
                                            [self updateUIWithStatus:placement_status coordinates:coordinate winStatus:win_code isCurrentUser:YES];
                                        }
@@ -748,6 +747,10 @@ userId:(NSString *)userID
 
 //Client-side place piece attempt
 -(IBAction)placePiece:(id)sender{
+    if (board_enabled == NO) {
+        [self showWaitYourTurn];
+        return;
+    }
     UIButton *button = (UIButton *)sender;
     NSString *buttonTag = [NSString stringWithFormat:@"%d", [button tag]]; //buttons are tagged with their coordinates in interface builder
     PTTictactoeCoordinate *clientCoordinates = [[PTTictactoeCoordinate alloc] initWithCoordinateString:buttonTag];
@@ -757,8 +760,6 @@ userId:(NSString *)userID
 }
 
 - (void)pusherPlayDateTictactoeEndGame:(NSNotification *)notification {
-    NSLog(@"End game pusher call received");
-    
     NSDictionary *eventData = notification.userInfo;
     NSInteger initiatorId = [[eventData objectForKey:@"playmate_id"] integerValue]; //person who ended the game
     
@@ -773,19 +774,15 @@ userId:(NSString *)userID
     NSString *boardID = [NSString stringWithFormat:@"%d", self.board_id];
     
     PTTictactoeEndGameRequest *endGameRequest = [[PTTictactoeEndGameRequest alloc] init];
-    NSLog(@"Auth token is :%@",[[PTUser currentUser] authToken] );
-    
+
     [endGameRequest endGameWithBoardId:boardID
                              authToken:[[PTUser currentUser] authToken]
                                 userId:[NSString stringWithFormat:@"%d", [[PTUser currentUser] userID]]
                             playdateId:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
-                             onSuccess:^(NSDictionary *result) {
-        NSLog(@"End game API call success");
-
-    }
+                             onSuccess:nil
                              onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"End game API call failure");
-    }];
+                                 NSLog(@"End game API call failure");
+                             }];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
@@ -851,6 +848,28 @@ userId:(NSString *)userID
              [self transitionToDialpad];
          }];
     }
+}
+
+#pragma mark - Tooltip methods
+
+- (void)showWaitYourTurn {
+    [ttWaitYourTurn.layer removeAllAnimations];
+    ttWaitYourTurn.alpha = 0.0f;
+    ttWaitYourTurn.hidden = NO;
+    [UIView animateWithDuration:0.4f animations:^{
+        ttWaitYourTurn.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        [self performSelector:@selector(hideWaitYourTurn) withObject:nil afterDelay:2.0f];
+    }];
+}
+
+- (void)hideWaitYourTurn {
+    [ttWaitYourTurn.layer removeAllAnimations];
+    [UIView animateWithDuration:0.4f animations:^{
+        ttWaitYourTurn.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        ttWaitYourTurn.hidden = YES;
+    }];
 }
 
 @end

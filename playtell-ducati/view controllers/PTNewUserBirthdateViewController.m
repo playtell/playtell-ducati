@@ -17,6 +17,7 @@
 #import "PTLoginViewController.h"
 #import "PTNewUserNavigationController.h"
 #import "PTNewUserPushNotificationsViewController.h"
+#import "PTAnalytics.h"
 
 @interface PTNewUserBirthdateViewController ()
 
@@ -123,6 +124,11 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    // Start analytics event timer
+    eventStart = [NSDate date];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
@@ -170,6 +176,22 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterLongStyle];
     txtDate.text = [dateFormatter stringFromDate:date];
+}
+
+#pragma mark - Analytics event
+
+- (void)logAnalyticsEvent {
+    if (eventStart) {
+        PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
+        
+        NSTimeInterval interval = fabs([eventStart timeIntervalSinceNow]);
+        
+        [PTAnalytics sendEventNamed:EventNewUserStep3Birthday
+                     withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithFloat:interval], PropDuration,
+                                     newUserNavigationController.currentUser.email, PropEmail,
+                                     nil]];
+    }
 }
 
 @end

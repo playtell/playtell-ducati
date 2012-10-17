@@ -19,6 +19,7 @@
 #import "PTNewUserPhotoViewController.h"
 #import "PTUserEmailCheckRequest.h"
 #import "PTErrorTableCell.h"
+#import "PTAnalytics.h"
 
 @interface PTNewUserInfoViewController ()
 
@@ -170,6 +171,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     // Reset in case they hit back
     hasNextBeenPressed = NO;
+    
+    // Start analytics event timer
+    eventStart = [NSDate date];
 }
 
 - (void)dealloc {
@@ -247,6 +251,9 @@
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           buttonNext.enabled = YES;
                                           [activityEmailView stopAnimating];
+                                          
+                                          // Log the analytics event
+                                          [self logAnalyticsEvent];
                                           
                                           // Go to next step in account creation (profile photo)
                                           PTNewUserPhotoViewController *newUserPhotoViewController = [[PTNewUserPhotoViewController alloc] initWithNibName:@"PTNewUserPhotoViewController" bundle:nil];
@@ -573,6 +580,22 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 0.0f;
+}
+
+#pragma mark - Analytics event
+
+- (void)logAnalyticsEvent {
+    if (eventStart) {
+        PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
+
+        NSTimeInterval interval = fabs([eventStart timeIntervalSinceNow]);
+        
+        [PTAnalytics sendEventNamed:EventNewUserStep1Info
+                     withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithFloat:interval], PropDuration,
+                                     newUserNavigationController.currentUser.email, PropEmail,
+                                     nil]];
+    }
 }
 
 @end

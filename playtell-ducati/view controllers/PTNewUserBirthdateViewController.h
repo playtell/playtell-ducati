@@ -20,6 +20,9 @@
     IBOutlet UIDatePicker *datePicker;
     BOOL hasDateChanged;
     IBOutlet UITextField *txtDate;
+    
+    // Analytics
+    NSDate *eventStart;
 }
 
 @end

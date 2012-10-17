@@ -47,8 +47,7 @@
 @synthesize phone;
 @synthesize chatController;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setup analytics
     [PTAnalytics startAnalytics];
     
@@ -207,7 +206,6 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
     // Register device if user is logged in
     if ([[PTUser currentUser] isLoggedIn] == YES) {
         // Updates the device token and registers the token with UA
@@ -227,7 +225,6 @@
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    NSLog(@"didFailToRegisterForRemoteNotificationsWithError");
     // Notify of failed push notification registration request
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidFail" object:nil];
 }

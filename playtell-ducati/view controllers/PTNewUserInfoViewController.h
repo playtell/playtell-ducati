@@ -28,6 +28,9 @@
     BOOL isKeyboardShown;
     BOOL isEmailNotAvailable;
     BOOL hasNextBeenPressed;
+    
+    // Analytics
+    NSDate *eventStart;
 }
 
 - (IBAction)signInDidPress:(id)sender;

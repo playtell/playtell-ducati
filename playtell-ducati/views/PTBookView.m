@@ -22,9 +22,9 @@
         inFocus = NO;
         
         // Setup pinch detection
-        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
-        [pinchRecognizer setDelegate:self];
-        [self addGestureRecognizer:pinchRecognizer];
+//        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinched:)];
+//        [pinchRecognizer setDelegate:self];
+//        [self addGestureRecognizer:pinchRecognizer];
 
     }
     return self;
@@ -289,12 +289,38 @@
     }
 }
 
-- (void)pinched:(id)sender {
-	NSLog(@"Pinching, ouch!");
+//- (void)pinched:(id)sender {
+//	NSLog(@"Pinching, ouch!");
+//}
+
+#pragma mark - Touches methods
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (inFocus) {
+        coverOut.opacity = 0.5f;
+    }
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (inFocus) {
+        [self performSelector:@selector(didCancelTouch) withObject:nil afterDelay:0.1f];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    NSLog(@"Touched me: %@", [self getId]);
+    if (inFocus) {
+        [self performSelector:@selector(didEndTouch) withObject:nil afterDelay:0.1f];
+    } else {
+        [delegate bookTouchedWithId:[self getId] AndView:self];
+    }
+}
+
+- (void)didCancelTouch {
+    coverOut.opacity = 1.0f;
+}
+
+- (void)didEndTouch {
+    coverOut.opacity = 1.0f;
     [delegate bookTouchedWithId:[self getId] AndView:self];
 }
 

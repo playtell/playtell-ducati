@@ -30,6 +30,11 @@
     UIImagePickerController *camera;
     UIPopoverController *cameraPopoverController;
     BOOL hasPhotoChanged;
+    
+    // Analytics
+    NSDate *eventStart;
+    BOOL isSourceCamera;
+    BOOL isSourceLibrary;
 }
 
 @property (nonatomic, retain) UIPopoverController *cameraPopoverController;

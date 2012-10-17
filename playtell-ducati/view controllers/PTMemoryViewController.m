@@ -370,9 +370,9 @@
 
             // Show winner/loser views
             if ([winnderId integerValue] == [PTUser currentUser].userID) {
-                [self displayYouWin];
+                [self performSelector:@selector(displayYouWin) withObject:nil afterDelay:1.5f];
             } else {
-                [self displayYouLost];
+                [self performSelector:@selector(displayYouLost) withObject:nil afterDelay:1.5f];
             }
 
             // Update scores
@@ -380,7 +380,7 @@
 
             // Start new game after timeout (let the winner fire off new game call!)
             if ([winnderId integerValue] == [PTUser currentUser].userID) {
-                [self performSelector:@selector(resetGame) withObject:nil afterDelay:5.0f];
+                [self performSelector:@selector(resetGame) withObject:nil afterDelay:6.0f];
             }
             break;
         }

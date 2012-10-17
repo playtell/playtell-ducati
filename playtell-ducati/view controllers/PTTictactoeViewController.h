@@ -28,6 +28,9 @@
     
     NSArray *board_buttons, *turn_indicators;
     NSMutableArray *board_spaces;
+
+    // Tooltip
+    UIImageView *ttWaitYourTurn;
 }
 
 //playdate specific

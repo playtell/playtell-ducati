@@ -7,21 +7,34 @@
 //
 
 // Names of events
-#define EventBookRead                 @"Book read"
-#define EventGamePlayed               @"Game played"
-#define EventNUXEnded                 @"NUX ended"
-#define EventNUXStarted               @"NUX started"
-#define EventPlaydateCreated          @"Playdate created"
-#define EventPlaydateEnded            @"Playdate ended"
-#define EventPlaydateJoined           @"Playdate joined"
-#define EventPlaymateJoinedMyPlaydate @"Playmate joined my playdate"
-#define EventUsedFinger               @"Used finger"
+#define EventBookRead                  @"Book read"
+#define EventGamePlayed                @"Game played"
+#define EventNUXEnded                  @"NUX ended"
+#define EventNUXStarted                @"NUX started"
+#define EventPlaydateCreated           @"Playdate created"
+#define EventPlaydateEnded             @"Playdate ended"
+#define EventPlaydateJoined            @"Playdate joined"
+#define EventPlaymateJoinedMyPlaydate  @"Playmate joined my playdate"
+#define EventUsedFinger                @"Used finger"
+#define EventNewUserStep1Info          @"New User: Step 1: Info"
+#define EventNewUserStep2Photo         @"New User: Step 2: Photo"
+#define EventNewUserStep3Birthday      @"New User: Step 3: Birthday"
+#define EventNewUserStep4AccountCreate @"New User: Step 4: Account creation"
+#define EventNewUserStep5Push          @"New User: Step 5: Push Notifications"
+#define EventFriendInvitation          @"Friends invited"
 
 // Names of properties passed in with events
+#define PropUserId                    @"User id"
 #define PropBookId                    @"Book id"
 #define PropDuration                  @"Duration"
 #define PropGameName                  @"Game name"
 #define PropPlaymateId                @"Playmate id"
+#define PropEmail                     @"Email"
+#define PropPhotoSource               @"Profile photo source"
+#define PropAccountCreation           @"Account creation successful"
+#define PropPushSuccessful            @"Push notification successful"
+#define PropNumContacts               @"Number invited"
+#define PropContactSource             @"Contact source"
 
 #import <Foundation/Foundation.h>
 

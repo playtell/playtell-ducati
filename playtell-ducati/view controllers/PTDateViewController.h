@@ -7,6 +7,7 @@
 //
 
 #import "PTBookView.h"
+#import "PTGameView.h"
 #import "PTBooksParentView.h"
 #import "PTBooksScrollView.h"
 #import "PTChatViewController.h"
@@ -31,7 +32,7 @@
 - (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller;
 @end
 
-@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate> {
+@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTGameViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate> {
     // Playdate
     PTPlaydate *playdate;
     IBOutlet UIButton *endPlaydate;
@@ -51,6 +52,9 @@
     NSMutableArray *coversToLoad;
     NSInteger coversToLoadIndex;
     BOOL boolListLoadedFromPlist;
+    
+    // Games
+    NSMutableArray *gameList;
     
     // Pages
     PTPagesScrollView *pagesScrollView;

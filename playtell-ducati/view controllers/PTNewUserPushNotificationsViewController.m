@@ -20,6 +20,7 @@
 #import "PTLoginRequest.h"
 #import "PTUser.h"
 #import "UAirship.h"
+#import "PTAnalytics.h"
 
 @interface PTNewUserPushNotificationsViewController ()
 
@@ -138,6 +139,9 @@
                                       NSLog(@"New user creation success!");
                                       isAccountSuccessfullyCreated = YES;
                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                          // Log the analytics event
+                                          [self logAnalyticsEventAccountWithSuccess:YES];
+
                                           viewAccountCreating.hidden = YES;
                                           viewAccountSuccess.hidden = NO;
                                           [self performSelector:@selector(proceedWithPushNotificationPrompt) withObject:nil afterDelay:2.0f];
@@ -146,6 +150,9 @@
                                       NSLog(@"New user creation failure!! %@ - %@", error, JSON);
                                       isAccountSuccessfullyCreated = NO;
                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                          // Log the analytics event
+                                          [self logAnalyticsEventAccountWithSuccess:NO];
+
                                           // Change Finish button title
                                           PTContactsNavNextButton *buttonFinishView = (PTContactsNavNextButton *)buttonFinish.customView;
                                           [buttonFinishView setTitle:@"Retry" forState:UIControlStateNormal];
@@ -249,7 +256,10 @@
                             toView:contentContainer2
                           duration:0.8f
                            options:(UIViewAnimationOptionShowHideTransitionViews|UIViewAnimationOptionTransitionFlipFromLeft)
-                        completion:nil];
+                        completion:^(BOOL finished) {
+                            // Start analytics event timer
+                            eventStart = [NSDate date];
+                        }];
     }
 }
 
@@ -260,15 +270,48 @@
 }
 
 - (void)pushNotificationRequestDidSucceed:(NSNotification *)notification {
+    // Log the analytics event
+    [self logAnalyticsEventPushWithSuccess:YES];
+
     // Transition to dialpad to start using app
     [self accountCreatedSuccessfully];
 }
 
 - (void)pushNotificationRequestDidFail:(NSNotification *)notification {
+    // Log the analytics event
+    [self logAnalyticsEventPushWithSuccess:NO];
+
     // TODO: Ping server that this failed!
     
     // Transition to dialpad to start using app
     [self accountCreatedSuccessfully];
+}
+
+#pragma mark - Analytics event
+
+- (void)logAnalyticsEventAccountWithSuccess:(BOOL)isAccountCreated {
+    PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
+    
+    [PTAnalytics sendEventNamed:EventNewUserStep4AccountCreate
+                 withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                 newUserNavigationController.currentUser.email, PropEmail,
+                                 isAccountCreated ? @"YES" : @"NO", PropAccountCreation,
+                                 nil]];
+}
+
+- (void)logAnalyticsEventPushWithSuccess:(BOOL)isPushSuccessful {
+    if (eventStart) {
+        PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
+        
+        NSTimeInterval interval = fabs([eventStart timeIntervalSinceNow]);
+        
+        [PTAnalytics sendEventNamed:EventNewUserStep5Push
+                     withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithFloat:interval], PropDuration,
+                                     newUserNavigationController.currentUser.email, PropEmail,
+                                     isPushSuccessful ? @"YES" : @"NO", PropPushSuccessful,
+                                     nil]];
+    }
 }
 
 @end

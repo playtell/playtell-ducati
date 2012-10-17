@@ -18,6 +18,7 @@
 #import "PTNewUserNavigationController.h"
 #import "PTNewUserBirthdateViewController.h"
 #import "UIImage+Resize.h"
+#import "PTAnalytics.h"
 
 // iOS 6 hack to make UIImagePickerController work in landscape
 
@@ -184,6 +185,11 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    // Start analytics event timer
+    eventStart = [NSDate date];
+}
+
 - (void)dealloc {
     // Notifications cleanup
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -236,12 +242,16 @@
 #pragma mark - Photo actions
 
 - (IBAction)takePhotoDidPress:(id)sender {
+    isSourceCamera = YES;
+
     camera.sourceType = UIImagePickerControllerSourceTypeCamera;
     camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
     [self.cameraPopoverController presentPopoverFromRect:photoContainer.frame inView:contentContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 - (IBAction)choosePhotoDidPress:(id)sender {
+    isSourceLibrary = YES;
+
     camera.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     [self.cameraPopoverController presentPopoverFromRect:photoContainer.frame inView:contentContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
@@ -292,6 +302,28 @@
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     // Get rid of camera
     [self.cameraPopoverController dismissPopoverAnimated:YES];
+}
+
+#pragma mark - Analytics event
+
+- (void)logAnalyticsEvent {
+    if (eventStart) {
+        PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
+        
+        NSTimeInterval interval = fabs([eventStart timeIntervalSinceNow]);
+        
+        NSString *photoSource = @"camera";
+        if (isSourceLibrary) {
+            photoSource = @"library";
+        }
+        
+        [PTAnalytics sendEventNamed:EventNewUserStep2Photo
+                     withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                     [NSNumber numberWithFloat:interval], PropDuration,
+                                     newUserNavigationController.currentUser.email, PropEmail,
+                                     photoSource, PropPhotoSource,
+                                     nil]];
+    }
 }
 
 @end

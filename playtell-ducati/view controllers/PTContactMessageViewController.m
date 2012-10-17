@@ -16,6 +16,8 @@
 #import "PTUser.h"
 #import "MBProgressHUD.h"
 #import "PTContactsTableMsgCell.h"
+#import "PTContactSelectViewController.h"
+#import "PTAnalytics.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface PTContactMessageViewController ()
@@ -220,6 +222,9 @@
 }
 
 - (void)didPressSend:(id)sender {
+    // Log the analytics event
+    [self logAnalyticsEvent];
+
     // Collect contact emails
     NSMutableArray *contactEmails = [NSMutableArray arrayWithCapacity:[contacts count]];
     for (NSMutableDictionary *contact in contacts) {
@@ -320,6 +325,28 @@
     if ([contacts count] == 0) {
         [self.navigationController popViewControllerAnimated:YES];
     }
+}
+
+- (void)logAnalyticsEvent {
+    // Contact data source
+    NSString *source;
+    if ([self.navigationController.viewControllers count] == 2) {
+        source = @"Manual Invite";
+    } else {
+        NSInteger totalController = [self.navigationController.viewControllers count];
+        PTContactSelectViewController *contactSelectViewController = [self.navigationController.viewControllers objectAtIndex:(totalController - 2)];
+        source = contactSelectViewController.sourceType;
+    }
+    
+    // Total contacts
+    NSNumber *totalContacts = [NSNumber numberWithInteger:[contacts count]];
+    
+    [PTAnalytics sendEventNamed:EventFriendInvitation
+                 withProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithInteger:[PTUser currentUser].userID], PropUserId,
+                                 totalContacts, PropNumContacts,
+                                 source, PropContactSource,
+                                 nil]];
 }
 
 @end

@@ -25,6 +25,9 @@
     IBOutlet UIView *viewAccountCreating;
     IBOutlet UIView *viewAccountFailure;
     BOOL isAccountSuccessfullyCreated;
+
+    // Analytics
+    NSDate *eventStart;
 }
 
 - (IBAction)showPushNotificationPrompt:(id)sender;
