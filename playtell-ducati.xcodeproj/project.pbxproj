@@ -1889,8 +1889,8 @@
 		F4A9D8E81579217E0015D977 /* PTPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymate.m; sourceTree = "<group>"; };
 		F4A9D8EA1579218E0015D977 /* PTUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUser.h; sourceTree = "<group>"; };
 		F4A9D8EB1579218E0015D977 /* PTUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUser.m; sourceTree = "<group>"; };
-		F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTUpdateSettingsRequest.h; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/api/PTUpdateSettingsRequest.h"; sourceTree = "<absolute>"; };
-		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTUpdateSettingsRequest.m; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/api/PTUpdateSettingsRequest.m"; sourceTree = "<absolute>"; };
+		F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUpdateSettingsRequest.h; sourceTree = "<group>"; };
+		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
 		F4A9D8F415798DBF0015D977 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTDialpadViewController.h; sourceTree = "<group>"; };
 		F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateButton.h; sourceTree = "<group>"; };
