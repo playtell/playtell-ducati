@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A10583F163048EC001D9694 /* PTUsersGetStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A10583E163048EC001D9694 /* PTUsersGetStatusRequest.m */; };
 		1A6E982F1626E16100E63F6C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 1A6E97EC1626E16100E63F6C /* .gitignore */; };
 		1A6E984A1626E16100E63F6C /* MPCJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98201626E16100E63F6C /* MPCJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1A6E984B1626E16100E63F6C /* MPCJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98221626E16100E63F6C /* MPCJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -792,6 +793,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A10583D163048EC001D9694 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUsersGetStatusRequest.h; sourceTree = "<group>"; };
+		1A10583E163048EC001D9694 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUsersGetStatusRequest.m; sourceTree = "<group>"; };
 		1A6E97EC1626E16100E63F6C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		1A6E981F1626E16100E63F6C /* MPCJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONDataSerializer.h; sourceTree = "<group>"; };
 		1A6E98201626E16100E63F6C /* MPCJSONDataSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONDataSerializer.m; sourceTree = "<group>"; };
@@ -1076,8 +1079,6 @@
 		23D291EA1623AC3F006ADBCE /* PTMemoryGameDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameDelegate.h; sourceTree = "<group>"; };
 		23D41A8D159CAEF900677E03 /* dialad-live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialad-live.png"; sourceTree = "<group>"; };
 		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialpad-pending.png"; sourceTree = "<group>"; };
-		23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTUsersGetStatusRequest.h; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/api/PTUsersGetStatusRequest.h"; sourceTree = "<absolute>"; };
-		23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTUsersGetStatusRequest.m; path = "/Users/dimitry/Documents/XCode/playtell-ducati/playtell-ducati/api/PTUsersGetStatusRequest.m"; sourceTree = "<absolute>"; };
 		23D4EE5F16260A84007CE611 /* PTMemoryGameScoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameScoreView.h; sourceTree = "<group>"; };
 		23D4EE6016260A84007CE611 /* PTMemoryGameScoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMemoryGameScoreView.m; sourceTree = "<group>"; };
 		23D78D6F15D5882300CC284B /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -2467,8 +2468,8 @@
 				23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */,
 				23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */,
 				23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */,
-				23D41A92159CBF7E00677E03 /* PTUsersGetStatusRequest.h */,
-				23D41A93159CBF7E00677E03 /* PTUsersGetStatusRequest.m */,
+				1A10583D163048EC001D9694 /* PTUsersGetStatusRequest.h */,
+				1A10583E163048EC001D9694 /* PTUsersGetStatusRequest.m */,
 			);
 			name = playdates;
 			sourceTree = "<group>";
@@ -4931,6 +4932,7 @@
 				236DBB411630451300FBE728 /* PTPlaydateDetailsRequest.m in Sources */,
 				236DBB421630451300FBE728 /* PTPlaydateDisconnectRequest.m in Sources */,
 				236DBB431630451300FBE728 /* PTPlaydateJoinedRequest.m in Sources */,
+				1A10583F163048EC001D9694 /* PTUsersGetStatusRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
