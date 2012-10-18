@@ -536,33 +536,37 @@
     } completion:^(BOOL finished) {
         self.chatController.playmate = playmate;
         [playmateImageView removeFromSuperview];
+        [self.chatController setLoadingViewForPlaymate:playmate];
 
-        // Start the playdate
-        [self initiatePlaydateWithPlaymate:playmate];
-
-        // If the user is logged in and the
-        if ([[PTUser currentUser] isLoggedIn] && ![playmate isARobot]) {
-            PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
-            [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:playmate.userID]
-                                                  authToken:[[PTUser currentUser] authToken]
-                                                  onSuccess:^(NSDictionary *result)
-             {
-                 LogInfo(@"playdateCreateWithFriend response: %@", result);
-                 PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
-                                                                playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
-                 self.chatController.playdate = aPlaydate;
-                 [self.chatController connectToOpenTokSession];
-                 [self.dateController setPlaydate:aPlaydate];
-                 self.dateController = nil;
-                 
-                 // Send analytics an event for creating a playdate
-                 [PTAnalytics sendEventNamed:EventPlaydateCreated withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
-             } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                 LogError(@"playdateCreateWithFriend failed: %@", error);
-             }];
-            LogInfo(@"Requesting playdate...");
-            [self.chatController setLoadingViewForPlaymate:playmate];
-        }
+        // Dispatching this asynchronously so the UI will update itself before trying to
+        // start a playdate
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Start the playdate
+            [self initiatePlaydateWithPlaymate:playmate];
+            
+            // If the user is logged in and the
+            if ([[PTUser currentUser] isLoggedIn] && ![playmate isARobot]) {
+                PTPlaydateCreateRequest *playdateCreateRequest = [[PTPlaydateCreateRequest alloc] init];
+                [playdateCreateRequest playdateCreateWithFriend:[NSNumber numberWithUnsignedInt:playmate.userID]
+                                                      authToken:[[PTUser currentUser] authToken]
+                                                      onSuccess:^(NSDictionary *result)
+                 {
+                     LogInfo(@"playdateCreateWithFriend response: %@", result);
+                     PTPlaydate* aPlaydate = [[PTPlaydate alloc] initWithDictionary:result
+                                                                    playmateFactory:[PTConcretePlaymateFactory sharedFactory]];
+                     self.chatController.playdate = aPlaydate;
+                     [self.chatController connectToOpenTokSession];
+                     [self.dateController setPlaydate:aPlaydate];
+                     self.dateController = nil;
+                     
+                     // Send analytics an event for creating a playdate
+                     [PTAnalytics sendEventNamed:EventPlaydateCreated withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
+                 } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                     LogError(@"playdateCreateWithFriend failed: %@", error);
+                 }];
+                LogInfo(@"Requesting playdate...");
+            }
+        });
     }];
 }
 
