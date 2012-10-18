@@ -180,6 +180,7 @@
     awaitingView.layer.borderWidth = 1.0f;
     awaitingView.alpha = 0.0f;
     [backgroundView insertSubview:awaitingView belowSubview:contentsView];
+    isAwaitingShown = NO;
     
     // "Invitation sent" Label
     UILabel *invitationSentLbl = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 6.0f, awaitingView.bounds.size.width-20.0f, 18.0f)];
@@ -220,6 +221,11 @@
         [self loadFriendshipConfirmView];
     }
     
+    if (isConfirmShown == YES) {
+        return;
+    }
+    isConfirmShown = YES;
+    
     // Turn off user interaction from contents view to let touches pass through to confirm view
     contentsView.userInteractionEnabled = NO;
 
@@ -237,8 +243,13 @@
 }
 
 - (void)hideFriendshipConfirmationAnimated:(BOOL)animated {
+    if (isConfirmShown == NO) {
+        return;
+    }
+    isConfirmShown = NO;
+
     // Turn on user interaction to contents view (turned off to let touches pass through to confirm view)
-    contentsView.userInteractionEnabled = NO;
+    contentsView.userInteractionEnabled = YES;
     
     if (animated == NO) {
         confirmView.alpha = 0.0f;
@@ -257,6 +268,11 @@
     if (awaitingView == nil) {
         [self loadFriendshipAwaitingView];
     }
+    
+    if (isAwaitingShown == YES) {
+        return;
+    }
+    isAwaitingShown = YES;
 
     if (animated == NO) {
         awaitingView.alpha = 1.0f;
@@ -272,6 +288,11 @@
 }
 
 - (void)hideFriendshipAwaitingAnimated:(BOOL)animated {
+    if (isAwaitingShown == NO) {
+        return;
+    }
+    isAwaitingShown = NO;
+
     if (animated == NO) {
         awaitingView.alpha = 0.0f;
         contentsView.alpha = 1.0f;
@@ -286,6 +307,9 @@
 }
 
 - (void)showUserInPlaydateAnimated:(BOOL)animated {
+    if (isInPlaydate == YES) {
+        return;
+    }
     isInPlaydate = YES;
 
     if (inPlaydateView == nil) {
@@ -306,6 +330,9 @@
 }
 
 - (void)hideUserInPlaydateAnimated:(BOOL)animated {
+    if (isInPlaydate == NO) {
+        return;
+    }
     isInPlaydate = NO;
 
     if (animated == NO) {

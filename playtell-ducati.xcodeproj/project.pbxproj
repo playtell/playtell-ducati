@@ -136,6 +136,8 @@
 		23A90AA9161F74E300CA6954 /* account-creation-success@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A90AA5161F74E300CA6954 /* account-creation-success@2x.png */; };
 		23A90AAA161F74E300CA6954 /* push-notification-info.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A90AA6161F74E300CA6954 /* push-notification-info.png */; };
 		23A90AAB161F74E300CA6954 /* push-notification-info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A90AA7161F74E300CA6954 /* push-notification-info@2x.png */; };
+		23AA8B0116303ABE00377D52 /* tooltip-birthday.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA8AFF16303ABE00377D52 /* tooltip-birthday.png */; };
+		23AA8B0216303ABE00377D52 /* tooltip-birthday@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AA8B0016303ABE00377D52 /* tooltip-birthday@2x.png */; };
 		23AD27EF15DA9FCD00279018 /* PTPlaydateEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23AD27ED15DA9FCC00279018 /* PTPlaydateEndViewController.m */; };
 		23AD27F015DA9FCD00279018 /* PTPlaydateEndViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23AD27EE15DA9FCC00279018 /* PTPlaydateEndViewController.xib */; };
 		23AD27F615DAB4E000279018 /* contactsComposeBox.png in Resources */ = {isa = PBXBuildFile; fileRef = 23AD27F515DAB4E000279018 /* contactsComposeBox.png */; };
@@ -994,6 +996,8 @@
 		23A90AA5161F74E300CA6954 /* account-creation-success@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "account-creation-success@2x.png"; sourceTree = "<group>"; };
 		23A90AA6161F74E300CA6954 /* push-notification-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "push-notification-info.png"; sourceTree = "<group>"; };
 		23A90AA7161F74E300CA6954 /* push-notification-info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "push-notification-info@2x.png"; sourceTree = "<group>"; };
+		23AA8AFF16303ABE00377D52 /* tooltip-birthday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip-birthday.png"; sourceTree = "<group>"; };
+		23AA8B0016303ABE00377D52 /* tooltip-birthday@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip-birthday@2x.png"; sourceTree = "<group>"; };
 		23AD27E715DA9F4000279018 /* PTPlaydateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateDelegate.h; sourceTree = "<group>"; };
 		23AD27EC15DA9FCB00279018 /* PTPlaydateEndViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateEndViewController.h; sourceTree = "<group>"; };
 		23AD27ED15DA9FCC00279018 /* PTPlaydateEndViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateEndViewController.m; sourceTree = "<group>"; };
@@ -2193,6 +2197,8 @@
 		237651D9161A167D0000A4D5 /* new user */ = {
 			isa = PBXGroup;
 			children = (
+				23AA8AFF16303ABE00377D52 /* tooltip-birthday.png */,
+				23AA8B0016303ABE00377D52 /* tooltip-birthday@2x.png */,
 				23A416B3162884560092C6B6 /* tooltip-invite-buddies.png */,
 				23A416B4162884560092C6B6 /* tooltip-invite-buddies@2x.png */,
 				23C26E8F1628831000A338EB /* invite-button-press.png */,
@@ -4721,6 +4727,8 @@
 				23A416C3162897DD0092C6B6 /* Default-Landscape@2x~ipad.png in Resources */,
 				23A416C616289A250092C6B6 /* placeholder-buddy.png in Resources */,
 				23A416C716289A250092C6B6 /* placeholder-buddy@2x.png in Resources */,
+				23AA8B0116303ABE00377D52 /* tooltip-birthday.png in Resources */,
+				23AA8B0216303ABE00377D52 /* tooltip-birthday@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

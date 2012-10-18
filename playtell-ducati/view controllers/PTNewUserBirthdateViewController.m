@@ -100,6 +100,16 @@
     
     // Txtfield Date setup
     txtDate.textColor = [UIColor colorFromHex:@"#999999"];
+    
+    // Birthday tooltip
+    ttBirthday = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tooltip-birthday"]];
+    ttBirthday.frame = CGRectMake(390.0f, 290.0f, 244.0f, 122.0f);
+    ttBirthday.alpha = 0.0f;
+    [self.view addSubview:ttBirthday];
+    hasTooltipBeenShown = NO;
+    isTooltipShown = NO;
+    UITapGestureRecognizer *ttTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tooltipDidTouch:)];
+    [ttBirthday addGestureRecognizer:ttTapRecognizer];
 }
 
 - (void)viewDidUnload {
@@ -127,6 +137,21 @@
 - (void)viewDidAppear:(BOOL)animated {
     // Start analytics event timer
     eventStart = [NSDate date];
+    
+    // Show birthday tooltip
+    if (hasTooltipBeenShown == NO) {
+        hasTooltipBeenShown = YES;
+        isTooltipShown = YES;
+        ttBirthday.frame = CGRectOffset(ttBirthday.frame, 0.0f, 500.0f);
+        [UIView animateWithDuration:0.4f
+                         animations:^{
+                             ttBirthday.frame = CGRectOffset(ttBirthday.frame, 0.0f, -500.0f);
+                             ttBirthday.alpha = 1.0f;
+                         }
+                         completion:^(BOOL finished) {
+                             [self performSelector:@selector(hideBirthdayTooltip) withObject:nil afterDelay:3.0f];
+                         }];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -146,6 +171,9 @@
 }
 
 - (void)finishDidPress:(id)sender {
+    // Log the analytics event
+    [self logAnalyticsEvent];
+
     PTNewUserPushNotificationsViewController *newUserPushNotificationsViewController = [[PTNewUserPushNotificationsViewController alloc] initWithNibName:@"PTNewUserPushNotificationsViewController" bundle:nil];
     [self.navigationController pushViewController:newUserPushNotificationsViewController animated:YES];
 }
@@ -167,6 +195,7 @@
 }
 
 - (void)datePickerDidUpdate:(id)sender {
+    [self hideBirthdayTooltip];
     hasDateChanged = YES;
     buttonFinish.enabled = [self isAbove13:datePicker.date];
     [self updateLabelUsingDate:datePicker.date];
@@ -192,6 +221,27 @@
                                      newUserNavigationController.currentUser.email, PropEmail,
                                      nil]];
     }
+}
+
+#pragma mark - Tooltip method
+
+- (void)hideBirthdayTooltip {
+    if (isTooltipShown == NO) {
+        return;
+    }
+    isTooltipShown = NO;
+    [ttBirthday.layer removeAllAnimations];
+    [UIView animateWithDuration:0.3f
+                     animations:^{
+                         ttBirthday.alpha = 0.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         [ttBirthday removeFromSuperview];
+                     }];
+}
+
+- (void)tooltipDidTouch:(UITapGestureRecognizer *)recognizer {
+    
 }
 
 @end

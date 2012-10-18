@@ -359,6 +359,7 @@
                     [playmateViewLocations setObject:playmateAddView
                                               forKey:[NSValue valueWithCGRect:itemFrame]];
                 }
+                break;
             }
             
             // Check if playmate view exists
@@ -428,6 +429,7 @@
                     [playmateViewLocations setObject:playmateAddView
                                               forKey:[NSValue valueWithCGRect:itemFrame]];
                 }
+                break;
             }
             
             // Check if playmate view exists
@@ -666,7 +668,7 @@
 
 - (void)pusherDidReceivePlaydateRequestNotification:(NSNotification*)note {
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
-    LogDebug(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
+//    NSLog(@"%@ received playdate: %@", NSStringFromSelector(_cmd), playdate);
 
     // If the pusher event is intended for the current user,
     // notify the user of the event and subscribe to the playdate channel
@@ -694,7 +696,7 @@
 
 - (void)pusherDidReceivePlaydateJoinedNotification:(NSNotification*)note {
     PTPlaydate* playdate = [[note userInfo] valueForKey:PTPlaydateKey];
-    LogDebug(@"%@ Playdate Joined: %@", NSStringFromSelector(_cmd), playdate);
+//    NSLog(@"%@ Playdate Joined: %@", NSStringFromSelector(_cmd), playdate);
     
     // Make sure current user didn't paripate in this playdate
     if (playdate.playmate.userID != [[PTUser currentUser] userID] && playdate.initiator.userID != [[PTUser currentUser] userID]) {

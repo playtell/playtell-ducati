@@ -228,6 +228,9 @@
 }
 
 - (void)nextDidPress:(id)sender {
+    // Log the analytics event
+    [self logAnalyticsEvent];
+
     PTNewUserBirthdateViewController *newUserBirthdateViewController = [[PTNewUserBirthdateViewController alloc] initWithNibName:@"PTNewUserBirthdateViewController" bundle:nil];
     [self.navigationController pushViewController:newUserBirthdateViewController animated:YES];
 }

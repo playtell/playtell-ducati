@@ -21,6 +21,11 @@
     BOOL hasDateChanged;
     IBOutlet UITextField *txtDate;
     
+    // Tooltip
+    UIImageView *ttBirthday;
+    BOOL hasTooltipBeenShown;
+    BOOL isTooltipShown;
+    
     // Analytics
     NSDate *eventStart;
 }

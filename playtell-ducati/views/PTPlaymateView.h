@@ -30,6 +30,7 @@
     
     // Friendship awaiting
     UIView *awaitingView;
+    BOOL isAwaitingShown;
     
     // In playdate
     UIView *inPlaydateView;
