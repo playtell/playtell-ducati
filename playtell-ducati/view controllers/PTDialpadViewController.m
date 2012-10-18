@@ -466,7 +466,7 @@
                                                      LogDebug(@"%@ received playdate on push: %@", NSStringFromSelector(_cmd), playdate);
                                                      self.requestedPlaydate = playdate;
                                                      dispatch_async(dispatch_get_main_queue(), ^() {
-                                                         [self joinPlaydate];
+                                                         [self joinPlaydateWithDelay:6.0f];
                                                      });
                                                  }
                                                  failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -591,6 +591,10 @@
 }
 
 - (void)joinPlaydate {
+    [self joinPlaydateWithDelay:0.0f];
+}
+
+- (void)joinPlaydateWithDelay:(float)delay {
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
     // Hide the shim
     [UIView animateWithDuration:0.5f animations:^{
@@ -616,7 +620,13 @@
 
     self.chatController.playdate = self.requestedPlaydate;
     [self.chatController setLoadingViewForPlaymate:otherPlaymate];
-    [self.chatController connectToOpenTokSession];
+    if (delay > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            [self.chatController connectToOpenTokSession];
+        });
+    } else {
+        [self.chatController connectToOpenTokSession];
+    }
     
     self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
                                                                  bundle:nil];
