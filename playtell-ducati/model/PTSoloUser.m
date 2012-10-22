@@ -131,7 +131,7 @@
         self.friendTooltip.alpha = 0.0f;
         [self.friendTooltip addToView:controller.view
                      withCaretAtPoint:CGPointMake(855.0f - 143.0, 525.0f - 152.0)];
-        self.friendTouchImage.frame = CGRectMake(694.0f, 365.0f, 57.0f, 57.0f);
+        self.friendTouchImage.frame = CGRectMake(702.0f, 384.0f, 39.0f, 39.0f);
         self.friendTouchImage.alpha = 0.0f;
         [controller.view addSubview:self.friendTouchImage];
         
