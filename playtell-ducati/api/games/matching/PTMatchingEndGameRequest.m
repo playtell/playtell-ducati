@@ -13,17 +13,13 @@
 @implementation PTMatchingEndGameRequest
 
 - (void)endGameWithBoardId:(NSString *)boardId
-                 authToken:(NSString *)token
-                    userId:(NSString *)userId
-                playdateId:(NSString*)playdateId
+                 authToken:(NSString*)token
                  onSuccess:(PTMatchingEndGameRequestSuccessBlock)success
-                 onFailure:(PTMatchingEndGameRequestFailureBlock)failure
-{
+                 onFailure:(PTMatchingEndGameRequestFailureBlock)failure {
+
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     boardId, @"board_id",
                                     token, @"authentication_token",
-                                    userId, @"user_id",
-                                    playdateId, @"playdate_id",
                                     nil];
     
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/matching/end_game", ROOT_URL]];

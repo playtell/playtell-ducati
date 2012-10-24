@@ -44,10 +44,12 @@
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
 #import "PTMemoryNewGameRequest.h"
+#import "PTMatchingNewGameRequest.h"
 
 //GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
 #import "PTMemoryViewController.h"
+#import "PTMatchingViewController.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;

@@ -211,6 +211,11 @@
 		23DF5FA015EE9477004210FE /* UIColor+ColorFromHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */; };
 		23E69D7F15D053A400FD8698 /* buttonSendInviteHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E69D7B15D053A400FD8698 /* buttonSendInviteHighlighted.png */; };
 		23E69D8015D053A400FD8698 /* buttonSendInviteNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23E69D7C15D053A400FD8698 /* buttonSendInviteNormal.png */; };
+		23E9CF1D1636F5960018193F /* PTMatchingNewGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23E9CF1C1636F5960018193F /* PTMatchingNewGameRequest.m */; };
+		23E9CF211636F6EF0018193F /* PTMatchingRefreshGameRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23E9CF201636F6EF0018193F /* PTMatchingRefreshGameRequest.m */; };
+		23E9CF241636F79F0018193F /* PTMatchingPlayTurnRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23E9CF231636F79F0018193F /* PTMatchingPlayTurnRequest.m */; };
+		23E9CF281636FC0A0018193F /* PTMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23E9CF261636FC0A0018193F /* PTMatchingViewController.m */; };
+		23E9CF291636FC0A0018193F /* PTMatchingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23E9CF271636FC0A0018193F /* PTMatchingViewController.xib */; };
 		23F1E55F1610E9E900EE023B /* PTLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23F1E55D1610E9E900EE023B /* PTLoginViewController.m */; };
 		23F1E5601610E9E900EE023B /* PTLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23F1E55E1610E9E900EE023B /* PTLoginViewController.xib */; };
 		8A1B91B8161584E400B4BF46 /* PTMemoryCardCoordinate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8A1B91B7161584E300B4BF46 /* PTMemoryCardCoordinate.m */; };
@@ -1097,6 +1102,15 @@
 		23DF5F9F15EE9477004210FE /* UIColor+ColorFromHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorFromHex.m"; sourceTree = "<group>"; };
 		23E69D7B15D053A400FD8698 /* buttonSendInviteHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteHighlighted.png; sourceTree = "<group>"; };
 		23E69D7C15D053A400FD8698 /* buttonSendInviteNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendInviteNormal.png; sourceTree = "<group>"; };
+		23E9CF1B1636F5960018193F /* PTMatchingNewGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMatchingNewGameRequest.h; path = games/matching/PTMatchingNewGameRequest.h; sourceTree = "<group>"; };
+		23E9CF1C1636F5960018193F /* PTMatchingNewGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMatchingNewGameRequest.m; path = games/matching/PTMatchingNewGameRequest.m; sourceTree = "<group>"; };
+		23E9CF1F1636F6EF0018193F /* PTMatchingRefreshGameRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMatchingRefreshGameRequest.h; path = games/matching/PTMatchingRefreshGameRequest.h; sourceTree = "<group>"; };
+		23E9CF201636F6EF0018193F /* PTMatchingRefreshGameRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMatchingRefreshGameRequest.m; path = games/matching/PTMatchingRefreshGameRequest.m; sourceTree = "<group>"; };
+		23E9CF221636F79F0018193F /* PTMatchingPlayTurnRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PTMatchingPlayTurnRequest.h; path = games/matching/PTMatchingPlayTurnRequest.h; sourceTree = "<group>"; };
+		23E9CF231636F79F0018193F /* PTMatchingPlayTurnRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PTMatchingPlayTurnRequest.m; path = games/matching/PTMatchingPlayTurnRequest.m; sourceTree = "<group>"; };
+		23E9CF251636FC0A0018193F /* PTMatchingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMatchingViewController.h; sourceTree = "<group>"; };
+		23E9CF261636FC0A0018193F /* PTMatchingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMatchingViewController.m; sourceTree = "<group>"; };
+		23E9CF271636FC0A0018193F /* PTMatchingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTMatchingViewController.xib; sourceTree = "<group>"; };
 		23F199361586B9F000DC2E16 /* cover_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cover_loading.png; sourceTree = "<group>"; };
 		23F199381586BB7200DC2E16 /* page_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = page_loading.png; sourceTree = "<group>"; };
 		23F1E55C1610E9E900EE023B /* PTLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTLoginViewController.h; sourceTree = "<group>"; };
@@ -2515,6 +2529,9 @@
 		8A62E3A215E7EA4F0077CBB6 /* games */ = {
 			isa = PBXGroup;
 			children = (
+				23E9CF251636FC0A0018193F /* PTMatchingViewController.h */,
+				23E9CF261636FC0A0018193F /* PTMatchingViewController.m */,
+				23E9CF271636FC0A0018193F /* PTMatchingViewController.xib */,
 				23D291EA1623AC3F006ADBCE /* PTMemoryGameDelegate.h */,
 				8AF80B751606CB2300F5BD06 /* PTMemoryViewController.h */,
 				8AF80B761606CB2300F5BD06 /* PTMemoryViewController.m */,
@@ -3060,6 +3077,12 @@
 			children = (
 				8AC60EEC15F84FFD0012FD9F /* PTMatchingEndGameRequest.h */,
 				8AC60EED15F84FFD0012FD9F /* PTMatchingEndGameRequest.m */,
+				23E9CF1B1636F5960018193F /* PTMatchingNewGameRequest.h */,
+				23E9CF1C1636F5960018193F /* PTMatchingNewGameRequest.m */,
+				23E9CF1F1636F6EF0018193F /* PTMatchingRefreshGameRequest.h */,
+				23E9CF201636F6EF0018193F /* PTMatchingRefreshGameRequest.m */,
+				23E9CF221636F79F0018193F /* PTMatchingPlayTurnRequest.h */,
+				23E9CF231636F79F0018193F /* PTMatchingPlayTurnRequest.m */,
 			);
 			name = matching;
 			sourceTree = "<group>";
@@ -4738,6 +4761,7 @@
 				2350BFE61630753F008F901F /* friendfinger@2x.png in Resources */,
 				2350BFE71630753F008F901F /* yourfinger.png in Resources */,
 				2350BFE81630753F008F901F /* yourfinger@2x.png in Resources */,
+				23E9CF291636FC0A0018193F /* PTMatchingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4933,6 +4957,10 @@
 				236DBB421630451300FBE728 /* PTPlaydateDisconnectRequest.m in Sources */,
 				236DBB431630451300FBE728 /* PTPlaydateJoinedRequest.m in Sources */,
 				1A10583F163048EC001D9694 /* PTUsersGetStatusRequest.m in Sources */,
+				23E9CF1D1636F5960018193F /* PTMatchingNewGameRequest.m in Sources */,
+				23E9CF211636F6EF0018193F /* PTMatchingRefreshGameRequest.m in Sources */,
+				23E9CF241636F79F0018193F /* PTMatchingPlayTurnRequest.m in Sources */,
+				23E9CF281636FC0A0018193F /* PTMatchingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

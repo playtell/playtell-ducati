@@ -15,8 +15,6 @@ typedef void (^PTMatchingEndGameRequestFailureBlock) (NSURLRequest* request, NSH
 
 - (void)endGameWithBoardId:(NSString *)boardId
                  authToken:(NSString*)token
-                    userId:(NSString*)userId
-                playdateId:(NSString*)playdateId
                  onSuccess:(PTMatchingEndGameRequestSuccessBlock)success
                  onFailure:(PTMatchingEndGameRequestFailureBlock)failure;
 
