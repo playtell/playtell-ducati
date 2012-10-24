@@ -75,6 +75,10 @@
     return self;
 }
 
+- (void)restrictToSmallSize:(BOOL)shouldRestrict {
+    [chatView restrictToSmallSize:shouldRestrict];
+}
+
 - (void)configureForDialpad {
     PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
     [self.chatView setImageForRightView:nullPlaymate.userPhoto];

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "PTAppDelegate.h"
 #import "PTChatHUDView2.h"
 
 #import "UIView+PlayTell.h"
@@ -31,6 +32,7 @@
 @property (nonatomic, strong) CALayer *roundedLayer;
 @property (nonatomic, strong) UIView *leftContainerView;
 @property (nonatomic, strong) UIView *rightContainerView;
+@property (nonatomic, assign) BOOL sizeRestricted;
 @end
 
 @implementation PTChatHUDView2
@@ -40,6 +42,7 @@
 @synthesize roundedLayer;
 @synthesize leftContainerView;
 @synthesize rightContainerView;
+@synthesize sizeRestricted;
 static float subviewCurrentHeight;
 static float subviewCurrentWidth;
 
@@ -98,12 +101,18 @@ static float subviewCurrentWidth;
         UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
         swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
         UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
+        tapRecognizer.numberOfTapsRequired = 1;
         
         
         // Add the gesture recognizers to the view
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
+        [self addGestureRecognizer:tapRecognizer];
+        
+        // Restrict the size
+        self.sizeRestricted = YES;
     }
     return self;
 }
@@ -194,7 +203,18 @@ static float subviewCurrentWidth;
                      }];
 }
 
+- (void)restrictToSmallSize:(BOOL)shouldRestrict {
+    if (shouldRestrict && subviewCurrentWidth != PTCHATVIEW_SUBVIEW_SMALL_WIDTH) {
+        [self animateSubviewsToWidth:PTCHATVIEW_SUBVIEW_SMALL_WIDTH andHeight:PTCHATVIEW_SMALL_HEIGHT];
+    }
+    
+    self.sizeRestricted = shouldRestrict;
+}
+
 - (void)animateSubviewsToWidth:(float)width andHeight:(float)height {
+    if (self.sizeRestricted)
+        return;
+    
     subviewCurrentWidth = width;
     subviewCurrentHeight = height;
     
@@ -251,6 +271,10 @@ static float subviewCurrentWidth;
         
         recognizer.scale = 1;
     }
+}
+
+- (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
+    [self.superview screenshot];
 }
 
 + (float)chatviewHeight {

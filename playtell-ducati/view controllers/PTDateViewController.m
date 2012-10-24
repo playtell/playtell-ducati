@@ -99,6 +99,9 @@
     
     // Set the start time for use with analytics
     playdateStart = [NSDate date];
+    
+    // Let the chat view change size
+    [self.chatController restrictToSmallSize:NO];
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -628,6 +631,9 @@
     
     // Shutoff the ringer
     [self endRinging];
+    
+    // Restrict the size of the chat view
+    [self.chatController restrictToSmallSize:YES];
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
