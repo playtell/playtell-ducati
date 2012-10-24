@@ -31,6 +31,7 @@
 @property (nonatomic, strong) CALayer *roundedLayer;
 @property (nonatomic, strong) UIView *leftContainerView;
 @property (nonatomic, strong) UIView *rightContainerView;
+@property (nonatomic, assign) BOOL sizeRestricted;
 @end
 
 @implementation PTChatHUDView2
@@ -40,6 +41,7 @@
 @synthesize roundedLayer;
 @synthesize leftContainerView;
 @synthesize rightContainerView;
+@synthesize sizeRestricted;
 static float subviewCurrentHeight;
 static float subviewCurrentWidth;
 
@@ -104,6 +106,9 @@ static float subviewCurrentWidth;
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
+        
+        // Restrict the size
+        self.sizeRestricted = YES;
     }
     return self;
 }
@@ -194,7 +199,18 @@ static float subviewCurrentWidth;
                      }];
 }
 
+- (void)restrictToSmallSize:(BOOL)shouldRestrict {
+    if (shouldRestrict && subviewCurrentWidth != PTCHATVIEW_SUBVIEW_SMALL_WIDTH) {
+        [self animateSubviewsToWidth:PTCHATVIEW_SUBVIEW_SMALL_WIDTH andHeight:PTCHATVIEW_SMALL_HEIGHT];
+    }
+    
+    self.sizeRestricted = shouldRestrict;
+}
+
 - (void)animateSubviewsToWidth:(float)width andHeight:(float)height {
+    if (self.sizeRestricted)
+        return;
+    
     subviewCurrentWidth = width;
     subviewCurrentHeight = height;
     

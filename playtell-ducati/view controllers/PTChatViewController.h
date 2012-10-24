@@ -27,6 +27,7 @@
 - (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate;
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL;
 - (void)stopPlayingMovies;
+- (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 @property (nonatomic, readonly) UIView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;

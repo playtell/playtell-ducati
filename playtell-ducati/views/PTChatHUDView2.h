@@ -16,6 +16,7 @@
 - (void)setLoadingImageForRightView:(UIImage*)anImage;
 - (void)transitionLeftImage;
 - (void)setImageForRightView:(UIImage*)anImage;
+- (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 // ... and keep these.
 - (void)setLeftView:(UIView*)aView;
