@@ -391,6 +391,17 @@
     [booksScrollView addSubview:gameView2];
     [gameList addObject:gameView2];
     
+    xPos += booksScrollView.frame.size.width;
+    i++;
+    
+    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                       gameId:3
+                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
+    [gameView3 setPosition:i];
+    [gameView3 setDelegate:self];
+    [booksScrollView addSubview:gameView3];
+    [gameList addObject:gameView3];
+    
     //TODO we need to incorporate an API call here to load games from the API
 //    xPos += (booksScrollView.frame.size.width * .75);
 //    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
@@ -412,7 +423,7 @@
 //    xPos = booksScrollView.frame.size.width + xPos;
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2);
+    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 3); // 3 hardcoded games
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
@@ -793,6 +804,69 @@
         NSLog(@"%@", request);
         NSLog(@"%@", JSON);
     }];
+}
+
+- (void)matchingTapped:(id)sender {
+    // Only allow a game to be played if the delegate allows it
+    if (![self delegateAllowsPlayingGames]) {
+        return;
+    }
+
+    // Find playmate user id
+    PTPlaymate *aPlaymate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        aPlaymate = self.playdate.playmate;
+    } else {
+        aPlaymate = self.playdate.initiator;
+    }
+    
+    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    
+    PTMatchingNewGameRequest *newGameRequest = [[PTMatchingNewGameRequest alloc] init];
+    [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
+                                 playmateId:aPlaymate.userID
+                                    themeId:19 // TODO: Hard coded
+                                   numCards:randNumCards
+                                  authToken:[[PTUser currentUser] authToken]
+                                  onSuccess:^(NSDictionary *result) {
+                                      // Send analytics an event for starting the game
+                                      [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Matching", PropGameName, aPlaymate.username, PropPlaymateId, nil]];
+                                      
+                                      // Get response parameters
+                                      NSInteger boardId = [[result valueForKey:@"board_id"] integerValue];
+                                      NSString *filenamesFlat = [result valueForKey:@"filename_dump"];
+                                      filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
+                                      NSArray *filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+                                      
+                                      // Init the game controller
+                                      PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
+                                                                                          initWithNibName:@"PTMatchingViewController"
+                                                                                          bundle:nil
+                                                                                          playdate:self.playdate
+                                                                                          boardId:boardId
+                                                                                          themeId:19 // TODO: Hard coded
+                                                                                          initiator:[PTUser currentUser]
+                                                                                          playmate:aPlaymate
+                                                                                          filenames:filenames
+                                                                                          totalCards:randNumCards
+                                                                                          myTurn:YES];
+                                      
+                                      
+                                      // Init game splash
+                                      UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+                                      splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                      
+                                      // Bring up the view controller of the new game
+                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                                      [appDelegate.transitionController loadGame:matchingViewController
+                                                                     withOptions:UIViewAnimationOptionTransitionCurlUp
+                                                                      withSplash:splash];
+                                  }
+                                  onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                      NSLog(@"New game API error: %@", error);
+                                      NSLog(@"%@", request);
+                                      NSLog(@"%@", JSON);
+                                  }];
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
@@ -1599,11 +1673,9 @@
 #pragma mark - Games delegates
 
 - (void)gameFocusedWithId:(NSNumber *)gameId {
-    NSLog(@"gameFocusedWithId: %i", [gameId integerValue]);
 }
 
 - (void)gameTouchedWithId:(NSNumber *)gameId AndView:(PTGameView *)gameView {
-    NSLog(@"gameTouchedWithId: %i", [gameId integerValue]);
     // Game selected, either focus it or open it
     if ([gameView inFocus] == NO) {
         // Bring game to focus
@@ -1616,6 +1688,8 @@
             [self memoryTapped:nil];
         } else if ([gameId integerValue] == 2) {
             [self ticTacToeTapped:nil];
+        } else if ([gameId integerValue] == 3) {
+            [self matchingTapped:nil];
         }
     }
 }

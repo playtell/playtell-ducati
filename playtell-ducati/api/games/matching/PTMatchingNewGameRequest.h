@@ -13,13 +13,12 @@ typedef void (^PTMatchingNewGameRequestFailureBlock) (NSURLRequest* request, NSH
 
 @interface PTMatchingNewGameRequest : PTRequest
 
-- (void)newBoardWithInitiatorId:(NSInteger)initiatorId
-                     playmateId:(NSInteger)playmateId
-                     playdateId:(NSInteger)playdateId
-                        themeId:(NSInteger)themeId
-                       numCards:(NSInteger)numCards
-                      authToken:(NSString*)token
-                      onSuccess:(PTMatchingNewGameRequestSuccessBlock)success
-                      onFailure:(PTMatchingNewGameRequestFailureBlock)failure;
+- (void)newBoardWithPlaydateId:(NSInteger)playdateId
+                    playmateId:(NSInteger)playmateId
+                       themeId:(NSInteger)themeId
+                      numCards:(NSInteger)numCards
+                     authToken:(NSString*)token
+                     onSuccess:(PTMatchingNewGameRequestSuccessBlock)success
+                     onFailure:(PTMatchingNewGameRequestFailureBlock)failure;
 
 @end

@@ -12,13 +12,13 @@
 
 @implementation PTMatchingEndGameRequest
 
-- (void)endGameWithBoardId:(NSString *)boardId
+- (void)endGameWithBoardId:(NSInteger)boardId
                  authToken:(NSString*)token
                  onSuccess:(PTMatchingEndGameRequestSuccessBlock)success
                  onFailure:(PTMatchingEndGameRequestFailureBlock)failure {
 
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    boardId, @"board_id",
+                                    [NSNumber numberWithInteger:boardId], @"board_id",
                                     token, @"authentication_token",
                                     nil];
     

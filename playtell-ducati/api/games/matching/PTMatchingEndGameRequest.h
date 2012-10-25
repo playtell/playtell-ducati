@@ -13,7 +13,7 @@ typedef void (^PTMatchingEndGameRequestFailureBlock) (NSURLRequest* request, NSH
 
 @interface PTMatchingEndGameRequest : PTRequest
 
-- (void)endGameWithBoardId:(NSString *)boardId
+- (void)endGameWithBoardId:(NSInteger)boardId
                  authToken:(NSString*)token
                  onSuccess:(PTMatchingEndGameRequestSuccessBlock)success
                  onFailure:(PTMatchingEndGameRequestFailureBlock)failure;
