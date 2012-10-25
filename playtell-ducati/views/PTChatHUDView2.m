@@ -274,7 +274,7 @@ static float subviewCurrentWidth;
 }
 
 - (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
-    [self.superview screenshot];
+    [self screenshot];
 }
 
 + (float)chatviewHeight {
