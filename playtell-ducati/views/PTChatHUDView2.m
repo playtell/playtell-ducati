@@ -109,7 +109,7 @@ static float subviewCurrentWidth;
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
-        [self addGestureRecognizer:tapRecognizer];
+        //[self addGestureRecognizer:tapRecognizer];
         
         // Restrict the size
         self.sizeRestricted = YES;
