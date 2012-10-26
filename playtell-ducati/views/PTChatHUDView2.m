@@ -8,6 +8,8 @@
 
 #import "PTAppDelegate.h"
 #import "PTChatHUDView2.h"
+#import "PTPlaydatePhotoCreateRequest.h"
+#import "PTUser.h"
 
 #import "UIView+PlayTell.h"
 #import "UIColor+ColorFromHex.h"
@@ -36,6 +38,7 @@
 @end
 
 @implementation PTChatHUDView2
+@synthesize playdateId;
 @synthesize innerView;
 @synthesize maskLayer;
 @synthesize shadowLayer;
@@ -109,7 +112,7 @@ static float subviewCurrentWidth;
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
-        //[self addGestureRecognizer:tapRecognizer];
+        [self addGestureRecognizer:tapRecognizer];
         
         // Restrict the size
         self.sizeRestricted = YES;
@@ -274,7 +277,23 @@ static float subviewCurrentWidth;
 }
 
 - (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
-    [self screenshot];
+    [self takeScreenshot];
+}
+
+- (UIImage *)takeScreenshot {
+    UIImage *screenshot = [self screenshot];
+    
+//    PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+//    [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+//                                           playdateId:self.playdateId
+//                                                photo:screenshot
+//                                  success:^(NSDictionary *result) {
+//                                      NSLog(@"Playdate photo successfully uploaded.");
+//                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+//                                  }];
+    
+    return screenshot;
 }
 
 + (float)chatviewHeight {

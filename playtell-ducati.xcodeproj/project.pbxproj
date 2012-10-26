@@ -16,6 +16,7 @@
 		1A6E984E1626E16100E63F6C /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98291626E16100E63F6C /* Mixpanel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1A6E984F1626E16100E63F6C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1A6E982A1626E16100E63F6C /* README.md */; };
 		1A6E98591626E1D900E63F6C /* PTAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98581626E1D900E63F6C /* PTAnalytics.m */; };
+		1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -814,6 +815,8 @@
 		1A6E982A1626E16100E63F6C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		1A6E98571626E1D900E63F6C /* PTAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTAnalytics.h; sourceTree = "<group>"; };
 		1A6E98581626E1D900E63F6C /* PTAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAnalytics.m; sourceTree = "<group>"; };
+		1ABD6EF4163A912C0027609C /* PTPlaydatePhotoCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydatePhotoCreateRequest.h; sourceTree = "<group>"; };
+		1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydatePhotoCreateRequest.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2472,6 +2475,8 @@
 				236DBB381630451300FBE728 /* PTPlaydateDisconnectRequest.m */,
 				236DBB391630451300FBE728 /* PTPlaydateJoinedRequest.h */,
 				236DBB3A1630451300FBE728 /* PTPlaydateJoinedRequest.m */,
+				1ABD6EF4163A912C0027609C /* PTPlaydatePhotoCreateRequest.h */,
+				1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */,
 				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
 				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
 				F4A94EAB1623C0A9000D428F /* PTGetSampleOpenTokToken.h */,
@@ -4961,6 +4966,7 @@
 				23E9CF211636F6EF0018193F /* PTMatchingRefreshGameRequest.m in Sources */,
 				23E9CF241636F79F0018193F /* PTMatchingPlayTurnRequest.m in Sources */,
 				23E9CF281636FC0A0018193F /* PTMatchingViewController.m in Sources */,
+				1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

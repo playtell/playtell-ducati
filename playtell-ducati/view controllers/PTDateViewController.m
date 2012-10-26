@@ -11,6 +11,7 @@
 #import "Logging.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
+#import "PTChatHUDView2.h"
 #import "TransitionController.h"
 
 //VIEW CONTROLLERS
@@ -91,6 +92,7 @@
     self.chatController = appDelegate.chatController;
 //    [self.chatController setPlaydate:self.playdate];
     [self.view addSubview:self.chatController.view];
+    [(PTChatHUDView2 *)self.chatController.view setPlaydateId:self.playdate.playdateID];
     
     if ([aPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         [self setupRinger];
