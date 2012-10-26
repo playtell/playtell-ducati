@@ -283,17 +283,17 @@ NSTimer *screenshotTimer;
 
 - (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
     dispatch_async(dispatch_get_current_queue(), ^{
-        [self screenshotWithSave:saveToCameraRoll];
+        UIImage *screenshot = [self screenshotWithSave:saveToCameraRoll];
         
-//        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-//        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-//                                               playdateId:self.playdateId
-//                                                    photo:screenshot
-//                                                  success:^(NSDictionary *result) {
-//                                                      NSLog(@"Playdate photo successfully uploaded.");
-//                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-//                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-//                                                  }];
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdateId
+                                                    photo:screenshot
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Playdate photo successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
     });
 }
 
