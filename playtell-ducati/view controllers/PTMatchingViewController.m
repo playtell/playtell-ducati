@@ -16,6 +16,7 @@
 #import "PTDialpadViewController.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTMatchingAvailableCardView.h"
+#import "PTMatchingPairingCardView.h"
 
 @interface PTMatchingViewController ()
 
@@ -61,11 +62,6 @@
     viewBgShim = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view insertSubview:viewBgShim atIndex:0];
     
-    // Game board
-    viewGameBoard = [[UIView alloc] initWithFrame:CGRectMake(10.0f, 200.0f, 1004.0f, 286.0f)];
-    viewGameBoard.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-me"]];
-    [self.view addSubview:viewGameBoard];
-    
     // Setup "end playdate" button
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
     endPlaydate.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
@@ -97,6 +93,33 @@
         x += sizeCard.width;
     }
     [viewAvailableCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 150.0f)];
+    
+    // Setup pairing cards container
+    viewPairingCards = [[PTMatchingPairingCardsView alloc] initWithFrame:CGRectMake(10.0f, 200.0f, 1004.0f, 286.0f)];
+    viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-me"]];
+    [self.view addSubview:viewPairingCards];
+    viewPairingCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(352.0f, 43.0f, 300.0f, 200.0f)];
+    viewPairingCardsScroll.tag = 2;
+    viewPairingCardsScroll.delegate = self;
+    viewPairingCardsScroll.backgroundColor = [UIColor greenColor];
+    viewPairingCardsScroll.clipsToBounds = NO;
+    viewPairingCardsScroll.userInteractionEnabled = YES;
+    viewPairingCardsScroll.canCancelContentTouches = NO;
+    viewPairingCardsScroll.delaysContentTouches = YES;
+    viewPairingCardsScroll.showsHorizontalScrollIndicator = NO;
+    viewPairingCardsScroll.pagingEnabled = YES;
+    [viewPairingCards addSubview:viewPairingCardsScroll];
+    
+    // Setup pairing cards
+    x = 0.0f;
+    sizeCard = CGSizeMake(300.0f, 200.0f);
+    for (int i=0; i<totalCards; i++) {
+        PTMatchingPairingCardView *viewCard = [[PTMatchingPairingCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i];
+        //viewCard.delegate = self;
+        [viewPairingCardsScroll addSubview:viewCard];
+        x += sizeCard.width;
+    }
+    [viewPairingCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 200.0f)];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -172,7 +195,7 @@
 #pragma mark - Cards scroll delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (scrollView.tag == 1) { // Available cards scroll view
+    if (scrollView.tag == 1) { // Available cards scroll view
 //        // Adjust size/opacity of each child as they scroll
 //        CGFloat x = scrollView.contentOffset.x;
 //        CGFloat width = scrollView.frame.size.width;
@@ -181,7 +204,16 @@
 //            CGFloat level = 1.0f - pos / width;
 //            [(PTMatchingAvailableCardView *)[scrollView.subviews objectAtIndex:i] setFocusLevel:level];
 //        }
-//    }
+    } else if (scrollView.tag == 2) { // Pairing cards scroll view
+        // Adjust size/opacity of each child as they scroll
+        CGFloat x = scrollView.contentOffset.x;
+        CGFloat width = scrollView.frame.size.width;
+        for (int i=0; i<totalCards; i++) {
+            CGFloat pos = ABS(i * width - x);
+            CGFloat level = 1.0f - pos / width;
+            [(PTMatchingPairingCardView *)[scrollView.subviews objectAtIndex:i] setFocusLevel:level];
+        }
+    }
 }
 
 #pragma mark - Mathing game delegates
@@ -194,6 +226,12 @@
     viewTrackingCard.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:viewTrackingCard];
     
+    // Grow card a bit
+    [UIView animateWithDuration:0.2f
+                     animations:^{
+                         viewTrackingCard.frame = CGRectMake(viewTrackingCard.frame.origin.x - 8.0f, viewTrackingCard.frame.origin.y - 10.0f, 136.0f, 180.0f);
+                     }];
+    
     // Hide the card
     viewOriginalTrackingCard = cardView;
     viewOriginalTrackingCard.alpha = 0.0f;
@@ -203,7 +241,7 @@
     // TODO: See if this point is near the landing box
     CGPoint point = [touch locationInView:self.view];
 //    NSLog(@"moved: %@", NSStringFromCGPoint(point));
-    viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f, point.y - pointTouchOffset.y, 120.0f, 160.0f);
+    viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f, point.y - pointTouchOffset.y, 136.0f, 180.0f);
 }
 
 - (void)matchingGameAvailableCardTouchesEnded:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {

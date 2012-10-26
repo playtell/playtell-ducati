@@ -29,6 +29,7 @@
 #import "UAirship.h"
 #import "PTNewUserNavigationController.h"
 #import "PTUpdateTokenRequest.h"
+#import "UIDevice+IdentifierAddition.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -211,13 +212,31 @@
         // Updates the device token and registers the token with UA
         [[UAirship shared] registerDeviceToken:deviceToken];
         NSString *uaToken = [[UAirship shared] deviceToken];
+        
+        // Get a playtell device token
+        UIDevice *device = [[UIDevice alloc] init];
+        NSString *ptToken = [device uniqueDeviceIdentifier];
 
         // Save this token on our server
         PTUpdateTokenRequest *updateTokenRequest = [[PTUpdateTokenRequest alloc] init];
-        [updateTokenRequest updateTokenWithToken:uaToken
-                                       authToken:[PTUser currentUser].authToken
-                                       onSuccess:nil
-                                       onFailure:nil];
+        [updateTokenRequest updateTokenWithUAToken:uaToken
+                                           PTToken:ptToken
+                                         authToken:[PTUser currentUser].authToken
+                                         onSuccess:nil
+                                         onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                 // Check if out version is out of date
+                                                 if (response.statusCode == 600) {
+                                                     UIAlertView *alert = [[UIAlertView alloc]
+                                                                           initWithTitle:@"Playdate Alert"
+                                                                           message:@"There's a newer version of Playdate with great stuff in it!"
+                                                                           delegate:self
+                                                                           cancelButtonTitle:nil
+                                                                           otherButtonTitles:@"Upgrade", nil];
+                                                     [alert show];
+                                                 }
+                                             });
+                                         }];
     } else {
         // Notify of successfull push notification registration request
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
@@ -265,6 +284,13 @@
     
     ttInviteBuddiesShownThisInstance = YES;
     return YES;
+}
+
+#pragma mark - Alert view delegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSURL *itunesURL = [NSURL URLWithString:@"http://itunes.com/apps/playdate"];
+    [[UIApplication sharedApplication] openURL:itunesURL];
 }
 
 @end

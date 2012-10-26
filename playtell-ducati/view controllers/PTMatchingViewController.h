@@ -11,6 +11,7 @@
 #import "PTPlaymate.h"
 #import "PTMatchingAvailableCardView.h"
 #import "PTMatchingAvailableCardsView.h"
+#import "PTMatchingPairingCardsView.h"
 
 @interface PTMatchingViewController : UIViewController <UIScrollViewDelegate, PTMachingGameDelegate> {
     // Game config
@@ -26,9 +27,6 @@
     // Background shim (used to transition backgrounds)
     UIView *viewBgShim;
     
-    // Game board
-    UIView *viewGameBoard;
-    
     // Buttons
     IBOutlet UIButton *endPlaydate;
     
@@ -39,6 +37,10 @@
     CGPoint pointTouchOriginal;
     CGPoint pointTouchOffset;
     PTMatchingAvailableCardView *viewOriginalTrackingCard;
+    
+    // Pairing cards
+    PTMatchingPairingCardsView *viewPairingCards;
+    UIScrollView *viewPairingCardsScroll;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil

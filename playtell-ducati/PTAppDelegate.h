@@ -18,7 +18,7 @@
 @class TransitionController;
 @class PTDateViewController;
 @class PTMemoryViewController;
-@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate> {
+@interface PTAppDelegate : UIResponder <UIApplicationDelegate, PTLoginViewControllerDelegate, UIAlertViewDelegate> {
     BOOL playdateRequestedViaPush;
     NSInteger playdateRequestedViaPushId;
     NSDictionary *appLaunchOptions;

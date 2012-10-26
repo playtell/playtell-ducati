@@ -13,14 +13,19 @@
 
 @implementation PTUpdateTokenRequest
 
-- (void)updateTokenWithToken:(NSString*)pushToken
-                   authToken:(NSString*)authToken
-                   onSuccess:(PTUpdateTokenRequestSuccessBlock)success
-                   onFailure:(PTUpdateTokenRequestFailureBlock)failure {
+- (void)updateTokenWithUAToken:(NSString*)uaToken
+                       PTToken:(NSString*)ptToken
+                     authToken:(NSString*)authToken
+                     onSuccess:(PTUpdateTokenRequestSuccessBlock)success
+                     onFailure:(PTUpdateTokenRequestFailureBlock)failure {
+    
+    NSString *version = [NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
 
     NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     authToken, @"authentication_token",
-                                    pushToken, @"device_token",
+                                    uaToken, @"UA_token",
+                                    ptToken, @"PT_token",
+                                    version, @"version",
                                     nil];
     
     NSURL *tokenURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/token/update.json", ROOT_URL]];

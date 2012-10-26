@@ -13,9 +13,10 @@ typedef void (^PTUpdateTokenRequestFailureBlock) (NSURLRequest* request, NSHTTPU
 
 @interface PTUpdateTokenRequest : PTRequest
 
-- (void)updateTokenWithToken:(NSString*)pushToken
-                   authToken:(NSString*)authToken
-                   onSuccess:(PTUpdateTokenRequestSuccessBlock)success
-                   onFailure:(PTUpdateTokenRequestFailureBlock)failure;
+- (void)updateTokenWithUAToken:(NSString*)uaToken
+                       PTToken:(NSString*)ptToken
+                     authToken:(NSString*)authToken
+                     onSuccess:(PTUpdateTokenRequestSuccessBlock)success
+                     onFailure:(PTUpdateTokenRequestFailureBlock)failure;
 
 @end
