@@ -20,10 +20,12 @@
 - (void)setLoadingImageForRightView:(UIImage*)anImage;
 - (void)transitionLeftImage;
 - (void)setImageForRightView:(UIImage*)anImage;
-- (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 // ... and keep these.
 - (void)setLeftView:(UIView*)aView;
 - (void)setRightView:(UIView*)aView;
+- (void)restrictToSmallSize:(BOOL)shouldRestrict;
+- (void)startAutomaticPicturesWithInterval:(float)interval;
+- (void)stopAutomaticPictures;
 
 @end

@@ -104,6 +104,9 @@
     
     // Let the chat view change size
     [self.chatController restrictToSmallSize:NO];
+    
+    // Start taking automatic screenshots
+    [(PTChatHUDView2 *)self.chatController.view startAutomaticPicturesWithInterval:15.0];
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -633,6 +636,9 @@
     
     // Shutoff the ringer
     [self endRinging];
+    
+    // Stop taking automatic screenshots
+    [(PTChatHUDView2 *)self.chatController.view stopAutomaticPictures];
     
     // Restrict the size of the chat view
     [self.chatController restrictToSmallSize:YES];

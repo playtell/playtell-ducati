@@ -14,6 +14,7 @@
 - (void)removeAllSubviews;
 - (void)removeAllGestureRecognizers;
 - (UIImage*)screenshot;
+- (UIImage*)screenshotWithSave:(BOOL)saveToCameraRoll;
 
 
 @end
