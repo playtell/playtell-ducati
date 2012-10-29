@@ -109,7 +109,7 @@ static float subviewCurrentWidth;
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
-        [self addGestureRecognizer:tapRecognizer];
+        //[self addGestureRecognizer:tapRecognizer];
         
         // Restrict the size
         self.sizeRestricted = YES;
@@ -274,7 +274,7 @@ static float subviewCurrentWidth;
 }
 
 - (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
-    [self.superview screenshot];
+    [self screenshot];
 }
 
 + (float)chatviewHeight {

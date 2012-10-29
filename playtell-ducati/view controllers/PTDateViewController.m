@@ -717,6 +717,30 @@
         aPlaymate = self.playdate.initiator;
     }
     
+    if ([aPlaymate isARobot]) {
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
+#if !(TARGET_IPHONE_SIMULATOR)
+        [tictactoeVc setChatController:self.chatController];
+#endif
+        [tictactoeVc setPlaydate:self.playdate];
+        [tictactoeVc initGameWithMyTurn:YES];
+        tictactoeVc.board_id = 0;
+        tictactoeVc.playmate_id = aPlaymate.userID;
+        tictactoeVc.initiator_id = [[PTUser currentUser] userID];
+        
+        CGRect imageframe = CGRectMake(0,0,1024,768);
+        
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:imageframe];
+        splash.image = [UIImage imageNamed:@"TTT-cover.png"];
+        
+        //bring up the view controller of the new game!
+        [appDelegate.transitionController loadGame:tictactoeVc
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp withSplash:splash];
+        return;
+    }
+    
     [newGameRequest newBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                 authToken:[[PTUser currentUser] authToken]
                                 playmate_id:[NSString stringWithFormat:@"%d", aPlaymate.userID]
@@ -767,6 +791,33 @@
         aPlaymate = self.playdate.playmate;
     } else {
         aPlaymate = self.playdate.initiator;
+    }
+    
+    if ([aPlaymate isARobot]) {
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initWithNibName:@"PTMemoryViewController"
+                                                                                    bundle:nil
+                                                                                  playdate:self.playdate
+                                                                                    myTurn:YES
+                                                                                   boardID:0
+                                                                                playmateID:aPlaymate.userID
+                                                                               initiatorID:[[PTUser currentUser] userID]
+                                                                              allFilenames:[NSArray arrayWithObjects:nil]
+                                                                                  numCards:4];
+#if !(TARGET_IPHONE_SIMULATOR)
+        [memoryVC setChatController:self.chatController];
+#endif
+        
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+        
+        // Bring up the view controller of the new game
+        [appDelegate.transitionController loadGame:memoryVC
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
+        return;
     }
     
     NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
