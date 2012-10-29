@@ -293,58 +293,90 @@
             });
         } else {
             // Figure out which books are new
+            NSMutableArray *apiBooks = [[NSMutableArray alloc] init];
             NSMutableArray *newBooks = [[NSMutableArray alloc] init];
             NSInteger oldTotalForBooks = [[books allKeys] count];
             for (NSDictionary *book in allBooks) {
                 NSNumber *bookId = [book objectForKey:@"id"];
+                [apiBooks addObject:bookId];
                 if ([books objectForKey:bookId] == nil) {
                     [newBooks addObject:bookId];
                     [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
                 }
             }
             
-            // If there are new books, create views for them and load their covers
-            if ([newBooks count] > 0) {
-                // Create new book views
-                BOOL restartCoversLoad = (coversToLoadIndex == [coversToLoad count]); // This means original covers load has finished
-                CGFloat xPos = (booksScrollView.frame.size.width * oldTotalForBooks) + (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
-                PTBookView *bookView;
-                for (int i=0; i<[newBooks count]; i++) {
-                    NSNumber *bookId = [newBooks objectAtIndex:i];
-                    NSMutableDictionary *book = [books objectForKey:bookId];
-                    bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
-                    [bookView setBookPosition:(oldTotalForBooks + i)];
-                    [bookView setDelegate:self];
-                    [booksScrollView addSubview:bookView];
-                    xPos += booksScrollView.frame.size.width;
-                    i++;
-                    [bookList addObject:bookView];
-                    
-                    // Book cover pages load
-                    [coversToLoad addObject:bookId];
+            // Figure out which books are old (aka, no longer returned by API)
+            NSMutableArray *oldBooks = [[NSMutableArray alloc] init];
+            NSArray *allBookIds = [books allKeys];
+            for (NSNumber *bookId in allBookIds) {
+                // Check if stored book id no longer exists
+                if ([apiBooks indexOfObject:bookId] == NSNotFound) {
+                    [oldBooks addObject:bookId];
+                    [books removeObjectForKey:bookId];
                 }
-                
-                // Update scroll view width (based on # of books)
-                CGFloat scroll_width = booksScrollView.frame.size.width * [books count];
-                [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
-                
-                // Start loading book covers
-                if (restartCoversLoad) {
-                    [self loadBookCoverFromFileOrURL];
-                }
-                
+            }
+            oldTotalForBooks = oldTotalForBooks - [oldBooks count];
+            
+            // If there are books to add to remove, re-draw the books views
+            if ([newBooks count] > 0 || [oldBooks count] > 0) {
                 // Write book list to plist file
                 NSMutableArray *writeData = [[NSMutableArray alloc] init];
                 for (NSNumber *bookId in books) {
                     [writeData addObject:[books objectForKey:bookId]];
                 }
                 [writeData writeToFile:path atomically:YES];
+                
+                // Load the actual views
+                dispatch_async(dispatch_get_main_queue(), ^() {
+                    [self loadBookViewsFromDictionary];
+                });
             }
+            
+//            // If there are new books, create views for them and load their covers
+//            if ([newBooks count] > 0) {
+//                // Create new book views
+//                BOOL restartCoversLoad = (coversToLoadIndex == [coversToLoad count]); // This means original covers load has finished
+//                CGFloat xPos = (booksScrollView.frame.size.width * oldTotalForBooks) + (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
+//                PTBookView *bookView;
+//                for (int i=0; i<[newBooks count]; i++) {
+//                    NSNumber *bookId = [newBooks objectAtIndex:i];
+//                    NSMutableDictionary *book = [books objectForKey:bookId];
+//                    bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+//                    [bookView setBookPosition:(oldTotalForBooks + i)];
+//                    [bookView setDelegate:self];
+//                    [booksScrollView addSubview:bookView];
+//                    xPos += booksScrollView.frame.size.width;
+//                    i++;
+//                    [bookList addObject:bookView];
+//                    
+//                    // Book cover pages load
+//                    [coversToLoad addObject:bookId];
+//                }
+//                
+//                // Update scroll view width (based on # of books)
+//                CGFloat scroll_width = booksScrollView.frame.size.width * [books count];
+//                [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
+//                
+//                // Start loading book covers
+//                if (restartCoversLoad) {
+//                    [self loadBookCoverFromFileOrURL];
+//                }
+//                
+//                // Write book list to plist file
+//                NSMutableArray *writeData = [[NSMutableArray alloc] init];
+//                for (NSNumber *bookId in books) {
+//                    [writeData addObject:[books objectForKey:bookId]];
+//                }
+//                [writeData writeToFile:path atomically:YES];
+//            }
         }
     } onFailure:nil];
 }
 
 - (void)loadBookViewsFromDictionary {
+    // Empty book views container
+    [[booksScrollView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
     // Create views for each book
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
     PTBookView *bookView;
@@ -401,26 +433,6 @@
     [gameView3 setDelegate:self];
     [booksScrollView addSubview:gameView3];
     [gameList addObject:gameView3];
-    
-    //TODO we need to incorporate an API call here to load games from the API
-//    xPos += (booksScrollView.frame.size.width * .75);
-//    UIImageView *tttBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
-//    tttBookView.image = [UIImage imageNamed:@"TTT-logo.png"];
-//    UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                                                                action:@selector(ticTacToeTapped:)];
-//    [tttBookView addGestureRecognizer:tapRecognizer];
-//    tttBookView.userInteractionEnabled = YES;
-//    [booksScrollView addSubview:tttBookView];
-//    xPos += booksScrollView.frame.size.width;
-//    
-//    UIImageView *memoryBookView = [[UIImageView alloc] initWithFrame:CGRectMake(xPos, 275.0f, 300.0f, 225)]; // 800x600
-//    memoryBookView.image = [UIImage imageNamed:@"Memory-logo.png"];
-//    UITapGestureRecognizer* tapRecognizerMemory = [[UITapGestureRecognizer alloc] initWithTarget:self
-//                                                                                    action:@selector(memoryTapped:)];
-//    [memoryBookView addGestureRecognizer:tapRecognizerMemory];
-//    memoryBookView.userInteractionEnabled = YES;
-//    [booksScrollView addSubview:memoryBookView];
-//    xPos = booksScrollView.frame.size.width + xPos;
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 3); // 3 hardcoded games
@@ -837,6 +849,7 @@
                                       NSString *filenamesFlat = [result valueForKey:@"filename_dump"];
                                       filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
                                       NSArray *filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+                                      NSString *cardsString = [result valueForKey:@"card_array_string"];
                                       
                                       // Init the game controller
                                       PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
@@ -849,6 +862,7 @@
                                                                                           playmate:aPlaymate
                                                                                           filenames:filenames
                                                                                           totalCards:randNumCards
+                                                                                          cardsString:cardsString
                                                                                           myTurn:YES];
                                       
                                       
@@ -980,7 +994,7 @@
         closeBook.alpha = 0.0f;
     }];
 
-    // Close book, hide pages, show all other books
+    // Close book, hide pages, show all other books and games
     if (bookView != nil) {
         // Set current page view to book view
         if ([pagesScrollView.subviews count] > 0 && (pagesScrollView.currentPage - 1) < [pagesScrollView.subviews count]) {
@@ -992,6 +1006,7 @@
         [pagesScrollView setHidden:YES];
         [bookView close];
         [booksScrollView showAllBooksExcept:currentBookId];
+        [self showAllGameViews];
     }
 }
 
@@ -1341,7 +1356,12 @@
         
         // Open the book
         [bookView open];
+        
+        // Hide all other books views
         [booksScrollView hideAllBooksExcept:(currentBookId)];
+        
+        // Hide all games views
+        [self hideAllGameViews];
         
         // Start loading pages
         [self beginBookPageLoading];
@@ -1692,6 +1712,26 @@
             [self matchingTapped:nil];
         }
     }
+}
+
+#pragma mark - Games methods
+
+- (void)hideAllGameViews {
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         for (PTGameView *gameView in gameList) {
+                             gameView.alpha = 0.0f;
+                         }
+                     }];
+}
+
+- (void)showAllGameViews {
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         for (PTGameView *gameView in gameList) {
+                             gameView.alpha = 0.6f;
+                         }
+                     }];
 }
 
 @end

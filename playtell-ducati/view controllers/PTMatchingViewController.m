@@ -24,15 +24,16 @@
 
 @implementation PTMatchingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil
-               bundle:(NSBundle *)nibBundleOrNil
-             playdate:(PTPlaydate *)_playdate
+- (id)initWithNibName:(NSString*)nibNameOrNil
+               bundle:(NSBundle*)nibBundleOrNil
+             playdate:(PTPlaydate*)_playdate
               boardId:(NSInteger)_boardId
               themeId:(NSInteger)_themeId
             initiator:(PTPlaymate *)_initiator
              playmate:(PTPlaymate *)_playmate
-            filenames:(NSArray *)_filenames
+            filenames:(NSArray*)_filenames
            totalCards:(NSInteger)_totalCards
+          cardsString:(NSString*)_cardsString
                myTurn:(BOOL)_myTurn {
 
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,6 +47,14 @@
         filenames = _filenames;
         totalCards = _totalCards;
         myTurn = _myTurn;
+        
+        // Parse cards string
+        NSMutableArray *stringBuffer = [NSMutableArray arrayWithCapacity:[_cardsString length]];
+        for (int i=0; i<[_cardsString length]; i++) {
+            [stringBuffer addObject:[NSString stringWithFormat:@"%C", [_cardsString characterAtIndex:i]]];
+        }
+        cards = [NSArray arrayWithArray:stringBuffer];
+        NSLog(@"-=-=-=-=-=-= Cards: %@", cards);
     }
     return self;
 }
@@ -86,7 +95,7 @@
     // Setup available cards
     CGFloat x = 0.0f;
     CGSize sizeCard = CGSizeMake(140.0f, 160.0f); // 120 card width + 10 padding on each side
-    for (int i=0; i<totalCards; i++) {
+    for (int i=0; i<(totalCards/2.0f); i++) {
         PTMatchingAvailableCardView *viewCard = [[PTMatchingAvailableCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i];
         viewCard.delegate = self;
         [viewAvailableCardsScroll addSubview:viewCard];
@@ -113,7 +122,7 @@
     // Setup pairing cards
     x = 0.0f;
     sizeCard = CGSizeMake(300.0f, 200.0f);
-    for (int i=0; i<totalCards; i++) {
+    for (int i=0; i<(totalCards/2.0f); i++) {
         PTMatchingPairingCardView *viewCard = [[PTMatchingPairingCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i];
         //viewCard.delegate = self;
         [viewPairingCardsScroll addSubview:viewCard];

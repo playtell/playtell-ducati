@@ -207,7 +207,9 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
     // Register device if user is logged in
+    NSLog(@"Logged in? %@", [[PTUser currentUser] isLoggedIn] == YES ? @"YES" : @"NO");
     if ([[PTUser currentUser] isLoggedIn] == YES) {
         // Updates the device token and registers the token with UA
         [[UAirship shared] registerDeviceToken:deviceToken];
@@ -289,8 +291,12 @@
 #pragma mark - Alert view delegate
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    NSURL *itunesURL = [NSURL URLWithString:@"http://itunes.com/apps/playdate"];
+    // Launch app store
+    NSURL *itunesURL = [NSURL URLWithString:@"itms-apps://itunes.apple.com/us/app/id570304295"];
     [[UIApplication sharedApplication] openURL:itunesURL];
+    
+    // Close the app
+    exit(0);
 }
 
 @end

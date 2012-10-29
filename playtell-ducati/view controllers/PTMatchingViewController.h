@@ -23,6 +23,7 @@
     NSArray *filenames;
     NSInteger totalCards;
     BOOL myTurn;
+    NSArray *cards;
     
     // Background shim (used to transition backgrounds)
     UIView *viewBgShim;
@@ -43,15 +44,16 @@
     UIScrollView *viewPairingCardsScroll;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil
-               bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString*)nibNameOrNil
+               bundle:(NSBundle*)nibBundleOrNil
              playdate:(PTPlaydate *)_playdate
               boardId:(NSInteger)_boardId
               themeId:(NSInteger)_themeId
             initiator:(PTPlaymate *)_initiator
              playmate:(PTPlaymate *)_playmate
-            filenames:(NSArray *)_filenames
+            filenames:(NSArray*)_filenames
            totalCards:(NSInteger)_totalCards
+          cardsString:(NSString*)_cardsString
                myTurn:(BOOL)_myTurn;
 
 - (IBAction)endGame:(id)sender;
