@@ -426,16 +426,16 @@
     xPos += booksScrollView.frame.size.width;
     i++;
     
-    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:3
-                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
-    [gameView3 setPosition:i];
-    [gameView3 setDelegate:self];
-    [booksScrollView addSubview:gameView3];
-    [gameList addObject:gameView3];
+//    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:3
+//                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
+//    [gameView3 setPosition:i];
+//    [gameView3 setDelegate:self];
+//    [booksScrollView addSubview:gameView3];
+//    [gameList addObject:gameView3];
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 3); // 3 hardcoded games
+    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2); // 3 hardcoded games
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
