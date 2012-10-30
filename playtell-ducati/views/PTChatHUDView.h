@@ -8,17 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^PTChatHUDViewReconnectBlock) (void);
-
 @interface PTChatHUDView : UIView
 
+// Need to remove all these methods once everything is refactored...
 - (void)setLoadingImageForLeftView:(UIImage*)anImage loadingText:(NSString*)text;
-- (void)setLoadingImageForLeftViewWithURL:(NSURL*)aURL loadingText:(NSString*)text;
 - (void)setLoadingImageForRightView:(UIImage*)anImage;
-- (void)transitionLeftImage;
-- (void)setImageForRightView:(UIImage*)anImage;
+
+// ... and keep these.
 - (void)setLeftView:(UIView*)aView;
 - (void)setRightView:(UIView*)aView;
 
-- (void)enableReconnectViewWithClickHandler:(PTChatHUDViewReconnectBlock)handler;
 @end

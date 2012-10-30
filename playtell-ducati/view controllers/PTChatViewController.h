@@ -20,6 +20,7 @@
 
 - (void)configureForDialpad;
 - (void)setLeftViewAsPlaceholder;
+- (void)setCurrentUserPhoto;
 - (void)connectToOpenTokSession;
 - (void)connectToPlaceholderOpenTokSession;
 - (void)disconnectOpenTokSession;
@@ -27,6 +28,9 @@
 - (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate;
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL;
 - (void)stopPlayingMovies;
+
+- (void)startAutomaticPicturesWithInterval:(float)interval;
+- (void)stopAutomaticPictures;
 - (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 @property (nonatomic, readonly) UIView* view;

@@ -11,7 +11,6 @@
 #import "Logging.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
-#import "PTChatHUDView2.h"
 #import "TransitionController.h"
 
 //VIEW CONTROLLERS
@@ -90,9 +89,8 @@
 
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
-//    [self.chatController setPlaydate:self.playdate];
+    [self.chatController setPlaydate:aPlaydate];
     [self.view addSubview:self.chatController.view];
-    [(PTChatHUDView2 *)self.chatController.view setPlaydateId:self.playdate.playdateID];
     
     if ([aPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         [self setupRinger];
@@ -106,7 +104,7 @@
     [self.chatController restrictToSmallSize:NO];
     
     // Start taking automatic screenshots
-    [(PTChatHUDView2 *)self.chatController.view startAutomaticPicturesWithInterval:15.0];
+    [self.chatController startAutomaticPicturesWithInterval:15.0];
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -638,10 +636,7 @@
     [self endRinging];
     
     // Stop taking automatic screenshots
-    [(PTChatHUDView2 *)self.chatController.view stopAutomaticPictures];
-    
-    // Restrict the size of the chat view
-    [self.chatController restrictToSmallSize:YES];
+    [self.chatController stopAutomaticPictures];
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
@@ -652,6 +647,11 @@
     }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    
+    // Restrict the size of the chat view
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.chatController restrictToSmallSize:YES];
+    });
 }
 
 - (IBAction)playdateDisconnect:(id)sender {    
