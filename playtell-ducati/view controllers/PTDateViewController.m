@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <Opentok/Opentok.h>
 
 #import "Logging.h"
 #import "PTAnalytics.h"
@@ -16,7 +17,9 @@
 //VIEW CONTROLLERS
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTPostcardViewController.h"
 #import "PTBookView.h"
+#import "PTChatHUDView.h"
 #import "PTPageView.h"
 #import "PTGameView.h"
 
@@ -70,6 +73,8 @@
 @synthesize audioPlayer;
 @synthesize backgroundTask;
 
+NSTimer *postcardTimer;
+
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)aChatController {
     self = [super initWithNibName:@"PTDateViewController"
@@ -95,6 +100,14 @@
     if ([aPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         [self setupRinger];
         [self beginRinging];
+        postcardTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f
+                                                         target:self
+                                                       selector:@selector(showPostcardView)
+                                                       userInfo:nil
+                                                        repeats:NO];
+    } else {
+        // Start taking automatic screenshots
+        [self.chatController startAutomaticPicturesWithInterval:15.0];
     }
     
     // Set the start time for use with analytics
@@ -102,9 +115,6 @@
     
     // Let the chat view change size
     [self.chatController restrictToSmallSize:NO];
-    
-    // Start taking automatic screenshots
-    [self.chatController startAutomaticPicturesWithInterval:15.0];
 }
 
 - (void)wireUpwireUpPlaydateConnections {
@@ -239,6 +249,36 @@
     // Setup end playdate popup
     endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
     endPlaydatePopup.hidden = YES;
+}
+
+- (void)showPostcardView {
+    // Stop any ongoing events
+    [self endRinging];
+    [self.chatController stopAutomaticPictures];
+    
+    // Get the view sizes for transitioning the postcard view
+    float height = self.view.frame.size.height;
+    float width = self.view.frame.size.width;
+    
+    [self.view bringSubviewToFront:endPlaydate];
+    
+    PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
+    postcardController.chatController = self.chatController;
+    postcardController.view.frame = CGRectMake(0.0f, -height, width, height);
+    [self.view insertSubview:postcardController.view belowSubview:endPlaydate];
+    
+//    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.view;
+//    OTVideoView *videoView = chatView.publisherView;
+//    
+//    if (videoView) {
+//        CGRect publisherFrame = [postcardController.view convertRect:videoView.frame fromView:videoView];
+//    }
+    
+    [UIView animateWithDuration:1.0f animations:^{
+        postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void)loadBooks {
@@ -616,6 +656,8 @@
 }
 
 - (void)transitionToDialpad {
+    [postcardTimer invalidate];
+    
     // Send analytics an event for playdate ending
     if (playdateStart) {
         NSTimeInterval interval = fabs([playdateStart timeIntervalSinceNow]);
@@ -651,6 +693,7 @@
     // Restrict the size of the chat view
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.chatController restrictToSmallSize:YES];
+        
     });
 }
 
@@ -843,10 +886,15 @@
     
     // Make sure the information is about this playdate
     if (joinedPlaydate.initiator.userID == [[PTUser currentUser] userID] && joinedPlaydate.playmate.userID == playmate.userID) {
+        [postcardTimer invalidate];
+        
         // Send analytics event for joining a playdate
         [PTAnalytics sendEventNamed:EventPlaymateJoinedMyPlaydate withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
         
         [self endRinging];
+        
+        // Start taking automatic pictures
+        [self.chatController startAutomaticPicturesWithInterval:15.0f];
     }
 }
 

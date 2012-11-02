@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Opentok/Opentok.h>
 
 @interface PTChatHUDView : UIView
+
+@property (nonatomic, weak) OTVideoView *publisherView;
 
 // Need to remove all these methods once everything is refactored...
 - (void)setLoadingImageForLeftView:(UIImage*)anImage loadingText:(NSString*)text;

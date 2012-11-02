@@ -126,6 +126,12 @@
 }
 
 - (void)setRightView:(UIView*)aView {
+    if ([aView isKindOfClass:[OTVideoView class]]) {
+        self.publisherView = (OTVideoView *)aView;
+    } else {
+        self.publisherView = nil;
+    }
+    
     // Remove OpenTok gestures
     [aView removeAllGestureRecognizers];
     
