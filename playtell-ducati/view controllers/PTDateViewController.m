@@ -221,6 +221,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateTictactoeNewGame:) name:@"PlayDateTictactoeNewGame" object:nil];
     //listen for memory game
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryNewGame:) name:@"PlayDateMemoryNewGame" object:nil];
+    //listen for matching game
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMatchingNewGame:) name:@"PlayDateMatchingNewGame" object:nil];
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -426,16 +428,16 @@
     xPos += booksScrollView.frame.size.width;
     i++;
     
-//    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-//                                                       gameId:3
-//                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
-//    [gameView3 setPosition:i];
-//    [gameView3 setDelegate:self];
-//    [booksScrollView addSubview:gameView3];
-//    [gameList addObject:gameView3];
+    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                       gameId:3
+                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
+    [gameView3 setPosition:i];
+    [gameView3 setDelegate:self];
+    [booksScrollView addSubview:gameView3];
+    [gameList addObject:gameView3];
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 2); // 3 hardcoded games
+    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 3); // 3 hardcoded games
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
@@ -915,11 +917,12 @@
                                                                                           totalCards:randNumCards
                                                                                           cardsString:cardsString
                                                                                           myTurn:YES];
+                                      matchingViewController.chatController = self.chatController;
                                       
                                       
                                       // Init game splash
                                       UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
-                                      splash.image = [UIImage imageNamed:@"Memory-cover.png"];
+                                      splash.image = [UIImage imageNamed:@"matching-splash"];
                                       
                                       // Bring up the view controller of the new game
                                       PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -1213,6 +1216,54 @@
 
         // Bring up the view controller of the new game
         [appDelegate.transitionController loadGame:memoryVC
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
+    }
+}
+
+- (void)pusherPlayDateMatchingNewGame:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+
+    // Get response parameters
+    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger boardId = [[eventData objectForKey:@"board_id"] integerValue];
+    NSInteger totalCards = [[eventData objectForKey:@"num_cards"] integerValue];
+    NSString *filenamesFlat = [eventData valueForKey:@"filename_dump"];
+    filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
+    NSArray *filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+    NSString *cardsString = [eventData valueForKey:@"card_array_string"];
+    
+    PTPlaymate *aPlaymate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        aPlaymate = self.playdate.playmate;
+    } else {
+        aPlaymate = self.playdate.initiator;
+    }
+    
+    // Someone invited us to play
+    if (initiatorId != [[PTUser currentUser] userID]) {
+        // Init the game controller
+        PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
+                                                            initWithNibName:@"PTMatchingViewController"
+                                                            bundle:nil
+                                                            playdate:self.playdate
+                                                            boardId:boardId
+                                                            themeId:19 // TODO: Hard coded
+                                                            initiator:[PTUser currentUser]
+                                                            playmate:aPlaymate
+                                                            filenames:filenames
+                                                            totalCards:totalCards
+                                                            cardsString:cardsString
+                                                            myTurn:NO];
+        matchingViewController.chatController = self.chatController;
+        
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        splash.image = [UIImage imageNamed:@"matching-splash"];
+        
+        // Bring up the view controller of the new game
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController loadGame:matchingViewController
                                        withOptions:UIViewAnimationOptionTransitionCurlUp
                                         withSplash:splash];
     }

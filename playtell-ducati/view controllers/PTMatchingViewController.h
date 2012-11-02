@@ -12,6 +12,9 @@
 #import "PTMatchingAvailableCardView.h"
 #import "PTMatchingAvailableCardsView.h"
 #import "PTMatchingPairingCardsView.h"
+#import "PTMatchingPairingCardView.h"
+#import "PTChatViewController.h"
+#import "PTMatchingScoreView.h"
 
 @interface PTMatchingViewController : UIViewController <UIScrollViewDelegate, PTMachingGameDelegate> {
     // Game config
@@ -23,7 +26,8 @@
     NSArray *filenames;
     NSInteger totalCards;
     BOOL myTurn;
-    NSArray *cards;
+    NSArray *pairingCards;
+    NSArray *availableCards;
     
     // Background shim (used to transition backgrounds)
     UIView *viewBgShim;
@@ -35,14 +39,40 @@
     PTMatchingAvailableCardsView *viewAvailableCards;
     UIScrollView *viewAvailableCardsScroll;
     UIView *viewTrackingCard;
+    UIImageView *viewTrackingCardImage;
     CGPoint pointTouchOriginal;
     CGPoint pointTouchOffset;
     PTMatchingAvailableCardView *viewOriginalTrackingCard;
+    NSInteger currentAvailableIndex;
+    PTMatchingAvailableCardView *viewCurrentAvailableCardView;
     
     // Pairing cards
+    UIView *viewPairingCardsContainer;
     PTMatchingPairingCardsView *viewPairingCards;
     UIScrollView *viewPairingCardsScroll;
+    CGRect rectLandingStrip;
+    BOOL canTrackingCardLand;
+    BOOL isTrackingCardSmall;
+    BOOL isBoardFlipped;
+    NSInteger currentPairingIndex;
+    PTMatchingPairingCardView *viewCurrentPairingCardView;
+    BOOL isGameOver;
+    NSNumber *winnerId;
+    
+    // Winner/loser
+    UIImageView *winnerView;
+    UIImageView *loserView;
+    UIImageView *drawView;
+    
+    // Score views
+    PTMatchingScoreView *scoreViewMe;
+    PTMatchingScoreView *scoreViewOpponent;
+    
+    // Shadow wedge
+    UIView *viewBottomShawdow;
 }
+
+@property (nonatomic, strong) PTChatViewController* chatController;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil
                bundle:(NSBundle*)nibBundleOrNil

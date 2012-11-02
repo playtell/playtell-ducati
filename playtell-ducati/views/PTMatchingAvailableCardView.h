@@ -12,14 +12,17 @@
 
 @interface PTMatchingAvailableCardView : UIView {
     NSInteger cardIndex;
-    UIView *childView;
+    UIImageView *childView;
+    UIView *borderView;
     id<PTMachingGameDelegate> delegate;
 }
 
 @property (nonatomic, retain) id<PTMachingGameDelegate> delegate;
 
-- (id)initWithFrame:(CGRect)frame cardIndex:(NSInteger)_cardIndex;
+- (id)initWithFrame:(CGRect)frame cardIndex:(NSInteger)_cardIndex delegate:(id<PTMachingGameDelegate>)_delegate;
 - (void)setFocusLevel:(CGFloat)focus;
+- (NSInteger)getCardIndex;
+- (UIImage*)getCardImage;
 
 @end
 
@@ -29,4 +32,7 @@
 - (void)matchingGameAvailableCardTouchesMoved:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)matchingGameAvailableCardTouchesEnded:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)matchingGameAvailableCardTouchesCancelled:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;
+- (UIImage*)matchingGameImageForCardIndex:(NSInteger)cardIndex;
+- (void)matchingGamePairingCardDidFinishUpDownAnimation;
+- (void)matchingGamePairingCardDidFinishLeftRightAnimation;
 @end

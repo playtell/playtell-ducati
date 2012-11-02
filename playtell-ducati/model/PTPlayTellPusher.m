@@ -259,6 +259,31 @@ static PTPlayTellPusher* instance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMemoryPlayTurn" object:self userInfo:eventData];
     }];
 
+    // Matching game start
+    [aPlaydateChannel bindToEventNamed:@"games_matching_new_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMatchingNewGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_matching_refresh_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMatchingRefreshGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_matching_end_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMatchingEndGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_matching_play_turn" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMatchingPlayTurn" object:self userInfo:eventData];
+    }];
+
+    
+    
+    
+    
     self.isSubscribedToPlaydateChannel = YES;
 }
 
