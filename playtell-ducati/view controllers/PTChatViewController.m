@@ -67,6 +67,11 @@ NSTimer *screenshotTimer;
         UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
         tapRecognizer.numberOfTapsRequired = 1;
         
+        // Set self to be the delegate for all gesture recognizers
+        swipeDownRecognizer.delegate = self;
+        swipeUpRecognizer.delegate = self;
+        pinchRecognizer.delegate = self;
+        tapRecognizer.delegate = self;
         
         // Add the gesture recognizers to the view
         [self.chatView addGestureRecognizer:swipeDownRecognizer];
@@ -369,6 +374,17 @@ NSTimer *screenshotTimer;
 
 - (UIView*)view {
     return self.chatView;
+}
+
+#pragma mark - UIGestureRecognizerDelegate methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+       shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        // we touched a button, slider, or other UIControl
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
 }
 
 @end

@@ -17,8 +17,8 @@
 #define LABEL_SPACING_Y 25.0
 #define PHOTO_HEIGHT    300.0
 #define PHOTO_WIDTH     400.0
-#define BUTTON_HEIGHT   40.0
-#define BUTTON_SPACING  25.0
+#define BUTTON_HEIGHT   49.0
+#define BUTTON_SPACING  20.0
 
 @interface PTPostcardView ()
 
@@ -115,14 +115,14 @@ CGRect originalFrame;
         
         // Layout the buttons
         btnCamera = [[UIButton alloc] initWithFrame:CGRectMake(postcard.frame.origin.x, postcard.frame.origin.y + postcard.frame.size.height + BUTTON_SPACING, (postcard.frame.size.width - BUTTON_SPACING) / 2, BUTTON_HEIGHT)];
-        [btnCamera setTitle:@"Take Photo" forState:UIControlStateNormal];
-        [btnCamera setBackgroundImage:[UIImage imageNamed:@"take-a-photo.png"] forState:UIControlStateNormal];
+        [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo.png"] forState:UIControlStateNormal];
+        [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo-press.png"] forState:UIControlStateHighlighted];
         [btnCamera addTarget:self action:@selector(cameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:btnCamera];
         
         btnSend = [[UIButton alloc] initWithFrame:CGRectMake(postcard.frame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
-        [btnSend setTitle:@"Send Postcard" forState:UIControlStateNormal];
-        [btnSend setBackgroundImage:[UIImage imageNamed:@"take-a-photo.png"] forState:UIControlStateNormal];
+        [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard.png"] forState:UIControlStateNormal];
+        [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard-press.png"] forState:UIControlStateHighlighted];
         [btnSend addTarget:self action:@selector(sendButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:btnSend];
     }
@@ -193,6 +193,9 @@ CGRect originalFrame;
         publisherView.frame = originalFrame;
         
         lblTitle.text = @"WANT TO SEND YOUR PICTURE?";
+        
+        [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo.png"] forState:UIControlStateNormal];
+        [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo-press.png"] forState:UIControlStateHighlighted];
     }];
 }
 

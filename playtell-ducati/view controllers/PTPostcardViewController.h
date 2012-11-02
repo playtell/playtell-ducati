@@ -18,6 +18,7 @@
 
 @interface PTPostcardViewController : UIViewController <PTPostcardViewDelegate>
 
+@property (nonatomic, assign) int playdateId;
 @property (nonatomic, strong) id<PTPostcardControllerDelegate> delegate;
 
 @end

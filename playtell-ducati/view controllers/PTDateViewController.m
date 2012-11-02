@@ -13,6 +13,7 @@
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
+#import "UIColor+ColorFromHex.h"
 
 //VIEW CONTROLLERS
 #import "PTDateViewController.h"
@@ -102,7 +103,7 @@ NSTimer *postcardTimer;
         [self beginRinging];
         postcardTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f
                                                          target:self
-                                                       selector:@selector(showPostcardView)
+                                                       selector:@selector(showPostcardPrompt)
                                                        userInfo:nil
                                                         repeats:NO];
     } else {
@@ -251,6 +252,32 @@ NSTimer *postcardTimer;
     endPlaydatePopup.hidden = YES;
 }
 
+- (void)showPostcardPrompt {
+    UIView *prompt = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 150.0f)];
+    prompt.backgroundColor = [UIColor colorFromHex:@"#2E4957"];
+    
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10.0f, 10.0f, prompt.frame.size.width - 20.0, 25.0)];
+    title.textAlignment = UITextAlignmentCenter;
+    title.textColor = [UIColor whiteColor];
+    title.backgroundColor = [UIColor clearColor];
+    title.font = [UIFont systemFontOfSize:title.frame.size.height - 5.0];
+    title.text = @"Leave a Message!";
+    [prompt addSubview:title];
+    
+    UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-icon.png"]];
+    icon.center = prompt.center;
+    [prompt addSubview:icon];
+    
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(icon.frame.origin.x, icon.frame.origin.y + icon.frame.size.height + 5.0, icon.frame.size.width, 30.0)];
+    [button setBackgroundImage:[UIImage imageNamed:@"take-a-photo.png"] forState:UIControlStateNormal];
+    [button setTitle:@"Compose" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
+    [prompt addSubview:button];
+    
+    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.view;
+    [chatView setLeftView:prompt];
+}
+
 - (void)showPostcardView {
     // Stop any ongoing events
     [self endRinging];
@@ -264,6 +291,7 @@ NSTimer *postcardTimer;
     
     PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
     postcardController.delegate = self;
+    postcardController.playdateId = self.playdate.playdateID;
     postcardController.view.frame = CGRectMake(0.0f, -height, width, height);
     [self.view insertSubview:postcardController.view belowSubview:endPlaydate];
     

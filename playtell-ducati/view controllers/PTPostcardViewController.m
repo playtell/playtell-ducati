@@ -6,7 +6,9 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "PTPlaydatePhotoCreateRequest.h"
 #import "PTPostcardViewController.h"
+#import "PTUser.h"
 
 @interface PTPostcardViewController ()
 
@@ -15,6 +17,7 @@
 @end
 
 @implementation PTPostcardViewController
+@synthesize playdateId;
 @synthesize delegate;
 
 @synthesize postcardView;
@@ -48,8 +51,19 @@
 
 #pragma mark - Postcard Delegate
 - (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot {
-    UIImageWriteToSavedPhotosAlbum(postcard, nil, nil, nil);
-    UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+    dispatch_async(dispatch_get_current_queue(), ^{
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdateId
+                                                    photo:postcard
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Postcard successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
+    });
+    //UIImageWriteToSavedPhotosAlbum(postcard, nil, nil, nil);
+    //UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
     
     if ([delegate respondsToSelector:@selector(postcardDidSend)]) {
         [delegate postcardDidSend];

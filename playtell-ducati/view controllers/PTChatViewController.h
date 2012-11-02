@@ -12,7 +12,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PTChatViewController : NSObject
+@interface PTChatViewController : NSObject <UIGestureRecognizerDelegate>
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
