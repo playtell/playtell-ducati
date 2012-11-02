@@ -207,6 +207,8 @@
     }
     
     [self.chatController setLeftViewAsPlaceholder];
+    [self.chatController setCurrentUserPhoto];
+    
     if (signUpBubbleContainer != nil) {
         [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
     } else {

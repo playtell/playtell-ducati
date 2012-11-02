@@ -7,16 +7,20 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <Opentok/Opentok.h>
 
 #import "Logging.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
+#import "UIColor+ColorFromHex.h"
 
 //VIEW CONTROLLERS
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
+#import "PTPostcardViewController.h"
 #import "PTBookView.h"
+#import "PTChatHUDView.h"
 #import "PTPageView.h"
 #import "PTGameView.h"
 
@@ -70,6 +74,8 @@
 @synthesize audioPlayer;
 @synthesize backgroundTask;
 
+NSTimer *postcardTimer;
+
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate
     chatViewController:(PTChatViewController*)aChatController {
     self = [super initWithNibName:@"PTDateViewController"
@@ -89,12 +95,20 @@
 
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
-//    [self.chatController setPlaydate:self.playdate];
+    [self.chatController setPlaydate:aPlaydate];
     [self.view addSubview:self.chatController.view];
     
     if ([aPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         [self setupRinger];
         [self beginRinging];
+        postcardTimer = [NSTimer scheduledTimerWithTimeInterval:10.0f
+                                                         target:self
+                                                       selector:@selector(showPostcardPrompt)
+                                                       userInfo:nil
+                                                        repeats:NO];
+    } else {
+        // Start taking automatic screenshots
+        [self.chatController startAutomaticPicturesWithInterval:15.0];
     }
     
     // Set the start time for use with analytics
@@ -236,6 +250,55 @@
     // Setup end playdate popup
     endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
     endPlaydatePopup.hidden = YES;
+}
+
+- (void)showPostcardPrompt {
+    UIView *prompt = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 150.0f)];
+    prompt.backgroundColor = [UIColor colorFromHex:@"#2E4957"];
+    
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10.0f, 10.0f, prompt.frame.size.width - 20.0, 25.0)];
+    title.textAlignment = UITextAlignmentCenter;
+    title.textColor = [UIColor whiteColor];
+    title.backgroundColor = [UIColor clearColor];
+    title.font = [UIFont systemFontOfSize:title.frame.size.height - 5.0];
+    title.text = @"Leave a Message!";
+    [prompt addSubview:title];
+    
+    UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-icon.png"]];
+    icon.center = prompt.center;
+    [prompt addSubview:icon];
+    
+    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(icon.frame.origin.x, icon.frame.origin.y + icon.frame.size.height + 5.0, icon.frame.size.width, 30.0)];
+    [button setBackgroundImage:[UIImage imageNamed:@"take-a-photo.png"] forState:UIControlStateNormal];
+    [button setTitle:@"Compose" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
+    [prompt addSubview:button];
+    
+    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.view;
+    [chatView setLeftView:prompt];
+}
+
+- (void)showPostcardView {
+    // Stop any ongoing events
+    [self endRinging];
+    [self.chatController stopAutomaticPictures];
+    
+    // Get the view sizes for transitioning the postcard view
+    float height = self.view.frame.size.height;
+    float width = self.view.frame.size.width;
+    
+    [self.view bringSubviewToFront:endPlaydate];
+    
+    PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
+    postcardController.delegate = self;
+    postcardController.playdateId = self.playdate.playdateID;
+    postcardController.view.frame = CGRectMake(0.0f, -height, width, height);
+    [self.view insertSubview:postcardController.view belowSubview:endPlaydate];
+    
+    [UIView animateWithDuration:1.0f animations:^{
+        postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
+    //} completion:^(BOOL finished) {
+    }];
 }
 
 - (void)loadBooks {
@@ -613,6 +676,8 @@
 }
 
 - (void)transitionToDialpad {
+    [postcardTimer invalidate];
+    
     // Send analytics an event for playdate ending
     if (playdateStart) {
         NSTimeInterval interval = fabs([playdateStart timeIntervalSinceNow]);
@@ -632,8 +697,8 @@
     // Shutoff the ringer
     [self endRinging];
     
-    // Restrict the size of the chat view
-    [self.chatController restrictToSmallSize:YES];
+    // Stop taking automatic screenshots
+    [self.chatController stopAutomaticPictures];
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
@@ -644,6 +709,12 @@
     }
     [appDelegate.transitionController transitionToViewController:appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    
+    // Restrict the size of the chat view
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.chatController restrictToSmallSize:YES];
+        
+    });
 }
 
 - (IBAction)playdateDisconnect:(id)sender {    
@@ -886,10 +957,15 @@
     
     // Make sure the information is about this playdate
     if (joinedPlaydate.initiator.userID == [[PTUser currentUser] userID] && joinedPlaydate.playmate.userID == playmate.userID) {
+        [postcardTimer invalidate];
+        
         // Send analytics event for joining a playdate
         [PTAnalytics sendEventNamed:EventPlaymateJoinedMyPlaydate withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
         
         [self endRinging];
+        
+        // Start taking automatic pictures
+        [self.chatController startAutomaticPicturesWithInterval:15.0f];
     }
 }
 
@@ -1669,6 +1745,12 @@
             [self ticTacToeTapped:nil];
         }
     }
+}
+
+#pragma mark - Postcard Controller delegate
+
+- (void)postcardDidSend {
+    [self playdateShouldEnd];
 }
 
 @end

@@ -8,6 +8,8 @@
 
 #import "PTAppDelegate.h"
 #import "PTChatHUDView2.h"
+#import "PTPlaydatePhotoCreateRequest.h"
+#import "PTUser.h"
 
 #import "UIView+PlayTell.h"
 #import "UIColor+ColorFromHex.h"
@@ -36,6 +38,7 @@
 @end
 
 @implementation PTChatHUDView2
+@synthesize playdateId;
 @synthesize innerView;
 @synthesize maskLayer;
 @synthesize shadowLayer;
@@ -45,6 +48,7 @@
 @synthesize sizeRestricted;
 static float subviewCurrentHeight;
 static float subviewCurrentWidth;
+NSTimer *screenshotTimer;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -109,7 +113,7 @@ static float subviewCurrentWidth;
         [self addGestureRecognizer:swipeDownRecognizer];
         [self addGestureRecognizer:swipeUpRecognizer];
         [self addGestureRecognizer:pinchRecognizer];
-        //[self addGestureRecognizer:tapRecognizer];
+        [self addGestureRecognizer:tapRecognizer];
         
         // Restrict the size
         self.sizeRestricted = YES;
@@ -274,7 +278,38 @@ static float subviewCurrentWidth;
 }
 
 - (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
-    [self screenshot];
+    [self takeScreenshotWithSave:YES];
+}
+
+- (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
+    dispatch_async(dispatch_get_current_queue(), ^{
+        UIImage *screenshot = [self screenshotWithSave:saveToCameraRoll];
+        
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdateId
+                                                    photo:screenshot
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Playdate photo successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
+    });
+}
+
+- (void)takeAutomaticScreenshot {
+    [self takeScreenshotWithSave:NO];
+}
+
+- (void)startAutomaticPicturesWithInterval:(float)interval {
+    screenshotTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                       target:self
+                                                     selector:@selector(takeAutomaticScreenshot) userInfo:nil
+                                                      repeats:YES];
+}
+
+- (void)stopAutomaticPictures {
+    [screenshotTimer invalidate];
 }
 
 + (float)chatviewHeight {
