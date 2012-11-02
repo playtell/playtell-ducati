@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PTPostcardViewDelegate <NSObject>
+@required
+- (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot;
+@end
+
 @interface PTPostcardView : UIView
+
+@property (nonatomic, strong) id<PTPostcardViewDelegate> delegate;
 
 @end

@@ -15,8 +15,9 @@
 @end
 
 @implementation PTPostcardViewController
+@synthesize delegate;
+
 @synthesize postcardView;
-@synthesize chatController;
 
 - (id)init {
     return [self initWithNibName:nil bundle:nil];
@@ -27,6 +28,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.postcardView = [[PTPostcardView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        self.postcardView.delegate = self;
         [self.view addSubview:self.postcardView];
     }
     return self;
@@ -42,6 +44,16 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Postcard Delegate
+- (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot {
+    UIImageWriteToSavedPhotosAlbum(postcard, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+    
+    if ([delegate respondsToSelector:@selector(postcardDidSend)]) {
+        [delegate postcardDidSend];
+    }
 }
 
 @end

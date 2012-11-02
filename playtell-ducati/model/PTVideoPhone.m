@@ -50,6 +50,10 @@ static PTVideoPhone* instance = nil;
     return self;
 }
 
+- (UIView *)currentPublisherView {
+    return self.publisher.view;
+}
+
 - (void)phoneWillEnterForeground:(NSNotification*)note {
     LOGMETHOD;
     [self wakeUp];

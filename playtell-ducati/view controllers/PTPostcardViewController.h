@@ -11,8 +11,13 @@
 #import "PTChatViewController.h"
 #import "PTPostcardView.h"
 
-@interface PTPostcardViewController : UIViewController
+@protocol PTPostcardControllerDelegate <NSObject>
+@optional
+- (void)postcardDidSend;
+@end
 
-@property (nonatomic, strong) PTChatViewController *chatController;
+@interface PTPostcardViewController : UIViewController <PTPostcardViewDelegate>
+
+@property (nonatomic, strong) id<PTPostcardControllerDelegate> delegate;
 
 @end

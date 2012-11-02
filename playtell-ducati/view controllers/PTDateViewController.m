@@ -263,21 +263,13 @@ NSTimer *postcardTimer;
     [self.view bringSubviewToFront:endPlaydate];
     
     PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
-    postcardController.chatController = self.chatController;
+    postcardController.delegate = self;
     postcardController.view.frame = CGRectMake(0.0f, -height, width, height);
     [self.view insertSubview:postcardController.view belowSubview:endPlaydate];
     
-//    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.view;
-//    OTVideoView *videoView = chatView.publisherView;
-//    
-//    if (videoView) {
-//        CGRect publisherFrame = [postcardController.view convertRect:videoView.frame fromView:videoView];
-//    }
-    
     [UIView animateWithDuration:1.0f animations:^{
         postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
-    } completion:^(BOOL finished) {
-        
+    //} completion:^(BOOL finished) {
     }];
 }
 
@@ -1674,6 +1666,12 @@ NSTimer *postcardTimer;
             [self ticTacToeTapped:nil];
         }
     }
+}
+
+#pragma mark - Postcard Controller delegate
+
+- (void)postcardDidSend {
+    [self playdateShouldEnd];
 }
 
 @end
