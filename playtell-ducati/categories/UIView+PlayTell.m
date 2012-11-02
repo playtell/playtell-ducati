@@ -34,11 +34,19 @@
 }
 
 - (UIImage*)screenshot {
+    return [self screenshotWithSave:YES];
+}
+
+- (UIImage*)screenshotWithSave:(BOOL)saveToCameraRoll {
 	UIGraphicsBeginImageContext(self.frame.size);
 	[self.layer renderInContext:UIGraphicsGetCurrentContext()];
 	UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
-    UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+    
+    if (saveToCameraRoll) {
+        UIImageWriteToSavedPhotosAlbum(viewImage, nil, nil, nil);
+    }
+    
     return viewImage;
 }
 

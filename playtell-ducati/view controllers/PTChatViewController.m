@@ -8,10 +8,10 @@
 
 #import "Logging.h"
 #import "PTChatHUDView.h"
-#import "PTChatHUDView2.h"
 #import "PTChatViewController.h"
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
+#import "PTPlaydatePhotoCreateRequest.h"
 #import "PTUser.h"
 
 #import "PTPlaydate+InitatorChecking.h"
@@ -20,15 +20,25 @@
 
 #import <MediaPlayer/MediaPlayer.h>
 
+#define CHATVIEW_CENTERX        512.0
+#define CHATVIEW_LARGE_HEIGHT   300.0
+#define CHATVIEW_LARGE_WIDTH    800.0
+#define CHATVIEW_SMALL_HEIGHT   150.0
+#define CHATVIEW_SMALL_WIDTH    400.0
+
 @interface PTChatViewController ()
-@property (nonatomic, strong) PTChatHUDView2* chatView;
+@property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
 @property (nonatomic, strong) MPMoviePlayerController* movieController;
+@property (nonatomic, assign) BOOL restrictSizeToSmall;
 @end
 
 @implementation PTChatViewController
 @synthesize chatView, videoPhone, playdate, playmate;
 @synthesize movieController;
+@synthesize restrictSizeToSmall;
+
+NSTimer *screenshotTimer;
 
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL {
     self.movieController.contentURL = movieURL;
@@ -44,8 +54,30 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.chatView = [[PTChatHUDView2 alloc] initWithFrame:CGRectZero];
+        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
         self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
+        self.restrictSizeToSmall = YES;
+        
+        // Create the gesture recognizers
+        UISwipeGestureRecognizer *swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
+        swipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
+        swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
+        tapRecognizer.numberOfTapsRequired = 1;
+        
+        // Set self to be the delegate for all gesture recognizers
+        swipeDownRecognizer.delegate = self;
+        swipeUpRecognizer.delegate = self;
+        pinchRecognizer.delegate = self;
+        tapRecognizer.delegate = self;
+        
+        // Add the gesture recognizers to the view
+        [self.chatView addGestureRecognizer:swipeDownRecognizer];
+        [self.chatView addGestureRecognizer:swipeUpRecognizer];
+        [self.chatView addGestureRecognizer:pinchRecognizer];
+        [self.chatView addGestureRecognizer:tapRecognizer];
     }
     return self;
 }
@@ -75,17 +107,109 @@
     return self;
 }
 
+- (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
+    dispatch_async(dispatch_get_current_queue(), ^{
+        UIImage *screenshot = [self.chatView screenshotWithSave:saveToCameraRoll];
+        
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdate.playdateID
+                                                    photo:screenshot
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Playdate photo successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
+    });
+}
+
+- (void)takeAutomaticScreenshot {
+    [self takeScreenshotWithSave:NO];
+}
+
+- (void)startAutomaticPicturesWithInterval:(float)interval {
+    screenshotTimer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                       target:self
+                                                     selector:@selector(takeAutomaticScreenshot) userInfo:nil
+                                                      repeats:YES];
+}
+
+- (void)stopAutomaticPictures {
+    [screenshotTimer invalidate];
+}
+
 - (void)restrictToSmallSize:(BOOL)shouldRestrict {
-    [chatView restrictToSmallSize:shouldRestrict];
+    if (shouldRestrict && self.chatView.frame.size.width != CHATVIEW_SMALL_WIDTH) {
+        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT);
+    }
+    
+    self.restrictSizeToSmall = shouldRestrict;
+}
+
+- (void)userSwipeDownEvent:(UISwipeGestureRecognizer *)recognizer {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    if (self.chatView.frame.size.width != CHATVIEW_LARGE_WIDTH) {
+        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_LARGE_WIDTH / 2), 0.0f, CHATVIEW_LARGE_WIDTH, CHATVIEW_LARGE_HEIGHT);
+    }
+}
+
+- (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    if (self.chatView.frame.size.width != CHATVIEW_SMALL_WIDTH) {
+        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT);
+    }
+}
+
+- (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan ||
+        recognizer.state == UIGestureRecognizerStateChanged) {
+        CGFloat scale = recognizer.scale;
+        
+        float newWidth = self.chatView.frame.size.width * scale;
+        if (newWidth < CHATVIEW_SMALL_WIDTH)
+            newWidth = CHATVIEW_SMALL_WIDTH;
+        if (newWidth > CHATVIEW_LARGE_WIDTH)
+            newWidth = CHATVIEW_LARGE_WIDTH;
+        
+        float newHeight = self.chatView.frame.size.height * scale;
+        if (newHeight < CHATVIEW_SMALL_HEIGHT)
+            newHeight = CHATVIEW_SMALL_HEIGHT;
+        if (newHeight > CHATVIEW_LARGE_HEIGHT)
+            newHeight = CHATVIEW_LARGE_HEIGHT;
+        
+        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (newWidth / 2), 0.0f, newWidth, newHeight);
+        
+        recognizer.scale = 1;
+    }
+}
+
+- (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
+    [self takeScreenshotWithSave:YES];
 }
 
 - (void)configureForDialpad {
     PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
-    [self.chatView setImageForRightView:nullPlaymate.userPhoto];
+    [self.chatView setLeftView:[[UIImageView alloc] initWithImage:nullPlaymate.userPhoto]];
+    [self.chatView setRightView:[[UIImageView alloc] initWithImage:[PTUser currentUser].userPhoto]];
 }
 
 - (void)setLeftViewAsPlaceholder {
     [self.chatView setLeftView:[self playmatePlaceholderView]];
+}
+
+- (void)setCurrentUserPhoto {
+    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
+    
+    // If user photo is nil user the placeholder
+    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
+    [self.chatView setLoadingImageForRightView:myPhoto];
 }
 
 - (void)connectToOpenTokSession {
@@ -150,8 +274,7 @@
 
 - (void)setupPlaymatePlaceholderImages {
     LOGMETHOD;
-    [self.chatView setLoadingImageForLeftViewWithURL:self.playmate.photoURL
-                                         loadingText:self.playmate.username];
+    [self.chatView setLoadingImageForLeftView:self.playmate.userPhoto loadingText:self.playmate.username];
     
     UIImageView* myImageView = [[UIImageView alloc] initWithImage:[[PTUser currentUser] userPhoto]];
     [self.chatView setRightView:myImageView];
@@ -227,14 +350,6 @@
     return dummyBackground;
 }
 
-- (void)setCurrentUserPhoto {
-    UIImage* myPhoto = [[PTUser currentUser] userPhoto];
-    
-    // If user photo is nil user the placeholder
-    myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    [self.chatView setLoadingImageForRightView:myPhoto];
-}
-
 - (UIView*)createWaitingView {
     UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
     UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
@@ -259,6 +374,17 @@
 
 - (UIView*)view {
     return self.chatView;
+}
+
+#pragma mark - UIGestureRecognizerDelegate methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+       shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        // we touched a button, slider, or other UIControl
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
 }
 
 @end

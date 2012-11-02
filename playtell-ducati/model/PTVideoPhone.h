@@ -20,6 +20,8 @@ typedef void (^PTPublisherDidStartStreamingBlock) (OTPublisher* aPublisher);
 
 + (PTVideoPhone*)sharedPhone;
 
+- (UIView *)currentPublisherView;
+
 - (void)connectToUser:(NSString*)aUser;
 - (void)disconnect;
 
@@ -34,4 +36,5 @@ typedef void (^PTPublisherDidStartStreamingBlock) (OTPublisher* aPublisher);
 - (void)setSessionConnectedBlock:(PTStreamConnectedToSessionBlock)handler;
 - (void)setSubscriberConnectedBlock:(PTVideoSubscriberSubscribedBlock)handler;
 - (void)setPublisherDidStartStreamingBlock:(PTPublisherDidStartStreamingBlock)handler;
+
 @end

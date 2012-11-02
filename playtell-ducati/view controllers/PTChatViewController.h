@@ -12,7 +12,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PTChatViewController : NSObject
+@interface PTChatViewController : NSObject <UIGestureRecognizerDelegate>
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
@@ -20,6 +20,7 @@
 
 - (void)configureForDialpad;
 - (void)setLeftViewAsPlaceholder;
+- (void)setCurrentUserPhoto;
 - (void)connectToOpenTokSession;
 - (void)connectToPlaceholderOpenTokSession;
 - (void)disconnectOpenTokSession;
@@ -27,6 +28,9 @@
 - (void)setLoadingViewForPlaymate:(PTPlaymate*)aPlaymate;
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL;
 - (void)stopPlayingMovies;
+
+- (void)startAutomaticPicturesWithInterval:(float)interval;
+- (void)stopAutomaticPictures;
 - (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 @property (nonatomic, readonly) UIView* view;

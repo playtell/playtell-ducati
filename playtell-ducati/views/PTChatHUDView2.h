@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PTChatHUDView2 : UIView
+@interface PTChatHUDView2 : UIView {
+    int playdateId;
+}
+
+@property (nonatomic, assign) int playdateId;
 
 // Need to remove all these methods once everything is refactored...
 - (void)setLoadingImageForLeftView:(UIImage*)anImage loadingText:(NSString*)text;
@@ -16,10 +20,12 @@
 - (void)setLoadingImageForRightView:(UIImage*)anImage;
 - (void)transitionLeftImage;
 - (void)setImageForRightView:(UIImage*)anImage;
-- (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
 // ... and keep these.
 - (void)setLeftView:(UIView*)aView;
 - (void)setRightView:(UIView*)aView;
+- (void)restrictToSmallSize:(BOOL)shouldRestrict;
+- (void)startAutomaticPicturesWithInterval:(float)interval;
+- (void)stopAutomaticPictures;
 
 @end
