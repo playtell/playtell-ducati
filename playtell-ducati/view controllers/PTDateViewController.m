@@ -1910,6 +1910,8 @@ NSTimer *postcardTimer;
                              gameView.alpha = 0.6f;
                          }
                      }];
+}
+
 #pragma mark - Postcard Controller delegate
 
 - (void)postcardDidSend {
