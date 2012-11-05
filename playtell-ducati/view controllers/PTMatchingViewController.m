@@ -98,7 +98,7 @@
     viewAvailableCardsScroll.clipsToBounds = NO;
     viewAvailableCardsScroll.userInteractionEnabled = YES;
     viewAvailableCardsScroll.canCancelContentTouches = NO;
-    viewAvailableCardsScroll.delaysContentTouches = YES;
+    viewAvailableCardsScroll.delaysContentTouches = NO;
     viewAvailableCardsScroll.showsHorizontalScrollIndicator = NO;
     viewAvailableCardsScroll.showsVerticalScrollIndicator = NO;
     viewAvailableCardsScroll.pagingEnabled = YES;
