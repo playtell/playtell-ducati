@@ -16,19 +16,9 @@
 #define CHATVIEW_PADDING        8.0
 
 @interface PTChatHUDView ()
-
-@property (nonatomic, strong) UIView *innerView;
-@property (nonatomic, strong) CAShapeLayer *maskLayer;
-@property (nonatomic, strong) CAShapeLayer *shadowLayer;
-@property (nonatomic, strong) CALayer *roundedLayer;
-
 @end
 
 @implementation PTChatHUDView
-@synthesize innerView;
-@synthesize maskLayer;
-@synthesize shadowLayer;
-@synthesize roundedLayer;
 @synthesize containerView;
 @synthesize contentView;
 
@@ -40,88 +30,87 @@
         float height = frame.size.height;
         
         // Container
-        self.containerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, width, height)];
-        self.containerView.backgroundColor = [UIColor whiteColor];
+        self.containerView = [[UIView alloc] initWithFrame:self.bounds];
+        self.containerView.backgroundColor = [UIColor clearColor];
         self.containerView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.containerShadowView = [[UIView alloc] initWithFrame:self.bounds];
+        self.containerShadowView.backgroundColor = [UIColor clearColor];
+        self.containerShadowView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.containerShadowView.hidden = YES;
         
         // Content
         self.contentView = [[UIView alloc] initWithFrame:CGRectMake(CHATVIEW_PADDING, 0.0f, width - (CHATVIEW_PADDING * 2.0f), height - CHATVIEW_PADDING)];
-//        NSLog(@"Content frame: %@", NSStringFromCGRect(self.contentView.frame));
         self.contentView.autoresizesSubviews = YES;
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.contentShadowView = [[UIView alloc] initWithFrame:self.contentView.frame];
+        self.contentShadowView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self.containerView addSubview:self.contentShadowView];
         [self.containerView addSubview:self.contentView];
         
-        // Set shadow to the parent layer
-//        self.backgroundColor = [UIColor redColor];
-//        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-//                                                       byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
-//                                                             cornerRadii:CGSizeMake(12.0f, 12.0f)];
-//        
-//        // Create the shadow layer
-//        shadowLayer = [CAShapeLayer layer];
-//        [shadowLayer setFrame:self.bounds];
-//        [shadowLayer setMasksToBounds:NO];
-//        [shadowLayer setShadowPath:maskPath.CGPath];
-//        shadowLayer.shadowColor = [UIColor blackColor].CGColor;
-//        shadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-//        shadowLayer.shadowOpacity = 0.5f;
-//        shadowLayer.shadowRadius = 6.0f;
-//        
-//        roundedLayer = [CALayer layer];
-//        [roundedLayer setFrame:self.bounds];
-//        [roundedLayer setBackgroundColor:[UIColor colorFromHex:@"#e4ecef"].CGColor];
+        // Container shadow setup
+        UIBezierPath *containerMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds
+                                                                byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                      cornerRadii:CGSizeMake(16.0f, 16.0f)];
+        containerShadowLayer = [CAShapeLayer layer];
+        [containerShadowLayer setFrame:self.containerView.bounds];
+        [containerShadowLayer setMasksToBounds:NO];
+        [containerShadowLayer setShadowPath:containerMaskPath.CGPath];
+        containerShadowLayer.shadowColor = [UIColor blackColor].CGColor;
+        containerShadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        containerShadowLayer.shadowOpacity = 0.5f;
+        containerShadowLayer.shadowRadius = 5.0f;
+        [self.containerShadowView.layer insertSublayer:containerShadowLayer atIndex:0];
+        containerMaskLayer = [CAShapeLayer layer];
+        containerMaskLayer.frame = self.containerView.bounds;
+        containerMaskLayer.path = containerMaskPath.CGPath;
+        self.containerView.layer.mask = containerMaskLayer;
         
-//        [self.layer insertSublayer:shadowLayer atIndex:0];
+        // Content shadow setup
+        UIBezierPath *contentMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.contentView.bounds
+                                                              byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                    cornerRadii:CGSizeMake(12.0f, 12.0f)];
+        contentShadowLayer = [CAShapeLayer layer];
+        [contentShadowLayer setFrame:self.contentView.bounds];
+        [contentShadowLayer setMasksToBounds:NO];
+        [contentShadowLayer setShadowPath:contentMaskPath.CGPath];
+        contentShadowLayer.shadowColor = [UIColor blackColor].CGColor;
+        contentShadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        contentShadowLayer.shadowOpacity = 0.5f;
+        contentShadowLayer.shadowRadius = 4.0f;
+        [self.contentShadowView.layer insertSublayer:contentShadowLayer atIndex:0];
+        contentMaskLayer = [CAShapeLayer layer];
+        contentMaskLayer.frame = self.contentView.bounds;
+        contentMaskLayer.path = contentMaskPath.CGPath;
+        self.contentView.layer.mask = contentMaskLayer;
         
-        // Add inner view (since we're rounding corners, parent view can't mask to bounds b/c of shadow - need extra view)
-//        maskLayer = [CAShapeLayer layer];
-//        maskLayer.frame = self.bounds;
-//        maskLayer.path = maskPath.CGPath;
-//        innerView = [[UIView alloc] initWithFrame:self.bounds];
-//        innerView.backgroundColor = [UIColor whiteColor];
-//        innerView.layer.mask = maskLayer;
-//        [self addSubview:innerView];
-        
+        // Container views
+        [self addSubview:self.containerShadowView];
         [self addSubview:self.containerView];
+        
+        // Border off by default
+        isBorderShown = NO;
     }
     return self;
 }
 
-//- (void)setNeedsDisplay {
-//    [super setNeedsDisplay];
-//    NSLog(@"setNeedsDisplay: %@", NSStringFromCGRect(self.frame));
-//}
-//
-//- (void)setNeedsLayout {
-//    [super setNeedsLayout];
-//    NSLog(@"setNeedsLayout: %@", NSStringFromCGRect(self.frame));
-//}
-
 - (void)layoutSubviews {
     [super layoutSubviews];
-    NSLog(@"layoutSubviews: %@", NSStringFromCGRect(self.frame));
     
-//    self.leftContainerParentView.frame = CGRectMake(0.0f, 0.0f, ((self.frame.size.width - CHATVIEW_MARGIN) / 2.0f), self.frame.size.height);
-//    self.rightContainerParentView.frame = CGRectMake(self.leftContainerParentView.frame.size.width + CHATVIEW_MARGIN, 0.0f, self.leftContainerParentView.frame.size.width, self.frame.size.height);
-//    
-//    NSLog(@"Container frame: %@", NSStringFromCGRect(self.containerView.frame));
-//
-//    NSLog(@"Left: %@", NSStringFromCGRect(self.leftContainerView.frame));
-//    NSLog(@"Right: %@", NSStringFromCGRect(self.rightContainerView.frame));
-
-//
-//    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-//                                                   byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
-//                                                         cornerRadii:CGSizeMake(12.0f, 12.0f)];
-//    
-//    shadowLayer.frame = self.bounds;
-//    [shadowLayer setShadowPath:maskPath.CGPath];
-//    
-//    maskLayer.frame = self.bounds;
-//    maskLayer.path = maskPath.CGPath;
-//    
-//    innerView.frame = self.bounds;
-//    innerView.layer.mask = maskLayer;
+    // Redefine container mask
+    UIBezierPath *containerMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds
+                                                            byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                  cornerRadii:CGSizeMake(16.0f, 16.0f)];
+    containerShadowLayer.shadowPath = containerMaskPath.CGPath;
+    containerMaskLayer.frame = self.containerView.bounds;
+    containerMaskLayer.path = containerMaskPath.CGPath;
+    
+    // Redefine content mask
+    UIBezierPath *contentMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.contentView.bounds
+                                                          byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                cornerRadii:CGSizeMake(12.0f, 12.0f)];
+    contentShadowLayer.shadowPath = contentMaskPath.CGPath;
+    contentMaskLayer.frame = self.contentView.bounds;
+    contentMaskLayer.path = contentMaskPath.CGPath;
 }
 
 - (void)setLoadingImageForView:(UIImage*)anImage {
@@ -133,8 +122,6 @@
 - (void)setView:(UIView*)aView {
     if ([aView isKindOfClass:[OTVideoView class]]) {
         self.publisherView = (OTVideoView *)aView;
-        NSLog(@"------------- setting autoresize mask");
-        self.publisherView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     } else {
         self.publisherView = nil;
     }
@@ -146,6 +133,34 @@
     aView.frame = self.contentView.bounds;
     aView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.contentView addSubview:aView];
+}
+
+- (void)showBorder {
+    if (isBorderShown == YES) {
+        return;
+    }
+    isBorderShown = YES;
+    
+    // Hide content shadow (to be replaced by border and its own shadow)
+    self.contentShadowView.hidden = YES;
+    
+    // Show container (border) and its own shadow
+    self.containerView.backgroundColor = [UIColor whiteColor];
+    self.containerShadowView.hidden = NO;
+}
+
+- (void)hideBorder {
+    if (isBorderShown == NO) {
+        return;
+    }
+    isBorderShown = NO;
+    
+    // Hide container (border) and its own shadow
+    self.containerView.backgroundColor = [UIColor clearColor];
+    self.containerShadowView.hidden = YES;
+
+    // Show content shadow (to replace the border and its own shadow)
+    self.contentShadowView.hidden = NO;
 }
 
 //- (void)setRightView:(UIView*)aView {

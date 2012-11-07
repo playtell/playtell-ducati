@@ -62,8 +62,8 @@ NSTimer *screenshotTimer;
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
 
-        self.leftView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - widthWithPadding - (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
-        self.rightView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX + (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
+        self.leftView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
+        self.rightView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
         [self.view addSubview:self.leftView];
         [self.view addSubview:self.rightView];
         
@@ -161,8 +161,9 @@ NSTimer *screenshotTimer;
         // Calculate width and height
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
-        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding - (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX + (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
     
     self.restrictSizeToSmall = shouldRestrict;
@@ -180,12 +181,8 @@ NSTimer *screenshotTimer;
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
         
-        [UIView animateWithDuration:0.3f
-                         animations:^{
-                             self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding - (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-                             self.rightView.frame = CGRectMake(CHATVIEW_CENTERX + (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-                         }];
-        
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
 }
 
@@ -200,43 +197,48 @@ NSTimer *screenshotTimer;
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
         
-        [UIView animateWithDuration:0.3f
-                         animations:^{
-                             self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding - (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-                             self.rightView.frame = CGRectMake(CHATVIEW_CENTERX + (CHATVIEW_MARGIN / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-                         }];
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
 }
 
 - (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
-    NSLog(@"userPinchEvent");
 //    if (self.restrictSizeToSmall)
 //        return;
     
-//    if (recognizer.state == UIGestureRecognizerStateBegan ||
-//        recognizer.state == UIGestureRecognizerStateChanged) {
-//        CGFloat scale = recognizer.scale;
-//        
-//        float newWidth = self.chatView.frame.size.width * scale;
-//        if (newWidth < CHATVIEW_SMALL_WIDTH)
-//            newWidth = CHATVIEW_SMALL_WIDTH;
-//        if (newWidth > CHATVIEW_LARGE_WIDTH)
-//            newWidth = CHATVIEW_LARGE_WIDTH;
-//        
-//        float newHeight = self.chatView.frame.size.height * scale;
-//        if (newHeight < CHATVIEW_SMALL_HEIGHT)
-//            newHeight = CHATVIEW_SMALL_HEIGHT;
-//        if (newHeight > CHATVIEW_LARGE_HEIGHT)
-//            newHeight = CHATVIEW_LARGE_HEIGHT;
-//        
-//        // Calculate final width and height
-//        CGFloat widthWithPadding = (4.0f * CHATVIEW_PADDING) + newWidth + CHATVIEW_MARGIN; // Account for padding around chat view + the margin between the two chat windows
-//        CGFloat heightWithPadding = CHATVIEW_PADDING + newHeight;
-//        
-//        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (widthWithPadding / 2), 0.0f, widthWithPadding, heightWithPadding);
-//        
-//        recognizer.scale = 1;
-//    }
+    if (recognizer.state == UIGestureRecognizerStateBegan ||
+        recognizer.state == UIGestureRecognizerStateChanged) {
+        CGFloat scale = recognizer.scale;
+        
+        // Min/max width
+        float newWidth = (self.leftView.frame.size.width - (2.0f * CHATVIEW_PADDING)) * scale;
+        if (newWidth < CHATVIEW_SMALL_WIDTH) {
+            newWidth = CHATVIEW_SMALL_WIDTH;
+            self.isChatViewSmall = YES;
+        }
+        if (newWidth > CHATVIEW_LARGE_WIDTH) {
+            newWidth = CHATVIEW_LARGE_WIDTH;
+            self.isChatViewSmall = NO;
+        }
+        
+        // Min/max height
+        float newHeight = (self.leftView.frame.size.height - CHATVIEW_PADDING) * scale;
+        if (newHeight < CHATVIEW_SMALL_HEIGHT) {
+            newHeight = CHATVIEW_SMALL_HEIGHT;
+        }
+        if (newHeight > CHATVIEW_LARGE_HEIGHT) {
+            newHeight = CHATVIEW_LARGE_HEIGHT;
+        }
+        
+        // Calculate final width and height
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + newWidth; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + newHeight;
+        
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+
+        recognizer.scale = 1;
+    }
 }
 
 - (void)userTapEvent:(UITapGestureRecognizer *)recognizer {
@@ -420,11 +422,6 @@ NSTimer *screenshotTimer;
 - (UIImage*)placeholderImage {
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
-
-//- (UIView*)view {
-//    // TODO: This isn't right...
-//    return self.leftView;
-//}
 
 #pragma mark - UIGestureRecognizerDelegate methods
 
