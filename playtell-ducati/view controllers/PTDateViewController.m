@@ -352,6 +352,9 @@ NSTimer *postcardTimer;
             }
             [writeData writeToFile:path atomically:YES];
             
+            // Make sure this file isn't backed up by iCloud
+            [self addSkipBackupAttributeToItemAtURLstring:path];
+            
             // Load the actual views
             dispatch_async(dispatch_get_main_queue(), ^() {
                  [self loadBookViewsFromDictionary];
@@ -391,6 +394,9 @@ NSTimer *postcardTimer;
                 }
                 [writeData writeToFile:path atomically:YES];
                 
+                // Make sure this file isn't backed up by iCloud
+                [self addSkipBackupAttributeToItemAtURLstring:path];
+
                 // Load the actual views
                 dispatch_async(dispatch_get_main_queue(), ^() {
                     [self loadBookViewsFromDictionary];
@@ -1404,6 +1410,9 @@ NSTimer *postcardTimer;
             NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
             [imageData writeToFile:imagePath atomically:YES];
             
+            // Make sure this file isn't backed up by iCloud
+            [self addSkipBackupAttributeToItemAtURLstring:imagePath];
+            
             // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
                 // Send the image to book
@@ -1452,6 +1461,9 @@ NSTimer *postcardTimer;
             NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
             [imageData writeToFile:imagePath atomically:YES];
             
+            // Make sure this file isn't backed up by iCloud
+            [self addSkipBackupAttributeToItemAtURLstring:imagePath];
+            
             // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
                 // Send the image to book
@@ -1484,6 +1496,19 @@ NSTimer *postcardTimer;
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
+}
+
+- (BOOL)addSkipBackupAttributeToItemAtURLstring:(NSString *)URLstring {
+    NSURL *URL = [[NSURL alloc] initFileURLWithPath:URLstring];
+    assert([[NSFileManager defaultManager] fileExistsAtPath:[URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool:YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error:&error];
+    if (!success) {
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 #pragma mark - Books scroll delegates
