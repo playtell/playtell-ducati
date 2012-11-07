@@ -9,6 +9,8 @@
 #import "PTPlaydate.h"
 #import "PTPlaymate.h"
 #import "PTVideoPhone.h"
+#import "PTChatHUDView.h"
+#import "PTChatHUDParentView.h"
 
 #import <Foundation/Foundation.h>
 
@@ -33,8 +35,10 @@
 - (void)stopAutomaticPictures;
 - (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
-@property (nonatomic, readonly) UIView* view;
+@property (nonatomic, strong) PTChatHUDParentView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;
 @property (nonatomic, strong) PTPlaymate* playmate;
+@property (nonatomic, strong) PTChatHUDView* leftView;
+@property (nonatomic, strong) PTChatHUDView* rightView;
 
 @end

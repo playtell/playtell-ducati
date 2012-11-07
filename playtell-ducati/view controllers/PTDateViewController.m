@@ -276,8 +276,8 @@ NSTimer *postcardTimer;
     [button addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
     [prompt addSubview:button];
     
-    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.view;
-    [chatView setLeftView:prompt];
+    PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.leftView;
+    [chatView setView:prompt];
 }
 
 - (void)showPostcardView {

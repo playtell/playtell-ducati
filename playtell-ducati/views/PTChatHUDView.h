@@ -13,12 +13,10 @@
 
 @property (nonatomic, weak) OTVideoView *publisherView;
 
-// Need to remove all these methods once everything is refactored...
-- (void)setLoadingImageForLeftView:(UIImage*)anImage loadingText:(NSString*)text;
-- (void)setLoadingImageForRightView:(UIImage*)anImage;
+- (void)setLoadingImageForView:(UIImage*)anImage;
+- (void)setView:(UIView*)aView;
 
-// ... and keep these.
-- (void)setLeftView:(UIView*)aView;
-- (void)setRightView:(UIView*)aView;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) UIView *contentView;
 
 @end
