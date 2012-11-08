@@ -147,6 +147,7 @@
 		2350BFE81630753F008F901F /* yourfinger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2350BFE41630753F008F901F /* yourfinger@2x.png */; };
 		2359AC9F164444C600F66998 /* matching-bottom-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2359AC9D164444C600F66998 /* matching-bottom-shadow.png */; };
 		2359ACA0164444C600F66998 /* matching-bottom-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2359AC9E164444C600F66998 /* matching-bottom-shadow@2x.png */; };
+		235A911B164983A300743629 /* PTChatHUDParentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 235A911A164983A300743629 /* PTChatHUDParentView.m */; };
 		235D9F9316149E8A0034583A /* PTContactsNavLongBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 235D9F9216149E8A0034583A /* PTContactsNavLongBackButton.m */; };
 		235D9F9616149FC30034583A /* buttonBackLongHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 235D9F9416149FC30034583A /* buttonBackLongHighlighted.png */; };
 		235D9F9716149FC30034583A /* buttonBackLongNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 235D9F9516149FC30034583A /* buttonBackLongNormal.png */; };
@@ -596,7 +597,6 @@
 		F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */; };
 		F4A94E8C1623BE6C000D428F /* PTNullPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E8B1623BE6B000D428F /* PTNullPlaymate.m */; };
 		F4A94E901623BE7F000D428F /* PTSoloUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E8F1623BE7F000D428F /* PTSoloUser.m */; };
-		F4A94EA31623C094000D428F /* PTChatHUDView2.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E961623C094000D428F /* PTChatHUDView2.m */; };
 		F4A94EA41623C094000D428F /* PTCloseActivityTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E981623C094000D428F /* PTCloseActivityTooltip.m */; };
 		F4A94EA51623C094000D428F /* PTEndCallTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E9A1623C094000D428F /* PTEndCallTooltip.m */; };
 		F4A94EA61623C094000D428F /* PTFriendTouchTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E9C1623C094000D428F /* PTFriendTouchTooltip.m */; };
@@ -1068,6 +1068,8 @@
 		2350BFE41630753F008F901F /* yourfinger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yourfinger@2x.png"; sourceTree = "<group>"; };
 		2359AC9D164444C600F66998 /* matching-bottom-shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "matching-bottom-shadow.png"; path = "Matching/matching-bottom-shadow.png"; sourceTree = "<group>"; };
 		2359AC9E164444C600F66998 /* matching-bottom-shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "matching-bottom-shadow@2x.png"; path = "Matching/matching-bottom-shadow@2x.png"; sourceTree = "<group>"; };
+		235A9119164983A300743629 /* PTChatHUDParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDParentView.h; sourceTree = "<group>"; };
+		235A911A164983A300743629 /* PTChatHUDParentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDParentView.m; sourceTree = "<group>"; };
 		235D9F9116149E8A0034583A /* PTContactsNavLongBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsNavLongBackButton.h; sourceTree = "<group>"; };
 		235D9F9216149E8A0034583A /* PTContactsNavLongBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsNavLongBackButton.m; sourceTree = "<group>"; };
 		235D9F9416149FC30034583A /* buttonBackLongHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonBackLongHighlighted.png; sourceTree = "<group>"; };
@@ -1617,8 +1619,6 @@
 		F4A94E8B1623BE6B000D428F /* PTNullPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNullPlaymate.m; sourceTree = "<group>"; };
 		F4A94E8E1623BE7E000D428F /* PTSoloUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSoloUser.h; sourceTree = "<group>"; };
 		F4A94E8F1623BE7F000D428F /* PTSoloUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSoloUser.m; sourceTree = "<group>"; };
-		F4A94E951623C094000D428F /* PTChatHUDView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTChatHUDView2.h; sourceTree = "<group>"; };
-		F4A94E961623C094000D428F /* PTChatHUDView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTChatHUDView2.m; sourceTree = "<group>"; };
 		F4A94E971623C094000D428F /* PTCloseActivityTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTCloseActivityTooltip.h; sourceTree = "<group>"; };
 		F4A94E981623C094000D428F /* PTCloseActivityTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCloseActivityTooltip.m; sourceTree = "<group>"; };
 		F4A94E991623C094000D428F /* PTEndCallTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTEndCallTooltip.h; sourceTree = "<group>"; };
@@ -4363,8 +4363,8 @@
 				23D4EE5D16260A60007CE611 /* games */,
 				231786C1161A25F8006BCF6B /* new user */,
 				23CC06A215C9A9BB003CAA11 /* contact inviter */,
-				F4A94E951623C094000D428F /* PTChatHUDView2.h */,
-				F4A94E961623C094000D428F /* PTChatHUDView2.m */,
+				235A9119164983A300743629 /* PTChatHUDParentView.h */,
+				235A911A164983A300743629 /* PTChatHUDParentView.m */,
 				F468876E158129800086D351 /* PTChatHUDView.h */,
 				F468876F158129800086D351 /* PTChatHUDView.m */,
 				F4A94E971623C094000D428F /* PTCloseActivityTooltip.h */,
@@ -5312,7 +5312,6 @@
 				8A1B91BC16160E6600B4BF46 /* UIImageView+Animations.m in Sources */,
 				F4A94E8C1623BE6C000D428F /* PTNullPlaymate.m in Sources */,
 				F4A94E901623BE7F000D428F /* PTSoloUser.m in Sources */,
-				F4A94EA31623C094000D428F /* PTChatHUDView2.m in Sources */,
 				F4A94EA41623C094000D428F /* PTCloseActivityTooltip.m in Sources */,
 				F4A94EA51623C094000D428F /* PTEndCallTooltip.m in Sources */,
 				F4A94EA61623C094000D428F /* PTFriendTouchTooltip.m in Sources */,
@@ -5365,6 +5364,7 @@
 				1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */,
 				1ABD6F161642B95B0027609C /* PTPostcardView.m in Sources */,
 				1ABD6F2F1642BC9A0027609C /* PTPostcardViewController.m in Sources */,
+				235A911B164983A300743629 /* PTChatHUDParentView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

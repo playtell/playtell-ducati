@@ -102,6 +102,9 @@
     } else {
         [scoreViewOpponent showYourTurn:YES delay:YES];
     }
+    
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:0.5f];
 }
 
 - (void)viewDidUnload {
@@ -349,6 +352,10 @@
                 [scoreViewMe showYourTurn:NO delay:YES];
                 [scoreViewOpponent showYourTurn:YES delay:YES];
             }
+            
+            // Set active chat HUD
+            [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:2.0f];
+            
             NSLog(@"Is it your turn? %@", isMyTurn ? @"YES" : @"NO");
             break;
         }
@@ -403,6 +410,15 @@
     // Update labels
     [scoreViewMe setScore:scoreMe];
     [scoreViewOpponent setScore:scoreOpponent];
+}
+
+- (void)setActiveChatHUD {
+    // Change active HUD
+    if (isMyTurn == YES) {
+        [self.chatController setActiveTurnToRightChatView];
+    } else {
+        [self.chatController setActiveTurnToLeftChatView];
+    }
 }
 
 #pragma mark - End game methods
@@ -515,6 +531,9 @@
     } else {
         [scoreViewOpponent showYourTurn:YES delay:NO];
     }
+    
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.0f];
     
     // Setup the cards
     [self setupCards];

@@ -7,7 +7,6 @@
 //
 
 #import "Logging.h"
-#import "PTChatHUDView.h"
 #import "PTChatViewController.h"
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
@@ -17,26 +16,31 @@
 #import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
 #import "UIColor+ColorFromHex.h"
+#import "UIImage+Resize.h"
 
 #import <MediaPlayer/MediaPlayer.h>
+#import <QuartzCore/QuartzCore.h>
 
 #define CHATVIEW_CENTERX        512.0
 #define CHATVIEW_LARGE_HEIGHT   300.0
-#define CHATVIEW_LARGE_WIDTH    800.0
+#define CHATVIEW_LARGE_WIDTH    400.0
 #define CHATVIEW_SMALL_HEIGHT   150.0
-#define CHATVIEW_SMALL_WIDTH    400.0
+#define CHATVIEW_SMALL_WIDTH    200.0
+#define CHATVIEW_PADDING        8.0
+#define CHATVIEW_MARGIN         8.0
 
 @interface PTChatViewController ()
-@property (nonatomic, strong) PTChatHUDView* chatView;
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
 @property (nonatomic, strong) MPMoviePlayerController* movieController;
 @property (nonatomic, assign) BOOL restrictSizeToSmall;
+@property (nonatomic, assign) BOOL isChatViewSmall;
 @end
 
 @implementation PTChatViewController
-@synthesize chatView, videoPhone, playdate, playmate;
+@synthesize leftView, rightView, videoPhone, playdate, playmate;
 @synthesize movieController;
 @synthesize restrictSizeToSmall;
+@synthesize isChatViewSmall;
 
 NSTimer *screenshotTimer;
 
@@ -44,7 +48,7 @@ NSTimer *screenshotTimer;
     self.movieController.contentURL = movieURL;
     self.movieController.scalingMode = MPMovieScalingModeAspectFit;
     self.movieController.controlStyle = MPMovieControlStyleNone;
-    [self.chatView setLeftView:self.movieController.view];
+    [self.leftView setView:self.movieController.view];
     [self.movieController play];
 }
 
@@ -54,9 +58,19 @@ NSTimer *screenshotTimer;
 
 - (id)init {
     if (self = [super init]) {
-        self.chatView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        self.view = [[PTChatHUDParentView alloc] init];
+
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
+
+        self.leftView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
+        self.rightView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
+        [self.view addSubview:self.leftView];
+        [self.view addSubview:self.rightView];
+        
         self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
         self.restrictSizeToSmall = YES;
+        self.isChatViewSmall = YES;
         
         // Create the gesture recognizers
         UISwipeGestureRecognizer *swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
@@ -73,11 +87,15 @@ NSTimer *screenshotTimer;
         pinchRecognizer.delegate = self;
         tapRecognizer.delegate = self;
         
-        // Add the gesture recognizers to the view
-        [self.chatView addGestureRecognizer:swipeDownRecognizer];
-        [self.chatView addGestureRecognizer:swipeUpRecognizer];
-        [self.chatView addGestureRecognizer:pinchRecognizer];
-        [self.chatView addGestureRecognizer:tapRecognizer];
+        // Add the gesture recognizers to the views
+        [self.leftView addGestureRecognizer:swipeDownRecognizer];
+        [self.leftView addGestureRecognizer:swipeUpRecognizer];
+        [self.leftView addGestureRecognizer:pinchRecognizer];
+        [self.leftView addGestureRecognizer:tapRecognizer];
+        [self.rightView addGestureRecognizer:swipeDownRecognizer];
+        [self.rightView addGestureRecognizer:swipeUpRecognizer];
+        [self.rightView addGestureRecognizer:pinchRecognizer];
+        [self.rightView addGestureRecognizer:tapRecognizer];
     }
     return self;
 }
@@ -109,17 +127,40 @@ NSTimer *screenshotTimer;
 
 - (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
     dispatch_async(dispatch_get_current_queue(), ^{
-        UIImage *screenshot = [self.chatView screenshotWithSave:saveToCameraRoll];
+        // Get images from left and right chat HUDs
+        UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
+        UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
         
-        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-                                               playdateId:self.playdate.playdateID
-                                                    photo:screenshot
-                                                  success:^(NSDictionary *result) {
-                                                      //NSLog(@"Playdate photo successfully uploaded.");
-                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-                                                  }];
+        // Resize if chatview was expanded
+        if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
+            leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+            rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        }
+        
+        // Merge the two images
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
+        [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
+        [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
+        UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // Save to photo roll?
+        if (saveToCameraRoll) {
+            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+        }
+        
+        // Save to the server (only if logged in)
+        if ([PTUser currentUser].isLoggedIn == YES) {
+            PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+            [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                                   playdateId:self.playdate.playdateID
+                                                        photo:screenshot
+                                                      success:^(NSDictionary *result) {
+                                                          //NSLog(@"Playdate photo successfully uploaded.");
+                                                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                          NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                      }];
+        }
     });
 }
 
@@ -139,8 +180,13 @@ NSTimer *screenshotTimer;
 }
 
 - (void)restrictToSmallSize:(BOOL)shouldRestrict {
-    if (shouldRestrict && self.chatView.frame.size.width != CHATVIEW_SMALL_WIDTH) {
-        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT);
+    if (shouldRestrict && self.isChatViewSmall == NO) {
+        // Calculate width and height
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
+
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
     
     self.restrictSizeToSmall = shouldRestrict;
@@ -150,8 +196,16 @@ NSTimer *screenshotTimer;
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.chatView.frame.size.width != CHATVIEW_LARGE_WIDTH) {
-        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_LARGE_WIDTH / 2), 0.0f, CHATVIEW_LARGE_WIDTH, CHATVIEW_LARGE_HEIGHT);
+    if (self.isChatViewSmall == YES) {
+        self.isChatViewSmall = NO;
+        NSLog(@"userSwipeDownEvent");
+        
+        // Calculate width and height
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
+        
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
 }
 
@@ -159,8 +213,15 @@ NSTimer *screenshotTimer;
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.chatView.frame.size.width != CHATVIEW_SMALL_WIDTH) {
-        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_SMALL_WIDTH / 2), 0.0f, CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT);
+    if (self.isChatViewSmall == NO) {
+        self.isChatViewSmall = YES;
+        
+        // Calculate width and height
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
+        
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     }
 }
 
@@ -172,20 +233,33 @@ NSTimer *screenshotTimer;
         recognizer.state == UIGestureRecognizerStateChanged) {
         CGFloat scale = recognizer.scale;
         
-        float newWidth = self.chatView.frame.size.width * scale;
-        if (newWidth < CHATVIEW_SMALL_WIDTH)
+        // Min/max width
+        float newWidth = (self.leftView.frame.size.width - (2.0f * CHATVIEW_PADDING)) * scale;
+        if (newWidth < CHATVIEW_SMALL_WIDTH) {
             newWidth = CHATVIEW_SMALL_WIDTH;
-        if (newWidth > CHATVIEW_LARGE_WIDTH)
+            self.isChatViewSmall = YES;
+        }
+        if (newWidth > CHATVIEW_LARGE_WIDTH) {
             newWidth = CHATVIEW_LARGE_WIDTH;
+            self.isChatViewSmall = NO;
+        }
         
-        float newHeight = self.chatView.frame.size.height * scale;
-        if (newHeight < CHATVIEW_SMALL_HEIGHT)
+        // Min/max height
+        float newHeight = (self.leftView.frame.size.height - CHATVIEW_PADDING) * scale;
+        if (newHeight < CHATVIEW_SMALL_HEIGHT) {
             newHeight = CHATVIEW_SMALL_HEIGHT;
-        if (newHeight > CHATVIEW_LARGE_HEIGHT)
+        }
+        if (newHeight > CHATVIEW_LARGE_HEIGHT) {
             newHeight = CHATVIEW_LARGE_HEIGHT;
+        }
         
-        self.chatView.frame = CGRectMake(CHATVIEW_CENTERX - (newWidth / 2), 0.0f, newWidth, newHeight);
+        // Calculate final width and height
+        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + newWidth; // Account for padding around chat view
+        CGFloat heightWithPadding = CHATVIEW_PADDING + newHeight;
         
+        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+
         recognizer.scale = 1;
     }
 }
@@ -196,12 +270,12 @@ NSTimer *screenshotTimer;
 
 - (void)configureForDialpad {
     PTNullPlaymate* nullPlaymate = [[PTNullPlaymate alloc] init];
-    [self.chatView setLeftView:[[UIImageView alloc] initWithImage:nullPlaymate.userPhoto]];
-    [self.chatView setRightView:[[UIImageView alloc] initWithImage:[PTUser currentUser].userPhoto]];
+    [self.leftView setView:[[UIImageView alloc] initWithImage:nullPlaymate.userPhoto]];
+    [self.rightView setView:[[UIImageView alloc] initWithImage:[PTUser currentUser].userPhoto]];
 }
 
 - (void)setLeftViewAsPlaceholder {
-    [self.chatView setLeftView:[self playmatePlaceholderView]];
+    [self.leftView setView:[self playmatePlaceholderView]];
 }
 
 - (void)setCurrentUserPhoto {
@@ -209,7 +283,7 @@ NSTimer *screenshotTimer;
     
     // If user photo is nil user the placeholder
     myPhoto = (myPhoto) ? [[PTUser currentUser] userPhoto] : [self placeholderImage];
-    [self.chatView setLoadingImageForRightView:myPhoto];
+    [self.rightView setLoadingImageForView:myPhoto];
 }
 
 - (void)connectToOpenTokSession {
@@ -220,7 +294,7 @@ NSTimer *screenshotTimer;
         }];
         [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber* subscriber) {
             LogDebug(@"Subscriber connected");
-            [self.chatView setLeftView:subscriber.view];
+            [self.leftView setView:subscriber.view];
         }];
 
         myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
@@ -231,7 +305,7 @@ NSTimer *screenshotTimer;
         // Begin duplicated code!
         [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
             LogDebug(@"Publisher started streaming");
-            [self.chatView setRightView:aPublisher.view];
+            [self.rightView setView:aPublisher.view];
         }];
         [[PTVideoPhone sharedPhone] connectToSession:mySession
                                            withToken:myToken
@@ -263,7 +337,7 @@ NSTimer *screenshotTimer;
                                               success:^(OTPublisher* publisher)
           {
               LogDebug(@"Connected to OpenTok session");
-              [self.chatView setRightView:publisher.view];
+              [self.rightView setView:publisher.view];
           } failure:^(NSError* error) {
               LogError(@"Error connecting to OpenTok session: %@", error);
           }];
@@ -274,16 +348,16 @@ NSTimer *screenshotTimer;
 
 - (void)setupPlaymatePlaceholderImages {
     LOGMETHOD;
-    [self.chatView setLoadingImageForLeftView:self.playmate.userPhoto loadingText:self.playmate.username];
+    [self.leftView setLoadingImageForView:self.playmate.userPhoto];// loadingText:self.playmate.username];
     
     UIImageView* myImageView = [[UIImageView alloc] initWithImage:[[PTUser currentUser] userPhoto]];
-    [self.chatView setRightView:myImageView];
+    [self.rightView setView:myImageView];
 }
 
 - (void)setPlaymate:(PTPlaymate *)aPlaymate {
     UIImageView* anImageview = [[UIImageView alloc] initWithImage:aPlaymate.userPhoto];
     anImageview.contentMode = UIViewContentModeScaleAspectFit;
-    [self.chatView setLeftView:anImageview];
+    [self.leftView setView:anImageview];
     playmate = aPlaymate;
 }
 
@@ -329,7 +403,7 @@ NSTimer *screenshotTimer;
                                  UIViewAutoresizingFlexibleRightMargin;
     [opacityView addSubview:nameLabel];
     
-    [self.chatView setLeftView:anImageView];
+    [self.leftView setView:anImageView];
     playmate = aPlaymate;
 }
 
@@ -372,10 +446,6 @@ NSTimer *screenshotTimer;
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
 
-- (UIView*)view {
-    return self.chatView;
-}
-
 #pragma mark - UIGestureRecognizerDelegate methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
@@ -385,6 +455,35 @@ NSTimer *screenshotTimer;
         return NO; // ignore the touch
     }
     return YES; // handle the touch
+}
+
+#pragma mark - Game-related methods
+
+- (void)setActiveTurnToLeftChatView {
+    self.rightView.layer.zPosition = 0;
+    [self.rightView hideBorder];
+    self.leftView.layer.zPosition = 1;
+    [self.leftView showBorder];
+    
+    // Pulsate with color
+    [self.leftView pulsateBorderWithColor:[UIColor colorFromHex:@"#f48511"]];
+}
+
+- (void)setActiveTurnToRightChatView {
+    self.leftView.layer.zPosition = 0;
+    [self.leftView hideBorder];
+    self.rightView.layer.zPosition = 1;
+    [self.rightView showBorder];
+
+    // Pulsate with color
+    [self.rightView pulsateBorderWithColor:[UIColor colorFromHex:@"#17a84b"]];
+}
+
+- (void)hideAllBorders {
+    self.leftView.layer.zPosition = 0;
+    [self.leftView hideBorder];
+    self.rightView.layer.zPosition = 0;
+    [self.rightView hideBorder];
 }
 
 @end

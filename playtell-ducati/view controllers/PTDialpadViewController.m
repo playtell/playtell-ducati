@@ -209,6 +209,9 @@
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController setCurrentUserPhoto];
     
+    // Remove borders from chat hud
+    [self.chatController hideAllBorders];
+    
     if (signUpBubbleContainer != nil) {
         [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
     } else {
@@ -535,7 +538,7 @@
     
     [UIView animateWithDuration:0.4f animations:^{
         CGRect imageViewFrame = playmateImageView.frame;
-        imageViewFrame.origin = CGPointMake(312.0f, 0.0f);
+        imageViewFrame.origin = CGPointMake(308.0f, 0.0f);
         playmateImageView.frame = imageViewFrame;
     } completion:^(BOOL finished) {
         self.chatController.playmate = playmate;

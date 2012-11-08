@@ -25,6 +25,7 @@
     //communication variables
     int whose_turn, board_id;
     BOOL board_enabled;
+    BOOL isMyTurn;
     
     NSArray *board_buttons, *turn_indicators;
     NSMutableArray *board_spaces;
