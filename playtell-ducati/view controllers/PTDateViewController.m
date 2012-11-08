@@ -1279,11 +1279,8 @@ NSTimer *postcardTimer;
                                                                                initiatorID:aPlaymate.userID
                                                                               allFilenames:allFilenames
                                                                                   numCards:numCards];
-
-#if !(TARGET_IPHONE_SIMULATOR)
         [memoryVC setChatController:self.chatController];
-#endif
-        
+
         // Init game splash
         UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
         splash.image = [UIImage imageNamed:@"Memory-cover.png"];
