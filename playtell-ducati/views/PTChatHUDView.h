@@ -27,5 +27,6 @@
 - (void)setView:(UIView*)aView;
 - (void)showBorder;
 - (void)hideBorder;
+- (void)pulsateBorderWithColor:(UIColor *)color;
 
 @end

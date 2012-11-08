@@ -16,6 +16,7 @@
 #import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
 #import "UIColor+ColorFromHex.h"
+#import "UIImage+Resize.h"
 
 #import <MediaPlayer/MediaPlayer.h>
 #import <QuartzCore/QuartzCore.h>
@@ -125,20 +126,42 @@ NSTimer *screenshotTimer;
 }
 
 - (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
-    NSLog(@"takeScreenshotWithSave");
-//    dispatch_async(dispatch_get_current_queue(), ^{
-//        UIImage *screenshot = [self.chatView screenshotWithSave:saveToCameraRoll];
-//        
-//        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-//        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-//                                               playdateId:self.playdate.playdateID
-//                                                    photo:screenshot
-//                                                  success:^(NSDictionary *result) {
-//                                                      //NSLog(@"Playdate photo successfully uploaded.");
-//                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-//                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-//                                                  }];
-//    });
+    dispatch_async(dispatch_get_current_queue(), ^{
+        // Get images from left and right chat HUDs
+        UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
+        UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
+        
+        // Resize if chatview was expanded
+        if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
+            leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+            rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        }
+        
+        // Merge the two images
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
+        [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
+        [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
+        UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        // Save to photo roll?
+        if (saveToCameraRoll) {
+            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+        }
+        
+        // Save to the server (only if logged in)
+        if ([PTUser currentUser].isLoggedIn == YES) {
+            PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+            [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                                   playdateId:self.playdate.playdateID
+                                                        photo:screenshot
+                                                      success:^(NSDictionary *result) {
+                                                          //NSLog(@"Playdate photo successfully uploaded.");
+                                                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                          NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                      }];
+        }
+    });
 }
 
 - (void)takeAutomaticScreenshot {
@@ -170,8 +193,8 @@ NSTimer *screenshotTimer;
 }
 
 - (void)userSwipeDownEvent:(UISwipeGestureRecognizer *)recognizer {
-//    if (self.restrictSizeToSmall)
-//        return;
+    if (self.restrictSizeToSmall)
+        return;
     
     if (self.isChatViewSmall == YES) {
         self.isChatViewSmall = NO;
@@ -187,8 +210,8 @@ NSTimer *screenshotTimer;
 }
 
 - (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
-//    if (self.restrictSizeToSmall)
-//        return;
+    if (self.restrictSizeToSmall)
+        return;
     
     if (self.isChatViewSmall == NO) {
         self.isChatViewSmall = YES;
@@ -203,8 +226,8 @@ NSTimer *screenshotTimer;
 }
 
 - (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
-//    if (self.restrictSizeToSmall)
-//        return;
+    if (self.restrictSizeToSmall)
+        return;
     
     if (recognizer.state == UIGestureRecognizerStateBegan ||
         recognizer.state == UIGestureRecognizerStateChanged) {
@@ -432,6 +455,35 @@ NSTimer *screenshotTimer;
         return NO; // ignore the touch
     }
     return YES; // handle the touch
+}
+
+#pragma mark - Game-related methods
+
+- (void)setActiveTurnToLeftChatView {
+    self.rightView.layer.zPosition = 0;
+    [self.rightView hideBorder];
+    self.leftView.layer.zPosition = 1;
+    [self.leftView showBorder];
+    
+    // Pulsate with color
+    [self.leftView pulsateBorderWithColor:[UIColor colorFromHex:@"#f48511"]];
+}
+
+- (void)setActiveTurnToRightChatView {
+    self.leftView.layer.zPosition = 0;
+    [self.leftView hideBorder];
+    self.rightView.layer.zPosition = 1;
+    [self.rightView showBorder];
+
+    // Pulsate with color
+    [self.rightView pulsateBorderWithColor:[UIColor colorFromHex:@"#17a84b"]];
+}
+
+- (void)hideAllBorders {
+    self.leftView.layer.zPosition = 0;
+    [self.leftView hideBorder];
+    self.rightView.layer.zPosition = 0;
+    [self.rightView hideBorder];
 }
 
 @end

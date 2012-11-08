@@ -539,11 +539,9 @@ NSTimer *postcardTimer;
     [super viewWillAppear:animated];
 
     // If the chat controller has been created, go ahead an add it
-#if !(TARGET_IPHONE_SIMULATOR)
     if (self.chatController) {
         [self.view addSubview:self.chatController.view];
     }
-#endif
     
     // Subscribe to playmate joined events so we can use analytics
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -557,6 +555,9 @@ NSTimer *postcardTimer;
                                              selector:@selector(dateControllerDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
+    
+    // Remove borders from chat hud
+    [self.chatController hideAllBorders];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -738,7 +739,8 @@ NSTimer *postcardTimer;
     // Restrict the size of the chat view
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.chatController restrictToSmallSize:YES];
-        
+        // Remove borders from chat hud
+        [self.chatController hideAllBorders];
     });
 }
 
@@ -794,9 +796,7 @@ NSTimer *postcardTimer;
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-#if !(TARGET_IPHONE_SIMULATOR)
         [tictactoeVc setChatController:self.chatController];
-#endif
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:YES];
         tictactoeVc.board_id = 0;
@@ -831,9 +831,7 @@ NSTimer *postcardTimer;
          PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
                   
          PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-#if !(TARGET_IPHONE_SIMULATOR)
          [tictactoeVc setChatController:self.chatController];
-#endif
          [tictactoeVc setPlaydate:self.playdate];
          [tictactoeVc initGameWithMyTurn:YES];
          tictactoeVc.board_id = [board_id intValue];
@@ -878,9 +876,7 @@ NSTimer *postcardTimer;
                                                                                initiatorID:[[PTUser currentUser] userID]
                                                                               allFilenames:[NSArray arrayWithObjects:nil]
                                                                                   numCards:4];
-#if !(TARGET_IPHONE_SIMULATOR)
         [memoryVC setChatController:self.chatController];
-#endif
         
         // Init game splash
         UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
@@ -923,9 +919,7 @@ NSTimer *postcardTimer;
                                                                                                              initiatorID:[[PTUser currentUser] userID]
                                                                                                             allFilenames:allFilenames
                                                                                                                 numCards:randNumCards];
-#if !(TARGET_IPHONE_SIMULATOR)
                                       [memoryVC setChatController:self.chatController];
-#endif
                                      
                                       // Init game splash
                                       UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
@@ -1232,9 +1226,7 @@ NSTimer *postcardTimer;
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
-#if !(TARGET_IPHONE_SIMULATOR)
         [tictactoeVc setChatController:self.chatController];
-#endif
         [tictactoeVc setPlaydate:self.playdate];
         [tictactoeVc initGameWithMyTurn:NO];
         tictactoeVc.board_id = board_id;

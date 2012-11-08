@@ -109,20 +109,17 @@
 }
 
 -(void)drawNewGame:(int)boardId
-          myTurn:(BOOL)isMyTurn
+            myTurn:(BOOL)_isMyTurn
          initiator:(int)initiatorId
-          playmate:(int)playmateId
-{
+          playmate:(int)playmateId {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     
     PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
     [tictactoeVc setPlaydate:self.playdate];
-#if !(TARGET_IPHONE_SIMULATOR)
     [tictactoeVc setChatController:self.chatController];
     [self.view addSubview:self.chatController.view];
-#endif
     tictactoeVc.board_id = boardId;
-    if (isMyTurn) {
+    if (_isMyTurn) {
         tictactoeVc.initiator_id = initiatorId;
         tictactoeVc.playmate_id = playmateId;
         [tictactoeVc initGameWithMyTurn:YES];
@@ -136,8 +133,7 @@
 }
 
 //client initiated new game
--(void) newGame
-{
+-(void) newGame {
     PTTictactoeRefreshGameRequest *newGameRequest = [[PTTictactoeRefreshGameRequest alloc] init];
     
     [newGameRequest refreshBoardWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
@@ -532,10 +528,10 @@
     board = [[UIImageView alloc] initWithFrame:imageframe];
     board.image = [UIImage imageNamed:@"game-board-you"]; //init with normal board, flip once everything else initialized
     [self.view addSubview:board];
-    
-#if !(TARGET_IPHONE_SIMULATOR)
+
+    // Chat HUD view
     [self.view addSubview:self.chatController.view];
-#endif
+    
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
     [self initGameVisually];
     
@@ -548,19 +544,24 @@
     [self.view addSubview:ttWaitYourTurn];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:0.5f];
+}
+
 // ## Tictactoe methods start ##
 -(void)initGameWithMyTurn:(BOOL)myTurn
 {
     (myTurn) ? [self createTurnIndicators:YES] : [self createTurnIndicators:NO];
     (myTurn) ? [self enableBoard] : [self disableBoard];
+    isMyTurn = myTurn;
 }
 
 - (void)updateUIWithStatus:(int)status
-                coordinates:(PTTictactoeCoordinate *)coordinates
-                                                   winStatus:(int)winStatus
-                                                   isCurrentUser:(BOOL)isCurrentUser
-                        
-{
+               coordinates:(PTTictactoeCoordinate *)coordinates
+                 winStatus:(int)winStatus
+             isCurrentUser:(BOOL)isCurrentUser {
+
     int pieceKind;
     int soundKind;
     if (isCurrentUser) {
@@ -579,6 +580,12 @@
         [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
         (isCurrentUser) ? [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:NO] : [self drawMoveWithCoordinates:coordinates pieceKind:pieceKind opaque:YES];
         (isCurrentUser) ? [self performSelector:@selector(disableBoard) withObject:nil afterDelay:.1] : [self performSelector:@selector(enableBoard) withObject:nil afterDelay:.1];
+        
+        // Switch turn
+        isMyTurn = !isMyTurn;
+        
+        // Set active chat HUD
+        [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:0.2f];
     }
     if (status == PLACED_WON) {
         [self beginSound:(id)[NSNumber numberWithInt:soundKind]];
@@ -870,6 +877,17 @@ userId:(NSString *)userID
     } completion:^(BOOL finished) {
         ttWaitYourTurn.hidden = YES;
     }];
+}
+
+#pragma mark - Chat view
+
+- (void)setActiveChatHUD {
+    // Change active HUD
+    if (isMyTurn == YES) {
+        [self.chatController setActiveTurnToRightChatView];
+    } else {
+        [self.chatController setActiveTurnToLeftChatView];
+    }
 }
 
 @end

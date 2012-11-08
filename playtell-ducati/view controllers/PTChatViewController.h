@@ -35,6 +35,10 @@
 - (void)stopAutomaticPictures;
 - (void)restrictToSmallSize:(BOOL)shouldRestrict;
 
+- (void)setActiveTurnToLeftChatView;
+- (void)setActiveTurnToRightChatView;
+- (void)hideAllBorders;
+
 @property (nonatomic, strong) PTChatHUDParentView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;
 @property (nonatomic, strong) PTPlaymate* playmate;

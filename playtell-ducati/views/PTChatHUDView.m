@@ -163,6 +163,36 @@
     self.contentShadowView.hidden = NO;
 }
 
+- (void)pulsateBorderWithColor:(UIColor *)color {
+    [UIView animateWithDuration:0.3f animations:^{
+        self.containerView.backgroundColor = color;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.3f animations:^{
+            self.containerView.backgroundColor = [UIColor whiteColor];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.3f animations:^{
+                self.containerView.backgroundColor = color;
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.3f animations:^{
+                    self.containerView.backgroundColor = [UIColor whiteColor];
+                } completion:^(BOOL finished) {
+                    [UIView animateWithDuration:0.3f animations:^{
+                        self.containerView.backgroundColor = color;
+                    } completion:^(BOOL finished) {
+                        [UIView animateWithDuration:0.3f animations:^{
+                            self.containerView.backgroundColor = [UIColor whiteColor];
+                        } completion:^(BOOL finished) {
+                            [UIView animateWithDuration:0.3f animations:^{
+                                self.containerView.backgroundColor = color;
+                            }];
+                        }];
+                    }];
+                }];
+            }];
+        }];
+    }];
+}
+
 //- (void)setRightView:(UIView*)aView {
 //    if ([aView isKindOfClass:[OTVideoView class]]) {
 //        self.publisherView = (OTVideoView *)aView;

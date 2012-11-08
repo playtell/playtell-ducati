@@ -136,6 +136,9 @@
         [self disableAvailableCards];
     }
     
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:0.5f];
+    
     // Winner/loser views
     winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
     winnerView.center = self.view.center;
@@ -488,6 +491,9 @@
 
     // Flip gameboard
     [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:1.5f];
+    
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.8f];
 }
 
 #pragma mark - Play turn methods
@@ -643,6 +649,9 @@
     
     // Flip gameboard
     [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:0.7f];
+    
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.0f];
 }
 
 - (void)updateAvailableScrollViewsPosition {
@@ -757,6 +766,15 @@
                      }];
 }
 
+- (void)setActiveChatHUD {
+    // Change active HUD
+    if (myTurn == YES) {
+        [self.chatController setActiveTurnToRightChatView];
+    } else {
+        [self.chatController setActiveTurnToLeftChatView];
+    }
+}
+
 - (PTMatchingAvailableCardView*)getAvailableCardViewByIndex:(NSInteger)cardIndex {
     for (PTMatchingAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
         if (cardIndex == [viewAvailableCard getCardIndex]) {
@@ -788,7 +806,6 @@
 }
 
 - (void)resetGame {
-    NSLog(@"NEW GAME BITCHES");
     // Since inititor may have changed, find out real playmate
     // It changes if user that won wasn't the original initiator
     // If they won, they should be the new initiator so they can have the first turn
@@ -945,8 +962,14 @@
     if (myTurn == NO) {
         [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:0.8f];
         [self disableAvailableCards];
+
+        // Set active chat HUD
+        [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.1f];
     } else {
         [self enabledAvailableCards];
+
+        // Set active chat HUD
+        [self setActiveChatHUD];
     }
 }
 
