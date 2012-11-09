@@ -40,6 +40,7 @@
     IBOutlet UIButton *closeBook;
     IBOutlet UIButton *endPlaydateForreal;
     IBOutlet UIView *endPlaydatePopup;
+    IBOutlet UIImageView *background;
     UIPopoverController *playdateEndPopover;
     PTPlaydateEndViewController *playdateEndViewController;
     

@@ -297,12 +297,18 @@ NSTimer *postcardTimer;
     PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
     postcardController.delegate = self;
     postcardController.playdateId = self.playdate.playdateID;
-    postcardController.view.frame = CGRectMake(0.0f, -height, width, height);
-    [self.view insertSubview:postcardController.view belowSubview:endPlaydate];
+    postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
+    [self.view insertSubview:postcardController.view belowSubview:background];
+    
+    float margin = 50.0f;
     
     [UIView animateWithDuration:1.0f animations:^{
-        postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
-    //} completion:^(BOOL finished) {
+        background.frame = CGRectMake(margin, height, width - (2 * margin), height);
+        booksParentView.frame = CGRectOffset(booksParentView.frame, 0.0f, height);
+        pagesScrollView.frame = CGRectOffset(pagesScrollView.frame, 0.0f, height);
+        self.chatController.view.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [postcardController startPhotoCountdown];
     }];
 }
 
@@ -738,6 +744,7 @@ NSTimer *postcardTimer;
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
     [self.chatController connectToPlaceholderOpenTokSession];
+    
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
@@ -748,8 +755,12 @@ NSTimer *postcardTimer;
     // Restrict the size of the chat view
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.chatController restrictToSmallSize:YES];
+        
         // Remove borders from chat hud
         [self.chatController hideAllBorders];
+        
+        // Make sure the chat hud is visible
+        self.chatController.view.alpha = 1.0f;
     });
 }
 

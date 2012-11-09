@@ -118,12 +118,14 @@ CGRect originalFrame;
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo.png"] forState:UIControlStateNormal];
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo-press.png"] forState:UIControlStateHighlighted];
         [btnCamera addTarget:self action:@selector(cameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        btnCamera.hidden = YES;
         [self addSubview:btnCamera];
         
         btnSend = [[UIButton alloc] initWithFrame:CGRectMake(postcard.frame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
         [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard.png"] forState:UIControlStateNormal];
         [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard-press.png"] forState:UIControlStateHighlighted];
         [btnSend addTarget:self action:@selector(sendButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        btnSend.hidden = YES;
         [self addSubview:btnSend];
     }
     return self;
@@ -153,6 +155,26 @@ CGRect originalFrame;
         [delegate postcardTaken:[postcard screenshotWithSave:NO] withScreenshot:photo.image];
     } else {
         NSLog(@"No delegate set so couldn't send postcards");
+    }
+}
+
+- (void)startPhotoCountdown {
+    publisherView = [[PTVideoPhone sharedPhone] currentPublisherView];
+    if (publisherView) {
+        originalFrame = publisherView.frame;
+        
+        // Add the publisher view
+        publisherView.frame = shim.frame;
+        [video insertSubview:publisherView belowSubview:shim];
+        
+        // Setup the shim
+        shim.alpha = 0.0f;
+        
+        // Start the countdown
+        [self countdown];
+    } else {
+        btnCamera.hidden = NO;
+        btnSend.hidden = NO;
     }
 }
 
@@ -196,6 +218,9 @@ CGRect originalFrame;
         
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo.png"] forState:UIControlStateNormal];
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo-press.png"] forState:UIControlStateHighlighted];
+        
+        btnCamera.hidden = NO;
+        btnSend.hidden = NO;
     }];
 }
 

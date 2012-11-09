@@ -17,4 +17,6 @@
 
 @property (nonatomic, strong) id<PTPostcardViewDelegate> delegate;
 
+- (void)startPhotoCountdown;
+
 @end

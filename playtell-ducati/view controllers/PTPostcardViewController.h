@@ -21,4 +21,6 @@
 @property (nonatomic, assign) int playdateId;
 @property (nonatomic, strong) id<PTPostcardControllerDelegate> delegate;
 
+- (void)startPhotoCountdown;
+
 @end

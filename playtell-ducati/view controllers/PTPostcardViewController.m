@@ -49,6 +49,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)startPhotoCountdown {
+    [self.postcardView startPhotoCountdown];
+}
+
 #pragma mark - Postcard Delegate
 - (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot {
     dispatch_async(dispatch_get_current_queue(), ^{
