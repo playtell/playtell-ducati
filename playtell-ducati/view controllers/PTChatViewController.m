@@ -88,14 +88,10 @@ NSTimer *screenshotTimer;
         tapRecognizer.delegate = self;
         
         // Add the gesture recognizers to the views
-        [self.leftView addGestureRecognizer:swipeDownRecognizer];
-        [self.leftView addGestureRecognizer:swipeUpRecognizer];
-        [self.leftView addGestureRecognizer:pinchRecognizer];
-        [self.leftView addGestureRecognizer:tapRecognizer];
-        [self.rightView addGestureRecognizer:swipeDownRecognizer];
-        [self.rightView addGestureRecognizer:swipeUpRecognizer];
-        [self.rightView addGestureRecognizer:pinchRecognizer];
-        [self.rightView addGestureRecognizer:tapRecognizer];
+        [self.view addGestureRecognizer:swipeDownRecognizer];
+        [self.view addGestureRecognizer:swipeUpRecognizer];
+        [self.view addGestureRecognizer:pinchRecognizer];
+        [self.view addGestureRecognizer:tapRecognizer];
     }
     return self;
 }
