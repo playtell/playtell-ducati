@@ -24,11 +24,13 @@
 
 @property (nonatomic, strong) UIView *background;
 @property (nonatomic, strong) UILabel *lblTitle;
-@property (nonatomic, strong) UIImageView *postcard;
+@property (nonatomic, strong) UIImage *snapshot;
 @property (nonatomic, strong) UIImageView *photo;
 @property (nonatomic, strong) UIView *video;
 @property (nonatomic, strong) UIButton *btnCamera;
 @property (nonatomic, strong) UIButton *btnSend;
+@property (nonatomic, strong) NSArray *postcardNames;
+@property (nonatomic, strong) NSMutableArray *postcards;
 
 // Subviews for the video view for use when taking a picture
 @property (nonatomic, strong) UIView *shim;
@@ -42,20 +44,41 @@
 
 @synthesize background;
 @synthesize lblTitle;
-@synthesize postcard;
+@synthesize snapshot;
 @synthesize photo;
 @synthesize video;
 @synthesize btnCamera, btnSend;
+@synthesize postcardNames;
+@synthesize postcards;
 
 @synthesize shim, cameraOutline, lblCounter;
 
 UIView *publisherView;
 CGRect originalFrame;
+int currentPostcard;
+
+CGRect offLeftFrame;
+CGRect leftFrame;
+CGRect centerFrame;
+CGRect rightFrame;
+CGRect offRightFrame;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
+        float centerWidth = 553.0f;
+        float centerHeight = 590.0f;
+        centerFrame = CGRectMake((frame.size.width - centerWidth) / 2, (frame.size.height - centerHeight) / 2, centerWidth, centerHeight);
+        
+        float otherWidth = centerWidth * 0.8;
+        float otherHeight = centerHeight * 0.8;
+        float otherY = centerFrame.origin.y + otherHeight * 0.1;
+        leftFrame = CGRectMake(otherWidth * -0.8, otherY, otherWidth, otherHeight);
+        rightFrame = CGRectMake(frame.size.width - (otherWidth * 0.2), otherY, otherWidth, otherHeight);
+        offLeftFrame = CGRectMake(-2 * otherWidth, otherY, otherWidth, otherHeight);
+        offRightFrame = CGRectMake(frame.size.width + (2 * otherWidth), otherY, otherWidth, otherHeight);
+        
         self.autoresizesSubviews = YES;
         
         float width = frame.size.width;
@@ -66,6 +89,17 @@ CGRect originalFrame;
         background.frame = CGRectMake(0.0f, 0.0f, width, height);
         background.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:background];
+        
+        // Load in the postcard views
+        postcards = [[NSMutableArray alloc] init];
+        postcardNames = [NSArray arrayWithObjects:@"postcards-a.png", @"postcards-b.png", @"postcards-c.png", @"postcards-d.png", nil];
+        for (NSString *name in postcardNames) {
+            UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:name]];
+            [self addSubview:p];
+            [postcards addObject:p];
+        }
+        currentPostcard = 1;
+        [self setPostcardFrames];
         
         // Layout the title label
         lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(LABEL_SPACING_X, LABEL_SPACING_Y, background.frame.size.width - (LABEL_SPACING_X * 2), LABEL_HEIGHT)];
@@ -78,20 +112,15 @@ CGRect originalFrame;
         lblTitle.text = @""; //@"SEND A CARD TO LET THEM KNOW YOU MISSED THEM";
         [self addSubview:lblTitle];
         
-        // Layout the postcard
-        postcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcards-a.png"]];
-        postcard.center = CGPointMake(background.center.x, background.center.y);
-        postcard.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:postcard];
-        
         // Layout the photo
-        photo = [[UIImageView alloc] initWithImage:[PTUser currentUser].userPhoto];
-        photo.frame = CGRectMake((postcard.frame.size.width - PHOTO_WIDTH) / 2, ((postcard.frame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        self.snapshot = [PTUser currentUser].userPhoto;
+        photo = [[UIImageView alloc] initWithImage:snapshot];
+        photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [postcard addSubview:photo];
+        [self addSubview:photo];
         
         // Layout the video view
-        video = [[UIView alloc] initWithFrame:[self convertRect:photo.frame fromView:postcard]];
+        video = [[UIView alloc] initWithFrame:photo.frame];
         video.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         video.alpha = 0.0f;
         [self addSubview:video];
@@ -114,14 +143,14 @@ CGRect originalFrame;
         [video addSubview:lblCounter];
         
         // Layout the buttons
-        btnCamera = [[UIButton alloc] initWithFrame:CGRectMake(postcard.frame.origin.x, postcard.frame.origin.y + postcard.frame.size.height + BUTTON_SPACING, (postcard.frame.size.width - BUTTON_SPACING) / 2, BUTTON_HEIGHT)];
+        btnCamera = [[UIButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x, centerFrame.origin.y + centerFrame.size.height + BUTTON_SPACING, (centerFrame.size.width - BUTTON_SPACING) / 2, BUTTON_HEIGHT)];
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo.png"] forState:UIControlStateNormal];
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo-press.png"] forState:UIControlStateHighlighted];
         [btnCamera addTarget:self action:@selector(cameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         btnCamera.hidden = YES;
         [self addSubview:btnCamera];
         
-        btnSend = [[UIButton alloc] initWithFrame:CGRectMake(postcard.frame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
+        btnSend = [[UIButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
         [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard.png"] forState:UIControlStateNormal];
         [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard-press.png"] forState:UIControlStateHighlighted];
         [btnSend addTarget:self action:@selector(sendButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -152,7 +181,12 @@ CGRect originalFrame;
 
 - (void)sendButtonPressed {
     if (delegate) {
-        [delegate postcardTaken:[postcard screenshotWithSave:NO] withScreenshot:photo.image];
+        UIImageView *selectedPostcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[postcardNames objectAtIndex:currentPostcard]]];
+        UIImageView *photoCopy = [[UIImageView alloc] initWithImage:snapshot];
+        photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        [selectedPostcard addSubview:photoCopy];
+        
+        [delegate postcardTaken:[selectedPostcard screenshotWithSave:NO] withScreenshot:photoCopy.image];
     } else {
         NSLog(@"No delegate set so couldn't send postcards");
     }
@@ -215,7 +249,7 @@ CGRect originalFrame;
     shim.alpha = 1.0f;
     
     // Take the picture from the video publisher view
-    UIImage *snapshot = [publisherView screenshotWithSave:NO];
+    snapshot = [publisherView screenshotWithSave:NO];
     photo.image = snapshot;
     
     // Animate out the video view
@@ -243,6 +277,23 @@ CGRect originalFrame;
 
 - (void)setCountdownTimeTwo {
     lblCounter.text = @"2";
+}
+
+- (void)setPostcardFrames {
+    for (int iter = 0; iter < postcards.count; iter++) {
+        UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
+        if (iter + 1 < currentPostcard) {
+            p.frame = offLeftFrame;
+        } else if (iter + 1 == currentPostcard) {
+            p.frame = leftFrame;
+        } else if (iter == currentPostcard) {
+            p.frame = centerFrame;
+        } else if (iter - 1 == currentPostcard) {
+            p.frame = rightFrame;
+        } else {
+            p.frame = offRightFrame;
+        }
+    }
 }
 
 @end
