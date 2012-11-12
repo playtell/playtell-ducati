@@ -54,6 +54,7 @@
 #import "PTTictactoeViewController.h"
 #import "PTMemoryViewController.h"
 #import "PTMatchingViewController.h"
+#import "PTMathViewController.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
@@ -252,6 +253,12 @@ NSTimer *postcardTimer;
     // Setup end playdate popup
     endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
     endPlaydatePopup.hidden = YES;
+    
+    UIButton *tempButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [tempButton setTitle:@"Start game" forState:UIControlStateNormal];
+    [tempButton addTarget:self action:@selector(mathTapped:) forControlEvents:UIControlEventTouchUpInside];
+    tempButton.frame = CGRectMake(100.0f, 100.0f, 150.0f, 34.0f);
+    [self.view addSubview:tempButton];
 }
 
 - (void)showPostcardPrompt {
@@ -505,8 +512,19 @@ NSTimer *postcardTimer;
     [booksScrollView addSubview:gameView3];
     [gameList addObject:gameView3];
     
+    xPos += booksScrollView.frame.size.width;
+    i++;
+    
+    PTGameView *gameView4 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                       gameId:4
+                                                     gameLogo:[UIImage imageNamed:@"math-logo"]];
+    [gameView4 setPosition:i];
+    [gameView4 setDelegate:self];
+    [booksScrollView addSubview:gameView4];
+    [gameList addObject:gameView4];
+    
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 3); // 3 hardcoded games
+    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 4); // 4 hardcoded games
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
@@ -963,6 +981,7 @@ NSTimer *postcardTimer;
                                  playmateId:aPlaymate.userID
                                     themeId:19 // TODO: Hard coded
                                    numCards:randNumCards
+                                  gameName:@"matching"
                                   authToken:[[PTUser currentUser] authToken]
                                   onSuccess:^(NSDictionary *result) {
                                       // Send analytics an event for starting the game
@@ -1006,6 +1025,73 @@ NSTimer *postcardTimer;
                                       NSLog(@"%@", request);
                                       NSLog(@"%@", JSON);
                                   }];
+}
+
+- (void)mathTapped:(id)sender {
+    NSLog(@"mathTapped:");
+    // Only allow a game to be played if the delegate allows it
+    if (![self delegateAllowsPlayingGames]) {
+        return;
+    }
+    
+    // Find playmate user id
+    PTPlaymate *aPlaymate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        aPlaymate = self.playdate.playmate;
+    } else {
+        aPlaymate = self.playdate.initiator;
+    }
+    
+    NSInteger randNumCards = 30;//2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    
+    PTMatchingNewGameRequest *newGameRequest = [[PTMatchingNewGameRequest alloc] init];
+    [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
+                                playmateId:aPlaymate.userID
+                                   themeId:2 // TODO: Hard coded
+                                  numCards:randNumCards
+                                  gameName:@"math"
+                                 authToken:[[PTUser currentUser] authToken]
+                                 onSuccess:^(NSDictionary *result) {
+                                     // Send analytics an event for starting the game
+                                     [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Math", PropGameName, aPlaymate.username, PropPlaymateId, nil]];
+                                     
+                                     // Get response parameters
+                                     NSInteger boardId = [[result valueForKey:@"board_id"] integerValue];
+                                     NSString *filenamesFlat = [result valueForKey:@"filename_dump"];
+                                     filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
+                                     NSArray *filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+                                     NSString *cardsString = [result valueForKey:@"card_array_string"];
+                                     
+                                     // Init the game controller
+                                     PTMathViewController *mathViewController = [[PTMathViewController alloc]
+                                                                                         initWithNibName:@"PTMathViewController"
+                                                                                         bundle:nil
+                                                                                         playdate:self.playdate
+                                                                                         boardId:boardId
+                                                                                         themeId:2 // TODO: Hard coded
+                                                                                         initiator:[PTUser currentUser]
+                                                                                         playmate:aPlaymate
+                                                                                         filenames:filenames
+                                                                                         totalCards:randNumCards
+                                                                                         cardsString:cardsString
+                                                                                         myTurn:YES];
+                                     mathViewController.chatController = self.chatController;
+                                     
+                                     // Init game splash
+                                     UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+                                     splash.image = [UIImage imageNamed:@"math-splash"];
+                                     
+                                     // Bring up the view controller of the new game
+                                     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                                     [appDelegate.transitionController loadGame:mathViewController
+                                                                    withOptions:UIViewAnimationOptionTransitionCurlUp
+                                                                     withSplash:splash];
+                                 }
+                                 onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                     NSLog(@"New game API error: %@", error);
+                                     NSLog(@"%@", request);
+                                     NSLog(@"%@", JSON);
+                                 }];
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
@@ -1895,6 +1981,7 @@ NSTimer *postcardTimer;
         CGPoint navigateTo = CGPointMake(booksScrollView.frame.size.width * position, 0.0f);
         [booksScrollView setContentOffset:navigateTo animated:YES];
     } else {
+        NSLog(@"Game: %i", [gameId integerValue]);
         // Open specific book (ids are hardcoded)
         if ([gameId integerValue] == 1) {
             [self memoryTapped:nil];
@@ -1902,6 +1989,8 @@ NSTimer *postcardTimer;
             [self ticTacToeTapped:nil];
         } else if ([gameId integerValue] == 3) {
             [self matchingTapped:nil];
+        } else if ([gameId integerValue] == 4) {
+            [self mathTapped:nil];
         }
     }
 }

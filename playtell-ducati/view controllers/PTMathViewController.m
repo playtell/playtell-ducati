@@ -1,12 +1,12 @@
 //
-//  PTMatchingViewController.m
+//  PTMathViewController.m
 //  playtell-ducati
 //
-//  Created by Dimitry Bentsionov on 10/23/12.
+//  Created by Dimitry Bentsionov on 11/8/12.
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
-#import "PTMatchingViewController.h"
+#import "PTMathViewController.h"
 #import "PTMatchingEndGameRequest.h"
 #import "PTMatchingPlayTurnRequest.h"
 #import "PTMatchingRefreshGameRequest.h"
@@ -15,16 +15,13 @@
 #import "TransitionController.h"
 #import "PTDialpadViewController.h"
 #import "PTPlaydateDisconnectRequest.h"
-#import "PTMatchingAvailableCardView.h"
 #import "PTMatchingPairingCardView.h"
 
-@interface PTMatchingViewController ()
+@interface PTMathViewController ()
 
 @end
 
-@implementation PTMatchingViewController
-
-@synthesize chatController;
+@implementation PTMathViewController
 
 - (id)initWithNibName:(NSString*)nibNameOrNil
                bundle:(NSBundle*)nibBundleOrNil
@@ -37,7 +34,7 @@
            totalCards:(NSInteger)_totalCards
           cardsString:(NSString*)_cardsString
                myTurn:(BOOL)_myTurn {
-
+    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Save game config
@@ -50,14 +47,17 @@
         totalCards = (_totalCards/2.0f); // Really there are twice as many, but they're all halves
         myTurn = _myTurn;
         isGameOver = NO;
+        NSLog(@"_cardsString: %@", _cardsString);
+        NSLog(@"themeId: %i", themeId);
+        NSLog(@"Filenaems: %@", filenames);
         
         // Parse cards string
         NSMutableArray *stringBuffer = [NSMutableArray arrayWithCapacity:[_cardsString length]];
         for (int i=0; i<[_cardsString length]; i++) {
             [stringBuffer addObject:[NSString stringWithFormat:@"%C", [_cardsString characterAtIndex:i]]];
         }
-        pairingCards = [NSArray arrayWithArray:[stringBuffer subarrayWithRange:NSMakeRange(0, totalCards)]];
-        availableCards = [NSArray arrayWithArray:[stringBuffer subarrayWithRange:NSMakeRange(totalCards, totalCards)]];
+        availableCards = [NSArray arrayWithArray:[stringBuffer subarrayWithRange:NSMakeRange(0, totalCards)]];
+        pairingCards = [NSArray arrayWithArray:[stringBuffer subarrayWithRange:NSMakeRange(totalCards, totalCards)]];
         
         // Subscribe to Pusher events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayTurn:) name:@"PlayDateMatchingPlayTurn" object:nil];
@@ -71,14 +71,7 @@
     [super viewDidLoad];
     
     // Game background
-    if (myTurn == YES) {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-green-bg"]];
-    } else {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-orangeblur-bg"]];
-    }
-//    viewBgShim = [[UIView alloc] initWithFrame:self.view.bounds];
-//    viewBgShim.hidden = YES;
-//    [self.view insertSubview:viewBgShim atIndex:0];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-bg"]];
     
     // Display chat HUD
     [self.view addSubview:self.chatController.view];
@@ -90,45 +83,45 @@
     endPlaydate.layer.shadowRadius = 6.0f;
     
     // Setup available cards container
-    viewAvailableCards = [[PTMatchingAvailableCardsView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-160.0f-30.0f, 1024.0f, 160.0f)];
+    viewAvailableCards = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-160.0f-40.0f, 1024.0f, 160.0f)];
     [self.view addSubview:viewAvailableCards];
-    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(442.0f, 0.0f, 140.0f, 160.0f)];
+    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(25.0f, 0.0f, 974.0f, 160.0f)];
     viewAvailableCardsScroll.tag = 1;
-    viewAvailableCardsScroll.delegate = self;
-    viewAvailableCardsScroll.clipsToBounds = NO;
+//    viewAvailableCardsScroll.delegate = self;
+//    viewAvailableCardsScroll.clipsToBounds = NO;
     viewAvailableCardsScroll.userInteractionEnabled = YES;
     viewAvailableCardsScroll.canCancelContentTouches = NO;
     viewAvailableCardsScroll.delaysContentTouches = NO;
     viewAvailableCardsScroll.showsHorizontalScrollIndicator = NO;
     viewAvailableCardsScroll.showsVerticalScrollIndicator = NO;
-    viewAvailableCardsScroll.pagingEnabled = YES;
+//    viewAvailableCardsScroll.pagingEnabled = YES;
     [viewAvailableCards addSubview:viewAvailableCardsScroll];
     
     // Setup available cards
     [self setupAvailableCards];
     
     // Setup pairing cards container
-    viewPairingCardsContainer = [[UIView alloc] initWithFrame:CGRectMake(10.0f, 200.0f, 1004.0f, 286.0f)];
-    viewPairingCards = [[PTMatchingPairingCardsView alloc] initWithFrame:viewPairingCardsContainer.bounds];
-    viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-me"]];
+    viewPairingCardsContainer = [[UIView alloc] initWithFrame:CGRectMake(132.0f, 200.0f, 760.0f, 284.0f)];
+    viewPairingCards = [[UIView alloc] initWithFrame:viewPairingCardsContainer.bounds];
+    viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-flipboard-front"]];
     viewPairingCards.clipsToBounds = YES;
     [viewPairingCardsContainer addSubview:viewPairingCards];
     [self.view addSubview:viewPairingCardsContainer];
-    viewPairingCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(352.0f, 43.0f, 300.0f, 200.0f)];
-    viewPairingCardsScroll.tag = 2;
-    viewPairingCardsScroll.delegate = self;
-    viewPairingCardsScroll.clipsToBounds = NO;
-    viewPairingCardsScroll.userInteractionEnabled = YES;
-    viewPairingCardsScroll.canCancelContentTouches = NO;
-    viewPairingCardsScroll.delaysContentTouches = YES;
-    viewPairingCardsScroll.showsHorizontalScrollIndicator = NO;
-    viewPairingCardsScroll.showsVerticalScrollIndicator = NO;
-    viewPairingCardsScroll.pagingEnabled = YES;
-    viewPairingCardsScroll.scrollEnabled = NO;
-    [viewPairingCards addSubview:viewPairingCardsScroll];
+//    viewPairingCardsScroll = [[UIScrollView alloc] initWithFrame:viewPairingCards.bounds];
+//    viewPairingCardsScroll.tag = 2;
+////    viewPairingCardsScroll.delegate = self;
+//    viewPairingCardsScroll.clipsToBounds = NO;
+//    viewPairingCardsScroll.userInteractionEnabled = YES;
+//    viewPairingCardsScroll.canCancelContentTouches = NO;
+//    viewPairingCardsScroll.delaysContentTouches = YES;
+//    viewPairingCardsScroll.showsHorizontalScrollIndicator = NO;
+//    viewPairingCardsScroll.showsVerticalScrollIndicator = NO;
+//    viewPairingCardsScroll.pagingEnabled = YES;
+//    viewPairingCardsScroll.scrollEnabled = NO;
+//    [viewPairingCards addSubview:viewPairingCardsScroll];
     
     // Setup pairing cards
-    [self setupPairingCards];
+    //[self setupPairingCards];
     
     // If not my turn, flip the game board
     if (myTurn == NO) {
@@ -160,7 +153,7 @@
     scoreViewOpponent = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(200.0f, 75.0f, 56.0f, 75.0f) myScore:NO];
     [self.view addSubview:scoreViewOpponent];
     
-    // Bottom shadow
+    // Bottom shadow (when available cards are disabled)
     viewBottomShawdow = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 733.0f, 1024.0f, 35.0f)];
     viewBottomShawdow.userInteractionEnabled = NO;
     viewBottomShawdow.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-bottom-shadow"]];
@@ -183,31 +176,51 @@
 }
 
 - (void)setupPairingCards {
-    int x = 0.0f;
-    CGSize sizeCard = CGSizeMake(300.0f, 200.0f);
-    for (int i=0; i<totalCards; i++) {
-        PTMatchingPairingCardView *viewCard = [[PTMatchingPairingCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i delegate:self];
-        [viewPairingCardsScroll addSubview:viewCard];
-        x += sizeCard.width;
-    }
-    [viewPairingCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 200.0f)];
-    [self scrollViewDidScroll:viewPairingCardsScroll]; // Resize all children appropriately first time around
-    rectLandingStrip = CGRectMake(356.0f, 237.0f, 156.0f, 212.0f);
-    
-    // Set the first card as the "current index"
-    currentPairingIndex = 0;
-    viewCurrentPairingCardView = (PTMatchingPairingCardView *)[viewPairingCardsScroll.subviews objectAtIndex:0];
+//    int x = 0.0f;
+//    CGSize sizeCard = CGSizeMake(300.0f, 200.0f);
+//    for (int i=0; i<totalCards; i++) {
+//        PTMatchingPairingCardView *viewCard = [[PTMatchingPairingCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i delegate:self];
+//        [viewPairingCardsScroll addSubview:viewCard];
+//        x += sizeCard.width;
+//    }
+//    [viewPairingCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 200.0f)];
+//    [self scrollViewDidScroll:viewPairingCardsScroll]; // Resize all children appropriately first time around
+//    rectLandingStrip = CGRectMake(356.0f, 237.0f, 156.0f, 212.0f);
+//    
+//    // Set the first card as the "current index"
+//    currentPairingIndex = 0;
+//    viewCurrentPairingCardView = (PTMatchingPairingCardView *)[viewPairingCardsScroll.subviews objectAtIndex:0];
 }
 
 - (void)setupAvailableCards {
-    CGFloat x = 0.0f;
-    CGSize sizeCard = CGSizeMake(140.0f, 160.0f); // 120 card width + 10 padding on each side
+    CGFloat x = 25.0f;
+    CGFloat maxHeight = 0;
     for (int i=0; i<totalCards; i++) {
-        PTMatchingAvailableCardView *viewCard = [[PTMatchingAvailableCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:(i+totalCards) delegate:self];
+        NSInteger cardIndex = i;//(i+totalCards);
+        UIImage *cardImage = [self mathGameImageForCardIndex:cardIndex];
+        CGSize sizeCard = cardImage.size;
+        
+        // Calculate max height of cards
+        if (sizeCard.height > maxHeight) {
+            maxHeight = sizeCard.height;
+        }
+        
+        PTMathAvailableCardView *viewCard = [[PTMathAvailableCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:cardIndex delegate:self];
+        [viewCard setCardImage:cardImage];
         [viewAvailableCardsScroll addSubview:viewCard];
-        x += sizeCard.width;
+        x += sizeCard.width + 25.0f; // + 25 px spacer
     }
-    [viewAvailableCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 150.0f)];
+    
+    // Set scroll view frame size and content size
+    CGFloat width = x;
+    viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-maxHeight-40.0f, 1024.0f, maxHeight);
+    viewAvailableCardsScroll.frame = CGRectMake(25.0f, 0.0f, 974.0f, maxHeight);
+    [viewAvailableCardsScroll setContentSize:CGSizeMake(width, maxHeight)];
+    
+    // Center (vertically) each available card
+    for (PTMathAvailableCardView *viewCard in viewAvailableCardsScroll.subviews) {
+        viewCard.frame = CGRectMake(viewCard.frame.origin.x, (maxHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
+    }
 }
 
 #pragma mark - Game actions
@@ -219,7 +232,7 @@
                              authToken:[PTUser currentUser].authToken
                              onSuccess:nil
                              onFailure:nil];
-
+    
     // Transition to playdate view controller
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
@@ -275,14 +288,14 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.tag == 1) { // Available cards scroll view
-//        // Adjust size/opacity of each child as they scroll
-//        CGFloat x = scrollView.contentOffset.x;
-//        CGFloat width = scrollView.frame.size.width;
-//        for (int i=0; i<totalCards; i++) {
-//            CGFloat pos = ABS(i * width - x);
-//            CGFloat level = 1.0f - pos / width;
-//            [(PTMatchingAvailableCardView *)[scrollView.subviews objectAtIndex:i] setFocusLevel:level];
-//        }
+        //        // Adjust size/opacity of each child as they scroll
+        //        CGFloat x = scrollView.contentOffset.x;
+        //        CGFloat width = scrollView.frame.size.width;
+        //        for (int i=0; i<totalCards; i++) {
+        //            CGFloat pos = ABS(i * width - x);
+        //            CGFloat level = 1.0f - pos / width;
+        //            [(PTMatchingAvailableCardView *)[scrollView.subviews objectAtIndex:i] setFocusLevel:level];
+        //        }
     } else if (scrollView.tag == 2) { // Pairing cards scroll view
         // Adjust size/opacity of each child as they scroll
         CGFloat x = scrollView.contentOffset.x;
@@ -303,30 +316,24 @@
 
 #pragma mark - Mathing game delegates
 
-- (void)matchingGameAvailableCardTouchesBegan:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {
+- (void)mathGameAvailableCardTouchesBegan:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
     if (viewAvailableCardsScroll.scrollEnabled == NO) {
         return;
     }
-
+    
     // Figure out the points on the screen relative to the touch
+    sizeTouchOriginal = cardView.bounds.size;
     pointTouchOriginal = [touch locationInView:self.view];
     pointTouchOffset = [touch locationInView:cardView];
-    viewTrackingCard = [[UIView alloc] initWithFrame:CGRectMake(pointTouchOriginal.x - pointTouchOffset.x + 10.0f - 6.0f, pointTouchOriginal.y - pointTouchOffset.y - 6.0f, 126.0f, 172.0f)];
-    viewTrackingCard.backgroundColor = [UIColor whiteColor];
-    viewTrackingCardImage = [[UIImageView alloc] initWithFrame:CGRectMake(6.0f, 6.0f, 120.0f, 160.0f)];
+    viewTrackingCard = [[UIView alloc] initWithFrame:CGRectMake(pointTouchOriginal.x - pointTouchOffset.x, pointTouchOriginal.y - pointTouchOffset.y, cardView.bounds.size.width, cardView.bounds.size.height)];
+    viewTrackingCard.backgroundColor = [UIColor clearColor];
+    viewTrackingCardImage = [[UIImageView alloc] initWithFrame:viewTrackingCard.bounds];
     viewTrackingCardImage.image = [cardView getCardImage];
+    viewTrackingCardImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [viewTrackingCard addSubview:viewTrackingCardImage];
     [self.view addSubview:viewTrackingCard];
     
-    // Tracking card shadow
-    viewTrackingCard.layer.masksToBounds = NO;
-    viewTrackingCard.layer.shadowColor = [UIColor blackColor].CGColor;
-    viewTrackingCard.layer.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    viewTrackingCard.layer.shadowOpacity = 0.8f;
-    viewTrackingCard.layer.shadowRadius = 6.0f;
-    viewTrackingCard.layer.shouldRasterize = YES;
-    viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, viewTrackingCard.frame.size.height - 2, viewTrackingCard.frame.size.width, 10)].CGPath;
-    
+    // Defaults
     canTrackingCardLand = NO;
     isTrackingCardSmall = YES;
     
@@ -334,27 +341,11 @@
     currentAvailableIndex = [cardView getCardIndex];
     viewCurrentAvailableCardView = cardView;
     
-    // Grow card a bit
-    CGRect newFrame = CGRectMake(viewTrackingCard.frame.origin.x - 8.0f, viewTrackingCard.frame.origin.y - 10.0f, 142.0f, 192.0f);
-    [UIView animateWithDuration:0.2f
-                     animations:^{
-                         viewTrackingCard.frame = newFrame;
-                         viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 136.0f, 180.0f);
-                     }];
-    
-    // Grow the shadow
-    CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-    theAnimation.duration = 0.2f;
-    theAnimation.fromValue = (id)viewTrackingCard.layer.shadowPath;
-    theAnimation.toValue = (id)[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
-    [viewTrackingCard.layer addAnimation:theAnimation forKey:@"shadowPath"];
-    viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
-    
-    // Hide the card
+    // Hide the available card
     viewCurrentAvailableCardView.alpha = 0.0f;
 }
 
-- (void)matchingGameAvailableCardTouchesMoved:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {
+- (void)mathGameAvailableCardTouchesMoved:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
     if (viewAvailableCardsScroll.scrollEnabled == NO) {
         return;
     }
@@ -370,52 +361,48 @@
     
     // Figure out if card can land
     canTrackingCardLand = CGRectContainsPoint(rectLandingStrip, pointTopLeft) || CGRectContainsPoint(rectLandingStrip, pointBottomRight) || CGRectContainsPoint(rectLandingStrip, pointTopRight) || CGRectContainsPoint(rectLandingStrip, pointBottomLeft);
-
-    // Redraw its location and size accordingly
-    if (canTrackingCardLand) {
-        viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f - 6.0f, point.y - pointTouchOffset.y - 6.0f, 156.0f, 212.0f);
-        viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 150.0f, 200.0f);
-    } else {
-        viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f - 12.0f, point.y - pointTouchOffset.y - 12.0f, 142.0f, 192.0f);
-        viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 136.0f, 180.0f);
-    }
     
-    // Update shadow position
-    viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, viewTrackingCard.frame.size.height - 2, viewTrackingCard.frame.size.width, 10)].CGPath;
+    // Redraw its location and size accordingly
+//    if (canTrackingCardLand) {
+//        viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f - 6.0f, point.y - pointTouchOffset.y - 6.0f, 156.0f, 212.0f);
+//        viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 150.0f, 200.0f);
+//    } else {
+    viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x, point.y - pointTouchOffset.y, viewTrackingCard.bounds.size.width, viewTrackingCard.bounds.size.height);
+//    }
 }
 
-- (void)matchingGameAvailableCardTouchesEnded:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {
+- (void)mathGameAvailableCardTouchesEnded:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
     if (viewAvailableCardsScroll.scrollEnabled == NO) {
         return;
     }
     
     // Can we land?
     if (canTrackingCardLand == YES) {
-        // Move it to its resting spot next to the right card
-        CGRect newFrame = rectLandingStrip;
-        [UIView animateWithDuration:0.2f
-                         animations:^{
-                             viewTrackingCard.frame = newFrame;
-                         }
-                         completion:^(BOOL finished) {
-                             // API call to play turn
-                             [self playTurn];
-                         }];
-        
-        // Shrink the shadow
-        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-        theAnimation.duration = 0.2f;
-        theAnimation.fromValue = (id)viewTrackingCard.layer.shadowPath;
-        theAnimation.toValue = (id)[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
-        [viewTrackingCard.layer addAnimation:theAnimation forKey:@"shadowPath"];
-        viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
+//        // Move it to its resting spot next to the right card
+//        CGRect newFrame = rectLandingStrip;
+//        [UIView animateWithDuration:0.2f
+//                         animations:^{
+//                             viewTrackingCard.frame = newFrame;
+//                         }
+//                         completion:^(BOOL finished) {
+//                             // API call to play turn
+//                             [self playTurn];
+//                         }];
+//        
+//        // Shrink the shadow
+//        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+//        theAnimation.duration = 0.2f;
+//        theAnimation.fromValue = (id)viewTrackingCard.layer.shadowPath;
+//        theAnimation.toValue = (id)[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
+//        [viewTrackingCard.layer addAnimation:theAnimation forKey:@"shadowPath"];
+//        viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
     } else {
         // If not near landing box, go back to its original location
         [self returnTrackingCardToOriginalLocation];
     }
 }
 
-- (void)matchingGameAvailableCardTouchesCancelled:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {
+- (void)mathGameAvailableCardTouchesCancelled:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
     if (viewAvailableCardsScroll.scrollEnabled == NO) {
         return;
     }
@@ -430,19 +417,18 @@
     viewTrackingCard = nil;
 }
 
-- (UIImage*)matchingGameImageForCardIndex:(NSInteger)cardIndex {
+- (UIImage*)mathGameImageForCardIndex:(NSInteger)cardIndex {
     NSString *filename = [filenames objectAtIndex:cardIndex];
     return [UIImage imageNamed:filename];
 }
 
 - (void)returnTrackingCardToOriginalLocation {
-    CGRect newFrame = CGRectMake(pointTouchOriginal.x - pointTouchOffset.x + 10.0f - 6.0f, pointTouchOriginal.y - pointTouchOffset.y - 6.0f, 126.0f, 172.0f);
+    CGRect newFrame = CGRectMake(pointTouchOriginal.x - pointTouchOffset.x, pointTouchOriginal.y - pointTouchOffset.y, sizeTouchOriginal.width, sizeTouchOriginal.height);
     
     // Move the tracking card
     [UIView animateWithDuration:0.2f
                      animations:^{
                          viewTrackingCard.frame = newFrame;
-                         viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 120.0f, 160.0f);
                      }
                      completion:^(BOOL finished) {
                          // Show original card
@@ -454,17 +440,9 @@
                          viewTrackingCardImage = nil;
                          viewTrackingCard = nil;
                      }];
-    
-    // Shrink the shadow
-    CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-    theAnimation.duration = 0.2f;
-    theAnimation.fromValue = (id)viewTrackingCard.layer.shadowPath;
-    theAnimation.toValue = (id)[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
-    [viewTrackingCard.layer addAnimation:theAnimation forKey:@"shadowPath"];
-    viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
 }
 
-- (void)matchingGamePairingCardDidFinishUpDownAnimation {
+- (void)mathGamePairingCardDidFinishUpDownAnimation {
     if (isGameOver == YES) {
         // Show winner/loser views
         if ([winnerId integerValue] == -1) {
@@ -474,7 +452,7 @@
         } else {
             [self performSelector:@selector(displayLose) withObject:nil afterDelay:1.5f];
         }
-
+        
         // Start new game after timeout (let the winner fire off new game call!)
         if (([winnerId integerValue] == [PTUser currentUser].userID) || ([winnerId integerValue] == -1 && initiator.userID == [PTUser currentUser].userID)) {
             [self performSelector:@selector(resetGame) withObject:nil afterDelay:6.0f];
@@ -485,10 +463,10 @@
     }
 }
 
-- (void)matchingGamePairingCardDidFinishLeftRightAnimation {
+- (void)mathGamePairingCardDidFinishLeftRightAnimation {
     // Reset the blank view of pairing card
-    [viewCurrentPairingCardView resetEmptyCardView];
-
+//    [viewCurrentPairingCardView resetEmptyCardView];
+    
     // Flip gameboard
     [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:1.5f];
     
@@ -538,11 +516,11 @@
                             winnerId:(NSNumber *)winnderId {
     
     switch (statusCode) {
-        // Match found!
+            // Match found!
         case MATCH_FOUND: {
             NSLog(@"Match found! Notify user, slide to next card, switch turn");
             // Set blank side of the pairing card
-            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
+//            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
             
             // Remove tracking card
             if (viewTrackingCard != nil) {
@@ -552,16 +530,16 @@
             
             // Switch whose turn it is
             myTurn = !myTurn;
-
+            
             // Animate the pairing card up and down to show match
-            [viewCurrentPairingCardView jumpUpDown];
+//            [viewCurrentPairingCardView jumpUpDown];
             
             // Remove available card
             [viewCurrentAvailableCardView removeFromSuperview];
             
             // Tighten up available cards scroll view
             [self updateAvailableScrollViewsPosition];
-
+            
             // Update pairing card index
             currentPairingIndex++;
             
@@ -570,11 +548,11 @@
             break;
         }
             
-        // Cards do not match
+            // Cards do not match
         case MATCH_ERROR: {
             NSLog(@"Cards not matched. Reset tracking card. Switch turn.");
             // Set blank side of the pairing card
-            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
+//            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
             
             // Remove tracking card
             if (viewTrackingCard != nil) {
@@ -586,18 +564,18 @@
             myTurn = !myTurn;
             
             // Animate the pairing card left and right to show mismatch
-            [viewCurrentPairingCardView jumpLeftRight];
+//            [viewCurrentPairingCardView jumpLeftRight];
             
             // Show available card
             viewCurrentAvailableCardView.alpha = 1.0f;
             break;
         }
             
-        // Match won!
+            // Match won!
         case MATCH_WINNER: {
             NSLog(@"Match won!");
             // Set blank side of the pairing card
-            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
+//            [viewCurrentPairingCardView setEmptyCardViewWithImage:[viewCurrentAvailableCardView getCardImage] matchedByMe:myTurn];
             
             // Remove tracking card
             if (viewTrackingCard != nil) {
@@ -608,9 +586,9 @@
             // Set the winner status
             isGameOver = YES;
             winnerId = winnderId;
-
+            
             // Animate the pairing card up and down to show match
-            [viewCurrentPairingCardView jumpUpDown];
+//            [viewCurrentPairingCardView jumpUpDown];
             
             // Remove available card
             [viewCurrentAvailableCardView removeFromSuperview];
@@ -641,11 +619,11 @@
 }
 
 - (void)updatePairingScrollViewPosition {
-    if (isBoardFlipped == NO) {
-        [viewPairingCardsScroll setContentOffset:CGPointMake((currentPairingIndex*viewCurrentPairingCardView.frame.size.width), 0.0f) animated:YES];
-    } else {
-        [viewPairingCardsScroll setContentOffset:CGPointMake(((totalCards - currentPairingIndex - 1)*viewCurrentPairingCardView.frame.size.width), 0.0f) animated:YES];
-    }
+//    if (isBoardFlipped == NO) {
+//        [viewPairingCardsScroll setContentOffset:CGPointMake((currentPairingIndex*viewCurrentPairingCardView.frame.size.width), 0.0f) animated:YES];
+//    } else {
+//        [viewPairingCardsScroll setContentOffset:CGPointMake(((totalCards - currentPairingIndex - 1)*viewCurrentPairingCardView.frame.size.width), 0.0f) animated:YES];
+//    }
     
     // Flip gameboard
     [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:0.7f];
@@ -664,7 +642,7 @@
     [UIView animateWithDuration:0.3f
                      animations:^{
                          int i=0;
-                         for (PTMatchingAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
+                         for (PTMathAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
                              CGRect frame = viewAvailableCard.frame;
                              viewAvailableCard.frame = CGRectMake(viewAvailableCardsScroll.frame.size.width * i, frame.origin.y, frame.size.width, frame.size.height);
                              i++;
@@ -683,48 +661,20 @@
     UIImageView *tempImgViewPairingCards = [[UIImageView alloc] initWithFrame:viewPairingCards.frame];
     tempImgViewPairingCards.image = imgViewPairingCards;
     [viewPairingCardsContainer addSubview:tempImgViewPairingCards];
-
+    
     if (myTurn == YES) {
-        // Now that view pairing cards scroll view is underneath, flip its children back to normal
-        int i = 0;
-        for (PTMatchingPairingCardView *viewPairingCard in viewPairingCardsScroll.subviews) {
-            [viewPairingCard resetTransformation];
-            CGRect frame = viewPairingCard.frame;
-            viewPairingCard.frame = CGRectMake(viewPairingCardsScroll.frame.size.width * i, 0.0f, frame.size.width, frame.size.height);
-            i++;
-            
-            // Flip the card
-            [viewPairingCard flipCardsToNormal];
-        }
+        // Mark board as not flipped
         isBoardFlipped = NO;
         
-        // Flip content position of pairing scroll view
-        [viewPairingCardsScroll setContentOffset:CGPointMake(viewPairingCardsScroll.frame.size.width * currentPairingIndex, 0)];
-        [self scrollViewDidScroll:viewPairingCardsScroll]; // Resize all children appropriately
-        
         // Change background
-        viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-me"]];
+        viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-flipboard-front"]];
         viewPairingCards.hidden = YES;
     } else {
-        // Now that view pairing cards scroll view is underneath, flip its children
-        int i = 0;
-        for (PTMatchingPairingCardView *viewPairingCard in viewPairingCardsScroll.subviews) {
-            [viewPairingCard resetTransformation];
-            i++;
-            CGRect frame = viewPairingCard.frame;
-            viewPairingCard.frame = CGRectMake(viewPairingCardsScroll.frame.size.width * (totalCards - i), 0.0f, frame.size.width, frame.size.height);
-
-            // Flip the card
-            [viewPairingCard flipCardsToMirror];
-        }
+        // Mark board as flipped
         isBoardFlipped = YES;
         
-        // Flip content position of pairing scroll view
-        [viewPairingCardsScroll setContentOffset:CGPointMake(viewPairingCardsScroll.frame.size.width * (totalCards - currentPairingIndex - 1), 0)];
-        [self scrollViewDidScroll:viewPairingCardsScroll]; // Resize all children appropriately
-        
         // Change background
-        viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-you"]];
+        viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-flipboard-back"]];
         viewPairingCards.hidden = YES;
     }
     
@@ -738,7 +688,7 @@
                         [tempImgViewPairingCards removeFromSuperview];
                         
                         // Set current pairing card view
-                        viewCurrentPairingCardView = (PTMatchingPairingCardView *)[viewPairingCardsScroll.subviews objectAtIndex:currentPairingIndex];
+//                        viewCurrentPairingCardView = (PTMatchingPairingCardView *)[viewPairingCardsScroll.subviews objectAtIndex:currentPairingIndex];
                         
                         // Show the available cards scroll view
                         if (myTurn == YES) {
@@ -746,24 +696,24 @@
                         }
                     }];
     
-//    // Switch background
-//    UIImage *imgNewBg;
-//    if (myTurn == YES) {
-//        imgNewBg = [UIImage imageNamed:@"matching-green-bg"];
-//    } else {
-//        imgNewBg = [UIImage imageNamed:@"matching-orangeblur-bg"];
-//    }
-//    viewBgShim.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
-//    viewBgShim.alpha = 0.0f;
-//    viewBgShim.hidden = NO;
-//    [UIView animateWithDuration:0.5f
-//                     animations:^{
-//                         viewBgShim.alpha = 1.0f;
-//                     }
-//                     completion:^(BOOL finished) {
-//                         viewBgShim.hidden = YES;
-//                         self.view.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
-//                     }];
+    //    // Switch background
+    //    UIImage *imgNewBg;
+    //    if (myTurn == YES) {
+    //        imgNewBg = [UIImage imageNamed:@"matching-green-bg"];
+    //    } else {
+    //        imgNewBg = [UIImage imageNamed:@"matching-orangeblur-bg"];
+    //    }
+    //    viewBgShim.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
+    //    viewBgShim.alpha = 0.0f;
+    //    viewBgShim.hidden = NO;
+    //    [UIView animateWithDuration:0.5f
+    //                     animations:^{
+    //                         viewBgShim.alpha = 1.0f;
+    //                     }
+    //                     completion:^(BOOL finished) {
+    //                         viewBgShim.hidden = YES;
+    //                         self.view.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
+    //                     }];
 }
 
 - (void)setActiveChatHUD {
@@ -775,8 +725,8 @@
     }
 }
 
-- (PTMatchingAvailableCardView*)getAvailableCardViewByIndex:(NSInteger)cardIndex {
-    for (PTMatchingAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
+- (PTMathAvailableCardView*)getAvailableCardViewByIndex:(NSInteger)cardIndex {
+    for (PTMathAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
         if (cardIndex == [viewAvailableCard getCardIndex]) {
             return viewAvailableCard;
         }
@@ -815,7 +765,7 @@
     } else {
         newPlaymateId = initiator.userID;
     }
-
+    
     // API call to reset the game
     NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
     PTMatchingRefreshGameRequest *matchingRefreshGameRequest = [[PTMatchingRefreshGameRequest alloc] init];
@@ -866,7 +816,7 @@
         currentAvailableIndex = [card2 integerValue];
         
         // Find the card
-        viewCurrentAvailableCardView = [self getAvailableCardViewByIndex:currentAvailableIndex];
+//        viewCurrentAvailableCardView = [self getAvailableCardViewByIndex:currentAvailableIndex];
         
         NSInteger initiatorScore = [[eventData objectForKey:@"initiator_score"] integerValue];
         NSInteger playmateScore = [[eventData objectForKey:@"playmate_score"] integerValue];
@@ -962,12 +912,12 @@
     if (myTurn == NO) {
         [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:0.8f];
         [self disableAvailableCards];
-
+        
         // Set active chat HUD
         [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.1f];
     } else {
         [self enabledAvailableCards];
-
+        
         // Set active chat HUD
         [self setActiveChatHUD];
     }

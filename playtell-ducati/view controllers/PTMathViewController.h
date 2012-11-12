@@ -1,22 +1,20 @@
 //
-//  PTMatchingViewController.h
+//  PTMathViewController.h
 //  playtell-ducati
 //
-//  Created by Dimitry Bentsionov on 10/23/12.
+//  Created by Dimitry Bentsionov on 11/8/12.
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "PTPlaydate.h"
 #import "PTPlaymate.h"
-#import "PTMatchingAvailableCardView.h"
-#import "PTMatchingAvailableCardsView.h"
-#import "PTMatchingPairingCardsView.h"
-#import "PTMatchingPairingCardView.h"
 #import "PTChatViewController.h"
 #import "PTMatchingScoreView.h"
+#import "PTMathAvailableCardView.h"
+#import "PTMathPairingCardView.h"
 
-@interface PTMatchingViewController : UIViewController <UIScrollViewDelegate, PTMachingGameDelegate> {
+@interface PTMathViewController : UIViewController <PTMathGameDelegate> {
     // Game config
     PTPlaydate *playdate;
     NSInteger boardId;
@@ -36,25 +34,26 @@
     IBOutlet UIButton *endPlaydate;
     
     // Available cards
-    PTMatchingAvailableCardsView *viewAvailableCards;
+    UIView *viewAvailableCards;
     UIScrollView *viewAvailableCardsScroll;
     UIView *viewTrackingCard;
     UIImageView *viewTrackingCardImage;
     CGPoint pointTouchOriginal;
     CGPoint pointTouchOffset;
+    CGSize sizeTouchOriginal;
     NSInteger currentAvailableIndex;
-    PTMatchingAvailableCardView *viewCurrentAvailableCardView;
+    PTMathAvailableCardView *viewCurrentAvailableCardView;
     
     // Pairing cards
     UIView *viewPairingCardsContainer;
-    PTMatchingPairingCardsView *viewPairingCards;
+    UIView *viewPairingCards;
     UIScrollView *viewPairingCardsScroll;
     CGRect rectLandingStrip;
     BOOL canTrackingCardLand;
     BOOL isTrackingCardSmall;
     BOOL isBoardFlipped;
     NSInteger currentPairingIndex;
-    PTMatchingPairingCardView *viewCurrentPairingCardView;
+    PTMathPairingCardView *viewCurrentPairingCardView;
     BOOL isGameOver;
     NSNumber *winnerId;
     

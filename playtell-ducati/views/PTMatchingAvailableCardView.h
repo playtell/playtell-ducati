@@ -27,7 +27,6 @@
 @end
 
 @protocol PTMachingGameDelegate <NSObject>
-//- (void)matchingGameAvailableCardDidTouch:(PTMatchingAvailableCardView *)cardView;
 - (void)matchingGameAvailableCardTouchesBegan:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)matchingGameAvailableCardTouchesMoved:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)matchingGameAvailableCardTouchesEnded:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch;

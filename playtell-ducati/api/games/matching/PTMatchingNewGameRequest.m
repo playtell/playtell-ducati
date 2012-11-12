@@ -16,6 +16,7 @@
                     playmateId:(NSInteger)playmateId
                        themeId:(NSInteger)themeId
                       numCards:(NSInteger)numCards
+                      gameName:(NSString*)gameName
                      authToken:(NSString*)token
                      onSuccess:(PTMatchingNewGameRequestSuccessBlock)success
                      onFailure:(PTMatchingNewGameRequestFailureBlock)failure {
@@ -25,6 +26,7 @@
                                     [NSNumber numberWithInteger:playmateId], @"playmate_id",
                                     [NSNumber numberWithInteger:themeId], @"theme_id",
                                     [NSNumber numberWithInteger:numCards], @"num_total_cards",
+                                    gameName, @"game_name",
                                     token, @"authentication_token",
                                     nil];
     
