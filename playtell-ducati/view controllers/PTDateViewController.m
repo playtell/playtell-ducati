@@ -267,16 +267,20 @@ NSTimer *postcardTimer;
     title.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [prompt addSubview:title];
     
-    UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-icon.png"]];
-    icon.center = prompt.center;
-    icon.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    float iconWidth = 89.0f;
+    float iconHeight = 67.0f;
+    UIButton *icon = [[UIButton alloc] initWithFrame:CGRectMake((prompt.frame.size.width - iconWidth) / 2, (prompt.frame.size.height - iconHeight) / 2, iconWidth, iconHeight)];
+    [icon setBackgroundImage:[UIImage imageNamed:@"postcard-icon.png"] forState:UIControlStateNormal];
+    [icon addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
+    icon.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [prompt addSubview:icon];
     
     UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(icon.frame.origin.x, icon.frame.origin.y + icon.frame.size.height + 5.0, icon.frame.size.width, 30.0)];
-    [button setBackgroundImage:[UIImage imageNamed:@"take-a-photo.png"] forState:UIControlStateNormal];
-    [button setTitle:@"Compose" forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageNamed:@"bluebutton.png"] forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageNamed:@"bluebutton-press.png"] forState:UIControlStateHighlighted];
+    [button setTitle:@"Postcard" forState:UIControlStateNormal];
     [button addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
-    button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
+    button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [prompt addSubview:button];
     
     PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.leftView;

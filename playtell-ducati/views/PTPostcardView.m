@@ -75,7 +75,7 @@ CGRect originalFrame;
         lblTitle.font = [UIFont boldSystemFontOfSize:LABEL_HEIGHT - 5];
         lblTitle.adjustsFontSizeToFitWidth = YES;
         lblTitle.minimumFontSize = 15.0f;
-        lblTitle.text = @"SEND A CARD TO LET THEM KNOW YOU MISSED THEM";
+        lblTitle.text = @""; //@"SEND A CARD TO LET THEM KNOW YOU MISSED THEM";
         [self addSubview:lblTitle];
         
         // Layout the postcard
@@ -167,11 +167,19 @@ CGRect originalFrame;
         publisherView.frame = shim.frame;
         [video insertSubview:publisherView belowSubview:shim];
         
+        // Hide the camera outline and countdown label
+        cameraOutline.hidden = YES;
+        lblCounter.hidden = YES;
+        
         // Setup the shim
         shim.alpha = 0.0f;
         
-        // Start the countdown
-        [self countdown];
+        [UIView animateWithDuration:1.0f animations:^{
+            video.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            // Start the countdown
+            [self countdown];
+        }];
     } else {
         btnCamera.hidden = NO;
         btnSend.hidden = NO;
