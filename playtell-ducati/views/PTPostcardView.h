@@ -13,7 +13,7 @@
 - (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot;
 @end
 
-@interface PTPostcardView : UIView
+@interface PTPostcardView : UIView <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) id<PTPostcardViewDelegate> delegate;
 

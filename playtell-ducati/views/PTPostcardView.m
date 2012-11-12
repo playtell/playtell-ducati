@@ -156,6 +156,20 @@ CGRect offRightFrame;
         [btnSend addTarget:self action:@selector(sendButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         btnSend.hidden = YES;
         [self addSubview:btnSend];
+        
+        // Create the gesture recognizers
+        UISwipeGestureRecognizer *swipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeLeftEvent:)];
+        swipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+        UISwipeGestureRecognizer *swipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeRightEvent:)];
+        swipeRightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        
+        // Set self to be the delegate for all gesture recognizers
+        swipeLeftRecognizer.delegate = self;
+        swipeRightRecognizer.delegate = self;
+        
+        // Add the gesture recognizers to the view
+        [self addGestureRecognizer:swipeLeftRecognizer];
+        [self addGestureRecognizer:swipeRightRecognizer];
     }
     return self;
 }
@@ -294,6 +308,35 @@ CGRect offRightFrame;
             p.frame = offRightFrame;
         }
     }
+}
+
+- (void)userSwipeLeftEvent:(UISwipeGestureRecognizer *)recognizer {
+    if (currentPostcard + 1 < postcards.count) {
+        currentPostcard++;
+        [UIView animateWithDuration:0.5f animations:^{
+            [self setPostcardFrames];
+        }];
+    }
+}
+
+- (void)userSwipeRightEvent:(UISwipeGestureRecognizer *)recognizer {
+    if (currentPostcard > 0) {
+        currentPostcard--;
+        [UIView animateWithDuration:0.5f animations:^{
+            [self setPostcardFrames];
+        }];
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate methods
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+       shouldReceiveTouch:(UITouch *)touch {
+    if ([touch.view isKindOfClass:[UIControl class]]) {
+        // we touched a button, slider, or other UIControl
+        return NO; // ignore the touch
+    }
+    return YES; // handle the touch
 }
 
 @end
