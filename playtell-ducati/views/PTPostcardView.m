@@ -181,6 +181,7 @@ CGRect originalFrame;
             [self countdown];
         }];
     } else {
+        lblTitle.text = @"WANT TO SEND YOUR PICTURE?";
         btnCamera.hidden = NO;
         btnSend.hidden = NO;
     }
@@ -188,6 +189,8 @@ CGRect originalFrame;
 
 - (void)countdown {
     lblTitle.text = @"SMILE!";
+    btnCamera.enabled = NO;
+    btnSend.enabled = NO;
     
     // Make sure the video view and its subviews are visible
     video.alpha = 1.0f;
@@ -228,7 +231,9 @@ CGRect originalFrame;
         [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo-press.png"] forState:UIControlStateHighlighted];
         
         btnCamera.hidden = NO;
+        btnCamera.enabled = YES;
         btnSend.hidden = NO;
+        btnSend.enabled = YES;
     }];
 }
 
