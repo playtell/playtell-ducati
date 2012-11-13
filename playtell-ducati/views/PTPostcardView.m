@@ -56,6 +56,7 @@
 UIView *publisherView;
 CGRect originalFrame;
 int currentPostcard;
+BOOL gesturesEnabled;
 
 CGRect offLeftFrame;
 CGRect leftFrame;
@@ -170,6 +171,15 @@ CGRect offRightFrame;
         // Add the gesture recognizers to the view
         [self addGestureRecognizer:swipeLeftRecognizer];
         [self addGestureRecognizer:swipeRightRecognizer];
+        
+        // At first, we'll be taking default picture so hide anything to do with gestures
+        gesturesEnabled = NO;
+        for (int iter = 0; iter < postcards.count; iter++) {
+            UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
+            if (iter != currentPostcard) {
+                p.alpha = 0.0f;
+            }
+        }
     }
     return self;
 }
@@ -185,6 +195,9 @@ CGRect offRightFrame;
         
         // Setup the shim
         shim.alpha = 0.0f;
+        
+        // Disable gestures
+        [self disableGestures];
         
         // Start the countdown
         [self countdown];
@@ -282,6 +295,8 @@ CGRect offRightFrame;
         btnCamera.enabled = YES;
         btnSend.hidden = NO;
         btnSend.enabled = YES;
+        
+        [self enableGestures];
     }];
 }
 
@@ -328,10 +343,38 @@ CGRect offRightFrame;
     }
 }
 
+- (void)enableGestures {
+    gesturesEnabled = YES;
+    
+    [UIView animateWithDuration:0.5f animations:^{
+        for (int iter = 0; iter < postcards.count; iter++) {
+            UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
+            p.alpha = 1.0f;
+        }
+    }];
+}
+
+- (void)disableGestures {
+    gesturesEnabled = NO;
+    
+    [UIView animateWithDuration:0.5f animations:^{
+        for (int iter = 0; iter < postcards.count; iter++) {
+            UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
+            if (iter != currentPostcard) {
+                p.alpha = 0.0f;
+            }
+        }
+    }];
+}
+
 #pragma mark - UIGestureRecognizerDelegate methods
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
        shouldReceiveTouch:(UITouch *)touch {
+    // If gestures aren't enabled, ignore the touch
+    if (!gesturesEnabled)
+        return NO;
+    
     if ([touch.view isKindOfClass:[UIControl class]]) {
         // we touched a button, slider, or other UIControl
         return NO; // ignore the touch
