@@ -156,6 +156,7 @@
     isBorderShown = NO;
     
     // Hide container (border) and its own shadow
+    [self.containerView.layer removeAllAnimations];
     self.containerView.backgroundColor = [UIColor clearColor];
     self.containerShadowView.hidden = YES;
 
@@ -167,21 +168,45 @@
     [UIView animateWithDuration:0.3f animations:^{
         self.containerView.backgroundColor = color;
     } completion:^(BOOL finished) {
+        if (isBorderShown == NO) {
+            self.containerView.backgroundColor = [UIColor clearColor];
+            return;
+        }
         [UIView animateWithDuration:0.3f animations:^{
             self.containerView.backgroundColor = [UIColor whiteColor];
         } completion:^(BOOL finished) {
+            if (isBorderShown == NO) {
+                self.containerView.backgroundColor = [UIColor clearColor];
+                return;
+            }
             [UIView animateWithDuration:0.3f animations:^{
                 self.containerView.backgroundColor = color;
             } completion:^(BOOL finished) {
+                if (isBorderShown == NO) {
+                    self.containerView.backgroundColor = [UIColor clearColor];
+                    return;
+                }
                 [UIView animateWithDuration:0.3f animations:^{
                     self.containerView.backgroundColor = [UIColor whiteColor];
                 } completion:^(BOOL finished) {
+                    if (isBorderShown == NO) {
+                        self.containerView.backgroundColor = [UIColor clearColor];
+                        return;
+                    }
                     [UIView animateWithDuration:0.3f animations:^{
                         self.containerView.backgroundColor = color;
                     } completion:^(BOOL finished) {
+                        if (isBorderShown == NO) {
+                            self.containerView.backgroundColor = [UIColor clearColor];
+                            return;
+                        }
                         [UIView animateWithDuration:0.3f animations:^{
                             self.containerView.backgroundColor = [UIColor whiteColor];
                         } completion:^(BOOL finished) {
+                            if (isBorderShown == NO) {
+                                self.containerView.backgroundColor = [UIColor clearColor];
+                                return;
+                            }
                             [UIView animateWithDuration:0.3f animations:^{
                                 self.containerView.backgroundColor = color;
                             }];

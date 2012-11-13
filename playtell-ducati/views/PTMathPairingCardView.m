@@ -33,7 +33,7 @@
         [self addSubview:viewCardPlaceholder];
         
         // Card view
-        viewCardRight = [[UIImageView alloc] initWithFrame:CGRectMake(245.0f, 35.0f, 288.0f, 183.0f)];
+        viewCardRight = [[UIImageView alloc] init];
         [self insertSubview:viewCardRight aboveSubview:viewCardPlaceholder];
         
         // Load card image
@@ -56,12 +56,18 @@
 - (void)setEmptyCardViewWithImage:(UIImage*)image matchedByMe:(BOOL)_matchedByMe {
     isCardMatched = YES;
     matchedByMe = _matchedByMe;
-    viewCardLeft.image = image;
+    
+    // Figure out image size and positioning (landing area is 13 from the right and 10 from the top of placeholder graphic)
+    CGSize size = image.size;
+    CGFloat x = ((283.0f - size.width) / 2.0f) + (viewCardPlaceholder.frame.origin.x + 13.0f);
+    CGFloat y = ((178.0f - size.height) / 2.0f) + (viewCardPlaceholder.frame.origin.y + 10.0f);
+    viewCardRight.frame = CGRectMake(x, y, size.width, size.height);
+    viewCardRight.image = image;
 }
 
 - (void)resetEmptyCardView {
     isCardMatched = NO;
-    viewCardLeft.image = nil;
+    viewCardRight.image = nil;
 }
 
 #pragma mark - Animations

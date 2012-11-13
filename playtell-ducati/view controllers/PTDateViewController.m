@@ -913,7 +913,7 @@ NSTimer *postcardTimer;
         return;
     }
     
-    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    NSInteger randNumCards = 2 * (arc4random_uniform(2) + 4); // Random number from 4 to 6 multiplied by 2 to get an even number from 8 to 12
 
     PTMemoryNewGameRequest *newGameRequest = [[PTMemoryNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydate_id:[NSString stringWithFormat:@"%d", self.playdate.playdateID]
@@ -974,7 +974,7 @@ NSTimer *postcardTimer;
         aPlaymate = self.playdate.initiator;
     }
     
-    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    NSInteger randNumCards = 12; // Hardcoded to 12 cards always (6 sets)
     
     PTMatchingNewGameRequest *newGameRequest = [[PTMatchingNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
@@ -1028,7 +1028,6 @@ NSTimer *postcardTimer;
 }
 
 - (void)mathTapped:(id)sender {
-    NSLog(@"mathTapped:");
     // Only allow a game to be played if the delegate allows it
     if (![self delegateAllowsPlayingGames]) {
         return;
@@ -1042,7 +1041,8 @@ NSTimer *postcardTimer;
         aPlaymate = self.playdate.initiator;
     }
     
-    NSInteger randNumCards = 30;//2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    NSInteger randNumCards = 2 * (10 + arc4random() % (21-10+1)); // Random number from 10 to 21 multiplied by 2
+    // Gives us number between 20 and 42 (10 to 21 sets)
     
     PTMatchingNewGameRequest *newGameRequest = [[PTMatchingNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
@@ -1389,40 +1389,72 @@ NSTimer *postcardTimer;
     filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
     NSArray *filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
     NSString *cardsString = [eventData valueForKey:@"card_array_string"];
+    NSString *gameName = [eventData valueForKey:@"game_name"];
     
+    PTPlaymate *aInitiator;
     PTPlaymate *aPlaymate;
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+    if (self.playdate.initiator.userID == initiatorId) {
+        aInitiator = self.playdate.initiator;
         aPlaymate = self.playdate.playmate;
     } else {
+        aInitiator = self.playdate.playmate;
         aPlaymate = self.playdate.initiator;
     }
     
     // Someone invited us to play
     if (initiatorId != [[PTUser currentUser] userID]) {
-        // Init the game controller
-        PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
-                                                            initWithNibName:@"PTMatchingViewController"
-                                                            bundle:nil
-                                                            playdate:self.playdate
-                                                            boardId:boardId
-                                                            themeId:19 // TODO: Hard coded
-                                                            initiator:[PTUser currentUser]
-                                                            playmate:aPlaymate
-                                                            filenames:filenames
-                                                            totalCards:totalCards
-                                                            cardsString:cardsString
-                                                            myTurn:NO];
-        matchingViewController.chatController = self.chatController;
-        
-        // Init game splash
-        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
-        splash.image = [UIImage imageNamed:@"matching-splash"];
-        
-        // Bring up the view controller of the new game
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.transitionController loadGame:matchingViewController
-                                       withOptions:UIViewAnimationOptionTransitionCurlUp
-                                        withSplash:splash];
+
+        // Figure out which game to start - Matching or Math
+        if ([gameName isEqualToString:@"matching"]) {
+            // Init the matching game controller
+            PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
+                                                                initWithNibName:@"PTMatchingViewController"
+                                                                bundle:nil
+                                                                playdate:self.playdate
+                                                                boardId:boardId
+                                                                themeId:19 // TODO: Hard coded
+                                                                initiator:aInitiator
+                                                                playmate:aPlaymate
+                                                                filenames:filenames
+                                                                totalCards:totalCards
+                                                                cardsString:cardsString
+                                                                myTurn:NO];
+            matchingViewController.chatController = self.chatController;
+            
+            // Init game splash
+            UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+            splash.image = [UIImage imageNamed:@"matching-splash"];
+            
+            // Bring up the view controller of the new game
+            [appDelegate.transitionController loadGame:matchingViewController
+                                           withOptions:UIViewAnimationOptionTransitionCurlUp
+                                            withSplash:splash];
+        } else if ([gameName isEqualToString:@"math"]) {
+            // Init the math game controller
+            PTMathViewController *mathViewController = [[PTMathViewController alloc]
+                                                        initWithNibName:@"PTMathViewController"
+                                                        bundle:nil
+                                                        playdate:self.playdate
+                                                        boardId:boardId
+                                                        themeId:2 // TODO: Hard coded
+                                                        initiator:aInitiator
+                                                        playmate:aPlaymate
+                                                        filenames:filenames
+                                                        totalCards:totalCards
+                                                        cardsString:cardsString
+                                                        myTurn:NO];
+            mathViewController.chatController = self.chatController;
+            
+            // Init game splash
+            UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+            splash.image = [UIImage imageNamed:@"math-splash"];
+            
+            // Bring up the view controller of the new game
+            [appDelegate.transitionController loadGame:mathViewController
+                                           withOptions:UIViewAnimationOptionTransitionCurlUp
+                                            withSplash:splash];
+        }
     }
 }
 
@@ -1479,14 +1511,14 @@ NSTimer *postcardTimer;
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Cover not loaded properly
+            } else {
+                // Cache image locally
+                NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+                [imageData writeToFile:imagePath atomically:YES];
+                
+                // Make sure this file isn't backed up by iCloud
+                [self addSkipBackupAttributeToItemAtURLstring:imagePath];
             }
-            
-            // Cache image locally
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-            
-            // Make sure this file isn't backed up by iCloud
-            [self addSkipBackupAttributeToItemAtURLstring:imagePath];
             
             // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
@@ -1530,14 +1562,14 @@ NSTimer *postcardTimer;
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Page not loaded properly
-            }            
-
-            // Cache image locally
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-            
-            // Make sure this file isn't backed up by iCloud
-            [self addSkipBackupAttributeToItemAtURLstring:imagePath];
+            } else {
+                // Cache image locally
+                NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+                [imageData writeToFile:imagePath atomically:YES];
+                
+                // Make sure this file isn't backed up by iCloud
+                [self addSkipBackupAttributeToItemAtURLstring:imagePath];
+            }
             
             // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
@@ -1575,7 +1607,9 @@ NSTimer *postcardTimer;
 
 - (BOOL)addSkipBackupAttributeToItemAtURLstring:(NSString *)URLstring {
     NSURL *URL = [[NSURL alloc] initFileURLWithPath:URLstring];
-    assert([[NSFileManager defaultManager] fileExistsAtPath:[URL path]]);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[URL path]] == NO) {
+        return NO;
+    }
     
     NSError *error = nil;
     BOOL success = [URL setResourceValue: [NSNumber numberWithBool:YES]

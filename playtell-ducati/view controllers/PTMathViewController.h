@@ -43,11 +43,11 @@
     CGSize sizeTouchOriginal;
     NSInteger currentAvailableIndex;
     PTMathAvailableCardView *viewCurrentAvailableCardView;
+    CGFloat heightAvailableCards;
     
     // Pairing cards
     UIView *viewPairingCardsContainer;
     UIView *viewPairingCards;
-    UIScrollView *viewPairingCardsScroll;
     CGRect rectLandingStrip;
     BOOL canTrackingCardLand;
     BOOL isTrackingCardSmall;
