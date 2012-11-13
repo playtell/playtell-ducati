@@ -213,7 +213,22 @@ CGRect offRightFrame;
         photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         [selectedPostcard addSubview:photoCopy];
         
-        [delegate postcardTaken:[selectedPostcard screenshotWithSave:NO] withScreenshot:photoCopy.image];
+        // Setup the animations
+        [self disableGestures];
+        [UIView animateWithDuration:0.5f animations:^{
+            lblTitle.alpha = 0.0f;
+            btnCamera.alpha = 0.0f;
+            btnSend.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            // Animate the postcard moving up
+            [UIView animateWithDuration:1.0f animations:^{
+                UIImageView *postcard = (UIImageView *)[postcards objectAtIndex:currentPostcard];
+                postcard.frame = CGRectOffset(postcard.frame, 0.0f, -self.frame.size.height);
+                photo.frame = CGRectOffset(photo.frame, 0.0f, -self.frame.size.height);
+            } completion:^(BOOL finished) {
+                [delegate postcardTaken:[selectedPostcard screenshotWithSave:NO] withScreenshot:photoCopy.image];
+            }];
+        }];
     } else {
         NSLog(@"No delegate set so couldn't send postcards");
     }
