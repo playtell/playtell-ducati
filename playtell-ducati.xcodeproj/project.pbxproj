@@ -197,6 +197,10 @@
 		2340F43316515CAE007C22EB /* theme2artwork21_l@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F3DF16515CAE007C22EB /* theme2artwork21_l@2x.png */; };
 		2340F43416515CAE007C22EB /* theme2artwork21_r.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F3E016515CAE007C22EB /* theme2artwork21_r.png */; };
 		2340F43516515CAE007C22EB /* theme2artwork21_r@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F3E116515CAE007C22EB /* theme2artwork21_r@2x.png */; };
+		2340F43A1651CB0F007C22EB /* math-placeholder-highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F4361651CB0F007C22EB /* math-placeholder-highlight.png */; };
+		2340F43B1651CB0F007C22EB /* math-placeholder-highlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F4371651CB0F007C22EB /* math-placeholder-highlight@2x.png */; };
+		2340F43C1651CB0F007C22EB /* math-placeholder-outline.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F4381651CB0F007C22EB /* math-placeholder-outline.png */; };
+		2340F43D1651CB0F007C22EB /* math-placeholder-outline@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2340F4391651CB0F007C22EB /* math-placeholder-outline@2x.png */; };
 		2342205115C16F8D00962DC2 /* PTContactMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2342204F15C16F8D00962DC2 /* PTContactMessageViewController.m */; };
 		2342205215C16F8D00962DC2 /* PTContactMessageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2342205015C16F8D00962DC2 /* PTContactMessageViewController.xib */; };
 		23424C2A15FFBADE00ECA190 /* PTNewUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 23424C2615FFBADE00ECA190 /* PTNewUserInfoViewController.m */; };
@@ -1210,6 +1214,10 @@
 		2340F3DF16515CAE007C22EB /* theme2artwork21_l@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "theme2artwork21_l@2x.png"; path = "theme2/theme2artwork21_l@2x.png"; sourceTree = "<group>"; };
 		2340F3E016515CAE007C22EB /* theme2artwork21_r.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = theme2artwork21_r.png; path = theme2/theme2artwork21_r.png; sourceTree = "<group>"; };
 		2340F3E116515CAE007C22EB /* theme2artwork21_r@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "theme2artwork21_r@2x.png"; path = "theme2/theme2artwork21_r@2x.png"; sourceTree = "<group>"; };
+		2340F4361651CB0F007C22EB /* math-placeholder-highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "math-placeholder-highlight.png"; path = "Math/math-placeholder-highlight.png"; sourceTree = "<group>"; };
+		2340F4371651CB0F007C22EB /* math-placeholder-highlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "math-placeholder-highlight@2x.png"; path = "Math/math-placeholder-highlight@2x.png"; sourceTree = "<group>"; };
+		2340F4381651CB0F007C22EB /* math-placeholder-outline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "math-placeholder-outline.png"; path = "Math/math-placeholder-outline.png"; sourceTree = "<group>"; };
+		2340F4391651CB0F007C22EB /* math-placeholder-outline@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "math-placeholder-outline@2x.png"; path = "Math/math-placeholder-outline@2x.png"; sourceTree = "<group>"; };
 		2342204E15C16F8D00962DC2 /* PTContactMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactMessageViewController.h; sourceTree = "<group>"; };
 		2342204F15C16F8D00962DC2 /* PTContactMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactMessageViewController.m; sourceTree = "<group>"; };
 		2342205015C16F8D00962DC2 /* PTContactMessageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTContactMessageViewController.xib; sourceTree = "<group>"; };
@@ -2546,6 +2554,10 @@
 		2340F37016513217007C22EB /* math */ = {
 			isa = PBXGroup;
 			children = (
+				2340F4361651CB0F007C22EB /* math-placeholder-highlight.png */,
+				2340F4371651CB0F007C22EB /* math-placeholder-highlight@2x.png */,
+				2340F4381651CB0F007C22EB /* math-placeholder-outline.png */,
+				2340F4391651CB0F007C22EB /* math-placeholder-outline@2x.png */,
 				2340F382165137F4007C22EB /* math-splash.png */,
 				2340F383165137F4007C22EB /* math-splash@2x.png */,
 				2340F37E16513506007C22EB /* math-logo.png */,
@@ -5575,6 +5587,10 @@
 				2340F43316515CAE007C22EB /* theme2artwork21_l@2x.png in Resources */,
 				2340F43416515CAE007C22EB /* theme2artwork21_r.png in Resources */,
 				2340F43516515CAE007C22EB /* theme2artwork21_r@2x.png in Resources */,
+				2340F43A1651CB0F007C22EB /* math-placeholder-highlight.png in Resources */,
+				2340F43B1651CB0F007C22EB /* math-placeholder-highlight@2x.png in Resources */,
+				2340F43C1651CB0F007C22EB /* math-placeholder-outline.png in Resources */,
+				2340F43D1651CB0F007C22EB /* math-placeholder-outline@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

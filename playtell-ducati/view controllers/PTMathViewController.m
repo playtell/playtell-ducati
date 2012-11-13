@@ -87,14 +87,11 @@
     [self.view addSubview:viewAvailableCards];
     viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(25.0f, 0.0f, 974.0f, 160.0f)];
     viewAvailableCardsScroll.tag = 1;
-//    viewAvailableCardsScroll.delegate = self;
-//    viewAvailableCardsScroll.clipsToBounds = NO;
     viewAvailableCardsScroll.userInteractionEnabled = YES;
     viewAvailableCardsScroll.canCancelContentTouches = NO;
     viewAvailableCardsScroll.delaysContentTouches = NO;
     viewAvailableCardsScroll.showsHorizontalScrollIndicator = NO;
     viewAvailableCardsScroll.showsVerticalScrollIndicator = NO;
-//    viewAvailableCardsScroll.pagingEnabled = YES;
     [viewAvailableCards addSubview:viewAvailableCardsScroll];
     
     // Setup available cards
@@ -107,21 +104,9 @@
     viewPairingCards.clipsToBounds = YES;
     [viewPairingCardsContainer addSubview:viewPairingCards];
     [self.view addSubview:viewPairingCardsContainer];
-//    viewPairingCardsScroll = [[UIScrollView alloc] initWithFrame:viewPairingCards.bounds];
-//    viewPairingCardsScroll.tag = 2;
-////    viewPairingCardsScroll.delegate = self;
-//    viewPairingCardsScroll.clipsToBounds = NO;
-//    viewPairingCardsScroll.userInteractionEnabled = YES;
-//    viewPairingCardsScroll.canCancelContentTouches = NO;
-//    viewPairingCardsScroll.delaysContentTouches = YES;
-//    viewPairingCardsScroll.showsHorizontalScrollIndicator = NO;
-//    viewPairingCardsScroll.showsVerticalScrollIndicator = NO;
-//    viewPairingCardsScroll.pagingEnabled = YES;
-//    viewPairingCardsScroll.scrollEnabled = NO;
-//    [viewPairingCards addSubview:viewPairingCardsScroll];
     
-    // Setup pairing cards
-    //[self setupPairingCards];
+    // Setup the initial pairing card
+    [self setupInitialPairingCard];
     
     // If not my turn, flip the game board
     if (myTurn == NO) {
@@ -175,21 +160,21 @@
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
-- (void)setupPairingCards {
-//    int x = 0.0f;
-//    CGSize sizeCard = CGSizeMake(300.0f, 200.0f);
-//    for (int i=0; i<totalCards; i++) {
-//        PTMatchingPairingCardView *viewCard = [[PTMatchingPairingCardView alloc] initWithFrame:CGRectMake(x, 0.0f, sizeCard.width, sizeCard.height) cardIndex:i delegate:self];
-//        [viewPairingCardsScroll addSubview:viewCard];
-//        x += sizeCard.width;
-//    }
-//    [viewPairingCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 200.0f)];
-//    [self scrollViewDidScroll:viewPairingCardsScroll]; // Resize all children appropriately first time around
-//    rectLandingStrip = CGRectMake(356.0f, 237.0f, 156.0f, 212.0f);
-//    
-//    // Set the first card as the "current index"
-//    currentPairingIndex = 0;
-//    viewCurrentPairingCardView = (PTMatchingPairingCardView *)[viewPairingCardsScroll.subviews objectAtIndex:0];
+- (void)setupInitialPairingCard {
+    // Setup landing zone location
+    rectLandingStrip = CGRectMake(483.0f, 254.0f, 283.0f, 178.0f);
+
+    // Set the first card as the "current index"
+    currentPairingIndex = totalCards;
+    viewCurrentPairingCardView = [[PTMathPairingCardView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 553.0f, 235.0f) cardIndex:currentPairingIndex delegate:self];
+    viewCurrentPairingCardView.frame = CGRectMake((viewPairingCards.bounds.size.width-viewCurrentPairingCardView.bounds.size.width)/2.0f + viewPairingCards.bounds.size.width, (viewPairingCards.bounds.size.height-viewCurrentPairingCardView.bounds.size.height)/2.0f, viewCurrentPairingCardView.bounds.size.width, viewCurrentPairingCardView.bounds.size.height); // Move it temporarily off-screen
+    viewCurrentPairingCardView.alpha = 0.0f;
+    
+    // Add it to pairing cards container
+    [viewPairingCards addSubview:viewCurrentPairingCardView];
+    
+    // Slide the pairing card info view
+    [self performSelector:@selector(animateCurrentPairingCardIntoView) withObject:nil afterDelay:1.0f];
 }
 
 - (void)setupAvailableCards {
@@ -221,6 +206,14 @@
     for (PTMathAvailableCardView *viewCard in viewAvailableCardsScroll.subviews) {
         viewCard.frame = CGRectMake(viewCard.frame.origin.x, (maxHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
     }
+}
+
+- (void)animateCurrentPairingCardIntoView {
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         viewCurrentPairingCardView.frame = CGRectOffset(viewCurrentPairingCardView.frame, -viewPairingCards.bounds.size.width, 0.0f);
+                         viewCurrentPairingCardView.alpha = 1.0f;
+                     }];
 }
 
 #pragma mark - Game actions
@@ -354,7 +347,7 @@
     CGPoint point = [touch locationInView:self.view];
     
     // Get all 4 points of the card
-    CGPoint pointTopLeft = CGPointMake(point.x - pointTouchOffset.x - 6.0f, point.y - pointTouchOffset.y - 6.0f);
+    CGPoint pointTopLeft = CGPointMake(point.x - pointTouchOffset.x, point.y - pointTouchOffset.y);
     CGPoint pointTopRight = CGPointMake(pointTopLeft.x + viewTrackingCard.frame.size.width, pointTopLeft.y);
     CGPoint pointBottomRight = CGPointMake(pointTopLeft.x + viewTrackingCard.frame.size.width, pointTopLeft.y + viewTrackingCard.frame.size.height);
     CGPoint pointBottomLeft = CGPointMake(pointTopLeft.x, pointTopLeft.y + viewTrackingCard.frame.size.height);
@@ -362,13 +355,15 @@
     // Figure out if card can land
     canTrackingCardLand = CGRectContainsPoint(rectLandingStrip, pointTopLeft) || CGRectContainsPoint(rectLandingStrip, pointBottomRight) || CGRectContainsPoint(rectLandingStrip, pointTopRight) || CGRectContainsPoint(rectLandingStrip, pointBottomLeft);
     
-    // Redraw its location and size accordingly
-//    if (canTrackingCardLand) {
-//        viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x + 10.0f - 6.0f, point.y - pointTouchOffset.y - 6.0f, 156.0f, 212.0f);
-//        viewTrackingCardImage.frame = CGRectMake(6.0f, 6.0f, 150.0f, 200.0f);
-//    } else {
+    // Move the tracking card
     viewTrackingCard.frame = CGRectMake(point.x - pointTouchOffset.x, point.y - pointTouchOffset.y, viewTrackingCard.bounds.size.width, viewTrackingCard.bounds.size.height);
-//    }
+    
+    // Can the card land?
+    if (canTrackingCardLand) {
+        [viewCurrentPairingCardView setLandingZoneAsActive];
+    } else {
+        [viewCurrentPairingCardView setLandingZoneAsInactive];
+    }
 }
 
 - (void)mathGameAvailableCardTouchesEnded:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
@@ -902,7 +897,7 @@
         [childView removeFromSuperview];
     }
     [self setupAvailableCards];
-    [self setupPairingCards];
+    [self setupInitialPairingCard];
     
     // Reset scores
     [scoreViewMe setScore:0];
