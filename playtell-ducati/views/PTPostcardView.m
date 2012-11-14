@@ -12,10 +12,10 @@
 #import "PTUser.h"
 #import "PTVideoPhone.h"
 
+#import "UIColor+ColorFromHex.h"
 #import "UIView+PlayTell.h"
 
 #define LABEL_HEIGHT    40.0
-#define LABEL_SPACING_X 75.0
 #define LABEL_SPACING_Y 25.0
 #define PHOTO_HEIGHT    300.0
 #define PHOTO_WIDTH     400.0
@@ -105,10 +105,12 @@ CGRect offRightFrame;
         [self setPostcardFrames];
         
         // Layout the title label
-        lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(LABEL_SPACING_X, LABEL_SPACING_Y, background.frame.size.width - (LABEL_SPACING_X * 2), LABEL_HEIGHT)];
+        lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(centerFrame.origin.x, LABEL_SPACING_Y, centerFrame.size.width, LABEL_HEIGHT)];
         lblTitle.backgroundColor = [UIColor clearColor];
         lblTitle.textAlignment = UITextAlignmentCenter;
-        lblTitle.textColor = [UIColor blueColor];
+        lblTitle.textColor = [UIColor colorFromHex:@"#223844"];
+        lblTitle.shadowColor = [UIColor whiteColor];
+        lblTitle.shadowOffset = CGSizeMake(0.0f, 2.0f);
         lblTitle.font = [UIFont boldSystemFontOfSize:LABEL_HEIGHT - 5];
         lblTitle.adjustsFontSizeToFitWidth = YES;
         lblTitle.minimumFontSize = 15.0f;
