@@ -6,7 +6,9 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "PTCameraButton.h"
 #import "PTPostcardView.h"
+#import "PTSendButton.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
 
@@ -27,8 +29,8 @@
 @property (nonatomic, strong) UIImage *snapshot;
 @property (nonatomic, strong) UIImageView *photo;
 @property (nonatomic, strong) UIView *video;
-@property (nonatomic, strong) UIButton *btnCamera;
-@property (nonatomic, strong) UIButton *btnSend;
+@property (nonatomic, strong) PTCameraButton *btnCamera;
+@property (nonatomic, strong) PTSendButton *btnSend;
 @property (nonatomic, strong) NSArray *postcardNames;
 @property (nonatomic, strong) NSMutableArray *postcards;
 
@@ -144,16 +146,12 @@ CGRect offRightFrame;
         [video addSubview:lblCounter];
         
         // Layout the buttons
-        btnCamera = [[UIButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x, centerFrame.origin.y + centerFrame.size.height + BUTTON_SPACING, (centerFrame.size.width - BUTTON_SPACING) / 2, BUTTON_HEIGHT)];
-        [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo.png"] forState:UIControlStateNormal];
-        [btnCamera setBackgroundImage:[UIImage imageNamed:@"photo-press.png"] forState:UIControlStateHighlighted];
+        btnCamera = [[PTCameraButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x, centerFrame.origin.y + centerFrame.size.height + BUTTON_SPACING, (centerFrame.size.width - BUTTON_SPACING) / 2, BUTTON_HEIGHT)];
         [btnCamera addTarget:self action:@selector(cameraButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         btnCamera.hidden = YES;
         [self addSubview:btnCamera];
         
-        btnSend = [[UIButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
-        [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard.png"] forState:UIControlStateNormal];
-        [btnSend setBackgroundImage:[UIImage imageNamed:@"send-postcard-press.png"] forState:UIControlStateHighlighted];
+        btnSend = [[PTSendButton alloc] initWithFrame:CGRectMake(centerFrame.origin.x + btnCamera.frame.size.width + BUTTON_SPACING, btnCamera.frame.origin.y, btnCamera.frame.size.width, BUTTON_HEIGHT)];
         [btnSend addTarget:self action:@selector(sendButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         btnSend.hidden = YES;
         [self addSubview:btnSend];
@@ -302,9 +300,6 @@ CGRect offRightFrame;
         publisherView.frame = originalFrame;
         
         lblTitle.text = @"WANT TO SEND YOUR PICTURE?";
-        
-        [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo.png"] forState:UIControlStateNormal];
-        [btnCamera setBackgroundImage:[UIImage imageNamed:@"retake-photo-press.png"] forState:UIControlStateHighlighted];
         
         btnCamera.hidden = NO;
         btnCamera.enabled = YES;
