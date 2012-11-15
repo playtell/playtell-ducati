@@ -854,6 +854,10 @@ userId:(NSString *)userID
          {
              [self transitionToDialpad];
          }];
+    } else {
+        // Solo call - disconnect anyway
+        [self transitionToDialpad];
+        [self.chatController stopPlayingMovies];
     }
 }
 
