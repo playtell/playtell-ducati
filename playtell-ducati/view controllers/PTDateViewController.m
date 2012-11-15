@@ -816,7 +816,7 @@ NSTimer *postcardTimer;
         aPlaymate = self.playdate.initiator;
     }
     
-    if ([aPlaymate isARobot]) {
+    if (self.playdate == nil || [self.playdate.playmate isARobot]) {
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTTictactoeViewController *tictactoeVc = [[PTTictactoeViewController alloc] init];
@@ -888,7 +888,7 @@ NSTimer *postcardTimer;
         aPlaymate = self.playdate.initiator;
     }
     
-    if ([aPlaymate isARobot]) {
+    if (self.playdate == nil || [aPlaymate isARobot]) {
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         
         PTMemoryViewController *memoryVC = [[PTMemoryViewController alloc] initWithNibName:@"PTMemoryViewController"
@@ -975,6 +975,41 @@ NSTimer *postcardTimer;
     }
     
     NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    
+    if (self.playdate == nil || [aPlaymate isARobot]) {
+        // Create a fake filename array
+        NSArray *filenames = [NSArray arrayWithObjects:@"theme19artwork1_r.png", @"theme19artwork2_r.png", @"theme19artwork3_r.png", @"theme19artwork2_l.png", @"theme19artwork3_l.png", @"theme19artwork1_l.png", nil];
+        
+        // Create a fake cardsString
+        NSString *cardsString = @"1,2,3,2,3,1";
+        
+        // Init the game controller
+        PTMatchingViewController *matchingViewController = [[PTMatchingViewController alloc]
+                                                            initWithNibName:@"PTMatchingViewController"
+                                                            bundle:nil
+                                                            playdate:self.playdate
+                                                            boardId:0
+                                                            themeId:19 // TODO: Hard coded
+                                                            initiator:[PTUser currentUser]
+                                                            playmate:aPlaymate
+                                                            filenames:filenames
+                                                            totalCards:6
+                                                            cardsString:cardsString
+                                                            myTurn:YES];
+        matchingViewController.chatController = self.chatController;
+        
+        
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        splash.image = [UIImage imageNamed:@"matching-splash"];
+        
+        // Bring up the view controller of the new game
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController loadGame:matchingViewController
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
+        return;
+    }
     
     PTMatchingNewGameRequest *newGameRequest = [[PTMatchingNewGameRequest alloc] init];
     [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
