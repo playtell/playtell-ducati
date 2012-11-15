@@ -5442,6 +5442,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5465,6 +5466,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
@@ -5481,6 +5483,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5497,6 +5500,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
@@ -5533,6 +5537,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5554,6 +5559,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
@@ -5591,6 +5597,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -5611,6 +5618,7 @@
 					"\"$(SRCROOT)/playtell-ducati/pusher\"",
 					"\"$(SRCROOT)/playtell-ducati/crittercism-sdk\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
