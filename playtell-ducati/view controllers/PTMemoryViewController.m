@@ -240,7 +240,7 @@
 
 - (void)setupSounds {
     NSError *playerError;
-    NSURL *win = [[NSBundle mainBundle] URLForResource:@"winner-applause" withExtension:@"wav"];
+    NSURL *win = [[NSBundle mainBundle] URLForResource:@"winner-applause" withExtension:@"mp3"];
     NSURL *loss = [[NSBundle mainBundle] URLForResource:@"winner-gong" withExtension:@"aiff"];
     NSURL *miss = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
     
