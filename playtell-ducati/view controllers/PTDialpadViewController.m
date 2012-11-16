@@ -50,6 +50,7 @@
 @property (nonatomic, retain) PTDateViewController* dateController;
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
 @property (nonatomic, retain) PTChatViewController* chatController;
+@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
 @end
 
 @implementation PTDialpadViewController
@@ -63,6 +64,7 @@
 @synthesize loadingView;
 @synthesize audioPlayer;
 @synthesize chatController;
+@synthesize backgroundTask;
 
 BOOL playdateStarting;
 
@@ -195,6 +197,11 @@ BOOL playdateStarting;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dialpadControllerDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }
@@ -228,6 +235,10 @@ BOOL playdateStarting;
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self deactivatePlaymateView];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidEnterBackgroundNotification
+                                                  object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -287,6 +298,47 @@ BOOL playdateStarting;
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+}
+
+- (void)dialpadControllerDidEnterBackground:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dialpadControllerDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+#if !(TARGET_IPHONE_SIMULATOR)
+    backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Here goes your operation
+        [self.chatController disconnectOpenTokSession];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                // if you don't call endBackgroundTask, the OS will exit your app.
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    });
+#endif
+}
+
+- (void)dialpadControllerDidBecomeActive:(NSNotification*)note {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
+    
+#if !(TARGET_IPHONE_SIMULATOR)
+    [self.chatController connectToPlaceholderOpenTokSession];
+#endif
 }
 
 - (void)drawPlaymates {
