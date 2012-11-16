@@ -64,6 +64,8 @@
 @synthesize audioPlayer;
 @synthesize chatController;
 
+BOOL playdateStarting;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -146,6 +148,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    playdateStarting = NO;
+    
     if ([[PTUser currentUser] isLoggedIn]) {
         [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     }
@@ -979,8 +984,11 @@
         return;
     }
     
-    // We are initiating a playdate request
-    [self initiatePlaydateRequestWithPlaymate:playmate view:playmateView];
+    if (!playdateStarting) {
+        // We are initiating a playdate request
+        [self initiatePlaydateRequestWithPlaymate:playmate view:playmateView];
+        playdateStarting = YES;
+    }
 }
 
 - (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
