@@ -15,6 +15,8 @@
 #import "UIColor+ColorFromHex.h"
 #import "UIView+PlayTell.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 #define LABEL_HEIGHT    40.0
 #define LABEL_SPACING_Y 25.0
 #define PHOTO_HEIGHT    300.0
@@ -103,6 +105,10 @@ CGRect offRightFrame;
         postcardNames = [NSArray arrayWithObjects:@"postcards-a.png", @"postcards-b.png", @"postcards-c.png", @"postcards-d.png", nil];
         for (NSString *name in postcardNames) {
             UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:name]];
+            p.layer.masksToBounds = NO;
+            p.layer.shadowOffset = CGSizeMake(0.0, 3.0);
+            p.layer.shadowRadius = 5.0;
+            p.layer.shadowOpacity = 0.5;
             [self addSubview:p];
             [postcards addObject:p];
         }
@@ -353,6 +359,12 @@ CGRect offRightFrame;
         } else {
             p.frame = offRightFrame;
         }
+        
+        if (iter != currentPostcard) {
+            p.alpha = 0.6;
+        } else {
+            p.alpha = 1.0;
+        }
     }
 }
 
@@ -380,7 +392,11 @@ CGRect offRightFrame;
     [UIView animateWithDuration:0.5f animations:^{
         for (int iter = 0; iter < postcards.count; iter++) {
             UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
-            p.alpha = 1.0f;
+            if (iter != currentPostcard) {
+                p.alpha = 0.6f;
+            } else {
+                p.alpha = 1.0f;
+            }
         }
     }];
 }
