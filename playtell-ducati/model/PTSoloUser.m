@@ -208,6 +208,9 @@
     [PTAnalytics sendEventNamed:EventNUXStarted];
     tutorialStart = [NSDate date];
     
+    // Start a placeholder Opentok session so the user can see own video
+    [controller.chatController connectToPlaceholderOpenTokSession];
+    
     if (!self.isIntroPlayed) {
         [self playIntroVideoWithChatController:controller.chatController];
     }
