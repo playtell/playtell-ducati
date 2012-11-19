@@ -39,6 +39,9 @@
 @property (nonatomic, strong) UIImageView *cameraOutline;
 @property (nonatomic, strong) UILabel *lblCounter;
 
+// Audio
+@property (nonatomic, retain) AVAudioPlayer* sendPlayer;
+
 @end
 
 @implementation PTCreatePostcardView
@@ -54,6 +57,8 @@
 @synthesize postcards;
 
 @synthesize shim, cameraOutline, lblCounter;
+
+@synthesize sendPlayer;
 
 UIView *publisherView;
 CGRect originalFrame;
@@ -181,7 +186,20 @@ CGRect offRightFrame;
             }
         }
     }
+    
+    [self setupSounds];
+    
     return self;
+}
+
+- (void)setupSounds {
+    NSError *playerError;
+    NSURL *sendSound = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
+    
+    self.sendPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:sendSound error:&playerError];
+    
+    self.sendPlayer.volume = 1.0;
+    self.sendPlayer.numberOfLoops = .5;
 }
 
 - (void)cameraButtonPressed {
@@ -225,6 +243,7 @@ CGRect offRightFrame;
                 UIImageView *postcard = (UIImageView *)[postcards objectAtIndex:currentPostcard];
                 postcard.frame = CGRectOffset(postcard.frame, 0.0f, -self.frame.size.height);
                 photo.frame = CGRectOffset(photo.frame, 0.0f, -self.frame.size.height);
+                [self.sendPlayer play];
             } completion:^(BOOL finished) {
                 [delegate postcardTaken:[selectedPostcard screenshotWithSave:NO] withScreenshot:photoCopy.image];
             }];
