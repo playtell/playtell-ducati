@@ -16,9 +16,9 @@
 #import "UIColor+ColorFromHex.h"
 
 //VIEW CONTROLLERS
+#import "PTCreatePostcardViewController.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
-#import "PTPostcardViewController.h"
 #import "PTBookView.h"
 #import "PTChatHUDView.h"
 #import "PTPageView.h"
@@ -298,7 +298,7 @@ NSTimer *postcardTimer;
     
     [self.view bringSubviewToFront:endPlaydate];
     
-    PTPostcardViewController *postcardController = [[PTPostcardViewController alloc] init];
+    PTCreatePostcardViewController *postcardController = [[PTCreatePostcardViewController alloc] init];
     postcardController.delegate = self;
     postcardController.playdateId = self.playdate.playdateID;
     postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);

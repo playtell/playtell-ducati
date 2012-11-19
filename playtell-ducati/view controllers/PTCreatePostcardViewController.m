@@ -1,22 +1,22 @@
 //
-//  PTPostcardViewController.m
+//  PTCreatePostcardViewController.m
 //  playtell-ducati
 //
 //  Created by Adam Horne on 11/1/12.
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "PTCreatePostcardViewController.h"
 #import "PTPlaydatePhotoCreateRequest.h"
-#import "PTPostcardViewController.h"
 #import "PTUser.h"
 
-@interface PTPostcardViewController ()
+@interface PTCreatePostcardViewController ()
 
-@property (nonatomic, strong) PTPostcardView *postcardView;
+@property (nonatomic, strong) PTCreatePostcardView *postcardView;
 
 @end
 
-@implementation PTPostcardViewController
+@implementation PTCreatePostcardViewController
 @synthesize playdateId;
 @synthesize delegate;
 
@@ -30,7 +30,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.postcardView = [[PTPostcardView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        self.postcardView = [[PTCreatePostcardView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
         self.postcardView.delegate = self;
         [self.view addSubview:self.postcardView];
     }

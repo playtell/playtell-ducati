@@ -17,7 +17,7 @@
 #import "PTPlaydateDelegate.h"
 #import "PTPlaydateEndViewController.h"
 #import "PTPlaymate.h"
-#import "PTPostcardViewController.h"
+#import "PTCreatePostcardViewController.h"
 
 #import <UIKit/UIKit.h>
 
@@ -33,7 +33,7 @@
 - (BOOL)dateViewControllerShouldPlayGame:(PTDateViewController*)controller;
 @end
 
-@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTGameViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate, PTPostcardControllerDelegate> {
+@interface PTDateViewController : UIViewController <UIScrollViewDelegate, PTBookViewDelegate, PTGameViewDelegate, PTPagesScrollViewDelegate, PTPlaydateDelegate, PTCreatePostcardControllerDelegate> {
     // Playdate
     PTPlaydate *playdate;
     IBOutlet UIButton *endPlaydate;

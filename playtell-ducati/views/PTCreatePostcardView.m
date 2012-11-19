@@ -1,5 +1,5 @@
 //
-//  PTPostcardView.m
+//  PTCreatePostcardView.m
 //  playtell-ducati
 //
 //  Created by Adam Horne on 11/1/12.
@@ -7,7 +7,7 @@
 //
 
 #import "PTCameraButton.h"
-#import "PTPostcardView.h"
+#import "PTCreatePostcardView.h"
 #import "PTSendButton.h"
 #import "PTUser.h"
 #import "PTVideoPhone.h"
@@ -22,7 +22,7 @@
 #define BUTTON_HEIGHT   49.0
 #define BUTTON_SPACING  20.0
 
-@interface PTPostcardView ()
+@interface PTCreatePostcardView ()
 
 @property (nonatomic, strong) UIView *background;
 @property (nonatomic, strong) UILabel *lblTitle;
@@ -41,7 +41,7 @@
 
 @end
 
-@implementation PTPostcardView
+@implementation PTCreatePostcardView
 @synthesize delegate;
 
 @synthesize background;

@@ -1,5 +1,5 @@
 //
-//  PTPostcardViewController.h
+//  PTCreatePostcardViewController.h
 //  playtell-ducati
 //
 //  Created by Adam Horne on 11/1/12.
@@ -9,17 +9,17 @@
 #import <UIKit/UIKit.h>
 
 #import "PTChatViewController.h"
-#import "PTPostcardView.h"
+#import "PTCreatePostcardView.h"
 
-@protocol PTPostcardControllerDelegate <NSObject>
+@protocol PTCreatePostcardControllerDelegate <NSObject>
 @optional
 - (void)postcardDidSend;
 @end
 
-@interface PTPostcardViewController : UIViewController <PTPostcardViewDelegate>
+@interface PTCreatePostcardViewController : UIViewController <PTCreatePostcardViewDelegate>
 
 @property (nonatomic, assign) int playdateId;
-@property (nonatomic, strong) id<PTPostcardControllerDelegate> delegate;
+@property (nonatomic, strong) id<PTCreatePostcardControllerDelegate> delegate;
 
 - (void)startPhotoCountdown;
 

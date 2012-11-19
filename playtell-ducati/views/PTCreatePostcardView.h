@@ -1,5 +1,5 @@
 //
-//  PTPostcardView.h
+//  PTCreatePostcardView.h
 //  playtell-ducati
 //
 //  Created by Adam Horne on 11/1/12.
@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol PTPostcardViewDelegate <NSObject>
+@protocol PTCreatePostcardViewDelegate <NSObject>
 @required
 - (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot;
 @end
 
-@interface PTPostcardView : UIView <UIGestureRecognizerDelegate>
+@interface PTCreatePostcardView : UIView <UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) id<PTPostcardViewDelegate> delegate;
+@property (nonatomic, strong) id<PTCreatePostcardViewDelegate> delegate;
 
 - (void)startPhotoCountdown;
 
