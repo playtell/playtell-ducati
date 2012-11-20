@@ -10,6 +10,7 @@
 #import "Logging.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
+#import "PTBadgeButton.h"
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
@@ -51,6 +52,7 @@
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
+@property (nonatomic, retain) PTBadgeButton* postcardButton;
 @end
 
 @implementation PTDialpadViewController
@@ -65,6 +67,7 @@
 @synthesize audioPlayer;
 @synthesize chatController;
 @synthesize backgroundTask;
+@synthesize postcardButton;
 
 BOOL playdateStarting;
 
@@ -147,6 +150,14 @@ BOOL playdateStarting;
         [self.scrollView insertSubview:ttInviteBuddies aboveSubview:playmateAddView];
     }
 
+    // Postcard notification button
+    UIImage *normalImage = [UIImage imageNamed:@"photobooth.png"];
+    UIImage *pressImage = [UIImage imageNamed:@"photobooth-press.png"];
+    postcardButton = [[PTBadgeButton alloc] initWithFrame:CGRectMake(10.0f, 10.0f, normalImage.size.width, normalImage.size.height)];
+    [postcardButton setBackgroundImage:normalImage forState:UIControlStateNormal];
+    [postcardButton setBackgroundImage:pressImage forState:UIControlStateHighlighted];
+    [postcardButton addTarget:self action:@selector(postcardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:postcardButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -710,6 +721,10 @@ BOOL playdateStarting;
     
     // Send analytics event for joining a playdate
     [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+}
+
+-(void) postcardButtonPressed {
+    // TODO: fill in to transition to postcard view
 }
 
 #pragma mark - Ringer methods
