@@ -566,7 +566,7 @@ BOOL playdateStarting;
          LogDebug(@"%@ received playdate on check: %@", NSStringFromSelector(_cmd), playdate);
          self.requestedPlaydate = playdate;
          dispatch_async(dispatch_get_main_queue(), ^{
-             [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
+             [self notifyUserOfRequestedPlaydate];
          });
      } failure:nil];
 }
@@ -742,7 +742,7 @@ BOOL playdateStarting;
     // for updates (potentially end playdate)
     if (playdate.playmate.userID == [[PTUser currentUser] userID]) {
         self.requestedPlaydate = playdate;
-        [self notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel];
+        [self notifyUserOfRequestedPlaydate];
     } else {
         // Mark players in this playdate as 'pending' in dialpad
 
@@ -904,7 +904,7 @@ BOOL playdateStarting;
     }
 }
 
-- (void)notifyUserOfRequestedPlaydateAndSubscribeToPlaydateChannel {
+- (void)notifyUserOfRequestedPlaydate {
     // Find the playmate view
     PTPlaymateView *playmateView = [self.playmateViews objectForKey:[NSNumber numberWithInteger:self.requestedPlaydate.initiator.userID]];
     if (!playmateView) {
@@ -919,7 +919,6 @@ BOOL playdateStarting;
 
     // Unsubscribe from rendezvous channel
     [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
     
     // Starting listening to end playdate event
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1033,6 +1032,7 @@ BOOL playdateStarting;
 - (void)playmateDidTouch:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     // Are we trying to respond to an incoming playdate request?
     if (self.selectedPlaymateView == playmateView) {
+        [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
         [self joinPlaydate];
         return;
     }
