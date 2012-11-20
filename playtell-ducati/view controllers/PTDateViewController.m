@@ -1062,6 +1062,7 @@ NSTimer *postcardTimer;
 }
 
 - (IBAction)endPlaydateHandle:(id)sender {
+    [postcardTimer invalidate];
 
     // Alert the delegate of playdate end
     if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewControllerDidEndPlaydate:)]) {
