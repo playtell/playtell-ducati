@@ -70,6 +70,7 @@
 @synthesize postcardButton;
 
 BOOL playdateStarting;
+BOOL postcardsShown;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -80,6 +81,8 @@ BOOL playdateStarting;
             [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"opentok.publisher.accepted"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
+        
+        postcardsShown = NO;
     }
     return self;
 }
@@ -89,7 +92,7 @@ BOOL playdateStarting;
     self.view.frame = CGRectMake(0, 0, 1024, 748);
     
     UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
-    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
+    background = [[UIImageView alloc] initWithImage:backgroundImage];
     background.tag = 666;
     [self.view addSubview:background];
     
@@ -104,7 +107,7 @@ BOOL playdateStarting;
     welcomeLabel.font = [self welcomeTextFont];
     welcomeLabel.textColor = [UIColor colorFromHex:@"#000000" alpha:0.8f];
     welcomeLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:welcomeLabel];
+    [background addSubview:welcomeLabel];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 200, 1024, 548)];
     [self.view addSubview:self.scrollView];
@@ -153,11 +156,15 @@ BOOL playdateStarting;
     // Postcard notification button
     UIImage *normalImage = [UIImage imageNamed:@"photobooth.png"];
     UIImage *pressImage = [UIImage imageNamed:@"photobooth-press.png"];
-    postcardButton = [[PTBadgeButton alloc] initWithFrame:CGRectMake(10.0f, 10.0f, normalImage.size.width, normalImage.size.height)];
+    postcardButton = [[PTBadgeButton alloc] initWithFrame:CGRectMake(15.0f, 15.0f, normalImage.size.width, normalImage.size.height)];
     [postcardButton setBackgroundImage:normalImage forState:UIControlStateNormal];
     [postcardButton setBackgroundImage:pressImage forState:UIControlStateHighlighted];
     [postcardButton addTarget:self action:@selector(postcardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:postcardButton];
+    
+    // Postcards view
+    postcardsView = [[PTShowPostcardsView alloc] initWithFrame:background.frame];
+    [self.view insertSubview:postcardsView belowSubview:background];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -169,7 +176,6 @@ BOOL playdateStarting;
         [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     }
     
-    UIView* background = [self.view viewWithTag:666];
     CGRect backgroundFrame = self.view.frame;
     backgroundFrame.origin = CGPointZero;
     background.frame = backgroundFrame;
@@ -724,7 +730,51 @@ BOOL playdateStarting;
 }
 
 -(void) postcardButtonPressed {
-    // TODO: fill in to transition to postcard view
+    // Get the view sizes for transitioning the postcard view
+    float height = self.view.frame.size.height;
+    float width = self.view.frame.size.width;
+    
+    if (postcardsShown) {
+        // Move the dialpad views back into place
+        [UIView animateWithDuration:1.0f animations:^{
+            background.frame = CGRectMake(0.0f, 0.0f, width, height);
+            self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, -height);
+            self.chatController.view.alpha = 1.0f;
+            signUpBubbleContainer.alpha = 1.0f;
+        }];
+        
+        // Set the button images
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth.png"] forState:UIControlStateNormal];
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth-press.png"] forState:UIControlStateHighlighted];
+    } else {
+        // TODO: fill in with real postcards
+        NSArray *images = [NSArray arrayWithObjects:
+                           [UIImage imageNamed:@"postcards-a.png"],
+                           [UIImage imageNamed:@"postcards-a.png"],
+                           [UIImage imageNamed:@"postcards-b.png"],
+                           [UIImage imageNamed:@"postcards-b.png"],
+                           [UIImage imageNamed:@"postcards-c.png"],
+                           [UIImage imageNamed:@"postcards-c.png"],
+                           [UIImage imageNamed:@"postcards-d.png"],
+                           [UIImage imageNamed:@"postcards-d.png"], nil];
+        postcardsView.postcardImages = images;
+        
+        // Move the dialpad views off the screen
+        float margin = 50.0f;
+        
+        [UIView animateWithDuration:1.0f animations:^{
+            background.frame = CGRectMake(margin, height, width - (2 * margin), height);
+            self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, height);
+            self.chatController.view.alpha = 0.0f;
+            signUpBubbleContainer.alpha = 0.0f;
+        }];
+        
+        // Set the button images
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad.png"] forState:UIControlStateNormal];
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad-press.png"] forState:UIControlStateHighlighted];
+    }
+    
+    postcardsShown = !postcardsShown;
 }
 
 #pragma mark - Ringer methods
