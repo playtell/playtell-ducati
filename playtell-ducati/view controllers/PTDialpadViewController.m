@@ -247,6 +247,26 @@ BOOL postcardsShown;
     } else {
         [self.view addSubview:self.chatController.view];
     }
+    
+    // Loop through the playmates and show the views as in playdate or not
+    // This is for when the user has been in a playdate as they don't get notified
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
+                                         token:[PTUser currentUser].authToken
+                                       success:^
+     {
+         NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         for (PTPlaymate *pm in refresh) {
+             PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
+             if ([pm.userStatus isEqualToString:@"playdate"]) {
+                 [pmView showUserInPlaydateAnimated:NO];
+             } else {
+                 [pmView hideUserInPlaydateAnimated:NO];
+             }
+         }
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+     }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
