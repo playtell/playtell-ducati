@@ -7,6 +7,7 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#import "AFImageRequestOperation.h"
 #import "Logging.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
@@ -238,6 +239,20 @@ BOOL postcardsShown;
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController setCurrentUserPhoto];
+    
+    // Have it reload the userphoto if it has not been loaded
+    if (![[PTUser currentUser] userPhoto]) {
+        // Fetch the current users's photo
+        NSURLRequest* urlRequest = [NSURLRequest requestWithURL:[PTUser currentUser].photoURL];
+        AFImageRequestOperation* reqeust;
+        reqeust = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                    success:^(UIImage *image)
+                   {
+                       [[PTUser currentUser] setUserPhoto:image];
+                       [self.chatController setCurrentUserPhoto];
+                   }];
+        [reqeust start];
+    }
     
     // Remove borders from chat hud
     [self.chatController hideAllBorders];
