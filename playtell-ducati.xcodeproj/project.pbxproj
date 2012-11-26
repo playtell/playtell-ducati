@@ -45,6 +45,8 @@
 		1A7503961653F40A00EC507D /* email-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A7503921653F40A00EC507D /* email-button@2x.png */; };
 		1A75039A1653F47F00EC507D /* PTCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7503991653F47F00EC507D /* PTCameraButton.m */; };
 		1A75039D1653F71100EC507D /* PTSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A75039C1653F71100EC507D /* PTSendButton.m */; };
+		1A83B4DD1663CC2700B37368 /* camera.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DB1663CC2700B37368 /* camera.mp3 */; };
+		1A83B4DE1663CC2700B37368 /* jetmail.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DC1663CC2700B37368 /* jetmail.mp3 */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
 		1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */; };
 		1ABD6F231642BB2F0027609C /* photo-bg-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABD6F191642BB2F0027609C /* photo-bg-dark.png */; };
@@ -948,6 +950,8 @@
 		1A7503991653F47F00EC507D /* PTCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCameraButton.m; sourceTree = "<group>"; };
 		1A75039B1653F71100EC507D /* PTSendButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSendButton.h; sourceTree = "<group>"; };
 		1A75039C1653F71100EC507D /* PTSendButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSendButton.m; sourceTree = "<group>"; };
+		1A83B4DB1663CC2700B37368 /* camera.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = camera.mp3; path = audio/camera.mp3; sourceTree = "<group>"; };
+		1A83B4DC1663CC2700B37368 /* jetmail.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = jetmail.mp3; path = audio/jetmail.mp3; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
 		1ABD6EF4163A912C0027609C /* PTPlaydatePhotoCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydatePhotoCreateRequest.h; sourceTree = "<group>"; };
@@ -3464,6 +3468,8 @@
 			isa = PBXGroup;
 			children = (
 				8AB1B2EA15E3155300FC3948 /* Tictactoe */,
+				1A83B4DB1663CC2700B37368 /* camera.mp3 */,
+				1A83B4DC1663CC2700B37368 /* jetmail.mp3 */,
 				F4A123EE1592777600FC7A24 /* music-box.wav */,
 				F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */,
 			);
@@ -5224,6 +5230,8 @@
 				1A5D7F82165BE65B006DBC32 /* photobooth-press@2x.png in Resources */,
 				1A5D7F83165BE65B006DBC32 /* photobooth.png in Resources */,
 				1A5D7F84165BE65B006DBC32 /* photobooth@2x.png in Resources */,
+				1A83B4DD1663CC2700B37368 /* camera.mp3 in Resources */,
+				1A83B4DE1663CC2700B37368 /* jetmail.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

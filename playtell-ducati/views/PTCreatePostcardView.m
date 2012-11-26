@@ -43,6 +43,7 @@
 
 // Audio
 @property (nonatomic, retain) AVAudioPlayer* sendPlayer;
+@property (nonatomic, retain) AVAudioPlayer* cameraPlayer;
 
 @end
 
@@ -60,7 +61,7 @@
 
 @synthesize shim, cameraOutline, lblCounter;
 
-@synthesize sendPlayer;
+@synthesize sendPlayer, cameraPlayer;
 
 UIView *publisherView;
 CGRect originalFrame;
@@ -200,12 +201,17 @@ CGRect offRightFrame;
 
 - (void)setupSounds {
     NSError *playerError;
-    NSURL *sendSound = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
+    NSURL *sendSound = [[NSBundle mainBundle] URLForResource:@"jetmail" withExtension:@"mp3"];
+    NSURL *cameraSound = [[NSBundle mainBundle] URLForResource:@"camera" withExtension:@"mp3"];
     
     self.sendPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:sendSound error:&playerError];
+    self.cameraPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:cameraSound error:&playerError];
     
     self.sendPlayer.volume = 1.0;
     self.sendPlayer.numberOfLoops = .5;
+    
+    self.cameraPlayer.volume = 1.0;
+    self.cameraPlayer.numberOfLoops = .5;
 }
 
 - (void)cameraButtonPressed {
@@ -308,6 +314,9 @@ CGRect offRightFrame;
 }
 
 - (void)takePicture {
+    // Play camera sound
+    [cameraPlayer play];
+    
     // Hide the camera outline and label
     cameraOutline.hidden = YES;
     lblCounter.hidden = YES;
