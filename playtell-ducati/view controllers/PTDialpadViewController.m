@@ -9,6 +9,7 @@
 
 #import "AFImageRequestOperation.h"
 #import "Logging.h"
+#import "PTAllPostcardsRequest.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
 #import "PTBadgeButton.h"
@@ -31,6 +32,7 @@
 #import "PTPlaymateButton.h"
 #import "PTPlaymateView.h"
 #import "PTPlaymateAddView.h"
+#import "PTPostcard.h"
 #import "PTSoloUser.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
@@ -285,16 +287,7 @@ BOOL postcardsShown;
      }];
     
     // Check for new postcards and update the badge number on the postcards button
-    postcardButton.badgeNumber = 0;
-    PTNumNewPostcardsRequest* request = [[PTNumNewPostcardsRequest alloc] init];
-    [request numNewPostcardsWithUserID:[PTUser currentUser].userID
-                               success:^(NSDictionary *result)
-     {
-         NSInteger numNew = [[result valueForKey:@"num_new_photos"] integerValue];
-         postcardButton.badgeNumber = numNew;
-     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         LogError(@"%@ - error: %@", NSStringFromSelector(_cmd), error);
-     }];
+    [self refreshPostcardButtonBadgeNumber];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -777,7 +770,20 @@ BOOL postcardsShown;
     [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
 }
 
--(void) postcardButtonPressed {
+- (void)refreshPostcardButtonBadgeNumber {
+    postcardButton.badgeNumber = 0;
+    PTNumNewPostcardsRequest* request = [[PTNumNewPostcardsRequest alloc] init];
+    [request numNewPostcardsWithUserID:[PTUser currentUser].userID
+                               success:^(NSDictionary *result)
+     {
+         NSInteger numNew = [[result valueForKey:@"num_new_photos"] integerValue];
+         postcardButton.badgeNumber = numNew;
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"%@ - error: %@", NSStringFromSelector(_cmd), error);
+     }];
+}
+
+- (void)postcardButtonPressed {
     // Get the view sizes for transitioning the postcard view
     float height = self.view.frame.size.height;
     float width = self.view.frame.size.width;
@@ -794,18 +800,21 @@ BOOL postcardsShown;
         // Set the button images
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth.png"] forState:UIControlStateNormal];
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth-press.png"] forState:UIControlStateHighlighted];
+        [self refreshPostcardButtonBadgeNumber];
     } else {
-        // TODO: fill in with real postcards
-        NSArray *images = [NSArray arrayWithObjects:
-                           [UIImage imageNamed:@"postcards-a.png"],
-                           [UIImage imageNamed:@"postcards-a.png"],
-                           [UIImage imageNamed:@"postcards-b.png"],
-                           [UIImage imageNamed:@"postcards-b.png"],
-                           [UIImage imageNamed:@"postcards-c.png"],
-                           [UIImage imageNamed:@"postcards-c.png"],
-                           [UIImage imageNamed:@"postcards-d.png"],
-                           [UIImage imageNamed:@"postcards-d.png"], nil];
-        postcardsView.postcardImages = images;
+        PTAllPostcardsRequest *postcardsRequest = [[PTAllPostcardsRequest alloc] init];
+        [postcardsRequest allPostcardsWithUserID:[PTUser currentUser].userID
+                                         success:^(NSArray *result)
+         {
+             NSMutableArray *postcards = [[NSMutableArray alloc] init];
+             for (NSDictionary *dict in result) {
+                 NSDictionary *postcardDict = [dict objectForKey:@"postcard"];
+                 [postcards addObject:[[PTPostcard alloc] initWithDictionary:postcardDict]];
+             }
+             postcardsView.postcards = postcards;
+         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+             LogError(@"AllPostcardsRequest failed: %@", error);
+         }];
         
         // Move the dialpad views off the screen
         float margin = 50.0f;

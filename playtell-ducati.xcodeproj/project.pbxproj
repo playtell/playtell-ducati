@@ -49,6 +49,8 @@
 		1A83B4DE1663CC2700B37368 /* jetmail.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DC1663CC2700B37368 /* jetmail.mp3 */; };
 		1A83B4E31665158400B37368 /* PTPostcardCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */; };
 		1A83B4E616651F7800B37368 /* PTNumNewPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E516651F7800B37368 /* PTNumNewPostcardsRequest.m */; };
+		1A83B4E9166531C600B37368 /* PTAllPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */; };
+		1A83B4EC1665437800B37368 /* PTPostcard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4EB1665437800B37368 /* PTPostcard.m */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
 		1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */; };
 		1ABD6F231642BB2F0027609C /* photo-bg-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABD6F191642BB2F0027609C /* photo-bg-dark.png */; };
@@ -958,6 +960,10 @@
 		1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcardCreateRequest.m; sourceTree = "<group>"; };
 		1A83B4E416651F7800B37368 /* PTNumNewPostcardsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNumNewPostcardsRequest.h; sourceTree = "<group>"; };
 		1A83B4E516651F7800B37368 /* PTNumNewPostcardsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNumNewPostcardsRequest.m; sourceTree = "<group>"; };
+		1A83B4E7166531C600B37368 /* PTAllPostcardsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTAllPostcardsRequest.h; sourceTree = "<group>"; };
+		1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllPostcardsRequest.m; sourceTree = "<group>"; };
+		1A83B4EA1665437800B37368 /* PTPostcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPostcard.h; sourceTree = "<group>"; };
+		1A83B4EB1665437800B37368 /* PTPostcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcard.m; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
 		1ABD6EF4163A912C0027609C /* PTPlaydatePhotoCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydatePhotoCreateRequest.h; sourceTree = "<group>"; };
@@ -2300,6 +2306,8 @@
 				1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */,
 				1A83B4E416651F7800B37368 /* PTNumNewPostcardsRequest.h */,
 				1A83B4E516651F7800B37368 /* PTNumNewPostcardsRequest.m */,
+				1A83B4E7166531C600B37368 /* PTAllPostcardsRequest.h */,
+				1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */,
 			);
 			name = postcards;
 			sourceTree = "<group>";
@@ -4534,6 +4542,8 @@
 				F468877A158138190086D351 /* PTVideoPhone.m */,
 				238409F31600DDE80031EF97 /* PTNewUser.h */,
 				238409F41600DDE80031EF97 /* PTNewUser.m */,
+				1A83B4EA1665437800B37368 /* PTPostcard.h */,
+				1A83B4EB1665437800B37368 /* PTPostcard.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -5465,6 +5475,8 @@
 				1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */,
 				1A83B4E31665158400B37368 /* PTPostcardCreateRequest.m in Sources */,
 				1A83B4E616651F7800B37368 /* PTNumNewPostcardsRequest.m in Sources */,
+				1A83B4E9166531C600B37368 /* PTAllPostcardsRequest.m in Sources */,
+				1A83B4EC1665437800B37368 /* PTPostcard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

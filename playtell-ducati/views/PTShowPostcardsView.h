@@ -10,6 +10,6 @@
 
 @interface PTShowPostcardsView : UIView <UIGestureRecognizerDelegate>
 
-@property (nonatomic, strong) NSArray *postcardImages;
+@property (nonatomic, strong) NSArray *postcards;
 
 @end

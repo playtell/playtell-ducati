@@ -63,7 +63,7 @@
                                                 success:^(NSDictionary *result) {
                                                     //NSLog(@"Postcard successfully uploaded.");
                                                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                    NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                    NSLog(@"Postcard creation failure!! %@ - %@", error, JSON);
                                                 }];
     });
     //UIImageWriteToSavedPhotosAlbum(postcard, nil, nil, nil);

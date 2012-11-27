@@ -6,11 +6,12 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
-#define LABEL_HEIGHT    40.0
+#define LABEL_HEIGHT    25.0
 #define LABEL_SPACING_Y 25.0
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "PTPostcard.h"
 #import "PTShowPostcardsView.h"
 
 #import "UIColor+ColorFromHex.h"
@@ -19,7 +20,7 @@
 
 @property (nonatomic, strong) UIView *background;
 @property (nonatomic, strong) UILabel *lblDetails;
-@property (nonatomic, strong) NSMutableArray *postcards;
+@property (nonatomic, strong) NSMutableArray *postcardImageViews;
 
 @end
 
@@ -27,9 +28,9 @@
 
 @synthesize background;
 @synthesize lblDetails;
-@synthesize postcards;
+@synthesize postcardImageViews;
 
-NSArray *_images;
+NSArray *_postcards;
 int currentPostcard;
 
 CGRect offLeftFrame;
@@ -75,7 +76,7 @@ CGRect offRightFrame;
         lblDetails.font = [UIFont boldSystemFontOfSize:LABEL_HEIGHT - 5];
         lblDetails.adjustsFontSizeToFitWidth = YES;
         lblDetails.minimumFontSize = 15.0f;
-        lblDetails.text = @"Text to test it out";
+        lblDetails.text = @""; //@"Text to test it out";
         [self addSubview:lblDetails];
         
         // Create the gesture recognizers
@@ -95,38 +96,50 @@ CGRect offRightFrame;
     return self;
 }
 
-- (NSArray *)postcardImages {
-    return _images;
+- (NSArray *)postcards {
+    return _postcards;
 }
 
-- (void)setPostcardImages:(NSArray *)postcardImages {
-    _images = postcardImages;
+- (void)setPostcards:(NSArray *)postcards {
+    _postcards = postcards;
     
-    if (postcards) {
-        for (UIImageView *p in postcards) {
+    if (postcardImageViews) {
+        for (UIImageView *p in postcardImageViews) {
             [p removeFromSuperview];
         }
-        postcards = nil;
+        postcardImageViews = nil;
     }
     
     // Load in the postcard views
-    postcards = [[NSMutableArray alloc] init];
-    for (UIImage *image in postcardImages) {
-        UIImageView *p = [[UIImageView alloc] initWithImage:image];
+    postcardImageViews = [[NSMutableArray alloc] init];
+    for (PTPostcard *postcard in postcards) {
+        UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_loading.gif"]];
         p.layer.masksToBounds = NO;
         p.layer.shadowOffset = CGSizeMake(0.0, 3.0);
         p.layer.shadowRadius = 5.0;
         p.layer.shadowOpacity = 0.5;
         [self addSubview:p];
-        [postcards addObject:p];
+        [postcardImageViews addObject:p];
+        
+        // Asynchronously load the images from the server
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        dispatch_async(queue, ^{
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:postcard.photoURL]];
+            
+            // Have to update UI elements on the main thread
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [p setImage:image];
+            });
+        });
     }
     currentPostcard = 0;
     [self setPostcardFrames];
+    [self setLabelText];
 }
 
 - (void)setPostcardFrames {
-    for (int iter = 0; iter < postcards.count; iter++) {
-        UIImageView *p = (UIImageView *)[postcards objectAtIndex:iter];
+    for (int iter = 0; iter < postcardImageViews.count; iter++) {
+        UIImageView *p = (UIImageView *)[postcardImageViews objectAtIndex:iter];
         if (iter + 1 < currentPostcard) {
             p.frame = offLeftFrame;
         } else if (iter + 1 == currentPostcard) {
@@ -147,11 +160,27 @@ CGRect offRightFrame;
     }
 }
 
+- (void)setLabelText {
+    if ([self.postcards count] > 0) {
+        PTPostcard *current = [self.postcards objectAtIndex:currentPostcard];
+        
+        NSDateFormatter *df = [[NSDateFormatter alloc] init];
+        [df setDateFormat:@"MMM dd, yyyy ● hh:mm a"];
+        NSString *dateStr = [df stringFromDate:current.timestamp];
+        
+        lblDetails.text = [NSString stringWithFormat:@"%@ ● %@", current.sender, dateStr];
+    } else {
+        lblDetails.text = @"You have no postcards!";
+    }
+}
+
 - (void)userSwipeLeftEvent:(UISwipeGestureRecognizer *)recognizer {
-    if (currentPostcard + 1 < postcards.count) {
+    if (currentPostcard + 1 < postcardImageViews.count) {
         currentPostcard++;
         [UIView animateWithDuration:0.5f animations:^{
             [self setPostcardFrames];
+        } completion:^(BOOL finished) {
+            [self setLabelText];
         }];
     }
 }
@@ -161,6 +190,8 @@ CGRect offRightFrame;
         currentPostcard--;
         [UIView animateWithDuration:0.5f animations:^{
             [self setPostcardFrames];
+        } completion:^(BOOL finished) {
+            [self setLabelText];
         }];
     }
 }
