@@ -36,19 +36,19 @@
                                                  [formData appendPartWithFileData:imageData name:@"photo" fileName:filename mimeType:@"image/png"];
                                              }];
     
-    AFJSONRequestOperation* createPlaydatePhoto;
-    createPlaydatePhoto = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
-                                                                          success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
-                           {
-                               if (success) {
-                                   success(JSON);
-                               }
-                           } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                               if (failure) {
-                                   failure(request, response, error, JSON);
-                               }
-                           }];
-    [createPlaydatePhoto start];
+    AFJSONRequestOperation* createPostcard;
+    createPostcard = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                                     success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                      {
+                          if (success) {
+                              success(JSON);
+                          }
+                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                          if (failure) {
+                              failure(request, response, error, JSON);
+                          }
+                      }];
+    [createPostcard start];
 }
 
 @end

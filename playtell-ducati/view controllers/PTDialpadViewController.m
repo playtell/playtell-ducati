@@ -22,6 +22,7 @@
 #import "PTFriendshipDeclineRequest.h"
 #import "PTNewUserNavigationController.h"
 #import "PTNullPlaymate.h"
+#import "PTNumNewPostcardsRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
 #import "PTPlaydateDetailsRequest.h"
@@ -281,6 +282,18 @@ BOOL postcardsShown;
          }
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+     }];
+    
+    // Check for new postcards and update the badge number on the postcards button
+    postcardButton.badgeNumber = 0;
+    PTNumNewPostcardsRequest* request = [[PTNumNewPostcardsRequest alloc] init];
+    [request numNewPostcardsWithUserID:[PTUser currentUser].userID
+                               success:^(NSDictionary *result)
+     {
+         NSInteger numNew = [[result valueForKey:@"num_new_photos"] integerValue];
+         postcardButton.badgeNumber = numNew;
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"%@ - error: %@", NSStringFromSelector(_cmd), error);
      }];
 }
 
