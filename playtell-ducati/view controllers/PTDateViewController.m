@@ -300,7 +300,7 @@ NSTimer *postcardTimer;
     
     PTCreatePostcardViewController *postcardController = [[PTCreatePostcardViewController alloc] init];
     postcardController.delegate = self;
-    postcardController.playdateId = self.playdate.playdateID;
+    postcardController.playmateId = self.playdate.playmate.userID;
     postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
     [self.view insertSubview:postcardController.view belowSubview:background];
     

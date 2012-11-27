@@ -47,6 +47,7 @@
 		1A75039D1653F71100EC507D /* PTSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A75039C1653F71100EC507D /* PTSendButton.m */; };
 		1A83B4DD1663CC2700B37368 /* camera.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DB1663CC2700B37368 /* camera.mp3 */; };
 		1A83B4DE1663CC2700B37368 /* jetmail.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DC1663CC2700B37368 /* jetmail.mp3 */; };
+		1A83B4E31665158400B37368 /* PTPostcardCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
 		1ABD6EF6163A912C0027609C /* PTPlaydatePhotoCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */; };
 		1ABD6F231642BB2F0027609C /* photo-bg-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 1ABD6F191642BB2F0027609C /* photo-bg-dark.png */; };
@@ -952,6 +953,8 @@
 		1A75039C1653F71100EC507D /* PTSendButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSendButton.m; sourceTree = "<group>"; };
 		1A83B4DB1663CC2700B37368 /* camera.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = camera.mp3; path = audio/camera.mp3; sourceTree = "<group>"; };
 		1A83B4DC1663CC2700B37368 /* jetmail.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = jetmail.mp3; path = audio/jetmail.mp3; sourceTree = "<group>"; };
+		1A83B4E11665158400B37368 /* PTPostcardCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPostcardCreateRequest.h; sourceTree = "<group>"; };
+		1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcardCreateRequest.m; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
 		1ABD6EF4163A912C0027609C /* PTPlaydatePhotoCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydatePhotoCreateRequest.h; sourceTree = "<group>"; };
@@ -2285,6 +2288,15 @@
 				1A5D7F69165BE4DF006DBC32 /* PTBadgeButton.m */,
 			);
 			name = postcard;
+			sourceTree = "<group>";
+		};
+		1A83B4E01665153F00B37368 /* postcards */ = {
+			isa = PBXGroup;
+			children = (
+				1A83B4E11665158400B37368 /* PTPostcardCreateRequest.h */,
+				1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */,
+			);
+			name = postcards;
 			sourceTree = "<group>";
 		};
 		1ABD6F181642BB2F0027609C /* Postcard View */ = {
@@ -4486,6 +4498,7 @@
 				8A1B741015E6EB59009BCEA0 /* books */,
 				8A1B740E15E6EB4F009BCEA0 /* games */,
 				8A1B741115E6EB76009BCEA0 /* playdates */,
+				1A83B4E01665153F00B37368 /* postcards */,
 				8A1B741215E6EBA7009BCEA0 /* toybox */,
 			);
 			path = api;
@@ -5445,6 +5458,7 @@
 				1A5D7F5E165A8BFD006DBC32 /* PTCreatePostcardView.m in Sources */,
 				1A5D7F6A165BE4DF006DBC32 /* PTBadgeButton.m in Sources */,
 				1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */,
+				1A83B4E31665158400B37368 /* PTPostcardCreateRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

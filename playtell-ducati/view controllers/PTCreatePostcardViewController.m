@@ -7,7 +7,7 @@
 //
 
 #import "PTCreatePostcardViewController.h"
-#import "PTPlaydatePhotoCreateRequest.h"
+#import "PTPostcardCreateRequest.h"
 #import "PTUser.h"
 
 @interface PTCreatePostcardViewController ()
@@ -17,7 +17,7 @@
 @end
 
 @implementation PTCreatePostcardViewController
-@synthesize playdateId;
+@synthesize playmateId;
 @synthesize delegate;
 
 @synthesize postcardView;
@@ -56,15 +56,15 @@
 #pragma mark - Postcard Delegate
 - (void)postcardTaken:(UIImage *)postcard withScreenshot:(UIImage *)screenshot {
     dispatch_async(dispatch_get_current_queue(), ^{
-        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-                                               playdateId:self.playdateId
-                                                    photo:postcard
-                                                  success:^(NSDictionary *result) {
-                                                      //NSLog(@"Postcard successfully uploaded.");
-                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-                                                  }];
+        PTPostcardCreateRequest *postcardCreateRequest = [[PTPostcardCreateRequest alloc] init];
+        [postcardCreateRequest postcardCreateWithUserId:[PTUser currentUser].userID
+                                             playmateId:self.playmateId
+                                                  photo:postcard
+                                                success:^(NSDictionary *result) {
+                                                    //NSLog(@"Postcard successfully uploaded.");
+                                                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                    NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                }];
     });
     //UIImageWriteToSavedPhotosAlbum(postcard, nil, nil, nil);
     //UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
