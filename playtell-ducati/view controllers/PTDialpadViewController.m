@@ -98,6 +98,9 @@ BOOL postcardsShown;
     UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
     background = [[UIImageView alloc] initWithImage:backgroundImage];
     background.tag = 666;
+    background.layer.masksToBounds = NO;
+    background.layer.shadowRadius = 5.0;
+    background.layer.shadowOpacity = 0.5;
     [self.view addSubview:background];
     
     NSString* welcomeText = @"Who will you play with today?";
