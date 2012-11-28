@@ -164,13 +164,42 @@ CGRect offRightFrame;
     if ([self.postcards count] > 0) {
         PTPostcard *current = [self.postcards objectAtIndex:currentPostcard];
         
-        NSDateFormatter *df = [[NSDateFormatter alloc] init];
-        [df setDateFormat:@"MMM dd, yyyy ● hh:mm a"];
-        NSString *dateStr = [df stringFromDate:current.timestamp];
+        NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+        [timeFormatter setDateFormat:@"hh:mm a"];
+        NSString *timeStr = [timeFormatter stringFromDate:current.timestamp];
         
-        lblDetails.text = [NSString stringWithFormat:@"%@ ● %@", current.sender, dateStr];
+        lblDetails.text = [NSString stringWithFormat:@"%@ ● %@ ● %@", current.sender, [self dateStringForDate:current.timestamp], timeStr];
     } else {
         lblDetails.text = @"You have no postcards!";
+    }
+}
+
+- (NSString *)dateStringForDate:(NSDate *)date {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM dd, yyyy"];
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *currentDate = [NSDate date];
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    // set tomorrow (0: today, -1: yesterday)
+    [comps setDay:0];
+    NSDate *dateToday = [calendar dateByAddingComponents:comps toDate:currentDate options:0];
+    [comps setDay:-1];
+    NSDate *dateYesterday = [calendar dateByAddingComponents:comps toDate:currentDate options:0];
+    
+    NSString *todayString = [dateFormatter stringFromDate:dateToday] ;
+    NSString *yesterdayString = [dateFormatter stringFromDate:dateYesterday] ;
+    NSString *refDateString = [dateFormatter stringFromDate:date];
+    
+    if ([refDateString isEqualToString:todayString])
+    {
+        return @"Today";
+    } else if ([refDateString isEqualToString:yesterdayString])
+    {
+        return @"Yesterday";
+    } else
+    {
+        return [dateFormatter stringFromDate:date];
     }
 }
 
