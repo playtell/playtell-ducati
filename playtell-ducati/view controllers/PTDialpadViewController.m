@@ -830,6 +830,7 @@ BOOL postcardsShown;
         // Set the button images
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad.png"] forState:UIControlStateNormal];
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad-press.png"] forState:UIControlStateHighlighted];
+        postcardButton.badgeNumber = 0;
     }
     
     postcardsShown = !postcardsShown;
