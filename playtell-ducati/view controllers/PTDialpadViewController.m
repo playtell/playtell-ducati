@@ -111,6 +111,7 @@ BOOL postcardsShown;
     welcomeLabel.font = [self welcomeTextFont];
     welcomeLabel.textColor = [UIColor colorFromHex:@"#000000" alpha:0.8f];
     welcomeLabel.backgroundColor = [UIColor clearColor];
+    welcomeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [background addSubview:welcomeLabel];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 200, 1024, 548)];
