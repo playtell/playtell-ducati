@@ -19,8 +19,8 @@
 
 #define LABEL_HEIGHT    40.0
 #define LABEL_SPACING_Y 25.0
-#define PHOTO_HEIGHT    300.0
-#define PHOTO_WIDTH     400.0
+#define PHOTO_HEIGHT    360.0
+#define PHOTO_WIDTH     480.0
 #define BUTTON_HEIGHT   49.0
 #define BUTTON_SPACING  20.0
 
