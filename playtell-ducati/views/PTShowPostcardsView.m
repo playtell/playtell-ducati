@@ -69,7 +69,7 @@ CGRect offRightFrame;
         // Layout the title label
         lblDetails = [[UILabel alloc] initWithFrame:CGRectMake(centerFrame.origin.x, centerFrame.origin.y + centerFrame.size.height + LABEL_SPACING_Y, centerFrame.size.width, LABEL_HEIGHT)];
         lblDetails.backgroundColor = [UIColor clearColor];
-        lblDetails.textAlignment = UITextAlignmentCenter;
+        lblDetails.textAlignment = UITextAlignmentLeft;
         lblDetails.textColor = [UIColor colorFromHex:@"#578DA0"];
         lblDetails.shadowColor = [UIColor whiteColor];
         lblDetails.shadowOffset = CGSizeMake(0.0f, 2.0f);
@@ -168,7 +168,7 @@ CGRect offRightFrame;
         [timeFormatter setDateFormat:@"hh:mm a"];
         NSString *timeStr = [timeFormatter stringFromDate:current.timestamp];
         
-        lblDetails.text = [NSString stringWithFormat:@"%@ ● %@ ● %@", current.sender, [self dateStringForDate:current.timestamp], timeStr];
+        lblDetails.text = [NSString stringWithFormat:@"%@ • %@ • %@", current.sender, [self dateStringForDate:current.timestamp], timeStr];
     } else {
         lblDetails.text = @"You have no postcards!";
     }
