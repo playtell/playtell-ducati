@@ -35,7 +35,7 @@ NSInteger _badgeNumber;
         
         // Setup the badge image view
         badgeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"notification-bubble-a.png"]];
-        badgeView.frame = CGRectMake(frame.size.width - SMALL_WIDTH, 0.0f, SMALL_WIDTH, SMALL_HEIGHT);
+        badgeView.frame = CGRectMake(frame.size.width - (SMALL_WIDTH * 0.5), -(SMALL_HEIGHT * 0.5), SMALL_WIDTH, SMALL_HEIGHT);
         badgeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         badgeView.autoresizesSubviews = YES;
         badgeView.hidden = YES;
@@ -70,13 +70,13 @@ NSInteger _badgeNumber;
     } else if (_badgeNumber < 10) {
         // Set the small badge image
         badgeView.image = [UIImage imageNamed:@"notification-bubble-a.png"];
-        badgeView.frame = CGRectMake(self.frame.size.width - SMALL_WIDTH, 0.0f, SMALL_WIDTH, SMALL_HEIGHT);
+        badgeView.frame = CGRectMake(self.frame.size.width - (SMALL_WIDTH * 0.5), -(SMALL_HEIGHT * 0.5), SMALL_WIDTH, SMALL_HEIGHT);
         
         badgeView.hidden = NO;
     } else {
         // Set the large badge image
         badgeView.image = [UIImage imageNamed:@"notification-bubble-b.png"];
-        badgeView.frame = CGRectMake(self.frame.size.width - LARGE_WIDTH, 0.0f, LARGE_WIDTH, LARGE_HEIGHT);
+        badgeView.frame = CGRectMake(self.frame.size.width - (LARGE_WIDTH * 0.5), -(LARGE_HEIGHT * 0.5), LARGE_WIDTH, LARGE_HEIGHT);
         
         badgeView.hidden = NO;
     }
