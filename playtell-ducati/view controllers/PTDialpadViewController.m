@@ -228,6 +228,11 @@ BOOL postcardsShown;
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPostcardButtonBadgeNumber)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }
@@ -291,6 +296,7 @@ BOOL postcardsShown;
      }];
     
     // Check for new postcards and update the badge number on the postcards button
+    postcardButton.badgeNumber = 0;
     [self refreshPostcardButtonBadgeNumber];
 }
 
@@ -775,7 +781,6 @@ BOOL postcardsShown;
 }
 
 - (void)refreshPostcardButtonBadgeNumber {
-    postcardButton.badgeNumber = 0;
     PTNumNewPostcardsRequest* request = [[PTNumNewPostcardsRequest alloc] init];
     [request numNewPostcardsWithUserID:[PTUser currentUser].userID
                                success:^(NSDictionary *result)
@@ -804,6 +809,7 @@ BOOL postcardsShown;
         // Set the button images
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth.png"] forState:UIControlStateNormal];
         [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth-press.png"] forState:UIControlStateHighlighted];
+        postcardButton.badgeNumber = 0;
         [self refreshPostcardButtonBadgeNumber];
     } else {
         PTAllPostcardsRequest *postcardsRequest = [[PTAllPostcardsRequest alloc] init];
