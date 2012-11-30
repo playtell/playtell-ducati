@@ -132,7 +132,7 @@ CGRect offRightFrame;
         // Layout the photo
         self.snapshot = [PTUser currentUser].userPhoto;
         photo = [[UIImageView alloc] initWithImage:snapshot];
-        photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:photo];
         
@@ -240,7 +240,7 @@ CGRect offRightFrame;
     if (delegate) {
         UIImageView *selectedPostcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[postcardNames objectAtIndex:currentPostcard]]];
         UIImageView *photoCopy = [[UIImageView alloc] initWithImage:snapshot];
-        photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         [selectedPostcard addSubview:photoCopy];
         
         // Setup the animations
