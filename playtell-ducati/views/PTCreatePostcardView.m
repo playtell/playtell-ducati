@@ -103,7 +103,7 @@ CGRect offRightFrame;
         
         // Load in the postcard views
         postcards = [[NSMutableArray alloc] init];
-        postcardNames = [NSArray arrayWithObjects:@"postcards-a.png", @"postcards-b.png", @"postcards-c.png", @"postcards-d.png", nil];
+        postcardNames = [NSArray arrayWithObjects:@"postcard-thinking.png", @"postcards-call.png", @"postcard-wish.png", @"postcards-thinking.png", nil];
         for (NSString *name in postcardNames) {
             UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:name]];
             p.layer.masksToBounds = NO;
