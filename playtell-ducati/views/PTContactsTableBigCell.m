@@ -143,6 +143,12 @@
 }
 
 - (void)setContact:(NSMutableDictionary *)contact {
+    // Since we're reusing cells, reset all labels
+    lblTitle.text = @"";
+    lblDetail.text = @"";
+    avatar.image = nil;
+    
+    // Set new contact values
     _contact = contact;
     lblTitle.text = [contact objectForKey:@"name"];
     if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) {
