@@ -541,7 +541,7 @@
         cell.contact = contact;
         
         if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) { // Not a PT user
-            if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contacnt NOT already selected
+            if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contact NOT already selected
                 [cell setMode:PTContactsTableBigCellModeInvite];
             } else { // Contact already selected
                 [cell setMode:PTContactsTableBigCellModeUninvite];

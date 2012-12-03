@@ -204,6 +204,7 @@
 								<string key="NSFrameSize">{380, 456}</string>
 								<reference key="NSSuperview" ref="383465873"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="693996074"/>
 								<bool key="IBUIClipsSubviews">YES</bool>
