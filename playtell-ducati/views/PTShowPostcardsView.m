@@ -22,6 +22,7 @@
 
 @property (nonatomic, strong) UIView *background;
 @property (nonatomic, strong) UILabel *lblDetails;
+@property (nonatomic, strong) UIImageView *imgTooltip;
 @property (nonatomic, strong) NSMutableArray *postcardImageViews;
 
 @end
@@ -30,6 +31,7 @@
 
 @synthesize background;
 @synthesize lblDetails;
+@synthesize imgTooltip;
 @synthesize postcardImageViews;
 
 NSArray *_postcards;
@@ -81,6 +83,12 @@ CGRect offRightFrame;
         lblDetails.text = @""; //@"Text to test it out";
         [self addSubview:lblDetails];
         
+        // Layout the tooltip for new users
+        imgTooltip = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcards-tip.png"]];
+        imgTooltip.frame = CGRectMake((centerFrame.origin.x - imgTooltip.frame.size.width) / 2, centerFrame.origin.y + 50.0, imgTooltip.frame.size.width, imgTooltip.frame.size.height);
+        imgTooltip.alpha = 0.0f;
+        [self addSubview:imgTooltip];
+        
         // Create the gesture recognizers
         UISwipeGestureRecognizer *swipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeLeftEvent:)];
         swipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -104,6 +112,10 @@ CGRect offRightFrame;
 
 - (void)setPostcards:(NSArray *)postcards {
     _postcards = postcards;
+    
+    if (postcards.count < 2) {
+        imgTooltip.alpha = 1.0f;
+    }
     
     if (postcardImageViews) {
         for (UIImageView *p in postcardImageViews) {
@@ -141,6 +153,18 @@ CGRect offRightFrame;
             });
         });
     }
+    
+    // If there are no postcards, put the default postcard just so something is there
+    if (postcardImageViews.count == 0) {
+        UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-default.png"]];
+        p.layer.masksToBounds = NO;
+        p.layer.shadowOffset = CGSizeMake(0.0, 3.0);
+        p.layer.shadowRadius = 5.0;
+        p.layer.shadowOpacity = 0.5;
+        [self addSubview:p];
+        [postcardImageViews addObject:p];
+    }
+    
     currentPostcard = 0;
     [self setPostcardFrames];
     [self setLabelText];
