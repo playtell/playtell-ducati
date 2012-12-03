@@ -13,8 +13,10 @@
 
 #import "PTPostcard.h"
 #import "PTShowPostcardsView.h"
+#import "PTSpinnerView.h"
 
 #import "UIColor+ColorFromHex.h"
+#import "UIImageView+Animations.h"
 
 @interface PTShowPostcardsView ()
 
@@ -113,13 +115,20 @@ CGRect offRightFrame;
     // Load in the postcard views
     postcardImageViews = [[NSMutableArray alloc] init];
     for (PTPostcard *postcard in postcards) {
-        UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_loading.gif"]];
+        UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-default.png"]];
         p.layer.masksToBounds = NO;
         p.layer.shadowOffset = CGSizeMake(0.0, 3.0);
         p.layer.shadowRadius = 5.0;
         p.layer.shadowOpacity = 0.5;
         [self addSubview:p];
         [postcardImageViews addObject:p];
+        
+        // Add a spinner view so they know it's loading
+        PTSpinnerView *spinner = [[PTSpinnerView alloc] init];
+        spinner.frame = CGRectMake(0.0f, 0.0f, 300.0f, 300.0f);
+        spinner.center = CGPointMake(p.frame.size.width / 2, p.frame.size.height / 2 - 50.0);
+        [spinner startSpinning];
+        [p addSubview:spinner];
         
         // Asynchronously load the images from the server
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
@@ -128,7 +137,7 @@ CGRect offRightFrame;
             
             // Have to update UI elements on the main thread
             dispatch_sync(dispatch_get_main_queue(), ^{
-                [p setImage:image];
+                [p replaceImageWithImage:image];
             });
         });
     }

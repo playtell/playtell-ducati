@@ -16,4 +16,6 @@
                   frontImage:(UIImage *)front
                    backImage:(UIImage *)back;
 
+- (void)replaceImageWithImage:(UIImage *)newImage;
+
 @end
