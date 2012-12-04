@@ -670,8 +670,12 @@
     PTUsersCreateFriendshipRequest *usersCreateFriendshipRequest = [[PTUsersCreateFriendshipRequest alloc] init];
     [usersCreateFriendshipRequest userCreateFriendship:[[contact objectForKey:@"user_id"] integerValue]
                                              authToken:[[PTUser currentUser] authToken]
-                                               success:nil
-                                               failure:nil];
+                                               success:^(NSDictionary *result) {
+                                                   // Now retrieve contact list from server (with metadata about each contact)
+                                                   NSLog(@"Successfully added friend");
+                                               } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                   NSLog(@"Failed to add friend: %i, %@", response.statusCode, JSON);
+                                               }];
     
     // Mark as pending friend locally
     [contact setObject:[NSNumber numberWithBool:YES] forKey:@"is_pending_friend"];
