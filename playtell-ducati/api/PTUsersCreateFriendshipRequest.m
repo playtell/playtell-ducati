@@ -23,7 +23,7 @@
                                     token, @"authentication_token",
                                     nil];
     
-    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/users/create_friendship", ROOT_URL]];
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/friendship/create", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
     [request setPostParameters:postParameters];
     
