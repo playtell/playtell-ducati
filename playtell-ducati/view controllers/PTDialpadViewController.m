@@ -282,14 +282,28 @@ BOOL postcardsShown;
                                          token:[PTUser currentUser].authToken
                                        success:^
      {
+         BOOL shouldRefreshPlaymateViews = NO;
          NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
          for (PTPlaymate *pm in refresh) {
              PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
-             if ([pm.userStatus isEqualToString:@"playdate"]) {
-                 [pmView showUserInPlaydateAnimated:NO];
+             if (pmView) {
+                 if ([pm.userStatus isEqualToString:@"playdate"]) {
+                     [pmView showUserInPlaydateAnimated:NO];
+                 } else {
+                     [pmView hideUserInPlaydateAnimated:NO];
+                 }
              } else {
-                 [pmView hideUserInPlaydateAnimated:NO];
+                 // Refresh local playmates array
+                 self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+
+                 // Playmate is new! Perhaps we added a new friend while in contact import flow
+                 shouldRefreshPlaymateViews = YES;
              }
+         }
+         
+         // Check if we need to refresh playmate views (if we have new ones)
+         if (shouldRefreshPlaymateViews) {
+             [self addNewPlaymate];
          }
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
@@ -472,7 +486,7 @@ BOOL postcardsShown;
     
     // Find new locations for all playmate views
     NSMutableDictionary *playmateViewLocations = [NSMutableDictionary dictionary];
-    PTPlaymateView *addedPlaymateView;
+    NSMutableArray *addedPlaymateViews = [NSMutableArray array];
     for (int row=0; row<totalRows; row++) {
         for (int cell=0; cell<itemsPerRow; cell++) {
             NSUInteger playmateIndex = (row*itemsPerRow) + cell;
@@ -509,7 +523,7 @@ BOOL postcardsShown;
                 
                 // Save playmate view to hash for easy retrieval
                 [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
-                addedPlaymateView = playmateView;
+                [addedPlaymateViews addObject:playmateView];
             }
         }
     }
@@ -523,7 +537,7 @@ BOOL postcardsShown;
                          }
                      }
                      completion:^(BOOL finished) {
-                         if (addedPlaymateView != nil) {
+                         for (PTPlaymateView *addedPlaymateView in addedPlaymateViews) {
                              [addedPlaymateView showAnimated:YES];
                          }
                      }];
