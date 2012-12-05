@@ -80,7 +80,6 @@ static PTVideoPhone* instance = nil;
     }];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // Here goes your operation
-        NSLog(@"Disconnecting for backgrounding");
         [self.session disconnect];
         self.session = nil;
         self.publisher = nil;
