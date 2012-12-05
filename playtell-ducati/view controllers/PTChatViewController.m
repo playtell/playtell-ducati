@@ -292,6 +292,15 @@ NSTimer *screenshotTimer;
             LogDebug(@"Subscriber connected");
             [self.leftView setView:subscriber.view];
         }];
+        [[PTVideoPhone sharedPhone] setPublisherDidStopStreamingBlock:^(OTPublisher *aPublisher) {
+            [self setCurrentUserPhoto];
+        }];
+        [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
+            if (session.connection.connectionId != stream.connection.connectionId) {
+                // This is the playmate dropping, so set the image in playmate chat window
+                [self.leftView setLoadingImageForView:self.playmate.userPhoto];
+            }
+        }];
 
         myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
         self.playdate.initiatorTokboxToken : self.playdate.playmateTokboxToken;

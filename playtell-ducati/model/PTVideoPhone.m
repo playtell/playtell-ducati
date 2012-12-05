@@ -21,6 +21,7 @@
 @property (nonatomic, copy) PTVideoSubscriberSubscribedBlock subscribedBlock;
 @property (nonatomic, copy) PTSessionDroppedStreamBlock sessionDroppedBlock;
 @property (nonatomic, copy) PTPublisherDidStartStreamingBlock publisherStreamingBlock;
+@property (nonatomic, copy) PTPublisherDidStopStreamingBlock publisherStopStreamingBlock;
 
 @property (nonatomic, copy) NSString* currentSessionToken;
 @property (nonatomic, copy) NSString* currentUserToken;
@@ -32,7 +33,7 @@ static NSString* const kApiKey = @"335312";
 static PTVideoPhone* instance = nil;
 @implementation PTVideoPhone
 @synthesize session, publisher, subscriber;
-@synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock, publisherStreamingBlock;
+@synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock, publisherStreamingBlock, publisherStopStreamingBlock;
 @synthesize currentSessionToken, currentUserToken;
 @synthesize backgroundTask;
 
@@ -132,6 +133,10 @@ static PTVideoPhone* instance = nil;
 
 - (void)setPublisherDidStartStreamingBlock:(PTPublisherDidStartStreamingBlock)handler {
     self.publisherStreamingBlock = handler;
+}
+
+- (void)setPublisherDidStopStreamingBlock:(PTPublisherDidStopStreamingBlock)handler {
+    self.publisherStopStreamingBlock = handler;
 }
 
 - (void)connectToUser:(NSString*)aUser {}
@@ -245,8 +250,11 @@ static PTVideoPhone* instance = nil;
     }
 }
 
-- (void)publisherDidStopStreaming:(OTPublisher*)publisher {
+- (void)publisherDidStopStreaming:(OTPublisher*)aPublisher {
     LOGMETHOD;
+    if (self.publisherStopStreamingBlock) {
+        self.publisherStopStreamingBlock(aPublisher);
+    }
 }
 
 @end
