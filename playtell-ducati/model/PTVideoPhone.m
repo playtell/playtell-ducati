@@ -24,6 +24,8 @@
 
 @property (nonatomic, copy) NSString* currentSessionToken;
 @property (nonatomic, copy) NSString* currentUserToken;
+
+@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
 @end
 
 static NSString* const kApiKey = @"335312";
@@ -32,6 +34,7 @@ static PTVideoPhone* instance = nil;
 @synthesize session, publisher, subscriber;
 @synthesize successBlock, failureBlock, connectedBlock, subscribedBlock, sessionDroppedBlock, publisherStreamingBlock;
 @synthesize currentSessionToken, currentUserToken;
+@synthesize backgroundTask;
 
 + (PTVideoPhone*)sharedPhone {
     if (!instance) {
@@ -43,8 +46,12 @@ static PTVideoPhone* instance = nil;
 - (id)init {
     if (self = [super init]) {
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(phoneWillEnterForeground:)
-                                                     name:UIApplicationWillEnterForegroundNotification
+                                                 selector:@selector(phoneDidBecomeActive:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(phoneDidEnterBackground:)
+                                                     name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
     }
     return self;
@@ -54,9 +61,40 @@ static PTVideoPhone* instance = nil;
     return self.publisher.view;
 }
 
-- (void)phoneWillEnterForeground:(NSNotification*)note {
+- (void)phoneDidBecomeActive:(NSNotification *)note {
     LOGMETHOD;
     [self wakeUp];
+}
+
+- (void)phoneDidEnterBackground:(NSNotification *)note {
+#if !(TARGET_IPHONE_SIMULATOR)
+    backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Here goes your operation
+        NSLog(@"Disconnecting for backgrounding");
+        [self.session disconnect];
+        self.session = nil;
+        self.publisher = nil;
+        self.subscriber = nil;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (backgroundTask != UIBackgroundTaskInvalid)
+            {
+                // if you don't call endBackgroundTask, the OS will exit your app.
+                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
+                backgroundTask = UIBackgroundTaskInvalid;
+            }
+        });
+    });
+#endif
 }
 
 //associates ipad with session and communicates with server
