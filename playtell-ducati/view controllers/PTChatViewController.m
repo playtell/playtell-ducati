@@ -326,23 +326,22 @@ NSTimer *screenshotTimer;
     }
 }
 
-- (void)disconnectOpenTokSession {
-    [[PTVideoPhone sharedPhone] setSessionConnectedBlock:nil];
-    [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:nil];
-    [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:nil];
-    [[PTVideoPhone sharedPhone] disconnect];
-}
-
 - (void)connectToPlaceholderOpenTokSession {
     PTGetSampleOpenTokToken* getTokBoxSession = [[PTGetSampleOpenTokToken alloc] init];
     [getTokBoxSession requestOpenTokSessionAndTokenWithSuccess:^(NSString *openTokSession, NSString *openTokToken)
      {
+         [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
+             LogDebug(@"Publisher started streaming");
+             [self.rightView setView:aPublisher.view];
+         }];
+         [[PTVideoPhone sharedPhone] setPublisherDidStopStreamingBlock:^(OTPublisher *aPublisher) {
+             [self setCurrentUserPhoto];
+         }];
          [[PTVideoPhone sharedPhone] connectToSession:openTokSession
                                             withToken:openTokToken
                                               success:^(OTPublisher* publisher)
           {
               LogDebug(@"Connected to OpenTok session");
-              [self.rightView setView:publisher.view];
           } failure:^(NSError* error) {
               LogError(@"Error connecting to OpenTok session: %@", error);
           }];

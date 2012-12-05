@@ -110,7 +110,7 @@ BOOL playdateStarting;
     // Get the ChatViewController
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
-    //[self.chatController connectToPlaceholderOpenTokSession];
+    [self.chatController connectToPlaceholderOpenTokSession];
     [self.chatController configureForDialpad];
 
     // Add all playmates to the dialpad
