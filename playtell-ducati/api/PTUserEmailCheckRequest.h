@@ -17,4 +17,9 @@ typedef void (^PTUserEmailCheckRequestFailureBlock) (NSURLRequest* request, NSHT
            success:(PTUserEmailCheckRequestSuccessBlock)success
            failure:(PTUserEmailCheckRequestFailureBlock)failure;
 
+- (void)checkEmail:(NSString *)email
+        returnUser:(BOOL)returnUser
+           success:(PTUserEmailCheckRequestSuccessBlock)success
+           failure:(PTUserEmailCheckRequestFailureBlock)failure;
+
 @end
