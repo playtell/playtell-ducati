@@ -85,7 +85,8 @@ CGRect offRightFrame;
         
         // Layout the tooltip for new users
         imgTooltip = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcards-tip.png"]];
-        imgTooltip.frame = CGRectMake((centerFrame.origin.x - imgTooltip.frame.size.width) / 2, centerFrame.origin.y + 50.0, imgTooltip.frame.size.width, imgTooltip.frame.size.height);
+        //imgTooltip.frame = CGRectMake(0.0f, centerFrame.origin.y + 50.0, imgTooltip.frame.size.width, imgTooltip.frame.size.height);
+        imgTooltip.center = CGPointMake(background.center.x, background.center.y);
         imgTooltip.alpha = 0.0f;
         [self addSubview:imgTooltip];
         
@@ -113,9 +114,7 @@ CGRect offRightFrame;
 - (void)setPostcards:(NSArray *)postcards {
     _postcards = postcards;
     
-    if (postcards.count < 2) {
-        imgTooltip.alpha = 1.0f;
-    }
+    imgTooltip.alpha = 0.0f;
     
     if (postcardImageViews) {
         for (UIImageView *p in postcardImageViews) {
@@ -163,6 +162,10 @@ CGRect offRightFrame;
         p.layer.shadowOpacity = 0.5;
         [self addSubview:p];
         [postcardImageViews addObject:p];
+        
+        // Show the tooltip so they know how they'll get new postcards
+        imgTooltip.alpha = 1.0f;
+        [self bringSubviewToFront:imgTooltip];
     }
     
     currentPostcard = 0;

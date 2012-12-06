@@ -30,7 +30,7 @@
     AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:ROOT_URL]];
     NSData *imageData = UIImagePNGRepresentation(photo);
     NSURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST"
-                                                                  path:@"/api/postcards"
+                                                                  path:@"/api/postcards.json"
                                                             parameters:postParameters
                                              constructingBodyWithBlock: ^(id <AFMultipartFormData> formData) {
                                                  [formData appendPartWithFileData:imageData name:@"photo" fileName:filename mimeType:@"image/png"];
