@@ -18,7 +18,7 @@
 
 @interface PTCreatePostcardViewController : UIViewController <PTCreatePostcardViewDelegate>
 
-@property (nonatomic, assign) int playdateId;
+@property (nonatomic, assign) int playmateId;
 @property (nonatomic, strong) id<PTCreatePostcardControllerDelegate> delegate;
 
 - (void)startPhotoCountdown;

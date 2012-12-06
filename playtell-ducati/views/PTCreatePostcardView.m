@@ -19,8 +19,8 @@
 
 #define LABEL_HEIGHT    40.0
 #define LABEL_SPACING_Y 25.0
-#define PHOTO_HEIGHT    300.0
-#define PHOTO_WIDTH     400.0
+#define PHOTO_HEIGHT    360.0
+#define PHOTO_WIDTH     480.0
 #define BUTTON_HEIGHT   49.0
 #define BUTTON_SPACING  20.0
 
@@ -43,6 +43,7 @@
 
 // Audio
 @property (nonatomic, retain) AVAudioPlayer* sendPlayer;
+@property (nonatomic, retain) AVAudioPlayer* cameraPlayer;
 
 @end
 
@@ -60,7 +61,7 @@
 
 @synthesize shim, cameraOutline, lblCounter;
 
-@synthesize sendPlayer;
+@synthesize sendPlayer, cameraPlayer;
 
 UIView *publisherView;
 CGRect originalFrame;
@@ -102,7 +103,7 @@ CGRect offRightFrame;
         
         // Load in the postcard views
         postcards = [[NSMutableArray alloc] init];
-        postcardNames = [NSArray arrayWithObjects:@"postcards-a.png", @"postcards-b.png", @"postcards-c.png", @"postcards-d.png", nil];
+        postcardNames = [NSArray arrayWithObjects:@"postcard-thinking.png", @"postcards-call.png", @"postcard-wish.png", @"postcards-thinking.png", nil];
         for (NSString *name in postcardNames) {
             UIImageView *p = [[UIImageView alloc] initWithImage:[UIImage imageNamed:name]];
             p.layer.masksToBounds = NO;
@@ -131,7 +132,7 @@ CGRect offRightFrame;
         // Layout the photo
         self.snapshot = [PTUser currentUser].userPhoto;
         photo = [[UIImageView alloc] initWithImage:snapshot];
-        photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:photo];
         
@@ -200,12 +201,17 @@ CGRect offRightFrame;
 
 - (void)setupSounds {
     NSError *playerError;
-    NSURL *sendSound = [[NSBundle mainBundle] URLForResource:@"wiff" withExtension:@"wav"];
+    NSURL *sendSound = [[NSBundle mainBundle] URLForResource:@"jetmail" withExtension:@"mp3"];
+    NSURL *cameraSound = [[NSBundle mainBundle] URLForResource:@"camera" withExtension:@"mp3"];
     
     self.sendPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:sendSound error:&playerError];
+    self.cameraPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:cameraSound error:&playerError];
     
     self.sendPlayer.volume = 1.0;
     self.sendPlayer.numberOfLoops = .5;
+    
+    self.cameraPlayer.volume = 1.0;
+    self.cameraPlayer.numberOfLoops = .5;
 }
 
 - (void)cameraButtonPressed {
@@ -234,7 +240,7 @@ CGRect offRightFrame;
     if (delegate) {
         UIImageView *selectedPostcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[postcardNames objectAtIndex:currentPostcard]]];
         UIImageView *photoCopy = [[UIImageView alloc] initWithImage:snapshot];
-        photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 50.0, PHOTO_WIDTH, PHOTO_HEIGHT);
+        photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         [selectedPostcard addSubview:photoCopy];
         
         // Setup the animations
@@ -308,6 +314,9 @@ CGRect offRightFrame;
 }
 
 - (void)takePicture {
+    // Play camera sound
+    [cameraPlayer play];
+    
     // Hide the camera outline and label
     cameraOutline.hidden = YES;
     lblCounter.hidden = YES;
