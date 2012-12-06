@@ -9,8 +9,10 @@
 
 #import "AFImageRequestOperation.h"
 #import "Logging.h"
+#import "PTAllPostcardsRequest.h"
 #import "PTAnalytics.h"
 #import "PTAppDelegate.h"
+#import "PTBadgeButton.h"
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
@@ -21,6 +23,7 @@
 #import "PTFriendshipDeclineRequest.h"
 #import "PTNewUserNavigationController.h"
 #import "PTNullPlaymate.h"
+#import "PTNumNewPostcardsRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydateCreateRequest.h"
 #import "PTPlaydateDetailsRequest.h"
@@ -29,6 +32,7 @@
 #import "PTPlaymateButton.h"
 #import "PTPlaymateView.h"
 #import "PTPlaymateAddView.h"
+#import "PTPostcard.h"
 #import "PTSoloUser.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
@@ -52,6 +56,7 @@
 @property (nonatomic, retain) AVAudioPlayer* audioPlayer;
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
+@property (nonatomic, retain) PTBadgeButton* postcardButton;
 @end
 
 @implementation PTDialpadViewController
@@ -66,8 +71,10 @@
 @synthesize audioPlayer;
 @synthesize chatController;
 @synthesize backgroundTask;
+@synthesize postcardButton;
 
 BOOL playdateStarting;
+BOOL postcardsShown;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -78,6 +85,8 @@ BOOL playdateStarting;
             [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"opentok.publisher.accepted"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
+        
+        postcardsShown = NO;
     }
     return self;
 }
@@ -87,8 +96,11 @@ BOOL playdateStarting;
     self.view.frame = CGRectMake(0, 0, 1024, 748);
     
     UIImage* backgroundImage = [UIImage imageNamed:@"date_bg.png"];
-    UIImageView* background = [[UIImageView alloc] initWithImage:backgroundImage];
+    background = [[UIImageView alloc] initWithImage:backgroundImage];
     background.tag = 666;
+    background.layer.masksToBounds = NO;
+    background.layer.shadowRadius = 5.0;
+    background.layer.shadowOpacity = 0.5;
     [self.view addSubview:background];
     
     NSString* welcomeText = @"Who will you play with today?";
@@ -102,7 +114,8 @@ BOOL playdateStarting;
     welcomeLabel.font = [self welcomeTextFont];
     welcomeLabel.textColor = [UIColor colorFromHex:@"#000000" alpha:0.8f];
     welcomeLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:welcomeLabel];
+    welcomeLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    [background addSubview:welcomeLabel];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 200, 1024, 548)];
     [self.view addSubview:self.scrollView];
@@ -110,7 +123,7 @@ BOOL playdateStarting;
     // Get the ChatViewController
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     self.chatController = appDelegate.chatController;
-    //[self.chatController connectToPlaceholderOpenTokSession];
+    [self.chatController connectToPlaceholderOpenTokSession];
     [self.chatController configureForDialpad];
 
     // Add all playmates to the dialpad
@@ -148,6 +161,18 @@ BOOL playdateStarting;
         [self.scrollView insertSubview:ttInviteBuddies aboveSubview:playmateAddView];
     }
 
+    // Postcard notification button
+    UIImage *normalImage = [UIImage imageNamed:@"photobooth.png"];
+    UIImage *pressImage = [UIImage imageNamed:@"photobooth-press.png"];
+    postcardButton = [[PTBadgeButton alloc] initWithFrame:CGRectMake(15.0f, 15.0f, normalImage.size.width, normalImage.size.height)];
+    [postcardButton setBackgroundImage:normalImage forState:UIControlStateNormal];
+    [postcardButton setBackgroundImage:pressImage forState:UIControlStateHighlighted];
+    [postcardButton addTarget:self action:@selector(postcardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:postcardButton];
+    
+    // Postcards view
+    postcardsView = [[PTShowPostcardsView alloc] initWithFrame:background.frame];
+    [self.view insertSubview:postcardsView belowSubview:background];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -159,7 +184,6 @@ BOOL playdateStarting;
         [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
     }
     
-    UIView* background = [self.view viewWithTag:666];
     CGRect backgroundFrame = self.view.frame;
     backgroundFrame.origin = CGPointZero;
     background.frame = backgroundFrame;
@@ -200,8 +224,8 @@ BOOL playdateStarting;
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dialpadControllerDidEnterBackground:)
-                                                 name:UIApplicationDidEnterBackgroundNotification
+                                             selector:@selector(refreshPostcardButtonBadgeNumber)
+                                                 name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
     if (self.selectedPlaymateView) {
@@ -279,6 +303,10 @@ BOOL playdateStarting;
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
      }];
+    
+    // Check for new postcards and update the badge number on the postcards button
+    postcardButton.badgeNumber = 0;
+    [self refreshPostcardButtonBadgeNumber];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -348,47 +376,6 @@ BOOL playdateStarting;
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-}
-
-- (void)dialpadControllerDidEnterBackground:(NSNotification*)note {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dialpadControllerDidBecomeActive:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
-#if !(TARGET_IPHONE_SIMULATOR)
-    backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (backgroundTask != UIBackgroundTaskInvalid)
-            {
-                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
-                backgroundTask = UIBackgroundTaskInvalid;
-            }
-        });
-    }];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // Here goes your operation
-        [self.chatController disconnectOpenTokSession];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (backgroundTask != UIBackgroundTaskInvalid)
-            {
-                // if you don't call endBackgroundTask, the OS will exit your app.
-                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
-                backgroundTask = UIBackgroundTaskInvalid;
-            }
-        });
-    });
-#endif
-}
-
-- (void)dialpadControllerDidBecomeActive:(NSNotification*)note {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationDidBecomeActiveNotification
-                                                  object:nil];
-    
-#if !(TARGET_IPHONE_SIMULATOR)
-    //[self.chatController connectToPlaceholderOpenTokSession];
-#endif
 }
 
 - (void)drawPlaymates {
@@ -759,6 +746,71 @@ BOOL playdateStarting;
     
     // Send analytics event for joining a playdate
     [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+}
+
+- (void)refreshPostcardButtonBadgeNumber {
+    PTNumNewPostcardsRequest* request = [[PTNumNewPostcardsRequest alloc] init];
+    [request numNewPostcardsWithUserID:[PTUser currentUser].userID
+                               success:^(NSDictionary *result)
+     {
+         NSInteger numNew = [[result valueForKey:@"num_new_photos"] integerValue];
+         postcardButton.badgeNumber = numNew;
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         LogError(@"%@ - error: %@", NSStringFromSelector(_cmd), error);
+     }];
+}
+
+- (void)postcardButtonPressed {
+    // Get the view sizes for transitioning the postcard view
+    float height = self.view.frame.size.height;
+    float width = self.view.frame.size.width;
+    
+    if (postcardsShown) {
+        // Move the dialpad views back into place
+        [UIView animateWithDuration:1.0f animations:^{
+            background.frame = CGRectMake(0.0f, 0.0f, width, height);
+            self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, -height);
+            self.chatController.view.alpha = 1.0f;
+            signUpBubbleContainer.alpha = 1.0f;
+        }];
+        
+        // Set the button images
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth.png"] forState:UIControlStateNormal];
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"photobooth-press.png"] forState:UIControlStateHighlighted];
+        postcardButton.badgeNumber = 0;
+        [self refreshPostcardButtonBadgeNumber];
+    } else {
+        PTAllPostcardsRequest *postcardsRequest = [[PTAllPostcardsRequest alloc] init];
+        [postcardsRequest allPostcardsWithUserID:[PTUser currentUser].userID
+                                         success:^(NSArray *result)
+         {
+             NSMutableArray *postcards = [[NSMutableArray alloc] init];
+             for (NSDictionary *dict in result) {
+                 NSDictionary *postcardDict = [dict objectForKey:@"postcard"];
+                 [postcards addObject:[[PTPostcard alloc] initWithDictionary:postcardDict]];
+             }
+             postcardsView.postcards = postcards;
+         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+             LogError(@"AllPostcardsRequest failed: %@", error);
+         }];
+        
+        // Move the dialpad views off the screen
+        float margin = 50.0f;
+        
+        [UIView animateWithDuration:1.0f animations:^{
+            background.frame = CGRectMake(margin, height, width - (2 * margin), height);
+            self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, height);
+            self.chatController.view.alpha = 0.0f;
+            signUpBubbleContainer.alpha = 0.0f;
+        }];
+        
+        // Set the button images
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad.png"] forState:UIControlStateNormal];
+        [postcardButton setBackgroundImage:[UIImage imageNamed:@"dialpad-press.png"] forState:UIControlStateHighlighted];
+        postcardButton.badgeNumber = 0;
+    }
+    
+    postcardsShown = !postcardsShown;
 }
 
 #pragma mark - Ringer methods

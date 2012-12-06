@@ -21,6 +21,8 @@
 #import "PTUser.h"
 #import "UAirship.h"
 #import "PTAnalytics.h"
+#import "UIView+PlayTell.h"
+#import "PTPostcardCreateRequest.h"
 
 @interface PTNewUserPushNotificationsViewController ()
 
@@ -135,34 +137,60 @@
                                  password:newUserNavigationController.currentUser.password
                                     photo:newUserNavigationController.currentUser.photo
                                 birthdate:newUserNavigationController.currentUser.birthday
-                                  success:^(NSDictionary *result) {
-                                      NSLog(@"New user creation success!");
-                                      isAccountSuccessfullyCreated = YES;
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          // Log the analytics event
-                                          [self logAnalyticsEventAccountWithSuccess:YES];
-
-                                          viewAccountCreating.hidden = YES;
-                                          viewAccountSuccess.hidden = NO;
-                                          [self performSelector:@selector(proceedWithPushNotificationPrompt) withObject:nil afterDelay:2.0f];
-                                      });
-                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                      NSLog(@"New user creation failure!! %@ - %@", error, JSON);
-                                      isAccountSuccessfullyCreated = NO;
-                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                          // Log the analytics event
-                                          [self logAnalyticsEventAccountWithSuccess:NO];
-
-                                          // Change Finish button title
-                                          PTContactsNavNextButton *buttonFinishView = (PTContactsNavNextButton *)buttonFinish.customView;
-                                          [buttonFinishView setTitle:@"Retry" forState:UIControlStateNormal];
-
-                                          viewAccountCreating.hidden = YES;
-                                          viewAccountFailure.hidden = NO;
-                                          
-                                          [self performSelector:@selector(accountCreationFailed) withObject:nil afterDelay:2.0f];
-                                      });
-                                  }];
+                                  success:^(NSDictionary *result)
+     {
+         NSLog(@"New user creation success!");
+         
+         NSString *message = [result objectForKey:@"message"];
+         NSInteger userID = [[message stringByReplacingOccurrencesOfString:@"User created " withString:@""] integerValue];
+         
+         // Create the first postcard for the user
+         UIImageView *postcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcard-new.png"]];
+         UIImageView *photoCopy = [[UIImageView alloc] initWithImage:newUserNavigationController.currentUser.photo];
+         photoCopy.frame = CGRectMake((postcard.frame.size.width - 480.0) / 2, ((postcard.frame.size.height - 360.0) / 2) - 70.0, 480.0, 360.0);
+         [postcard addSubview:photoCopy];
+         UIImage *p = [postcard screenshotWithSave:NO];
+         
+         // Send the postcard to the server
+         dispatch_async(dispatch_get_current_queue(), ^{
+             PTPostcardCreateRequest *postcardCreateRequest = [[PTPostcardCreateRequest alloc] init];
+             [postcardCreateRequest postcardCreateWithUserId:userID
+                                                  playmateId:userID
+                                                       photo:p
+                                                     success:^(NSDictionary *result)
+              {
+                  //NSLog(@"Postcard successfully uploaded.");
+              } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                  NSLog(@"Postcard creation failure!! %@ - %@", error, JSON);
+              }];
+         });
+         
+         isAccountSuccessfullyCreated = YES;
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Log the analytics event
+             [self logAnalyticsEventAccountWithSuccess:YES];
+             
+             viewAccountCreating.hidden = YES;
+             viewAccountSuccess.hidden = NO;
+             [self performSelector:@selector(proceedWithPushNotificationPrompt) withObject:nil afterDelay:2.0f];
+         });
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         NSLog(@"New user creation failure!! %@ - %@", error, JSON);
+         isAccountSuccessfullyCreated = NO;
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Log the analytics event
+             [self logAnalyticsEventAccountWithSuccess:NO];
+             
+             // Change Finish button title
+             PTContactsNavNextButton *buttonFinishView = (PTContactsNavNextButton *)buttonFinish.customView;
+             [buttonFinishView setTitle:@"Retry" forState:UIControlStateNormal];
+             
+             viewAccountCreating.hidden = YES;
+             viewAccountFailure.hidden = NO;
+             
+             [self performSelector:@selector(accountCreationFailed) withObject:nil afterDelay:2.0f];
+         });
+     }];
     
 //    isAccountSuccessfullyCreated = YES;
 //    dispatch_async(dispatch_get_main_queue(), ^{

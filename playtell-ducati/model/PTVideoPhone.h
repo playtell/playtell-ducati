@@ -15,6 +15,7 @@ typedef void (^PTVideoSubscriberSubscribedBlock) (OTSubscriber*);
 typedef void (^PTStreamConnectedToSessionBlock) (OTStream* subscriberStream, OTSession* session, BOOL isSelf);
 typedef void (^PTSessionDroppedStreamBlock) (OTSession* session, OTStream* stream);
 typedef void (^PTPublisherDidStartStreamingBlock) (OTPublisher* aPublisher);
+typedef void (^PTPublisherDidStopStreamingBlock) (OTPublisher* aPublisher);
 
 @interface PTVideoPhone : NSObject <OTSessionDelegate, OTSubscriberDelegate, OTPublisherDelegate>
 
@@ -36,5 +37,6 @@ typedef void (^PTPublisherDidStartStreamingBlock) (OTPublisher* aPublisher);
 - (void)setSessionConnectedBlock:(PTStreamConnectedToSessionBlock)handler;
 - (void)setSubscriberConnectedBlock:(PTVideoSubscriberSubscribedBlock)handler;
 - (void)setPublisherDidStartStreamingBlock:(PTPublisherDidStartStreamingBlock)handler;
+- (void)setPublisherDidStopStreamingBlock:(PTPublisherDidStopStreamingBlock)handler;
 
 @end

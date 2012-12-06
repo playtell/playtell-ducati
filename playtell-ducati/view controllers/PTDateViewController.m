@@ -300,7 +300,7 @@ NSTimer *postcardTimer;
     
     PTCreatePostcardViewController *postcardController = [[PTCreatePostcardViewController alloc] init];
     postcardController.delegate = self;
-    postcardController.playdateId = self.playdate.playdateID;
+    postcardController.playmateId = self.playdate.playmate.userID;
     postcardController.view.frame = CGRectMake(0.0f, 0.0f, width, height);
     [self.view insertSubview:postcardController.view belowSubview:background];
     
@@ -600,53 +600,6 @@ NSTimer *postcardTimer;
                                              selector:@selector(dateControllerWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dateControllerDidBecomeActive:)
-                                                 name:UIApplicationDidBecomeActiveNotification
-                                               object:nil];
-#if !(TARGET_IPHONE_SIMULATOR)
-    backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler: ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (backgroundTask != UIBackgroundTaskInvalid)
-            {
-                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
-                backgroundTask = UIBackgroundTaskInvalid;
-            }
-        });
-    }];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // Here goes your operation
-        [self removePlaymateFromChatHUD];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (backgroundTask != UIBackgroundTaskInvalid)
-            {
-                // if you don't call endBackgroundTask, the OS will exit your app.
-                [[UIApplication sharedApplication] endBackgroundTask:backgroundTask];
-                backgroundTask = UIBackgroundTaskInvalid;
-            }
-        });
-    });
-#endif
-}
-
-- (void)removePlaymateFromChatHUD {
-    // Remove the chat hud from view
-    [self.chatController disconnectOpenTokSession];
-    [self.chatController.view removeFromSuperview];
-    [self.chatController setPlaymate:nil];
-    [self.chatController configureForDialpad];
-    
-    // We don't setup these, so not sure why these calls are in here
-    if (self.playmateSubscriber) {
-        [self.playmateSubscriber.view removeFromSuperview];
-        self.playmateSubscriber = nil;
-    }
-
-    if (self.myPublisher) {
-        [self.myPublisher.view removeFromSuperview];
-        self.myPublisher = nil;
-    }
 }
 
 - (void)dateControllerWillEnterForeground:(NSNotification*)note {
@@ -677,30 +630,11 @@ NSTimer *postcardTimer;
 //        } else {
 //            LogDebug(@"Received status code %i from server", response.statusCode);
 //        }
-        [self disconnectAndTransitionToDialpad];
+        
+        // If we wait a second, it keeps the app from crashing on wakeup from background
+        [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(disconnectAndTransitionToDialpad) userInfo:nil repeats:NO];
+        //[self disconnectAndTransitionToDialpad];
     }];
-}
-
-- (void)dateControllerDidBecomeActive:(NSNotification*)note {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIApplicationDidBecomeActiveNotification
-                                                  object:nil];
-    
-#if !(TARGET_IPHONE_SIMULATOR)
-    PTPlaymate *partner;
-    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
-        partner = self.playdate.playmate;
-    } else {
-        partner = self.playdate.initiator;
-    }
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    self.chatController = appDelegate.chatController;
-    [self.view addSubview:self.chatController.view];
-    [self.chatController setPlaymate:partner];
-    [self.chatController setLoadingViewForPlaymate:partner];
-    [self.chatController connectToOpenTokSession];
-#endif
 }
 
 - (void)disconnectAndTransitionToDialpad {
@@ -747,7 +681,7 @@ NSTimer *postcardTimer;
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
-    //[self.chatController connectToPlaceholderOpenTokSession];
+    [self.chatController connectToPlaceholderOpenTokSession];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {

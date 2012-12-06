@@ -58,6 +58,28 @@
                     }];
 }
 
+- (void)replaceImageWithImage:(UIImage *)newImage {
+    UIImageView *replacement = [[UIImageView alloc]initWithImage:newImage];
+    replacement.frame = self.bounds;
+    replacement.alpha = 0.0f;
+    [self addSubview:replacement];
+    
+    [UIView animateWithDuration:0.4 animations:^ {
+        for (UIView *subview in self.subviews) {
+            if (subview == replacement) {
+                subview.alpha = 1.0f;
+            } else {
+                subview.alpha = 0.0f;
+            }
+        }
+    } completion:^(BOOL finished) {
+        self.image = newImage;
+        for (UIView *subview in self.subviews) {
+            [subview removeFromSuperview];
+        }
+    }];
+}
+
 - (void) flip
 {
 }
