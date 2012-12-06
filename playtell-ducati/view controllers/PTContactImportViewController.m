@@ -18,6 +18,8 @@
 #import "PTContactsNavCancelButton.h"
 #import <AddressBook/AddressBook.h>
 #import <QuartzCore/QuartzCore.h>
+#import "PTUserEmailCheckRequest.h"
+#import "PTUsersCreateFriendshipRequest.h"
 
 @interface PTContactImportViewController ()
 
@@ -334,15 +336,69 @@
         return;
     }
     
-    // Show compose msg view controller
-    NSMutableDictionary *contact = [NSMutableDictionary dictionaryWithObjectsAndKeys:textName.text, @"name", textEmail.text, @"email", nil];
-    [self.contacts addObject:contact];
+    // Temporarily disable the button
+    buttonSendInvite.enabled = NO;
+    
+    // Check if the email belongs to an existing user
+    PTUserEmailCheckRequest *apiRequest = [[PTUserEmailCheckRequest alloc] init];
+    [apiRequest checkEmail:textEmail.text
+                returnUser:YES
+                   success:^(NSDictionary *result) {
+                       BOOL isEmailAvailable = [[result objectForKey:@"available"] boolValue];
+                       if (isEmailAvailable == NO) {
+                           // If email is taken, it must belong to a user -> find their user id
+                           NSInteger userId = [[result objectForKey:@"user_id"] integerValue];
 
-    PTContactMessageViewController *contactMessageViewController = [[PTContactMessageViewController alloc] initWithNibName:@"PTContactMessageViewController" bundle:nil withContacts:self.contacts];
-    [self.navigationController pushViewController:contactMessageViewController animated:YES];
+                           // Create friendship
+                           [self createFriendshipWithUserId:userId];
+                       } else {
+                           // If email is available, it doesn't belong to an existing user -> send manual invitation
+                           dispatch_async(dispatch_get_main_queue(), ^{
+                               // Show compose msg view controller
+                               NSMutableDictionary *contact = [NSMutableDictionary dictionaryWithObjectsAndKeys:textName.text, @"name", textEmail.text, @"email", nil];
+                               [self.contacts addObject:contact];
+                               
+                               PTContactMessageViewController *contactMessageViewController = [[PTContactMessageViewController alloc] initWithNibName:@"PTContactMessageViewController" bundle:nil withContacts:self.contacts];
+                               [self.navigationController pushViewController:contactMessageViewController animated:YES];
+                           });
+                       }
+
+                       // Enable the button
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                           buttonSendInvite.enabled = YES;
+                       });
+                   }
+                   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                       NSLog(@"EMAIL FAILURE: %@", error);
+                       NSLog(@"EMAIL FAILURE: %@", JSON);
+                       // Enable the button
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                           buttonSendInvite.enabled = YES;
+                       });
+                   }];
 }
 
-#pragma make - Textfield delegates
+#pragma mark - Friending
+
+- (void)createFriendshipWithUserId:(NSInteger)userId {
+    // API call to create friendship
+    PTUsersCreateFriendshipRequest *usersCreateFriendshipRequest = [[PTUsersCreateFriendshipRequest alloc] init];
+    [usersCreateFriendshipRequest userCreateFriendship:userId
+                                             authToken:[[PTUser currentUser] authToken]
+                                               success:^(NSDictionary *result) {
+                                                   // Created friendship request, now go to Dialpad
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       [self cancelContactImport:nil];
+                                                   });
+                                               } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                   // Failed creating friendship request, now go to Dialpad
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       [self cancelContactImport:nil];
+                                                   });
+                                               }];
+}
+
+#pragma mark - Textfield delegates
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if (textField.tag == 0) {
