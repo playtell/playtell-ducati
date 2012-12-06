@@ -870,6 +870,9 @@ BOOL playdateStarting;
         // Add new playmate to the factory
         [[PTConcretePlaymateFactory sharedFactory] addPlaymate:initiator];
         
+        // Refresh local playmates array
+        self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+        
         // Add new playmate to the dialpad
         [self addNewPlaymate];
     }
@@ -881,16 +884,9 @@ BOOL playdateStarting;
     
     // We accepted someone's friendship (we're NOT the initiator of the friendship)
     if ([friend integerValue] == [[PTUser currentUser] userID]) {
-        NSLog(@"We accepted someone's friendship (%i)!", [initiator integerValue]);
-        // Find friend's playmate obj and playmate view
-        PTPlaymateView *playmateView = [self.playmateViews objectForKey:initiator];
-        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[initiator integerValue]];
-        if (playmateView != nil && playmate != nil) {
-            // Update playmate friendship status
-            playmate.friendshipStatus = @"confirmed";
-            // Update playmate view to reflect change
-            [playmateView hideFriendshipConfirmationAnimated:YES];
-        }
+        // Don't do anything since we handled that when placing the API call
+        NSLog(@"We accepted someone's friendship (%i)! (via Pusher)", [initiator integerValue]);
+        return;
     }
     
     // Someone accepted our friendship (we're the initiator of the friendship)
@@ -914,22 +910,9 @@ BOOL playdateStarting;
     
     // We declined someone's friendship (we're NOT the initiator of the friendship)
     if ([friend integerValue] == [[PTUser currentUser] userID]) {
-        NSLog(@"We declined someone's friendship (%i)!", [initiator integerValue]);
-        // Find friend's playmate obj and playmate view
-        PTPlaymateView *playmateView = [self.playmateViews objectForKey:initiator];
-        PTPlaymate *playmate = [[PTConcretePlaymateFactory sharedFactory] playmateWithId:[initiator integerValue]];
-        if (playmateView != nil && playmate != nil) {
-            // Delete this playmate obj from factory
-            [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
-
-            // Delete playmate view and move all others to reflect this change
-            [UIView animateWithDuration:0.3f
-                             animations:^{
-                                 playmateView.alpha = 0.0f;
-                             } completion:^(BOOL finished) {
-                                 [self refreshPlaymateViews];
-                             }];
-        }
+        // Don't do anything since we handled that when placing the API call
+        NSLog(@"We declined someone's friendship (%i)! (via Pusher)", [initiator integerValue]);
+        return;
     }
     
     // Someone declined our friendship (we're the initiator of the friendship)
@@ -1098,7 +1081,15 @@ BOOL playdateStarting;
     PTFriendshipAcceptRequest *friendshipAcceptRequest = [[PTFriendshipAcceptRequest alloc] init];
     [friendshipAcceptRequest acceptFriendshipWith:playmate.userID
                                         authToken:[[PTUser currentUser] authToken]
-                                          success:nil // Don't need since Pusher will notify the client of this and will handle UI changes
+                                          success:^(NSDictionary *result) {
+                                              // Update playmate view to reflect change
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  // Update playmate friendship status
+                                                  playmate.friendshipStatus = @"confirmed";
+                                                  // Update playmate view to reflect change
+                                                  [playmateView hideFriendshipConfirmationAnimated:YES];
+                                              });
+                                          }
                                           failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                               dispatch_async(dispatch_get_main_queue(), ^{
                                                   // Show alert
@@ -1120,7 +1111,24 @@ BOOL playdateStarting;
     PTFriendshipDeclineRequest *friendshipDeclineRequest = [[PTFriendshipDeclineRequest alloc] init];
     [friendshipDeclineRequest declineFriendshipFrom:playmate.userID
                                           authToken:[[PTUser currentUser] authToken]
-                                            success:nil // Don't need since Pusher will notify the client of this and will handle UI changes
+                                            success:^(NSDictionary *result) {
+                                                // Update playmate view to reflect change
+                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                    // Delete this playmate obj from factory
+                                                    [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
+
+                                                    // Refresh local playmates array
+                                                    self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+                                                    
+                                                    // Delete playmate view and move all others to reflect this change
+                                                    [UIView animateWithDuration:0.3f
+                                                                     animations:^{
+                                                                         playmateView.alpha = 0.0f;
+                                                                     } completion:^(BOOL finished) {
+                                                                         [self refreshPlaymateViews];
+                                                                     }];
+                                                });
+                                            }
                                             failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                     // Show alert
