@@ -18,6 +18,7 @@ typedef void (^PTMatchingRefreshGameRequestFailureBlock) (NSURLRequest* request,
                          playdateId:(NSInteger)playdateId
                             themeId:(NSInteger)themeId
                            numCards:(NSInteger)numCards
+                           gameName:(NSString*)gameName
                           authToken:(NSString*)token
                           onSuccess:(PTMatchingRefreshGameRequestSuccessBlock)success
                           onFailure:(PTMatchingRefreshGameRequestFailureBlock)failure;

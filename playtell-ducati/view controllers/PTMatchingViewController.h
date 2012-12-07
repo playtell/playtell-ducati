@@ -42,7 +42,6 @@
     UIImageView *viewTrackingCardImage;
     CGPoint pointTouchOriginal;
     CGPoint pointTouchOffset;
-    PTMatchingAvailableCardView *viewOriginalTrackingCard;
     NSInteger currentAvailableIndex;
     PTMatchingAvailableCardView *viewCurrentAvailableCardView;
     

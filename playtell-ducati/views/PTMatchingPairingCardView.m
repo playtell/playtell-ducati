@@ -201,8 +201,6 @@
     rightBorder.hidden = NO;
 }
 
-#pragma mark - Shake yes/no
-
 #pragma mark - Animations
 
 - (void)jumpUpDownDelayed:(BOOL)doDelay {

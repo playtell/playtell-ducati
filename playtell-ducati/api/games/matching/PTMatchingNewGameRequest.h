@@ -17,6 +17,7 @@ typedef void (^PTMatchingNewGameRequestFailureBlock) (NSURLRequest* request, NSH
                     playmateId:(NSInteger)playmateId
                        themeId:(NSInteger)themeId
                       numCards:(NSInteger)numCards
+                      gameName:(NSString*)gameName
                      authToken:(NSString*)token
                      onSuccess:(PTMatchingNewGameRequestSuccessBlock)success
                      onFailure:(PTMatchingNewGameRequestFailureBlock)failure;
