@@ -13,8 +13,8 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setBackgroundImage:[UIImage imageNamed:@"buttonBackNormal"] forState:UIControlStateNormal];
-        [self setBackgroundImage:[UIImage imageNamed:@"buttonBackHighlighted"] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageNamed:@"backpress.png"] forState:UIControlStateHighlighted];
         [self setTitle:@"Back" forState:UIControlStateNormal];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
     }

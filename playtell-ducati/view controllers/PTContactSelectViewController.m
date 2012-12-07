@@ -104,23 +104,12 @@
     [self.navigationController.navigationBar setTintColor:[UIColor colorFromHex:@"#3FA9F5"]];
     
     // Nav buttons
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
-    
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
+    [buttonBackView setTitle:@"Cancel" forState:UIControlStateNormal];
+    [buttonBackView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
     buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
-    buttonBack.enabled = NO;
-
-    PTContactsNavNextButton *buttonNextView = [PTContactsNavNextButton buttonWithType:UIButtonTypeCustom];
-    buttonNextView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
-    [buttonNextView addTarget:self action:@selector(showComposeMessageController:) forControlEvents:UIControlEventTouchUpInside];
-    buttonNext = [[UIBarButtonItem alloc] initWithCustomView:buttonNextView];
-    buttonNext.enabled = NO;
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonNext, buttonBack, nil]];
+    [self.navigationItem setLeftBarButtonItem:buttonBack];
     
     // Filtering
     [textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
@@ -539,6 +528,11 @@
         vcSize = CGSizeMake(404.0f, height);
     }
     contactsSelectedViewController.view.superview.frame = CGRectMake(([UIScreen mainScreen].bounds.size.height - vcSize.width) / 2.0f, ([UIScreen mainScreen].bounds.size.width - vcSize.height) / 2.0f, vcSize.width, vcSize.height);
+}
+
+- (IBAction)didPressManualInvite:(id)sender {
+    // TODO: fill in when manual invite screen is ready
+    NSLog(@"Did select manual invite");
 }
 
 #pragma mark - Contact select delegates
