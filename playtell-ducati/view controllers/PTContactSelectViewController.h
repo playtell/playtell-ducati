@@ -31,12 +31,6 @@
     NSArray *filteredContactsNotOnPT;
     NSString *searchString;
     
-    // Related contacts
-    NSMutableArray *relatedContacts;
-    IBOutlet UIView *relatedContactsContainer;
-    IBOutlet UITableView *relatedContactsTableView;
-    IBOutlet UIImageView *relatedHeader;
-    
     // Invitation/filter box
     IBOutlet UIView *leftContainer;
     IBOutlet UIView *invitationContainer;

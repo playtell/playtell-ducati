@@ -72,7 +72,6 @@
                                       success:^(NSDictionary *result) {
                                           // Now retrieve contact list from server (with metadata about each contact)
                                           [self getContactList];
-                                          [self getRelatedContacts];
                                       } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                           NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
                                       }];
@@ -126,22 +125,13 @@
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     leftContainer.layer.shadowColor = [UIColor blackColor].CGColor;
-    leftContainer.layer.shadowOffset = CGSizeMake(4.0f, 0.0f);
-    leftContainer.layer.shadowOpacity = 0.3f;
-    leftContainer.layer.shadowRadius = 4.0f;
+    leftContainer.layer.shadowOpacity = 0.8f;
+    leftContainer.layer.shadowRadius = 8.0f;
     
     // Table view style
     contactsTableView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     contactsTableView.separatorColor = [UIColor colorFromHex:@"#55707f"];
     contactsTableView.hidden = YES;
-    relatedContactsTableView.backgroundColor = [UIColor clearColor];
-    relatedContactsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    CALayer *sep1 = [CALayer layer];
-    sep1.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
-    sep1.frame = CGRectMake(0.0f, 0.0f, relatedContactsTableView.frame.size.width, 1.0f);
-    [relatedContactsContainer.layer addSublayer:sep1];
-    relatedContactsContainer.hidden = YES;
-    relatedHeader.hidden = YES;
     
     // Setup loading view
     UILabel *loadingLbl = [[loadingView subviews] objectAtIndex:0];
@@ -266,40 +256,6 @@
                                          }];
 }
 
-- (void)getRelatedContacts {
-    PTContactsGetRelatedRequest *contactsGetRelatedRequest = [[PTContactsGetRelatedRequest alloc] init];
-    [contactsGetRelatedRequest getRelatedWithAuthToken:[PTUser currentUser].authToken
-                                               success:^(NSArray *contactList, NSInteger total) {
-                                                   if (total == 0) {
-                                                       return;
-                                                   }
-
-                                                   // Modify to mutable objects
-                                                   relatedContacts = [[NSMutableArray alloc] initWithCapacity:[contactList count]];
-                                                   for (NSDictionary *contact in contactList) {
-                                                       [relatedContacts addObject:[NSMutableDictionary dictionaryWithDictionary:contact]];
-                                                   }
-                                                   
-                                                   dispatch_async(dispatch_get_main_queue(), ^() {
-                                                       // Update table view
-                                                       [relatedContactsTableView reloadData];
-                                                       
-                                                       // Show table view container
-                                                       relatedContactsContainer.alpha = 0.0f;
-                                                       relatedContactsContainer.hidden = NO;
-                                                       relatedHeader.alpha = 0.0f;
-                                                       relatedHeader.hidden = NO;
-                                                       [UIView animateWithDuration:0.5f animations:^{
-                                                           relatedContactsContainer.alpha = 1.0f;
-                                                           relatedHeader.alpha = 1.0f;
-                                                       }];
-                                                   });
-                                               }
-                                               failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                   NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
-                                               }];
-}
-
 - (void)navigateBack:(id)sender {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
@@ -391,7 +347,6 @@
                                               success:^(NSDictionary *result) {
                                                   // Now retrieve contact list from server (with metadata about each contact)
                                                   [self getContactList];
-                                                  [self getRelatedContacts];
                                               } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                   NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
                                               }];
@@ -421,30 +376,18 @@
 #pragma mark - Table View delegates
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView.tag == 0) { // Contacts table
-        return 2;
-    } else { // Related contacts table
-        return [relatedContacts count];
-    }
+    return 2;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        if (section == 0) {
-            return @"Your friends already on Playtell";
-        } else {
-            return @"Your friends from [Source]";
-        }
-    } else { // Related contacts table
-        return nil;
+    if (section == 0) {
+        return @"Your friends already on Playtell";
+    } else {
+        return @"Your friends from [Source]";
     }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 1) { // Related contacts table
-        return [UIView new];
-    }
-
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 7.0f, 27.0f, 19.0f)];
     if (section == 0) {
         img.image = [UIImage imageNamed:@"contactsHeader2"];
@@ -476,116 +419,82 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        return 32.0f;
-    } else { // Related contacts table
-        return 0.0f;
-    }
+    return 32.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        if (inSearchMode) {
-            // Filtered contacts
-            if (section == 0) {
-                return [filteredContactsOnPT count];
-            } else {
-                return [filteredContactsNotOnPT count] + 1; // The extra one is the "Manual Invite" cell.
-            }
+    if (inSearchMode) {
+        // Filtered contacts
+        if (section == 0) {
+            return [filteredContactsOnPT count];
         } else {
-            // All contacts
-            if (section == 0) {
-                return [contactsOnPT count];
-            } else {
-                return [contactsNotOnPT count];
-            }
+            return [filteredContactsNotOnPT count] + 1; // The extra one is the "Manual Invite" cell.
         }
-    } else { // Related contacts table
-        return [relatedContacts count];
+    } else {
+        // All contacts
+        if (section == 0) {
+            return [contactsOnPT count];
+        } else {
+            return [contactsNotOnPT count];
+        }
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView.tag == 0) { // Contacts table
-        // Last cell in if we're filtering should always be "Manual Invite" cell
-        if (inSearchMode && indexPath.section == 1 && (indexPath.row == [filteredContactsNotOnPT count])) {
-            PTContactsTableManualInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTContactsTableManualInviteCell"];
-            if (cell == nil) {
-                cell = [[PTContactsTableManualInviteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PTContactsTableManualInviteCell" tableWidth:contactsTableView.frame.size.width];
-            }
-            cell.delegate = self;
-            return cell;
-        }
-        
-        // Load normal cells
-        static NSString *CellIdentifier = @"PTContactsTableBigCell";
-        PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    // Last cell in if we're filtering should always be "Manual Invite" cell
+    if (inSearchMode && indexPath.section == 1 && (indexPath.row == [filteredContactsNotOnPT count])) {
+        PTContactsTableManualInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTContactsTableManualInviteCell"];
         if (cell == nil) {
-            cell = [[PTContactsTableBigCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
+            cell = [[PTContactsTableManualInviteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PTContactsTableManualInviteCell" tableWidth:contactsTableView.frame.size.width];
         }
-        
-        // Contact description
-        NSMutableDictionary *contact;
-        if (inSearchMode) {
-            if (indexPath.section == 0) {
-                contact = [filteredContactsOnPT objectAtIndex:indexPath.row];
-            } else {
-                contact = [filteredContactsNotOnPT objectAtIndex:indexPath.row];
-            }
-        } else {
-            if (indexPath.section == 0) {
-                contact = [contactsOnPT objectAtIndex:indexPath.row];
-            } else {
-                contact = [contactsNotOnPT objectAtIndex:indexPath.row];
-            }
-        }
-        
-        // Define cell
         cell.delegate = self;
-        cell.contact = contact;
-        
-        if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) { // Not a PT user
-            if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contact NOT already selected
-                [cell setMode:PTContactsTableBigCellModeInvite];
-            } else { // Contact already selected
-                [cell setMode:PTContactsTableBigCellModeUninvite];
-            }
-        } else { // Existing PT user
-            BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
-            BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
-            if (isConfirmedFriend || isPendingFriend) { // Already a friend (confirmed or pending)
-                [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
-            } else { // Not a friend
-                [cell setMode:PTContactsTableBigCellModeFriend];
-            }
-        }
-        
         return cell;
-    } else { // Related contacts table
-        static NSString *CellIdentifier = @"PTContactsTableSmallCell";
-        
-        PTContactsTableSmallCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[PTContactsTableSmallCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:relatedContactsTableView.frame.size.width];
+    }
+    
+    // Load normal cells
+    static NSString *CellIdentifier = @"PTContactsTableBigCell";
+    PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[PTContactsTableBigCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
+    }
+    
+    // Contact description
+    NSMutableDictionary *contact;
+    if (inSearchMode) {
+        if (indexPath.section == 0) {
+            contact = [filteredContactsOnPT objectAtIndex:indexPath.row];
+        } else {
+            contact = [filteredContactsNotOnPT objectAtIndex:indexPath.row];
         }
-        
-        // Contact description
-        NSMutableDictionary *contact = [relatedContacts objectAtIndex:indexPath.row];
-        
-        // Define cell
-        cell.delegate = self;
-        cell.contact = contact;
-
+    } else {
+        if (indexPath.section == 0) {
+            contact = [contactsOnPT objectAtIndex:indexPath.row];
+        } else {
+            contact = [contactsNotOnPT objectAtIndex:indexPath.row];
+        }
+    }
+    
+    // Define cell
+    cell.delegate = self;
+    cell.contact = contact;
+    
+    if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) { // Not a PT user
+        if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contact NOT already selected
+            [cell setMode:PTContactsTableBigCellModeInvite];
+        } else { // Contact already selected
+            [cell setMode:PTContactsTableBigCellModeUninvite];
+        }
+    } else { // Existing PT user
         BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
         BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
-        if (isConfirmedFriend || isPendingFriend) { // Already a friend
+        if (isConfirmedFriend || isPendingFriend) { // Already a friend (confirmed or pending)
             [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
         } else { // Not a friend
             [cell setMode:PTContactsTableBigCellModeFriend];
         }
-        
-        return cell;
     }
+    
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
