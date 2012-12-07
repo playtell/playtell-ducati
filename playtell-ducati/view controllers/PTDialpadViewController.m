@@ -16,7 +16,7 @@
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
-#import "PTContactImportViewController.h"
+#import "PTContactSelectViewController.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTFriendshipAcceptRequest.h"
@@ -42,6 +42,7 @@
 #import "UIColor+ColorFromHex.h"
 #import "UIView+PlayTell.h"
 
+#import <AddressBook/AddressBook.h>
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -1200,15 +1201,91 @@ BOOL postcardsShown;
 - (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
     // Is the user logged in?
     if ([[PTUser currentUser] isLoggedIn] == YES) {
-        PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
-        
-        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+        ABAddressBookRef addressBook;
+        // iOS 6 and up
+        if (ABAddressBookGetAuthorizationStatus != NULL) {
+            ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+            
+            // Check address book permission
+            if (status != kABAuthorizationStatusAuthorized) {
+                CFErrorRef error = nil;
+                addressBook = ABAddressBookCreateWithOptions(NULL, &error);
+                ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //                if (error) {
+                        //                    NSError* nsError = (__bridge NSError*)error;
+                        //                    NSLog(@"nsError: %@", nsError.localizedDescription);
+                        //                }
+                        // Permission granted?
+                        if (granted && !error) {
+                            [self getContactsFromAddressBook:addressBook];
+                        }
+                    });
+                });
+            } else {
+                addressBook = ABAddressBookCreate();
+                [self getContactsFromAddressBook:addressBook];
+            }
+        } else {
+            // Pre-iOS 6
+            addressBook = ABAddressBookCreate();
+            [self getContactsFromAddressBook:addressBook];
+        }
+//        PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+//        
+//        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//        [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
     } else {
         // If user isn't logged in, redirect them to sign-up form
         [self signUpDidPress:nil];
     }
+}
+
+- (void)getContactsFromAddressBook:(ABAddressBookRef)addressBook {
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    CFIndex nPeople = ABAddressBookGetPersonCount(addressBook);
+    
+    NSMutableArray *abContacts = [NSMutableArray array];
+    for (int i=0; i<nPeople; i++) {
+        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
+        NSString *firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        
+        // Get emails
+        ABMultiValueRef emailsRef = ABRecordCopyValue(ref, kABPersonEmailProperty);
+        if (emailsRef) {
+            for (int i=0; i<ABMultiValueGetCount(emailsRef); i++) {
+                NSString *email = (__bridge NSString *)ABMultiValueCopyValueAtIndex(emailsRef, i);
+                
+                // Save the contact
+                NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [fullName copy],                @"name",
+                                         [[email copy] lowercaseString], @"email",
+                                         @"iPad Address Book",           @"source",
+                                         nil];
+                [abContacts addObject:contact];
+            }
+        }
+        
+        // Cleanup
+        CFRelease(ref);
+    }
+    
+    NSLog(@"---> Got contacts: %i", [abContacts count]);
+    
+    // Load select controller
+    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
+                                                                  initWithNibName:@"PTContactSelectViewController"
+                                                                  bundle:nil
+                                                                  withContacts:abContacts];
+    contactSelectViewController.sourceType = @"Address Book";
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - New user flow methods

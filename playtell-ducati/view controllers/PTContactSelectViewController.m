@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "PTAppDelegate.h"
+#import "TransitionController.h"
 #import "PTContactSelectViewController.h"
 #import "PTContactMessageViewController.h"
 #import "PTContactsCreateListRequest.h"
@@ -299,7 +301,9 @@
 }
 
 - (void)navigateBack:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)searchStringDidChange:(id)sender {
