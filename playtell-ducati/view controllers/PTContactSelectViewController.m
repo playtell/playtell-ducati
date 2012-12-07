@@ -426,7 +426,7 @@
         if (section == 0) {
             return [filteredContactsOnPT count];
         } else {
-            return [filteredContactsNotOnPT count] + 1; // The extra one is the "Manual Invite" cell.
+            return [filteredContactsNotOnPT count]; // The extra one is the "Manual Invite" cell.
         }
     } else {
         // All contacts
@@ -438,17 +438,7 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Last cell in if we're filtering should always be "Manual Invite" cell
-    if (inSearchMode && indexPath.section == 1 && (indexPath.row == [filteredContactsNotOnPT count])) {
-        PTContactsTableManualInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTContactsTableManualInviteCell"];
-        if (cell == nil) {
-            cell = [[PTContactsTableManualInviteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PTContactsTableManualInviteCell" tableWidth:contactsTableView.frame.size.width];
-        }
-        cell.delegate = self;
-        return cell;
-    }
-    
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
     // Load normal cells
     static NSString *CellIdentifier = @"PTContactsTableBigCell";
     PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
