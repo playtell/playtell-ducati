@@ -139,6 +139,15 @@
     UIView *loadingCrank = [self createLoadingCrank];
     loadingCrank.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
     [loadingView addSubview:loadingCrank];
+    
+    // Setup bottom bar
+    bottomBar.layer.shadowColor = [UIColor blackColor].CGColor;
+    bottomBar.layer.shadowOpacity = 0.3f;
+    bottomBar.layer.shadowRadius = 4.0f;
+    bottomBar.layer.borderColor = [UIColor blackColor].CGColor;
+    bottomBar.layer.borderWidth = 1.0f;
+    lblManualInvite.shadowColor = [UIColor whiteColor];
+    lblManualInvite.shadowOffset = CGSizeMake(0.0f, 1.0f);
 }
 
 - (void)viewDidUnload {

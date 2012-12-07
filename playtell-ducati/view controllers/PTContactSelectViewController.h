@@ -35,6 +35,10 @@
     IBOutlet UIView *leftContainer;
     IBOutlet UIView *invitationContainer;
     PTContactsInvitationCountButton *contactsInvitationCountButton;
+    
+    // Bottom bar
+    IBOutlet UIView *bottomBar;
+    IBOutlet UILabel *lblManualInvite;
 }
 
 @property (nonatomic, retain) NSString *sourceType;
