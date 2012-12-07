@@ -244,6 +244,9 @@
                              onSuccess:nil
                              onFailure:nil];
     
+    // Notifications cleanup
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
     // Transition to playdate view controller
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
@@ -287,6 +290,9 @@
 }
 
 - (void)transitionToDialpad {
+    // Notifications cleanup
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
@@ -857,6 +863,9 @@
     NSInteger initiatorId = [[eventData objectForKey:@"playmate_id"] integerValue]; // Who ended the game
     
     if (initiatorId != [[PTUser currentUser] userID]) { // Skip if we are the ones who ended the game
+        // Notifications cleanup
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+
         // Transition to playdate view controller
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
         [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCrossDissolve];
@@ -865,76 +874,56 @@
 
 - (void)pusherRefreshGame:(NSNotification*)notification {
     NSDictionary *eventData = notification.userInfo;
-    boardId = [[eventData objectForKey:@"board_id"] integerValue];
-    totalCards = ([[eventData objectForKey:@"num_cards"] integerValue]/2.0f); // Really there are twice as many, but they're all halves
     
-    // Parse file names
+    // Get response parameters
+    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger _boardId = [[eventData objectForKey:@"board_id"] integerValue];
+    NSInteger _totalCards = [[eventData objectForKey:@"num_cards"] integerValue];
     NSString *filenamesFlat = [eventData valueForKey:@"filename_dump"];
     filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
-    filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+    NSArray *_filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
+    NSString *cardsString = [eventData valueForKey:@"card_array_string"];
     
-    // Parse cards string
-    NSString *_cardsString = [eventData objectForKey:@"card_array_string"];
-    NSArray *stringArr = [_cardsString componentsSeparatedByString:@","];
-    availableCards = [NSArray arrayWithArray:[stringArr subarrayWithRange:NSMakeRange(0, totalCards)]];
-    pairingCards = [NSArray arrayWithArray:[stringArr subarrayWithRange:NSMakeRange(totalCards, totalCards)]];
-    
-    // Figure out the roles of the players
-    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
-    if ([[PTUser currentUser] userID] == initiatorId) {
-        initiator = [PTUser currentUser];
-        playmate = playdate.playmate;
-        myTurn = YES;
+    PTPlaymate *aInitiator;
+    PTPlaymate *aPlaymate;
+    if (playdate.initiator.userID == initiatorId) {
+        aInitiator = playdate.initiator;
+        aPlaymate = playdate.playmate;
     } else {
-        initiator = playdate.playmate;
-        playmate = [PTUser currentUser];
-        myTurn = NO;
+        aInitiator = playdate.playmate;
+        aPlaymate = playdate.initiator;
     }
     
-    // Reset game status
-    isGameOver = NO;
+    // My turn?
+    BOOL isMyTurn = [PTUser currentUser].userID == initiatorId;
     
-    // Hide win/lose/draw popups
-    [UIView animateWithDuration:0.2f animations:^{
-        winnerView.alpha = 0.0f;
-        loserView.alpha = 0.0f;
-        drawView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        [winnerView removeFromSuperview];
-        [loserView removeFromSuperview];
-        [drawView removeFromSuperview];
-    }];
+    // Init the math game controller
+    PTMathViewController *mathViewController = [[PTMathViewController alloc]
+                                                initWithNibName:@"PTMathViewController"
+                                                bundle:nil
+                                                playdate:playdate
+                                                boardId:_boardId
+                                                themeId:2 // TODO: Hard coded
+                                                initiator:aInitiator
+                                                playmate:aPlaymate
+                                                filenames:_filenames
+                                                totalCards:_totalCards
+                                                cardsString:cardsString
+                                                myTurn:isMyTurn];
+    mathViewController.chatController = self.chatController;
     
-    // Reset game board flip position
-    viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-flipboard-front"]];
-
-    // Reset all pairing and available card subviews
-    for (UIView *childView in viewAvailableCardsScroll.subviews) {
-        [childView removeFromSuperview];
-    }
-    for (UIView *childView in viewPairingCards.subviews) {
-        [childView removeFromSuperview];
-    }
-    [self setupAvailableCards];
-    [self setupInitialPairingCard];
+    // Init game splash
+    UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+    splash.image = [UIImage imageNamed:@"math-splash"];
     
-    // Reset scores
-    [scoreViewMe setScore:0];
-    [scoreViewOpponent setScore:0];
+    // Notifications cleanup
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    // If not my turn, flip the game board
-    if (myTurn == NO) {
-        [self performSelector:@selector(flipGameBoard) withObject:nil afterDelay:0.8f];
-        [self disableAvailableCards];
-        
-        // Set active chat HUD
-        [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:1.1f];
-    } else {
-        [self enabledAvailableCards];
-        
-        // Set active chat HUD
-        [self setActiveChatHUD];
-    }
+    // Bring up the view controller of the new game
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController loadGame:mathViewController
+                                   withOptions:UIViewAnimationOptionTransitionCurlUp
+                                    withSplash:splash];
 }
 
 @end
