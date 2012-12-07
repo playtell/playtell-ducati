@@ -21,6 +21,7 @@
 @implementation PTChatHUDView
 @synthesize containerView;
 @synthesize contentView;
+@synthesize opentokView;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -46,6 +47,12 @@
         self.contentShadowView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self.containerView addSubview:self.contentShadowView];
         [self.containerView addSubview:self.contentView];
+        
+        // Opentok video
+        self.opentokView = [[UIView alloc] initWithFrame:CGRectMake(CHATVIEW_PADDING, 0.0f, width - (CHATVIEW_PADDING * 2.0f), height - CHATVIEW_PADDING)];
+        self.opentokView.autoresizesSubviews = YES;
+        self.opentokView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self.containerView addSubview:self.opentokView];
         
         // Container shadow setup
         UIBezierPath *containerMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.containerView.bounds
@@ -83,6 +90,15 @@
         contentMaskLayer.path = contentMaskPath.CGPath;
         self.contentView.layer.mask = contentMaskLayer;
         
+        // Opentok mask layer setup
+        UIBezierPath *opentokMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.contentView.bounds
+                                                              byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                    cornerRadii:CGSizeMake(12.0f, 12.0f)];
+        opentokMaskLayer = [CAShapeLayer layer];
+        opentokMaskLayer.frame = self.contentView.bounds;
+        opentokMaskLayer.path = opentokMaskPath.CGPath;
+        self.opentokView.layer.mask = opentokMaskLayer;
+        
         // Container views
         [self addSubview:self.containerShadowView];
         [self addSubview:self.containerView];
@@ -111,6 +127,13 @@
     contentShadowLayer.shadowPath = contentMaskPath.CGPath;
     contentMaskLayer.frame = self.contentView.bounds;
     contentMaskLayer.path = contentMaskPath.CGPath;
+    
+    // Redefine Opentok mask
+    UIBezierPath *opentokMaskPath = [UIBezierPath bezierPathWithRoundedRect:self.contentView.bounds
+                                                          byRoundingCorners:(UIRectCornerBottomLeft|UIRectCornerBottomRight)
+                                                                cornerRadii:CGSizeMake(12.0f, 12.0f)];
+    opentokMaskLayer.frame = self.contentView.bounds;
+    opentokMaskLayer.path = opentokMaskPath.CGPath;
 }
 
 - (void)setLoadingImageForView:(UIImage*)anImage {
@@ -133,6 +156,22 @@
     aView.frame = self.contentView.bounds;
     aView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.contentView addSubview:aView];
+}
+
+- (void)setOpentokVideoView:(UIView*)aView {
+    if ([aView isKindOfClass:[OTVideoView class]]) {
+        self.publisherView = (OTVideoView *)aView;
+    } else {
+        self.publisherView = nil;
+    }
+    
+    // Remove OpenTok gestures
+    [aView removeAllGestureRecognizers];
+    
+    [self.opentokView removeAllSubviews];
+    aView.frame = self.opentokView.bounds;
+    aView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.opentokView addSubview:aView];
 }
 
 - (void)showBorder {
