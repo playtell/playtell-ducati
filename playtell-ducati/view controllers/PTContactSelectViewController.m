@@ -91,8 +91,17 @@
     // Background
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
+    // Header view container
+    headerContainer.backgroundColor = [UIColor colorFromHex:@"#3FA9F5"];
+    headerContainer.layer.shadowColor = [UIColor blackColor].CGColor;
+    headerContainer.layer.shadowOpacity = 0.8f;
+    headerContainer.layer.shadowRadius = 8.0f;
+    headerContainer.layer.borderColor = [UIColor blackColor].CGColor;
+    headerContainer.layer.borderWidth = 1.0f;
+    
     // Navigation controller setup
-    self.title = [NSString stringWithFormat:@"Invite From %@", self.sourceType];
+    self.title = @"Invite Your Family To Play";
+    [self.navigationController.navigationBar setTintColor:[UIColor colorFromHex:@"#3FA9F5"]];
     
     // Nav buttons
     PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
@@ -115,12 +124,6 @@
     
     // Filtering
     [textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
-    invitationContainer.backgroundColor = [UIColor colorWithRed:(62.0f / 255.0f) green:(169.0f / 255.0f) blue:(245.0f / 255.0f) alpha:1.0f];
-    contactsInvitationCountButton = [PTContactsInvitationCountButton buttonWithType:UIButtonTypeCustom];
-    [contactsInvitationCountButton setTitle:@"0" forState:UIControlStateNormal];
-    contactsInvitationCountButton.frame = CGRectMake(31.0f, 12.0f, 88.0f, 82.0f);
-    [contactsInvitationCountButton addTarget:self action:@selector(viewSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [invitationContainer addSubview:contactsInvitationCountButton];
     
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
@@ -158,7 +161,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [contactsTableView reloadData];
-    [contactsInvitationCountButton setTitle:[NSString stringWithFormat:@"%i", [selectedContacts count]] forState:UIControlStateNormal];
 }
 
 - (void)dealloc {
@@ -250,6 +252,7 @@
                                                      loadingView.alpha = 0.0f;
                                                  } completion:^(BOOL finished) {
                                                      textSearch.enabled = YES;
+                                                     [textSearch becomeFirstResponder];
                                                      loadingView.hidden = YES;
                                                      
                                                      // Show table
@@ -301,10 +304,7 @@
     [self.navigationController pushViewController:contactMessageViewController animated:YES];
 }
 
-- (void)receiveContactAction:(NSNotification *)notification {
-    // Update label count
-    [contactsInvitationCountButton setTitle:[NSString stringWithFormat:@"%i", [selectedContacts count]] forState:UIControlStateNormal];
-    
+- (void)receiveContactAction:(NSNotification *)notification {    
     // Navigation buttons
     buttonNext.enabled = [selectedContacts count] > 0;
 }
@@ -554,25 +554,6 @@
     // Announce action
     NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionInvited], @"action", nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
-    
-    // Envelope animation
-    UIImageView *blastEnvelope = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactsTableInvite"]];
-    CGFloat y = cell.frame.origin.y - contactsTableView.contentOffset.y + contactsTableView.frame.origin.y + 19.0f;
-    blastEnvelope.frame = CGRectMake(31.0f, y, 100.0f, 75.0f);
-    [self.view addSubview:blastEnvelope];
-    contactsInvitationCountButton.titleLabel.textColor = [UIColor whiteColor];
-
-    [UIView animateWithDuration:0.3f animations:^{
-        blastEnvelope.frame = CGRectMake(61.0f, 33.0f, 50.0f, 39.0f);
-    } completion:^(BOOL finished) {
-        contactsInvitationCountButton.titleLabel.textColor = [UIColor colorWithRed:(50.0f / 255.0f) green:(137.0f / 255.0f) blue:(191.0f / 255.0f) alpha:1.0f];
-
-        [UIView animateWithDuration:0.2f animations:^{
-            blastEnvelope.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            [blastEnvelope removeFromSuperview];
-        }];
-    }];
 }
 
 - (void)contactDidCancelInvite:(NSMutableDictionary *)contact cell:(id)sender {

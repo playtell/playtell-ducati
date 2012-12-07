@@ -33,8 +33,7 @@
     
     // Invitation/filter box
     IBOutlet UIView *leftContainer;
-    IBOutlet UIView *invitationContainer;
-    PTContactsInvitationCountButton *contactsInvitationCountButton;
+    IBOutlet UIView *headerContainer;
     
     // Bottom bar
     IBOutlet UIView *bottomBar;
