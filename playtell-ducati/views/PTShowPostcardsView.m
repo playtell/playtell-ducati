@@ -86,7 +86,7 @@ CGRect offRightFrame;
         // Layout the tooltip for new users
         imgTooltip = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"postcards-tip.png"]];
         //imgTooltip.frame = CGRectMake(0.0f, centerFrame.origin.y + 50.0, imgTooltip.frame.size.width, imgTooltip.frame.size.height);
-        imgTooltip.center = CGPointMake(background.center.x, background.center.y);
+        imgTooltip.center = CGPointMake(background.center.x, background.center.y - 50.0);
         imgTooltip.alpha = 0.0f;
         [self addSubview:imgTooltip];
         
