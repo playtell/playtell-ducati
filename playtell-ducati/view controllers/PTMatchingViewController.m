@@ -71,14 +71,10 @@
     [super viewDidLoad];
     
     // Game background
-    if (myTurn == YES) {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-green-bg"]];
-    } else {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-orangeblur-bg"]];
-    }
-    viewBgShim = [[UIView alloc] initWithFrame:self.view.bounds];
-    viewBgShim.hidden = YES;
-    [self.view insertSubview:viewBgShim atIndex:0];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-bg"]];
+//    viewBgShim = [[UIView alloc] initWithFrame:self.view.bounds];
+//    viewBgShim.hidden = YES;
+//    [self.view insertSubview:viewBgShim atIndex:0];
     
     // Display chat HUD
     [self.view addSubview:self.chatController.view];
@@ -141,14 +137,17 @@
     
     // Winner/loser views
     winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
+    winnerView.backgroundColor = [UIColor clearColor];
     winnerView.center = self.view.center;
     winnerView.image = [UIImage imageNamed:@"memory-win"];
     winnerView.alpha = 0.0f;
     loserView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
+    loserView.backgroundColor = [UIColor clearColor];
     loserView.center = self.view.center;
     loserView.image = [UIImage imageNamed:@"memory-win"]; // Everybody wins!
     loserView.alpha = 0.0f;
     drawView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
+    drawView.backgroundColor = [UIColor clearColor];
     drawView.center = self.view.center;
     drawView.backgroundColor = [UIColor blackColor];
     drawView.image = [UIImage imageNamed:@"memory-win"]; // Everybody wins!
@@ -162,9 +161,10 @@
     
     // Bottom shadow
     viewBottomShawdow = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 733.0f, 1024.0f, 35.0f)];
+    viewBottomShawdow.userInteractionEnabled = NO;
     viewBottomShawdow.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-bottom-shadow"]];
     viewBottomShawdow.alpha = 0;
-    [self.view insertSubview:viewBottomShawdow belowSubview:viewPairingCards];
+    [self.view insertSubview:viewBottomShawdow aboveSubview:viewAvailableCards];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -354,8 +354,7 @@
     viewTrackingCard.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, newFrame.size.height - 2, newFrame.size.width, 10)].CGPath;
     
     // Hide the card
-    viewOriginalTrackingCard = cardView;
-    viewOriginalTrackingCard.alpha = 0.0f;
+    viewCurrentAvailableCardView.alpha = 0.0f;
 }
 
 - (void)matchingGameAvailableCardTouchesMoved:(PTMatchingAvailableCardView *)cardView touch:(UITouch *)touch {
@@ -425,7 +424,7 @@
     }
     
     // Show original card
-    viewOriginalTrackingCard.alpha = 1.0f;
+    viewCurrentAvailableCardView.alpha = 1.0f;
     
     // Remove this view and get rid of it
     [viewTrackingCardImage removeFromSuperview];
@@ -450,7 +449,7 @@
                      }
                      completion:^(BOOL finished) {
                          // Show original card
-                         viewOriginalTrackingCard.alpha = 1.0f;
+                         viewCurrentAvailableCardView.alpha = 1.0f;
                          
                          // Remove this view and get rid of it
                          [viewTrackingCardImage removeFromSuperview];
@@ -750,24 +749,24 @@
                         }
                     }];
     
-    // Switch background
-    UIImage *imgNewBg;
-    if (myTurn == YES) {
-        imgNewBg = [UIImage imageNamed:@"matching-green-bg"];
-    } else {
-        imgNewBg = [UIImage imageNamed:@"matching-orangeblur-bg"];
-    }
-    viewBgShim.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
-    viewBgShim.alpha = 0.0f;
-    viewBgShim.hidden = NO;
-    [UIView animateWithDuration:0.5f
-                     animations:^{
-                         viewBgShim.alpha = 1.0f;
-                     }
-                     completion:^(BOOL finished) {
-                         viewBgShim.hidden = YES;
-                         self.view.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
-                     }];
+//    // Switch background
+//    UIImage *imgNewBg;
+//    if (myTurn == YES) {
+//        imgNewBg = [UIImage imageNamed:@"matching-green-bg"];
+//    } else {
+//        imgNewBg = [UIImage imageNamed:@"matching-orangeblur-bg"];
+//    }
+//    viewBgShim.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
+//    viewBgShim.alpha = 0.0f;
+//    viewBgShim.hidden = NO;
+//    [UIView animateWithDuration:0.5f
+//                     animations:^{
+//                         viewBgShim.alpha = 1.0f;
+//                     }
+//                     completion:^(BOOL finished) {
+//                         viewBgShim.hidden = YES;
+//                         self.view.backgroundColor = [UIColor colorWithPatternImage:imgNewBg];
+//                     }];
 }
 
 - (void)setActiveChatHUD {
@@ -821,13 +820,15 @@
     }
 
     // API call to reset the game
-    NSInteger randNumCards = 2 * (arc4random_uniform(4) + 2); // Random number from 2 to 6 multiplied by 2 to get an even number from 2 to 12
+    NSInteger randNumCards = 12; // Hardcoded to 12 cards always (6 sets)
+
     PTMatchingRefreshGameRequest *matchingRefreshGameRequest = [[PTMatchingRefreshGameRequest alloc] init];
     [matchingRefreshGameRequest refreshBoardWithInitiatorId:[PTUser currentUser].userID
                                                  playmateId:newPlaymateId
                                                  playdateId:playdate.playdateID
                                                     themeId:19 // Hardcoded
                                                    numCards:randNumCards
+                                                   gameName:@"matching"
                                                   authToken:[PTUser currentUser].authToken
                                                   onSuccess:nil
                                                   onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -940,12 +941,7 @@
         [drawView removeFromSuperview];
     }];
     
-    // Reset Game background & game board flip position
-    if (myTurn == YES) {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-green-bg"]];
-    } else {
-        self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-orangeblur-bg"]];
-    }
+    // Reset game board flip position
     viewPairingCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-flipboard-me"]];
     
     // Reset all pairing and available card subview

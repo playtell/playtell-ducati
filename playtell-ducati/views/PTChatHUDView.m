@@ -159,6 +159,7 @@
     [self.containerView.layer removeAllAnimations];
     
     // Hide container (border) and its own shadow
+    [self.containerView.layer removeAllAnimations];
     self.containerView.backgroundColor = [UIColor clearColor];
     self.containerShadowView.hidden = YES;
 

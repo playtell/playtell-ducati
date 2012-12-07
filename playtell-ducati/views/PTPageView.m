@@ -504,14 +504,14 @@
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Page not loaded right
+            } else {
+                // Cache image locally
+                NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
+                [imageData writeToFile:imagePath atomically:YES];
+                
+                // Make sure this file isn't backed up by iCloud
+                [self addSkipBackupAttributeToItemAtURLstring:imagePath];
             }
-            
-            // Cache image locally
-            NSData *imageData = UIImageJPEGRepresentation(image, 1.0f);
-            [imageData writeToFile:imagePath atomically:YES];
-            
-            // Make sure this file isn't backed up by iCloud
-            [self addSkipBackupAttributeToItemAtURLstring:imagePath];
             
             // Apply to the book (in main thread)
             dispatch_async(dispatch_get_main_queue(), ^() {
@@ -534,8 +534,10 @@
 
 - (BOOL)addSkipBackupAttributeToItemAtURLstring:(NSString *)URLstring {
     NSURL *URL = [[NSURL alloc] initFileURLWithPath:URLstring];
-    assert([[NSFileManager defaultManager] fileExistsAtPath:[URL path]]);
-    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[URL path]] == NO) {
+        return NO;
+    }
+
     NSError *error = nil;
     BOOL success = [URL setResourceValue: [NSNumber numberWithBool:YES]
                                   forKey: NSURLIsExcludedFromBackupKey error:&error];
