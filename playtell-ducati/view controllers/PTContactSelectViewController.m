@@ -149,6 +149,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    selectedContacts = [NSArray array];
     [contactsTableView reloadData];
 }
 
@@ -528,16 +529,18 @@
 #pragma mark - Contact select delegates
 
 - (void)contactDidInvite:(NSMutableDictionary *)contact cell:(id)sender {
-    PTContactsTableBigCell *cell = (PTContactsTableBigCell *)sender;
+    selectedContacts = [NSArray arrayWithObject:contact];
+    [self showComposeMessageController:sender];
+    //PTContactsTableBigCell *cell = (PTContactsTableBigCell *)sender;
     //[cell setMode:PTContactsTableBigCellModeUninvite];
     //NSLog(@"Cell: %@", NSStringFromCGRect(cell.frame));
 
     // Add contact to list
-    [selectedContacts addObject:contact];
+    //[selectedContacts addObject:contact];
     
     // Announce action
-    NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionInvited], @"action", nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
+    //NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionInvited], @"action", nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
 }
 
 - (void)contactDidCancelInvite:(NSMutableDictionary *)contact cell:(id)sender {
