@@ -290,16 +290,7 @@ NSTimer *screenshotTimer;
         }];
         [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber* subscriber) {
             LogDebug(@"Subscriber connected");
-            [self.leftView setView:subscriber.view];
-        }];
-        [[PTVideoPhone sharedPhone] setPublisherDidStopStreamingBlock:^(OTPublisher *aPublisher) {
-            [self setCurrentUserPhoto];
-        }];
-        [[PTVideoPhone sharedPhone] setSessionDropBlock:^(OTSession *session, OTStream *stream) {
-            if (session.connection.connectionId != stream.connection.connectionId) {
-                // This is the playmate dropping, so set the image in playmate chat window
-                [self.leftView setLoadingImageForView:self.playmate.userPhoto];
-            }
+            [self.leftView setOpentokVideoView:subscriber.view];
         }];
 
         myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
@@ -310,7 +301,7 @@ NSTimer *screenshotTimer;
         // Begin duplicated code!
         [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
             LogDebug(@"Publisher started streaming");
-            [self.rightView setView:aPublisher.view];
+            [self.rightView setOpentokVideoView:aPublisher.view];
         }];
         [[PTVideoPhone sharedPhone] connectToSession:mySession
                                            withToken:myToken
