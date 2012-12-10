@@ -79,8 +79,9 @@
         lblTitle2.text = [name substringFromIndex:(spaceLoc.location + spaceLoc.length)];
     }
     
+    lblDetail.text = [contact objectForKey:@"email"];
+    
     if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) {
-        lblDetail.text = [contact objectForKey:@"email"];
         [buttonAction setEnabled:YES];
     }
 }

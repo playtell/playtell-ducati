@@ -8,6 +8,7 @@
 
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
+#import "PTContactImportViewController.h"
 #import "PTContactSelectViewController.h"
 #import "PTContactMessageViewController.h"
 #import "PTContactsCreateListRequest.h"
@@ -522,8 +523,8 @@
 }
 
 - (IBAction)didPressManualInvite:(id)sender {
-    // TODO: fill in when manual invite screen is ready
-    NSLog(@"Did select manual invite");
+    PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+    [self.navigationController pushViewController:contactImportViewController animated:YES];
 }
 
 #pragma mark - Contact select delegates

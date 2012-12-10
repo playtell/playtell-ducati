@@ -117,7 +117,7 @@
 #pragma mark - Navigation
 
 - (void)didPressBack:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //- (void)didPressBack:(id)sender {
@@ -306,14 +306,16 @@
 
 - (void)logAnalyticsEvent {
     // Contact data source
-    NSString *source;
-    if ([self.navigationController.viewControllers count] == 2) {
-        source = @"Manual Invite";
-    } else {
-        NSInteger totalController = [self.navigationController.viewControllers count];
-        PTContactSelectViewController *contactSelectViewController = [self.navigationController.viewControllers objectAtIndex:(totalController - 2)];
-        source = contactSelectViewController.sourceType;
-    }
+//    NSString *source;
+//    if ([self.navigationController.viewControllers count] == 2) {
+//        source = @"Manual Invite";
+//    } else {
+//        NSInteger totalController = [self.navigationController.viewControllers count];
+//        PTContactSelectViewController *contactSelectViewController = [self.navigationController.viewControllers objectAtIndex:(totalController - 2)];
+//        source = contactSelectViewController.sourceType;
+//    }
+    
+    NSString *source = @"Manual Invite";
     
     // Total contacts
     NSNumber *totalContacts = [NSNumber numberWithInteger:[contacts count]];
