@@ -15,6 +15,7 @@
     CAShapeLayer *containerShadowLayer;
     CAShapeLayer *contentMaskLayer;
     CAShapeLayer *contentShadowLayer;
+    CAShapeLayer *opentokMaskLayer;
 }
 
 @property (nonatomic, weak) OTVideoView *publisherView;
@@ -22,9 +23,11 @@
 @property (nonatomic, strong) UIView *containerShadowView;
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UIView *contentShadowView;
+@property (nonatomic, strong) UIView *opentokView;
 
 - (void)setLoadingImageForView:(UIImage*)anImage;
 - (void)setView:(UIView*)aView;
+- (void)setOpentokVideoView:(UIView*)aView;
 - (void)showBorder;
 - (void)hideBorder;
 - (void)pulsateBorderWithColor:(UIColor *)color;
