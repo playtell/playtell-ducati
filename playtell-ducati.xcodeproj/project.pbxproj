@@ -3897,7 +3897,6 @@
 		F4A123EC1592776800FC7A24 /* audio */ = {
 			isa = PBXGroup;
 			children = (
-				8AB1B2EA15E3155300FC3948 /* Tictactoe */,
 				1A83B4DB1663CC2700B37368 /* camera.mp3 */,
 				1A83B4DC1663CC2700B37368 /* jetmail.mp3 */,
 				F4A123EE1592777600FC7A24 /* music-box.wav */,
@@ -5688,14 +5687,6 @@
 				1A70D32C166D36F100F66595 /* crank8@2x.png in Resources */,
 				1A70D32D166D36F100F66595 /* crank9@2x.png in Resources */,
 				1A70D32E166D36F100F66595 /* crank10@2x.png in Resources */,
-				1ABD6F54164439040027609C /* retake-photo-press.png in Resources */,
-				1ABD6F55164439040027609C /* retake-photo-press@2X.png in Resources */,
-				1ABD6F56164439040027609C /* retake-photo.png in Resources */,
-				1ABD6F57164439040027609C /* retake-photo@2X.png in Resources */,
-				1ABD6F58164439040027609C /* send-postcard-press.png in Resources */,
-				1ABD6F59164439040027609C /* send-postcard-press@2X.png in Resources */,
-				1ABD6F5A164439040027609C /* send-postcard.png in Resources */,
-				1ABD6F5B164439040027609C /* send-postcard@2X.png in Resources */,
 				234DBBA1164C53BB009B7481 /* PTMathViewController.xib in Resources */,
 				2340F37816513225007C22EB /* math-bg.png in Resources */,
 				2340F37916513225007C22EB /* math-bg@2x.png in Resources */,
@@ -6184,8 +6175,9 @@
 		F4A9D8D8157869840015D977 /* Distribution - Staging */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ARCHS = armv7;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6214,7 +6206,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6E469B33-D795-4769-8E70-9C33F27AC866";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6E469B33-D795-4769-8E70-9C33F27AC866";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Staging";
