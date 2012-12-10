@@ -137,7 +137,7 @@ bGsgc29vbiE</string>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="299109966"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<object class="NSColor" key="IBUIBackgroundColor" id="284787879">
+								<object class="NSColor" key="IBUIBackgroundColor" id="355532723">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 								</object>
@@ -231,17 +231,32 @@ bGsgc29vbiE</string>
 								<array class="NSMutableArray" key="NSSubviews">
 									<object class="IBUIImageView" id="165531385">
 										<reference key="NSNextResponder" ref="1000694808"/>
-										<int key="NSvFlags">274</int>
-										<string key="NSFrame">{{72, 15}, {307, 69}}</string>
+										<int key="NSvFlags">292</int>
+										<string key="NSFrame">{{93, 22}, {188, 56}}</string>
 										<reference key="NSSuperview" ref="1000694808"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView" ref="471598993"/>
+										<reference key="NSNextKeyView" ref="255034134"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<object class="NSCustomResource" key="IBUIImage">
 											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">contactsComposeLinks.png</string>
+											<string key="NSResourceName">download-app.png</string>
+										</object>
+									</object>
+									<object class="IBUIImageView" id="255034134">
+										<reference key="NSNextResponder" ref="1000694808"/>
+										<int key="NSvFlags">292</int>
+										<string key="NSFrame">{{302, 22}, {56, 56}}</string>
+										<reference key="NSSuperview" ref="1000694808"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="538969070"/>
+										<string key="NSReuseIdentifierKey">_NS:9</string>
+										<bool key="IBUIUserInteractionEnabled">NO</bool>
+										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+										<object class="NSCustomResource" key="IBUIImage">
+											<string key="NSClassName">NSImage</string>
+											<string key="NSResourceName">solo-icon.png</string>
 										</object>
 									</object>
 								</array>
@@ -259,18 +274,18 @@ bGsgc29vbiE</string>
 								</object>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
-							<object class="IBUIView" id="471598993">
+							<object class="IBUIView" id="538969070">
 								<reference key="NSNextResponder" ref="850558570"/>
 								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{45, 478}, {450, 2}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="2524066"/>
+								<reference key="NSNextKeyView" ref="384315480"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<reference key="IBUIBackgroundColor" ref="284787879"/>
+								<reference key="IBUIBackgroundColor" ref="355532723"/>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
-							<object class="IBUIButton" id="2524066">
+							<object class="IBUIButton" id="384315480">
 								<reference key="NSNextResponder" ref="850558570"/>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{135, 518}, {271, 50}}</string>
@@ -429,7 +444,7 @@ bGsgc29vbiE</string>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">didPressSend:</string>
-						<reference key="source" ref="2524066"/>
+						<reference key="source" ref="384315480"/>
 						<reference key="destination" ref="841351856"/>
 						<int key="IBEventType">7</int>
 					</object>
@@ -492,8 +507,8 @@ bGsgc29vbiE</string>
 							<reference ref="177469645"/>
 							<reference ref="276207497"/>
 							<reference ref="1000694808"/>
-							<reference ref="471598993"/>
-							<reference ref="2524066"/>
+							<reference ref="538969070"/>
+							<reference ref="384315480"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
@@ -530,6 +545,7 @@ bGsgc29vbiE</string>
 						<reference key="object" ref="1000694808"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="165531385"/>
+							<reference ref="255034134"/>
 						</array>
 						<reference key="parent" ref="850558570"/>
 					</object>
@@ -540,13 +556,18 @@ bGsgc29vbiE</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">36</int>
-						<reference key="object" ref="2524066"/>
+						<reference key="object" ref="384315480"/>
 						<reference key="parent" ref="850558570"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">38</int>
-						<reference key="object" ref="471598993"/>
+						<reference key="object" ref="538969070"/>
 						<reference key="parent" ref="850558570"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">39</int>
+						<reference key="object" ref="255034134"/>
+						<reference key="parent" ref="1000694808"/>
 					</object>
 				</array>
 			</object>
@@ -568,6 +589,7 @@ bGsgc29vbiE</string>
 				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="36.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="38.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="39.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -575,7 +597,7 @@ bGsgc29vbiE</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">38</int>
+			<int key="maxID">39</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -649,8 +671,9 @@ bGsgc29vbiE</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="buttonSendInviteHighlighted.png">{271, 49}</string>
 			<string key="buttonSendInviteNormal.png">{271, 50}</string>
-			<string key="contactsComposeLinks.png">{307, 69}</string>
 			<string key="contactsInviteeHeader.png">{194, 25}</string>
+			<string key="download-app.png">{188, 56}</string>
+			<string key="solo-icon.png">{56, 56}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
