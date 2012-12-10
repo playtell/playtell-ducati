@@ -71,17 +71,12 @@
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     leftContainer.layer.shadowColor = [UIColor blackColor].CGColor;
-    leftContainer.layer.shadowOffset = CGSizeMake(4.0f, 0.0f);
-    leftContainer.layer.shadowOpacity = 0.3f;
-    leftContainer.layer.shadowRadius = 4.0f;
+    leftContainer.layer.shadowOpacity = 0.8f;
+    leftContainer.layer.shadowRadius = 5.0f;
     
     // Compose box
     composeBox.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"contactsComposeBox"]];
     msgBody.layer.borderWidth = 0.0f;
-    myProfilePic.image = [PTUser currentUser].userPhoto;
-    myProfilePic.layer.borderColor = [UIColor blackColor].CGColor;
-    myProfilePic.layer.borderWidth = 1.0f;
-    myProfilePic.layer.cornerRadius = 14.0f;
     
     // Name: Merge field label
     mergeFieldName.textColor = [UIColor colorFromHex:@"#3FA9F5"];
@@ -138,13 +133,6 @@
 //}
 
 - (IBAction)didPressInviteMore:(id)sender {
-    // Manually added last contact?
-    if ([self.navigationController.viewControllers count] == 2) {
-        // Pass current contact list back to import view controller to keep track of all contacts
-        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
-        importViewController.contacts = contacts;
-    }
-
     // Go back
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -210,7 +198,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)didPressSend:(id)sender {
+- (IBAction)didPressSend:(id)sender {
     // Log the analytics event
     [self logAnalyticsEvent];
 

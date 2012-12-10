@@ -51,7 +51,7 @@
         [buttonAction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         buttonAction.titleLabel.shadowOffset = CGSizeMake(0.0f, -1.0f);
         [buttonAction addTarget:self action:@selector(buttonDidPress:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:buttonAction];
+        //[self.contentView addSubview:buttonAction];
         
         // Configure presentation (button, avatar, background)
         [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonRemoveNormal"] forState:UIControlStateNormal];
