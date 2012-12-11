@@ -7,6 +7,7 @@
 //
 
 #import "PTContactImportViewController.h"
+#import "PTContactsNavBackButton.h"
 #import "PTContactSelectViewController.h"
 #import "PTContactMessageViewController.h"
 #import "GTMOAuth2ViewControllerTouch.h"
@@ -58,14 +59,18 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
     // Navigation controller setup
-    self.title = @"Add Contacts";
-    self.navigationController.navigationBar.alpha = 0.0f;
-    self.navigationController.navigationBar.tintColor = [UIColor colorFromHex:@"#2e4857"];
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
+    self.title = @"Invite A Buddy By Email";
+    
+    // Nav buttons
+    PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
+    buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
+    [buttonBackView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
+    [self.navigationItem setLeftBarButtonItem:buttonBack];
     
     // View style
-    inviteNavigationBar.tintColor = [UIColor colorFromHex:@"#2e4857"];
-    inviteNavigationBar.topItem.title = @"Invite";
+    inviteNavigationBar.tintColor = [UIColor colorFromHex:@"#3FA9F5"];
+    inviteNavigationBar.topItem.title = @"Manual Invitation";
     inviteContainer.backgroundColor = [UIColor colorFromHex:@"#e4ecef"];
     inviteContainer.layer.cornerRadius = 5.0f;
     inviteContainer.layer.masksToBounds = YES;
@@ -73,12 +78,6 @@
     inviteContainerOuter.layer.shadowOffset = CGSizeZero;
     inviteContainerOuter.layer.shadowOpacity = 0.3f;
     inviteContainerOuter.layer.shadowRadius = 4.0f;
-    
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(cancelContactImport:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [inviteNavigationBar.topItem setLeftBarButtonItem:cancelButton];
     
     inviteContainerTexts.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"inviteTextGroup"]];
 
@@ -120,18 +119,6 @@
     // Reset fields
     textEmail.text = @"";
     textName.text = @"";
-
-    // Hide navbar
-    [UIView animateWithDuration:0.2f animations:^{
-        self.navigationController.navigationBar.alpha = 0.0f;
-    }];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    // Show navbar
-    [UIView animateWithDuration:0.2f animations:^{
-        self.navigationController.navigationBar.alpha = 1.0f;
-    }];
 }
 
 - (void)viewDidUnload {
@@ -143,6 +130,10 @@
 - (void)dealloc {
     // Keyboard notifications cleanup
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)navigateBack:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)cancelContactImport:(id)sender {
@@ -302,6 +293,7 @@
 }
 
 - (IBAction)manualInvite:(id)sender {
+    self.contacts = [[NSMutableArray alloc] init];
     // Validate name
     NSArray *nameParts = [textName.text componentsSeparatedByString:@" "];
     if ([nameParts count] < 2) {

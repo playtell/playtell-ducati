@@ -46,25 +46,14 @@
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
     // Navigation controller setup
-    self.title = @"Compose Your Message";
+    self.title = @"Compose A Message To Your Buddies";
     
     // Nav buttons
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(didPressCancel:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
-    
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
     [buttonBackView addTarget:self action:@selector(didPressBack:) forControlEvents:UIControlEventTouchUpInside];
     buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
-    
-    PTContactsNavSendButton *buttonSendView = [PTContactsNavSendButton buttonWithType:UIButtonTypeCustom];
-    buttonSendView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonSendView addTarget:self action:@selector(didPressSend:) forControlEvents:UIControlEventTouchUpInside];
-    buttonSend = [[UIBarButtonItem alloc] initWithCustomView:buttonSendView];
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonSend, buttonBack, nil]];
+    [self.navigationItem setLeftBarButtonItem:buttonBack];
     
     // Table view style
     contactsTableView.backgroundColor = [UIColor clearColor];
@@ -82,17 +71,12 @@
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     leftContainer.layer.shadowColor = [UIColor blackColor].CGColor;
-    leftContainer.layer.shadowOffset = CGSizeMake(4.0f, 0.0f);
-    leftContainer.layer.shadowOpacity = 0.3f;
-    leftContainer.layer.shadowRadius = 4.0f;
+    leftContainer.layer.shadowOpacity = 0.8f;
+    leftContainer.layer.shadowRadius = 5.0f;
     
     // Compose box
     composeBox.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"contactsComposeBox"]];
     msgBody.layer.borderWidth = 0.0f;
-    myProfilePic.image = [PTUser currentUser].userPhoto;
-    myProfilePic.layer.borderColor = [UIColor blackColor].CGColor;
-    myProfilePic.layer.borderWidth = 1.0f;
-    myProfilePic.layer.cornerRadius = 14.0f;
     
     // Name: Merge field label
     mergeFieldName.textColor = [UIColor colorFromHex:@"#3FA9F5"];
@@ -132,30 +116,23 @@
 
 #pragma mark - Navigation
 
-- (void)didPressCancel:(id)sender {
-    [self.navigationController popToRootViewControllerAnimated:YES];
-}
-
 - (void)didPressBack:(id)sender {
-    // Manually added last contact?
-    if ([self.navigationController.viewControllers count] == 2) {
-        // Pass current contact list back to import view controller to keep track of all contacts
-        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
-        importViewController.contacts = contacts;
-    }
-    
-    // Go back
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)didPressInviteMore:(id)sender {
-    // Manually added last contact?
-    if ([self.navigationController.viewControllers count] == 2) {
-        // Pass current contact list back to import view controller to keep track of all contacts
-        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
-        importViewController.contacts = contacts;
-    }
+//- (void)didPressBack:(id)sender {
+//    // Manually added last contact?
+//    if ([self.navigationController.viewControllers count] == 2) {
+//        // Pass current contact list back to import view controller to keep track of all contacts
+//        PTContactImportViewController *importViewController = (PTContactImportViewController *)[self.navigationController.viewControllers objectAtIndex:0];
+//        importViewController.contacts = contacts;
+//    }
+//    
+//    // Go back
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
+- (IBAction)didPressInviteMore:(id)sender {
     // Go back
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -221,7 +198,7 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
-- (void)didPressSend:(id)sender {
+- (IBAction)didPressSend:(id)sender {
     // Log the analytics event
     [self logAnalyticsEvent];
 
@@ -329,14 +306,16 @@
 
 - (void)logAnalyticsEvent {
     // Contact data source
-    NSString *source;
-    if ([self.navigationController.viewControllers count] == 2) {
-        source = @"Manual Invite";
-    } else {
-        NSInteger totalController = [self.navigationController.viewControllers count];
-        PTContactSelectViewController *contactSelectViewController = [self.navigationController.viewControllers objectAtIndex:(totalController - 2)];
-        source = contactSelectViewController.sourceType;
-    }
+//    NSString *source;
+//    if ([self.navigationController.viewControllers count] == 2) {
+//        source = @"Manual Invite";
+//    } else {
+//        NSInteger totalController = [self.navigationController.viewControllers count];
+//        PTContactSelectViewController *contactSelectViewController = [self.navigationController.viewControllers objectAtIndex:(totalController - 2)];
+//        source = contactSelectViewController.sourceType;
+//    }
+    
+    NSString *source = @"Manual Invite";
     
     // Total contacts
     NSNumber *totalContacts = [NSNumber numberWithInteger:[contacts count]];

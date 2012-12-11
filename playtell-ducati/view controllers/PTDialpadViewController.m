@@ -16,7 +16,7 @@
 #import "PTChatViewController.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
-#import "PTContactImportViewController.h"
+#import "PTContactSelectViewController.h"
 #import "PTDateViewController.h"
 #import "PTDialpadViewController.h"
 #import "PTFriendshipAcceptRequest.h"
@@ -42,6 +42,7 @@
 #import "UIColor+ColorFromHex.h"
 #import "UIView+PlayTell.h"
 
+#import <AddressBook/AddressBook.h>
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -228,6 +229,11 @@ BOOL postcardsShown;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPlaymates)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }
@@ -270,39 +276,8 @@ BOOL postcardsShown;
         [self.view addSubview:self.chatController.view];
     }
     
-    // Loop through the playmates and show the views as in playdate or not
     // This is for when the user has been in a playdate as they don't get notified
-    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
-    [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
-                                         token:[PTUser currentUser].authToken
-                                       success:^
-     {
-         BOOL shouldRefreshPlaymateViews = NO;
-         NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-         for (PTPlaymate *pm in refresh) {
-             PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
-             if (pmView) {
-                 if ([pm.userStatus isEqualToString:@"playdate"]) {
-                     [pmView showUserInPlaydateAnimated:NO];
-                 } else {
-                     [pmView hideUserInPlaydateAnimated:NO];
-                 }
-             } else {
-                 // Refresh local playmates array
-                 self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-
-                 // Playmate is new! Perhaps we added a new friend while in contact import flow
-                 shouldRefreshPlaymateViews = YES;
-             }
-         }
-         
-         // Check if we need to refresh playmate views (if we have new ones)
-         if (shouldRefreshPlaymateViews) {
-             [self addNewPlaymate];
-         }
-     } failure:^(NSError *error) {
-         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
-     }];
+    [self refreshPlaymates];
     
     // Check for new postcards and update the badge number on the postcards button
     postcardButton.badgeNumber = 0;
@@ -424,6 +399,41 @@ BOOL postcardsShown;
             [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
         }
     }
+}
+
+- (void)refreshPlaymates {
+    // Loop through the playmates and show the views as in playdate or not
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
+                                         token:[PTUser currentUser].authToken
+                                       success:^
+     {
+         BOOL shouldRefreshPlaymateViews = NO;
+         NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         for (PTPlaymate *pm in refresh) {
+             PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
+             if (pmView) {
+                 if ([pm.userStatus isEqualToString:@"playdate"]) {
+                     [pmView showUserInPlaydateAnimated:NO];
+                 } else {
+                     [pmView hideUserInPlaydateAnimated:NO];
+                 }
+             } else {
+                 // Refresh local playmates array
+                 self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+                 
+                 // Playmate is new! Perhaps we added a new friend while in contact import flow
+                 shouldRefreshPlaymateViews = YES;
+             }
+         }
+         
+         // Check if we need to refresh playmate views (if we have new ones)
+         if (shouldRefreshPlaymateViews) {
+             [self addNewPlaymate];
+         }
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+     }];
 }
 
 - (void)addNewPlaymate {
@@ -905,6 +915,9 @@ BOOL postcardsShown;
         if (playmateView2 != nil && playmate2 != nil && [playmate2.friendshipStatus isEqualToString:@"confirmed"]) {
             [playmateView2 hideUserInPlaydateAnimated:YES];
         }
+    } else {
+        // Cancel showing the playdate
+        [self deactivatePlaymateView];
     }
 }
 
@@ -1002,7 +1015,7 @@ BOOL postcardsShown;
     [self beginRinging];
 
     // Unsubscribe from rendezvous channel
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    //[[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     
     // Starting listening to end playdate event
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1116,6 +1129,7 @@ BOOL postcardsShown;
 - (void)playmateDidTouch:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     // Are we trying to respond to an incoming playdate request?
     if (self.selectedPlaymateView == playmateView) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
         [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
         [self joinPlaydate];
         return;
@@ -1200,15 +1214,91 @@ BOOL postcardsShown;
 - (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
     // Is the user logged in?
     if ([[PTUser currentUser] isLoggedIn] == YES) {
-        PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
-        
-        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+        ABAddressBookRef addressBook;
+        // iOS 6 and up
+        if (ABAddressBookGetAuthorizationStatus != NULL) {
+            ABAuthorizationStatus status = ABAddressBookGetAuthorizationStatus();
+            
+            // Check address book permission
+            if (status != kABAuthorizationStatusAuthorized) {
+                CFErrorRef error = nil;
+                addressBook = ABAddressBookCreateWithOptions(NULL, &error);
+                ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //                if (error) {
+                        //                    NSError* nsError = (__bridge NSError*)error;
+                        //                    NSLog(@"nsError: %@", nsError.localizedDescription);
+                        //                }
+                        // Permission granted?
+                        if (granted && !error) {
+                            [self getContactsFromAddressBook:addressBook];
+                        }
+                    });
+                });
+            } else {
+                addressBook = ABAddressBookCreate();
+                [self getContactsFromAddressBook:addressBook];
+            }
+        } else {
+            // Pre-iOS 6
+            addressBook = ABAddressBookCreate();
+            [self getContactsFromAddressBook:addressBook];
+        }
+//        PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactImportViewController];
+//        
+//        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//        [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
     } else {
         // If user isn't logged in, redirect them to sign-up form
         [self signUpDidPress:nil];
     }
+}
+
+- (void)getContactsFromAddressBook:(ABAddressBookRef)addressBook {
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    CFIndex nPeople = ABAddressBookGetPersonCount(addressBook);
+    
+    NSMutableArray *abContacts = [NSMutableArray array];
+    for (int i=0; i<nPeople; i++) {
+        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
+        NSString *firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
+        NSString *fullName = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+        
+        // Get emails
+        ABMultiValueRef emailsRef = ABRecordCopyValue(ref, kABPersonEmailProperty);
+        if (emailsRef) {
+            for (int i=0; i<ABMultiValueGetCount(emailsRef); i++) {
+                NSString *email = (__bridge NSString *)ABMultiValueCopyValueAtIndex(emailsRef, i);
+                
+                // Save the contact
+                NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         [fullName copy],                @"name",
+                                         [[email copy] lowercaseString], @"email",
+                                         @"iPad Address Book",           @"source",
+                                         nil];
+                [abContacts addObject:contact];
+            }
+        }
+        
+        // Cleanup
+        CFRelease(ref);
+    }
+    
+    NSLog(@"---> Got contacts: %i", [abContacts count]);
+    
+    // Load select controller
+    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
+                                                                  initWithNibName:@"PTContactSelectViewController"
+                                                                  bundle:nil
+                                                                  withContacts:abContacts];
+    contactSelectViewController.sourceType = @"Address Book";
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - New user flow methods

@@ -126,17 +126,23 @@ NSTimer *screenshotTimer;
         // Get images from left and right chat HUDs
         UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
         UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
+        UIImage *leftVideo = [self.leftView.opentokView screenshotWithSave:NO];
+        UIImage *rightVideo = [self.rightView.opentokView screenshotWithSave:NO];
         
         // Resize if chatview was expanded
         if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
             leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
             rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+            leftVideo = [leftVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+            rightVideo = [rightVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
         }
         
         // Merge the two images
         UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
         [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
         [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
+        [leftVideo drawAtPoint:CGPointMake(0.0f, 0.0f)];
+        [rightVideo drawAtPoint:CGPointMake(200.0f, 0.0f)];
         UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         

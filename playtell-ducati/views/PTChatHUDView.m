@@ -260,6 +260,20 @@
     }];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *result = nil;
+    
+    // Pass the point to the content view for buttons
+    CGPoint point2 = [self convertPoint:point toView:contentView];
+    if ([contentView pointInside:point2 withEvent:event]) {
+        if ((result = [contentView hitTest:point2 withEvent:event]) != nil) {
+            return result;
+        }
+    }
+    
+    return result;
+}
+
 //- (void)setRightView:(UIView*)aView {
 //    if ([aView isKindOfClass:[OTVideoView class]]) {
 //        self.publisherView = (OTVideoView *)aView;

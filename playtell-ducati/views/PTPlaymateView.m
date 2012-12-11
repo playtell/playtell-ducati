@@ -159,7 +159,7 @@
     // Accept/Reject buttons
     rejectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     rejectButton.frame = CGRectMake(10.0f, 30.0f, 82.0f, 20.0f);
-    [rejectButton setTitle:@"Reject" forState:UIControlStateNormal];
+    [rejectButton setTitle:@"Ignore" forState:UIControlStateNormal];
     [confirmView addSubview:rejectButton];
     
     acceptButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
