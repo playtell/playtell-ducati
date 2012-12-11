@@ -915,6 +915,9 @@ BOOL postcardsShown;
         if (playmateView2 != nil && playmate2 != nil && [playmate2.friendshipStatus isEqualToString:@"confirmed"]) {
             [playmateView2 hideUserInPlaydateAnimated:YES];
         }
+    } else {
+        // Cancel showing the playdate
+        [self deactivatePlaymateView];
     }
 }
 
@@ -1012,7 +1015,7 @@ BOOL postcardsShown;
     [self beginRinging];
 
     // Unsubscribe from rendezvous channel
-    [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+    //[[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
     
     // Starting listening to end playdate event
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1126,6 +1129,7 @@ BOOL postcardsShown;
 - (void)playmateDidTouch:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     // Are we trying to respond to an incoming playdate request?
     if (self.selectedPlaymateView == playmateView) {
+        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
         [[PTPlayTellPusher sharedPusher] subscribeToPlaydateChannel:self.requestedPlaydate.pusherChannelName];
         [self joinPlaydate];
         return;
