@@ -76,6 +76,7 @@
 										<string key="NSFrame">{{221, 282}, {164, 28}}</string>
 										<reference key="NSSuperview" ref="521974093"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -252,11 +253,11 @@
 								</object>
 								<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">buttonManualInviteHighlighted.png</string>
+									<string key="NSResourceName">Manual-invite-press.png</string>
 								</object>
 								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">buttonManualInviteNormal.png</string>
+									<string key="NSResourceName">Manual-invite.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="1067802394"/>
 								<reference key="IBUIFont" ref="579678737"/>
@@ -502,7 +503,7 @@
 				<string key="40.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="43.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="0.0" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="1" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -580,8 +581,8 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="buttonManualInviteHighlighted.png">{126, 33}</string>
-			<string key="buttonManualInviteNormal.png">{126, 33}</string>
+			<string key="Manual-invite-press.png">{125, 32}</string>
+			<string key="Manual-invite.png">{125, 32}</string>
 			<string key="search-area.png">{607, 87}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
