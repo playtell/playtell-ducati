@@ -44,7 +44,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{717, 20}, {194, 25}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="755395584"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -63,7 +62,6 @@
 								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{380, 570}</string>
 								<reference key="NSSuperview" ref="755395584"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="941884473">
@@ -84,7 +82,6 @@
 						</array>
 						<string key="NSFrame">{{624, 65}, {380, 570}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="939733836"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -102,17 +99,15 @@
 										<int key="NSvFlags">292</int>
 										<string key="NSFrame">{{5, 5}, {440, 190}}</string>
 										<reference key="NSSuperview" ref="101749961"/>
-										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="1000694808"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIClipsSubviews">YES</bool>
 										<bool key="IBUIMultipleTouchEnabled">YES</bool>
 										<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 										<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
-										<string type="base64-UTF8" key="IBUIText">Sm9pbiBtZSBvbiBQbGF5VGVsbCBhbmQgd2UgY2FuIHJlYWQgYm9va3MgYW5kIHBsYXkgZ2FtZXMgdG9n
+										<string type="base64-UTF8" key="IBUIText">Sm9pbiBtZSBvbiBQbGF5ZGF0ZSBhbmQgd2UgY2FuIHJlYWQgYm9va3MgYW5kIHBsYXkgZ2FtZXMgdG9n
 ZXRoZXIuIFRoZXJlIGFyZSBzb21lIGZ1biBmcmVlIGFjdGl2aXRpZXMgd2UgY2FuIHRyeSBmaXJzdC4K
-CkZyb20geW91ciBpUGFkLCBwcmVzcyB0byBkb3dubG9hZCBQbGF5VGVsbCBmcm9tIGlUdW5lcy4KClRh
-bGsgc29vbiE</string>
+CkZyb20geW91ciBpUGFkLCBwcmVzcyB0byBkb3dubG9hZCBQbGF5ZGF0ZSBmcm9tIGlUdW5lcy4</string>
 										<object class="NSColor" key="IBUITextColor" id="982415159">
 											<int key="NSColorSpace">3</int>
 											<bytes key="NSWhite">MC4zMzMzMzMzMzMzAA</bytes>
@@ -134,7 +129,6 @@ bGsgc29vbiE</string>
 								</array>
 								<string key="NSFrame">{{45, 102}, {450, 200}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="299109966"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="355532723">
@@ -148,7 +142,6 @@ bGsgc29vbiE</string>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{45, 20}, {450, 45}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="177469645"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -177,7 +170,6 @@ bGsgc29vbiE</string>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{45, 73}, {38, 21}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="276207497"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -209,7 +201,6 @@ bGsgc29vbiE</string>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{81, 73}, {320, 21}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="101749961"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -234,7 +225,6 @@ bGsgc29vbiE</string>
 										<int key="NSvFlags">292</int>
 										<string key="NSFrame">{{93, 22}, {188, 56}}</string>
 										<reference key="NSSuperview" ref="1000694808"/>
-										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="255034134"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -249,7 +239,6 @@ bGsgc29vbiE</string>
 										<int key="NSvFlags">292</int>
 										<string key="NSFrame">{{302, 22}, {56, 56}}</string>
 										<reference key="NSSuperview" ref="1000694808"/>
-										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="538969070"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -262,7 +251,6 @@ bGsgc29vbiE</string>
 								</array>
 								<string key="NSFrame">{{45, 340}, {450, 100}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="165531385"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
@@ -279,7 +267,6 @@ bGsgc29vbiE</string>
 								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{45, 478}, {450, 2}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="384315480"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="355532723"/>
@@ -290,7 +277,6 @@ bGsgc29vbiE</string>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{135, 518}, {271, 50}}</string>
 								<reference key="NSSuperview" ref="850558570"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="381067437"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -328,7 +314,6 @@ bGsgc29vbiE</string>
 						</array>
 						<string key="NSFrame">{{66, 40}, {540, 646}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="642287404"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -341,7 +326,6 @@ bGsgc29vbiE</string>
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="850558570"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -599,71 +583,7 @@ bGsgc29vbiE</string>
 			<nil key="sourceID"/>
 			<int key="maxID">39</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">PTContactMessageViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="didPressInviteMore:">id</string>
-						<string key="didPressSend:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="didPressInviteMore:">
-							<string key="name">didPressInviteMore:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="didPressSend:">
-							<string key="name">didPressSend:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="composeBox">UIView</string>
-						<string key="contactsTableContainer">UIView</string>
-						<string key="contactsTableView">UITableView</string>
-						<string key="leftContainer">UIView</string>
-						<string key="linksBox">UIView</string>
-						<string key="mergeFieldName">UILabel</string>
-						<string key="msgBody">UITextView</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="composeBox">
-							<string key="name">composeBox</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="contactsTableContainer">
-							<string key="name">contactsTableContainer</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="contactsTableView">
-							<string key="name">contactsTableView</string>
-							<string key="candidateClassName">UITableView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="leftContainer">
-							<string key="name">leftContainer</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="linksBox">
-							<string key="name">linksBox</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="mergeFieldName">
-							<string key="name">mergeFieldName</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="msgBody">
-							<string key="name">msgBody</string>
-							<string key="candidateClassName">UITextView</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/PTContactMessageViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
