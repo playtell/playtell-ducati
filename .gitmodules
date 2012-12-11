@@ -1,3 +1,6 @@
 [submodule "submodules/opentok"]
 	path = submodules/opentok
 	url = https://github.com/opentok/opentok-ios-sdk.git
+[submodule "submodules/webrtc"]
+	path = submodules/webrtc
+	url = https://github.com/opentok/opentok-ios-sdk-webrtc.git

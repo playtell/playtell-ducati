@@ -27,6 +27,9 @@
 		1A666953165193FE00792CDE /* bluebutton-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A66694F165193FE00792CDE /* bluebutton-press@2x.png */; };
 		1A666954165193FE00792CDE /* bluebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A666950165193FE00792CDE /* bluebutton.png */; };
 		1A666955165193FE00792CDE /* bluebutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A666951165193FE00792CDE /* bluebutton@2x.png */; };
+		1A69020316768E2800E6703C /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A69020216768E2800E6703C /* Opentok.framework */; };
+		1A69020616768E3500E6703C /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A69020516768E3400E6703C /* opentok.bundle */; };
+		1A69020816768E9000E6703C /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A69020716768E9000E6703C /* libstdc++.dylib */; };
 		1A6E982F1626E16100E63F6C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 1A6E97EC1626E16100E63F6C /* .gitignore */; };
 		1A6E984A1626E16100E63F6C /* MPCJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98201626E16100E63F6C /* MPCJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1A6E984B1626E16100E63F6C /* MPCJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98221626E16100E63F6C /* MPCJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -737,8 +740,6 @@
 		F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878515813AE20086D351 /* CoreVideo.framework */; };
 		F468878815813B040086D351 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F468878715813B040086D351 /* OpenGLES.framework */; };
 		F46887A5158174DF0086D351 /* PTPlaydate+InitatorChecking.m in Sources */ = {isa = PBXBuildFile; fileRef = F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */; };
-		F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46B3FC215A4B0790023C82B /* Opentok.framework */; };
-		F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F46B3FC415A4B2220023C82B /* opentok.bundle */; };
 		F4A123F01592777600FC7A24 /* music-box.wav in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EE1592777600FC7A24 /* music-box.wav */; };
 		F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */; };
 		F4A94E8C1623BE6C000D428F /* PTNullPlaymate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A94E8B1623BE6B000D428F /* PTNullPlaymate.m */; };
@@ -1053,6 +1054,9 @@
 		1A66694F165193FE00792CDE /* bluebutton-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluebutton-press@2x.png"; sourceTree = "<group>"; };
 		1A666950165193FE00792CDE /* bluebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluebutton.png; sourceTree = "<group>"; };
 		1A666951165193FE00792CDE /* bluebutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluebutton@2x.png"; sourceTree = "<group>"; };
+		1A69020216768E2800E6703C /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/webrtc/Opentok.framework; sourceTree = "<group>"; };
+		1A69020516768E3400E6703C /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/webrtc/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
+		1A69020716768E9000E6703C /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		1A6E97EC1626E16100E63F6C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		1A6E981F1626E16100E63F6C /* MPCJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONDataSerializer.h; sourceTree = "<group>"; };
 		1A6E98201626E16100E63F6C /* MPCJSONDataSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONDataSerializer.m; sourceTree = "<group>"; };
@@ -1912,8 +1916,6 @@
 		F468878715813B040086D351 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		F46887A3158174DF0086D351 /* PTPlaydate+InitatorChecking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PTPlaydate+InitatorChecking.h"; sourceTree = "<group>"; };
 		F46887A4158174DF0086D351 /* PTPlaydate+InitatorChecking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PTPlaydate+InitatorChecking.m"; sourceTree = "<group>"; };
-		F46B3FC215A4B0790023C82B /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/opentok/Opentok.framework; sourceTree = "<group>"; };
-		F46B3FC415A4B2220023C82B /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/opentok/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		F4A123EE1592777600FC7A24 /* music-box.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "music-box.wav"; path = "audio/music-box.wav"; sourceTree = "<group>"; };
 		F4A123EF1592777600FC7A24 /* ringtone-connecting.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "ringtone-connecting.mp3"; path = "audio/ringtone-connecting.mp3"; sourceTree = "<group>"; };
 		F4A94E8A1623BE6B000D428F /* PTNullPlaymate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNullPlaymate.h; sourceTree = "<group>"; };
@@ -2423,9 +2425,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A69020816768E9000E6703C /* libstdc++.dylib in Frameworks */,
 				F4A94EAF1623C0DA000D428F /* MediaPlayer.framework in Frameworks */,
 				2371A5CA15B59C64007CEFEE /* AddressBook.framework in Frameworks */,
-				F46B3FC315A4B0790023C82B /* Opentok.framework in Frameworks */,
 				F468878815813B040086D351 /* OpenGLES.framework in Frameworks */,
 				F468878615813AE30086D351 /* CoreVideo.framework in Frameworks */,
 				F468878415813ACF0086D351 /* CoreMedia.framework in Frameworks */,
@@ -2450,6 +2452,7 @@
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
+				1A69020316768E2800E6703C /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3977,9 +3980,10 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A69020716768E9000E6703C /* libstdc++.dylib */,
+				1A69020516768E3400E6703C /* opentok.bundle */,
+				1A69020216768E2800E6703C /* Opentok.framework */,
 				2371A5C915B59C64007CEFEE /* AddressBook.framework */,
-				F46B3FC415A4B2220023C82B /* opentok.bundle */,
-				F46B3FC215A4B0790023C82B /* Opentok.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F468878115813A880086D351 /* AVFoundation.framework */,
 				F4A9D7951576C34A0015D977 /* CFNetwork.framework */,
@@ -3996,8 +4000,6 @@
 				F4A9D7A71576C3A70015D977 /* MessageUI.framework */,
 				F4A9D7971576C35A0015D977 /* MobileCoreServices.framework */,
 				F468878715813B040086D351 /* OpenGLES.framework */,
-				F46B3FC415A4B2220023C82B /* opentok.bundle */,
-				F46B3FC215A4B0790023C82B /* Opentok.framework */,
 				237B24B2157D1AB600FC288E /* QuartzCore.framework */,
 				F4A9D901157A92F80015D977 /* QuartzCore.framework */,
 				F4A9D7991576C3620015D977 /* Security.framework */,
@@ -5138,7 +5140,6 @@
 				F4EAC41715866DE200BE086B /* PTLoadingViewController.xib in Resources */,
 				F4A123F01592777600FC7A24 /* music-box.wav in Resources */,
 				F4A123F11592777600FC7A24 /* ringtone-connecting.mp3 in Resources */,
-				F46B3FC515A4B2220023C82B /* opentok.bundle in Resources */,
 				2371A5FF15B59CDD007CEFEE /* GTMOAuth2ViewTouch.xib in Resources */,
 				2371A60815B59CDD007CEFEE /* ReleaseNotes.txt in Resources */,
 				2371A60915B59CDD007CEFEE /* UnitTests-Info.plist in Resources */,
@@ -5788,6 +5789,7 @@
 				2340F43D1651CB0F007C22EB /* math-placeholder-outline@2x.png in Resources */,
 				23E40FAA1652AEE9001041CA /* matching-bg.png in Resources */,
 				23E40FAB1652AEE9001041CA /* matching-bg@2x.png in Resources */,
+				1A69020616768E3500E6703C /* opentok.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6086,8 +6088,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/submodules/opentok\"",
 					"\"$(SRCROOT)/playtell-ducati\"",
+					"\"$(SRCROOT)/submodules/webrtc\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -6127,8 +6129,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/submodules/opentok\"",
 					"\"$(SRCROOT)/playtell-ducati\"",
+					"\"$(SRCROOT)/submodules/webrtc\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -6182,8 +6184,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/submodules/opentok\"",
 					"\"$(SRCROOT)/playtell-ducati\"",
+					"\"$(SRCROOT)/submodules/webrtc\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
@@ -6243,8 +6245,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/submodules/opentok\"",
 					"\"$(SRCROOT)/playtell-ducati\"",
+					"\"$(SRCROOT)/submodules/webrtc\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
