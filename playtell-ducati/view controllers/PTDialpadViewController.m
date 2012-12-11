@@ -229,6 +229,11 @@ BOOL postcardsShown;
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPlaymates)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }
@@ -271,39 +276,8 @@ BOOL postcardsShown;
         [self.view addSubview:self.chatController.view];
     }
     
-    // Loop through the playmates and show the views as in playdate or not
     // This is for when the user has been in a playdate as they don't get notified
-    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
-    [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
-                                         token:[PTUser currentUser].authToken
-                                       success:^
-     {
-         BOOL shouldRefreshPlaymateViews = NO;
-         NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-         for (PTPlaymate *pm in refresh) {
-             PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
-             if (pmView) {
-                 if ([pm.userStatus isEqualToString:@"playdate"]) {
-                     [pmView showUserInPlaydateAnimated:NO];
-                 } else {
-                     [pmView hideUserInPlaydateAnimated:NO];
-                 }
-             } else {
-                 // Refresh local playmates array
-                 self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-
-                 // Playmate is new! Perhaps we added a new friend while in contact import flow
-                 shouldRefreshPlaymateViews = YES;
-             }
-         }
-         
-         // Check if we need to refresh playmate views (if we have new ones)
-         if (shouldRefreshPlaymateViews) {
-             [self addNewPlaymate];
-         }
-     } failure:^(NSError *error) {
-         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
-     }];
+    [self refreshPlaymates];
     
     // Check for new postcards and update the badge number on the postcards button
     postcardButton.badgeNumber = 0;
@@ -425,6 +399,41 @@ BOOL postcardsShown;
             [self.playmateViews setObject:playmateView forKey:[NSNumber numberWithInteger:playmate.userID]];
         }
     }
+}
+
+- (void)refreshPlaymates {
+    // Loop through the playmates and show the views as in playdate or not
+    PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
+    [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
+                                         token:[PTUser currentUser].authToken
+                                       success:^
+     {
+         BOOL shouldRefreshPlaymateViews = NO;
+         NSArray *refresh = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         for (PTPlaymate *pm in refresh) {
+             PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
+             if (pmView) {
+                 if ([pm.userStatus isEqualToString:@"playdate"]) {
+                     [pmView showUserInPlaydateAnimated:NO];
+                 } else {
+                     [pmView hideUserInPlaydateAnimated:NO];
+                 }
+             } else {
+                 // Refresh local playmates array
+                 self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+                 
+                 // Playmate is new! Perhaps we added a new friend while in contact import flow
+                 shouldRefreshPlaymateViews = YES;
+             }
+         }
+         
+         // Check if we need to refresh playmate views (if we have new ones)
+         if (shouldRefreshPlaymateViews) {
+             [self addNewPlaymate];
+         }
+     } failure:^(NSError *error) {
+         LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+     }];
 }
 
 - (void)addNewPlaymate {
