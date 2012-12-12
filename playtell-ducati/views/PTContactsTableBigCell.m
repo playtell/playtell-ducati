@@ -92,12 +92,12 @@
             break;
         }
         case PTContactsTableBigCellModeFriend: {
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteNormal"] forState:UIControlStateNormal];
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteHighlighted"] forState:UIControlStateHighlighted];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsNormal"] forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsHighlighted"] forState:UIControlStateHighlighted];
             [buttonAction setTitle:@"Friend" forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
             buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 81.0f), 40.0f, 81.0f, 33.0f);
+            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 101.0f), 40.0f, 101.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
             [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
