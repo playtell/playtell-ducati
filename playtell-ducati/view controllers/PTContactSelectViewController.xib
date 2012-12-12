@@ -76,7 +76,6 @@
 										<string key="NSFrame">{{221, 282}, {164, 28}}</string>
 										<reference key="NSSuperview" ref="521974093"/>
 										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -231,7 +230,7 @@
 							<object class="IBUIButton" id="6728470">
 								<reference key="NSNextResponder" ref="349643340"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{658, 8}, {126, 33}}</string>
+								<string key="NSFrame">{{660, 8}, {126, 33}}</string>
 								<reference key="NSSuperview" ref="349643340"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="426480467"/>
@@ -241,7 +240,7 @@
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUIContentEdgeInsets.top">0.0</double>
-								<double key="IBUIContentEdgeInsets.bottom">0.0</double>
+								<double key="IBUIContentEdgeInsets.bottom">2</double>
 								<double key="IBUIContentEdgeInsets.left">0.0</double>
 								<double key="IBUIContentEdgeInsets.right">10</double>
 								<string key="IBUINormalTitle">Manual Invite</string>
@@ -451,8 +450,8 @@
 						<int key="objectID">36</int>
 						<reference key="object" ref="349643340"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="6728470"/>
 							<reference ref="149835444"/>
+							<reference ref="6728470"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
