@@ -418,6 +418,10 @@ BOOL postcardsShown;
                  } else {
                      [pmView hideUserInPlaydateAnimated:NO];
                  }
+                 
+                 if ([pm.friendshipStatus isEqualToString:@"confirmed"]) {
+                     [pmView hideFriendshipAwaitingAnimated:YES];
+                 }
              } else {
                  // Refresh local playmates array
                  self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
