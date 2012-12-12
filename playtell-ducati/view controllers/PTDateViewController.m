@@ -535,6 +535,7 @@ NSTimer *postcardTimer;
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
+    isGameOpen = NO;
 
     // Start loading book covers
     [self loadBookCovers];
@@ -589,6 +590,9 @@ NSTimer *postcardTimer;
     
     // Remove borders from chat hud
     [self.chatController hideAllBorders];
+    
+    // Reset game open status
+    isGameOpen = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -693,7 +697,7 @@ NSTimer *postcardTimer;
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
-    [self.chatController connectToPlaceholderOpenTokSession];
+    //[self.chatController connectToPlaceholderOpenTokSession];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
@@ -1997,7 +2001,13 @@ NSTimer *postcardTimer;
         CGPoint navigateTo = CGPointMake(booksScrollView.frame.size.width * position, 0.0f);
         [booksScrollView setContentOffset:navigateTo animated:YES];
     } else {
-        NSLog(@"Game: %i", [gameId integerValue]);
+        if (isGameOpen == YES) {
+            return;
+        }
+
+        // Update status
+        isGameOpen = YES;
+        
         // Open specific book (ids are hardcoded)
         if ([gameId integerValue] == 1) {
             [self memoryTapped:nil];

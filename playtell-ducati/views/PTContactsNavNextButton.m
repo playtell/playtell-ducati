@@ -15,7 +15,7 @@
     if (self) {
         [self setBackgroundImage:[UIImage imageNamed:@"buttonNextNormal"] forState:UIControlStateNormal];
         [self setBackgroundImage:[UIImage imageNamed:@"buttonNextHighlighted"] forState:UIControlStateHighlighted];
-        [self setBackgroundImage:[UIImage imageNamed:@"buttonNextDisabled"] forState:UIControlStateDisabled];
+        //[self setBackgroundImage:[UIImage imageNamed:@"buttonNextDisabled"] forState:UIControlStateDisabled];
         [self setTitle:@"Next" forState:UIControlStateNormal];
         self.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
     }

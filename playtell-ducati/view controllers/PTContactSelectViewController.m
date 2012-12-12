@@ -6,6 +6,9 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#import "PTAppDelegate.h"
+#import "TransitionController.h"
+#import "PTContactImportViewController.h"
 #import "PTContactSelectViewController.h"
 #import "PTContactMessageViewController.h"
 #import "PTContactsCreateListRequest.h"
@@ -70,7 +73,6 @@
                                       success:^(NSDictionary *result) {
                                           // Now retrieve contact list from server (with metadata about each contact)
                                           [self getContactList];
-                                          [self getRelatedContacts];
                                       } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                           NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
                                       }];
@@ -90,56 +92,39 @@
     // Background
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
     
+    // Header view container
+    headerContainer.backgroundColor = [UIColor colorFromHex:@"#3FA9F5"];
+    headerContainer.layer.shadowColor = [UIColor blackColor].CGColor;
+    headerContainer.layer.shadowOpacity = 0.8f;
+    headerContainer.layer.shadowRadius = 8.0f;
+    headerContainer.layer.borderColor = [UIColor blackColor].CGColor;
+    headerContainer.layer.borderWidth = 1.0f;
+    
     // Navigation controller setup
-    self.title = [NSString stringWithFormat:@"Invite From %@", self.sourceType];
+    self.title = @"Invite Your Family To Play";
+    [self.navigationController.navigationBar setTintColor:[UIColor colorFromHex:@"#3FA9F5"]];
     
     // Nav buttons
-    PTContactsNavCancelButton *buttonCancelView = [PTContactsNavCancelButton buttonWithType:UIButtonTypeCustom];
-    buttonCancelView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
-    [buttonCancelView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithCustomView:buttonCancelView];
-    [self.navigationItem setLeftBarButtonItem:cancelButton];
-    
     PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
     buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
+    [buttonBackView setTitle:@"Cancel" forState:UIControlStateNormal];
+    [buttonBackView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
     buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
-    buttonBack.enabled = NO;
-
-    PTContactsNavNextButton *buttonNextView = [PTContactsNavNextButton buttonWithType:UIButtonTypeCustom];
-    buttonNextView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
-    [buttonNextView addTarget:self action:@selector(showComposeMessageController:) forControlEvents:UIControlEventTouchUpInside];
-    buttonNext = [[UIBarButtonItem alloc] initWithCustomView:buttonNextView];
-    buttonNext.enabled = NO;
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonNext, buttonBack, nil]];
+    [self.navigationItem setLeftBarButtonItem:buttonBack];
     
     // Filtering
     [textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
-    invitationContainer.backgroundColor = [UIColor colorWithRed:(62.0f / 255.0f) green:(169.0f / 255.0f) blue:(245.0f / 255.0f) alpha:1.0f];
-    contactsInvitationCountButton = [PTContactsInvitationCountButton buttonWithType:UIButtonTypeCustom];
-    [contactsInvitationCountButton setTitle:@"0" forState:UIControlStateNormal];
-    contactsInvitationCountButton.frame = CGRectMake(31.0f, 12.0f, 88.0f, 82.0f);
-    [contactsInvitationCountButton addTarget:self action:@selector(viewSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [invitationContainer addSubview:contactsInvitationCountButton];
     
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     leftContainer.layer.shadowColor = [UIColor blackColor].CGColor;
-    leftContainer.layer.shadowOffset = CGSizeMake(4.0f, 0.0f);
-    leftContainer.layer.shadowOpacity = 0.3f;
-    leftContainer.layer.shadowRadius = 4.0f;
+    leftContainer.layer.shadowOpacity = 0.8f;
+    leftContainer.layer.shadowRadius = 8.0f;
     
     // Table view style
     contactsTableView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
     contactsTableView.separatorColor = [UIColor colorFromHex:@"#55707f"];
     contactsTableView.hidden = YES;
-    relatedContactsTableView.backgroundColor = [UIColor clearColor];
-    relatedContactsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    CALayer *sep1 = [CALayer layer];
-    sep1.backgroundColor = [UIColor colorFromHex:@"#55707f"].CGColor;
-    sep1.frame = CGRectMake(0.0f, 0.0f, relatedContactsTableView.frame.size.width, 1.0f);
-    [relatedContactsContainer.layer addSublayer:sep1];
-    relatedContactsContainer.hidden = YES;
-    relatedHeader.hidden = YES;
     
     // Setup loading view
     UILabel *loadingLbl = [[loadingView subviews] objectAtIndex:0];
@@ -147,6 +132,15 @@
     UIView *loadingCrank = [self createLoadingCrank];
     loadingCrank.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
     [loadingView addSubview:loadingCrank];
+    
+    // Setup bottom bar
+    bottomBar.layer.shadowColor = [UIColor blackColor].CGColor;
+    bottomBar.layer.shadowOpacity = 0.3f;
+    bottomBar.layer.shadowRadius = 4.0f;
+    bottomBar.layer.borderColor = [UIColor blackColor].CGColor;
+    bottomBar.layer.borderWidth = 1.0f;
+    lblManualInvite.shadowColor = [UIColor whiteColor];
+    lblManualInvite.shadowOffset = CGSizeMake(0.0f, 1.0f);
 }
 
 - (void)viewDidUnload {
@@ -156,8 +150,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    selectedContacts = [NSArray array];
     [contactsTableView reloadData];
-    [contactsInvitationCountButton setTitle:[NSString stringWithFormat:@"%i", [selectedContacts count]] forState:UIControlStateNormal];
 }
 
 - (void)dealloc {
@@ -249,6 +243,7 @@
                                                      loadingView.alpha = 0.0f;
                                                  } completion:^(BOOL finished) {
                                                      textSearch.enabled = YES;
+                                                     [textSearch becomeFirstResponder];
                                                      loadingView.hidden = YES;
                                                      
                                                      // Show table
@@ -264,42 +259,10 @@
                                          }];
 }
 
-- (void)getRelatedContacts {
-    PTContactsGetRelatedRequest *contactsGetRelatedRequest = [[PTContactsGetRelatedRequest alloc] init];
-    [contactsGetRelatedRequest getRelatedWithAuthToken:[PTUser currentUser].authToken
-                                               success:^(NSArray *contactList, NSInteger total) {
-                                                   if (total == 0) {
-                                                       return;
-                                                   }
-
-                                                   // Modify to mutable objects
-                                                   relatedContacts = [[NSMutableArray alloc] initWithCapacity:[contactList count]];
-                                                   for (NSDictionary *contact in contactList) {
-                                                       [relatedContacts addObject:[NSMutableDictionary dictionaryWithDictionary:contact]];
-                                                   }
-                                                   
-                                                   dispatch_async(dispatch_get_main_queue(), ^() {
-                                                       // Update table view
-                                                       [relatedContactsTableView reloadData];
-                                                       
-                                                       // Show table view container
-                                                       relatedContactsContainer.alpha = 0.0f;
-                                                       relatedContactsContainer.hidden = NO;
-                                                       relatedHeader.alpha = 0.0f;
-                                                       relatedHeader.hidden = NO;
-                                                       [UIView animateWithDuration:0.5f animations:^{
-                                                           relatedContactsContainer.alpha = 1.0f;
-                                                           relatedHeader.alpha = 1.0f;
-                                                       }];
-                                                   });
-                                               }
-                                               failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                   NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
-                                               }];
-}
-
 - (void)navigateBack:(id)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
+                                                     withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 - (void)searchStringDidChange:(id)sender {
@@ -332,10 +295,7 @@
     [self.navigationController pushViewController:contactMessageViewController animated:YES];
 }
 
-- (void)receiveContactAction:(NSNotification *)notification {
-    // Update label count
-    [contactsInvitationCountButton setTitle:[NSString stringWithFormat:@"%i", [selectedContacts count]] forState:UIControlStateNormal];
-    
+- (void)receiveContactAction:(NSNotification *)notification {    
     // Navigation buttons
     buttonNext.enabled = [selectedContacts count] > 0;
 }
@@ -387,7 +347,6 @@
                                               success:^(NSDictionary *result) {
                                                   // Now retrieve contact list from server (with metadata about each contact)
                                                   [self getContactList];
-                                                  [self getRelatedContacts];
                                               } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                   NSLog(@"Contacts error: %i, %@", response.statusCode, JSON);
                                               }];
@@ -417,30 +376,18 @@
 #pragma mark - Table View delegates
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView.tag == 0) { // Contacts table
-        return 2;
-    } else { // Related contacts table
-        return [relatedContacts count];
-    }
+    return 2;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        if (section == 0) {
-            return @"Your friends already on Playtell";
-        } else {
-            return @"Your friends from [Source]";
-        }
-    } else { // Related contacts table
-        return nil;
+    if (section == 0) {
+        return @"Your friends already on Playtell";
+    } else {
+        return @"Your friends from [Source]";
     }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 1) { // Related contacts table
-        return [UIView new];
-    }
-
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 7.0f, 27.0f, 19.0f)];
     if (section == 0) {
         img.image = [UIImage imageNamed:@"contactsHeader2"];
@@ -472,116 +419,72 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        return 32.0f;
-    } else { // Related contacts table
-        return 0.0f;
-    }
+    return 32.0f;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView.tag == 0) { // Contacts table
-        if (inSearchMode) {
-            // Filtered contacts
-            if (section == 0) {
-                return [filteredContactsOnPT count];
-            } else {
-                return [filteredContactsNotOnPT count] + 1; // The extra one is the "Manual Invite" cell.
-            }
+    if (inSearchMode) {
+        // Filtered contacts
+        if (section == 0) {
+            return [filteredContactsOnPT count];
         } else {
-            // All contacts
-            if (section == 0) {
-                return [contactsOnPT count];
-            } else {
-                return [contactsNotOnPT count];
-            }
+            return [filteredContactsNotOnPT count]; // The extra one is the "Manual Invite" cell.
         }
-    } else { // Related contacts table
-        return [relatedContacts count];
+    } else {
+        // All contacts
+        if (section == 0) {
+            return [contactsOnPT count];
+        } else {
+            return [contactsNotOnPT count];
+        }
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView.tag == 0) { // Contacts table
-        // Last cell in if we're filtering should always be "Manual Invite" cell
-        if (inSearchMode && indexPath.section == 1 && (indexPath.row == [filteredContactsNotOnPT count])) {
-            PTContactsTableManualInviteCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PTContactsTableManualInviteCell"];
-            if (cell == nil) {
-                cell = [[PTContactsTableManualInviteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PTContactsTableManualInviteCell" tableWidth:contactsTableView.frame.size.width];
-            }
-            cell.delegate = self;
-            return cell;
-        }
-        
-        // Load normal cells
-        static NSString *CellIdentifier = @"PTContactsTableBigCell";
-        PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[PTContactsTableBigCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
-        }
-        
-        // Contact description
-        NSMutableDictionary *contact;
-        if (inSearchMode) {
-            if (indexPath.section == 0) {
-                contact = [filteredContactsOnPT objectAtIndex:indexPath.row];
-            } else {
-                contact = [filteredContactsNotOnPT objectAtIndex:indexPath.row];
-            }
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {    
+    // Load normal cells
+    static NSString *CellIdentifier = @"PTContactsTableBigCell";
+    PTContactsTableBigCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[PTContactsTableBigCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:contactsTableView.frame.size.width];
+    }
+    
+    // Contact description
+    NSMutableDictionary *contact;
+    if (inSearchMode) {
+        if (indexPath.section == 0) {
+            contact = [filteredContactsOnPT objectAtIndex:indexPath.row];
         } else {
-            if (indexPath.section == 0) {
-                contact = [contactsOnPT objectAtIndex:indexPath.row];
-            } else {
-                contact = [contactsNotOnPT objectAtIndex:indexPath.row];
-            }
+            contact = [filteredContactsNotOnPT objectAtIndex:indexPath.row];
         }
-        
-        // Define cell
-        cell.delegate = self;
-        cell.contact = contact;
-        
-        if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) { // Not a PT user
-            if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contact NOT already selected
-                [cell setMode:PTContactsTableBigCellModeInvite];
-            } else { // Contact already selected
-                [cell setMode:PTContactsTableBigCellModeUninvite];
-            }
-        } else { // Existing PT user
-            BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
-            BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
-            if (isConfirmedFriend || isPendingFriend) { // Already a friend (confirmed or pending)
-                [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
-            } else { // Not a friend
-                [cell setMode:PTContactsTableBigCellModeFriend];
-            }
+    } else {
+        if (indexPath.section == 0) {
+            contact = [contactsOnPT objectAtIndex:indexPath.row];
+        } else {
+            contact = [contactsNotOnPT objectAtIndex:indexPath.row];
         }
-        
-        return cell;
-    } else { // Related contacts table
-        static NSString *CellIdentifier = @"PTContactsTableSmallCell";
-        
-        PTContactsTableSmallCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[PTContactsTableSmallCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier tableWidth:relatedContactsTableView.frame.size.width];
+    }
+    
+    // Define cell
+    cell.delegate = self;
+    cell.contact = contact;
+    
+    if ([[contact objectForKey:@"user_id"] isKindOfClass:[NSNull class]]) { // Not a PT user
+        if ([selectedContacts indexOfObject:contact] == NSNotFound) { // Contact NOT already selected
+            [cell setMode:PTContactsTableBigCellModeInvite];
+        } else { // Contact already selected
+            [cell setMode:PTContactsTableBigCellModeUninvite];
         }
-        
-        // Contact description
-        NSMutableDictionary *contact = [relatedContacts objectAtIndex:indexPath.row];
-        
-        // Define cell
-        cell.delegate = self;
-        cell.contact = contact;
-
+    } else { // Existing PT user
         BOOL isConfirmedFriend = [[contact objectForKey:@"is_confirmed_friend"] boolValue];
         BOOL isPendingFriend = [[contact objectForKey:@"is_pending_friend"] boolValue];
-        if (isConfirmedFriend || isPendingFriend) { // Already a friend
+        if (isConfirmedFriend || isPendingFriend) { // Already a friend (confirmed or pending)
             [cell setMode:PTContactsTableBigCellModeAlreadyFriend];
         } else { // Not a friend
             [cell setMode:PTContactsTableBigCellModeFriend];
         }
-        
-        return cell;
     }
+    
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -619,38 +522,26 @@
     contactsSelectedViewController.view.superview.frame = CGRectMake(([UIScreen mainScreen].bounds.size.height - vcSize.width) / 2.0f, ([UIScreen mainScreen].bounds.size.width - vcSize.height) / 2.0f, vcSize.width, vcSize.height);
 }
 
+- (IBAction)didPressManualInvite:(id)sender {
+    PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
+    [self.navigationController pushViewController:contactImportViewController animated:YES];
+}
+
 #pragma mark - Contact select delegates
 
 - (void)contactDidInvite:(NSMutableDictionary *)contact cell:(id)sender {
-    PTContactsTableBigCell *cell = (PTContactsTableBigCell *)sender;
+    selectedContacts = [NSArray arrayWithObject:contact];
+    [self showComposeMessageController:sender];
+    //PTContactsTableBigCell *cell = (PTContactsTableBigCell *)sender;
     //[cell setMode:PTContactsTableBigCellModeUninvite];
     //NSLog(@"Cell: %@", NSStringFromCGRect(cell.frame));
 
     // Add contact to list
-    [selectedContacts addObject:contact];
+    //[selectedContacts addObject:contact];
     
     // Announce action
-    NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionInvited], @"action", nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
-    
-    // Envelope animation
-    UIImageView *blastEnvelope = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactsTableInvite"]];
-    CGFloat y = cell.frame.origin.y - contactsTableView.contentOffset.y + contactsTableView.frame.origin.y + 19.0f;
-    blastEnvelope.frame = CGRectMake(31.0f, y, 100.0f, 75.0f);
-    [self.view addSubview:blastEnvelope];
-    contactsInvitationCountButton.titleLabel.textColor = [UIColor whiteColor];
-
-    [UIView animateWithDuration:0.3f animations:^{
-        blastEnvelope.frame = CGRectMake(61.0f, 33.0f, 50.0f, 39.0f);
-    } completion:^(BOOL finished) {
-        contactsInvitationCountButton.titleLabel.textColor = [UIColor colorWithRed:(50.0f / 255.0f) green:(137.0f / 255.0f) blue:(191.0f / 255.0f) alpha:1.0f];
-
-        [UIView animateWithDuration:0.2f animations:^{
-            blastEnvelope.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            [blastEnvelope removeFromSuperview];
-        }];
-    }];
+    //NSDictionary *action = [NSDictionary dictionaryWithObjectsAndKeys:contact, @"contact", [NSNumber numberWithInt:PTContactsTableBigCellActionInvited], @"action", nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"actionPerformedOnContact" object:nil userInfo:action];
 }
 
 - (void)contactDidCancelInvite:(NSMutableDictionary *)contact cell:(id)sender {

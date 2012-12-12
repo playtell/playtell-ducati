@@ -30,6 +30,7 @@
 #import "PTNewUserNavigationController.h"
 #import "PTUpdateTokenRequest.h"
 #import "UIDevice+IdentifierAddition.h"
+#import "PTVersionCheckRequest.h"
 
 @interface PTAppDelegate ()
 @property (nonatomic, retain) PTPusher* client;
@@ -102,6 +103,9 @@
     
     // Defaults
     ttInviteBuddiesShownThisInstance = NO;
+    
+    // Check the app version
+    [self checkAppVersion];
     
     return YES;
 }
@@ -225,20 +229,7 @@
                                            PTToken:ptToken
                                          authToken:[PTUser currentUser].authToken
                                          onSuccess:nil
-                                         onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                 // Check if out version is out of date
-                                                 if (response.statusCode == 600) {
-                                                     UIAlertView *alert = [[UIAlertView alloc]
-                                                                           initWithTitle:@"Playdate Alert"
-                                                                           message:@"There's a newer version of Playdate with great stuff in it!"
-                                                                           delegate:self
-                                                                           cancelButtonTitle:nil
-                                                                           otherButtonTitles:@"Upgrade", nil];
-                                                     [alert show];
-                                                 }
-                                             });
-                                         }];
+                                         onFailure:nil];
     } else {
         // Notify of successfull push notification registration request
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PushNotificationRequestDidSucceed" object:nil];
@@ -297,6 +288,27 @@
     
     // Close the app
     exit(0);
+}
+
+#pragma mark - Verion check
+
+- (void)checkAppVersion {
+    PTVersionCheckRequest *apiRequest = [[PTVersionCheckRequest alloc] init];
+    [apiRequest checkVersion:nil // Our version is good - no need to handle this case
+                   onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                       dispatch_async(dispatch_get_main_queue(), ^{
+                           // Check if out version is out of date (error code: 600)
+                           if (response.statusCode == 600) {
+                               UIAlertView *alert = [[UIAlertView alloc]
+                                                     initWithTitle:@"Playdate Alert"
+                                                     message:@"There's a newer version of Playdate with great stuff in it!"
+                                                     delegate:self
+                                                     cancelButtonTitle:nil
+                                                     otherButtonTitles:@"Upgrade", nil];
+                               [alert show];
+                           }
+                       });
+                   }];
 }
 
 @end

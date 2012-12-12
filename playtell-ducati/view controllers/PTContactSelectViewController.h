@@ -31,16 +31,13 @@
     NSArray *filteredContactsNotOnPT;
     NSString *searchString;
     
-    // Related contacts
-    NSMutableArray *relatedContacts;
-    IBOutlet UIView *relatedContactsContainer;
-    IBOutlet UITableView *relatedContactsTableView;
-    IBOutlet UIImageView *relatedHeader;
-    
     // Invitation/filter box
     IBOutlet UIView *leftContainer;
-    IBOutlet UIView *invitationContainer;
-    PTContactsInvitationCountButton *contactsInvitationCountButton;
+    IBOutlet UIView *headerContainer;
+    
+    // Bottom bar
+    IBOutlet UIView *bottomBar;
+    IBOutlet UILabel *lblManualInvite;
 }
 
 @property (nonatomic, retain) NSString *sourceType;
@@ -48,5 +45,6 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil usingGoogleAuth:(GTMOAuth2Authentication *)_googleAuth;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;
 - (IBAction)viewSelected:(id)sender;
+- (IBAction)didPressManualInvite:(id)sender;
 
 @end
