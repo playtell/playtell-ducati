@@ -200,11 +200,17 @@ CGRect offRightFrame;
     if ([self.postcards count] > 0) {
         PTPostcard *current = [self.postcards objectAtIndex:currentPostcard];
         
+        // Check for blank sender name
+        NSString *sender = current.sender;
+        if ([[sender stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]) {
+            sender = @"No name";
+        }
+        
         NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
         [timeFormatter setDateFormat:@"hh:mm a"];
         NSString *timeStr = [timeFormatter stringFromDate:current.timestamp];
         
-        lblDetails.text = [NSString stringWithFormat:@"%@ • %@ • %@", current.sender, [self dateStringForDate:current.timestamp], timeStr];
+        lblDetails.text = [NSString stringWithFormat:@"%@ • %@ • %@", sender, [self dateStringForDate:current.timestamp], timeStr];
     } else {
         lblDetails.text = @"You have no postcards!";
     }
