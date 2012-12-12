@@ -57,6 +57,7 @@
     
     // Games
     NSMutableArray *gameList;
+    BOOL isGameOpen;
     
     // Pages
     PTPagesScrollView *pagesScrollView;
