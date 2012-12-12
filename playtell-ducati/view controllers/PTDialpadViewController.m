@@ -969,6 +969,8 @@ BOOL postcardsShown;
             playmate.friendshipStatus = @"confirmed";
             // Update playmate view to reflect change
             [playmateView hideFriendshipAwaitingAnimated:YES];
+        } else {
+            [self refreshPlaymates];
         }
     }
 }
