@@ -693,7 +693,7 @@ NSTimer *postcardTimer;
     
     [self.chatController setLeftViewAsPlaceholder];
     [self.chatController configureForDialpad];
-    [self.chatController connectToPlaceholderOpenTokSession];
+    //[self.chatController connectToPlaceholderOpenTokSession];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (appDelegate.dialpadController.loadingView != nil) {
