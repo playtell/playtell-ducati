@@ -269,6 +269,7 @@ BOOL postcardsShown;
     
     // Remove borders from chat hud
     [self.chatController hideAllBorders];
+    [self.chatController restrictToSmallSize:YES];
     
     if (signUpBubbleContainer != nil) {
         [self.view insertSubview:self.chatController.view belowSubview:signUpBubbleContainer];
