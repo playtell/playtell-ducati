@@ -236,7 +236,7 @@
                                           UIAlertView *alert = [[UIAlertView alloc]
                                                                 initWithTitle:@"Notification error"
                                                                 message:@"We could not deliver your invite at this time."
-                                                                delegate:self
+                                                                delegate:nil
                                                                 cancelButtonTitle:@"Ok"
                                                                 otherButtonTitles:nil];
                                           [alert show];
