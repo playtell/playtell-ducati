@@ -387,6 +387,7 @@
 		238B1D1516386F8C004B1D6A /* matching-flipboard-you@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 238B1D1116386F8C004B1D6A /* matching-flipboard-you@2x.png */; };
 		238B1D1816387379004B1D6A /* matching-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 238B1D1616387379004B1D6A /* matching-logo.png */; };
 		238B1D1916387379004B1D6A /* matching-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 238B1D1716387379004B1D6A /* matching-logo@2x.png */; };
+		238F5F461677F2BC00272A56 /* PTVersionCheckRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 238F5F451677F2BC00272A56 /* PTVersionCheckRequest.m */; };
 		23A1EAAB15ED2594000FED09 /* PTPlaymateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */; };
 		23A416B5162884560092C6B6 /* tooltip-invite-buddies.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A416B3162884560092C6B6 /* tooltip-invite-buddies.png */; };
 		23A416B6162884560092C6B6 /* tooltip-invite-buddies@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23A416B4162884560092C6B6 /* tooltip-invite-buddies@2x.png */; };
@@ -1536,6 +1537,8 @@
 		238B1D1116386F8C004B1D6A /* matching-flipboard-you@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "matching-flipboard-you@2x.png"; path = "Matching/matching-flipboard-you@2x.png"; sourceTree = "<group>"; };
 		238B1D1616387379004B1D6A /* matching-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "matching-logo.png"; path = "Matching/matching-logo.png"; sourceTree = "<group>"; };
 		238B1D1716387379004B1D6A /* matching-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "matching-logo@2x.png"; path = "Matching/matching-logo@2x.png"; sourceTree = "<group>"; };
+		238F5F441677F2BC00272A56 /* PTVersionCheckRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTVersionCheckRequest.h; sourceTree = "<group>"; };
+		238F5F451677F2BC00272A56 /* PTVersionCheckRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTVersionCheckRequest.m; sourceTree = "<group>"; };
 		23A1EAA915ED2594000FED09 /* PTPlaymateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateView.h; sourceTree = "<group>"; };
 		23A1EAAA15ED2594000FED09 /* PTPlaymateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymateView.m; sourceTree = "<group>"; };
 		23A416B3162884560092C6B6 /* tooltip-invite-buddies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip-invite-buddies.png"; sourceTree = "<group>"; };
@@ -2995,6 +2998,8 @@
 				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
 				23B2D19E1628AAEA0076408D /* PTUpdateTokenRequest.h */,
 				23B2D19F1628AAEA0076408D /* PTUpdateTokenRequest.m */,
+				238F5F441677F2BC00272A56 /* PTVersionCheckRequest.h */,
+				238F5F451677F2BC00272A56 /* PTVersionCheckRequest.m */,
 			);
 			name = login;
 			sourceTree = "<group>";
@@ -6137,6 +6142,7 @@
 				234DBBA0164C53BB009B7481 /* PTMathViewController.m in Sources */,
 				2340F389165148F6007C22EB /* PTMathAvailableCardView.m in Sources */,
 				2340F38C16514974007C22EB /* PTMathPairingCardView.m in Sources */,
+				238F5F461677F2BC00272A56 /* PTVersionCheckRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
