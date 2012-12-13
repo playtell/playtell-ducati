@@ -6372,8 +6372,8 @@
 		F4A9D8DA157869930015D977 /* Distribution - Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: PlayTell, Inc";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: PlayTell, Inc";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6401,8 +6401,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "CC0FF199-D228-4EF2-9E0D-B282617645DC";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CC0FF199-D228-4EF2-9E0D-B282617645DC";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Production";
