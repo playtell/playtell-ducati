@@ -34,6 +34,7 @@
 #import "PTPlaymateAddView.h"
 #import "PTPostcard.h"
 #import "PTSoloUser.h"
+#import "PTSpinnerView.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
 #import "TransitionController.h"
@@ -178,6 +179,14 @@ BOOL postcardsShown;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Add the spinner to the background view
+    float width = background.frame.size.width;
+    float height = background.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, height - (size * 1.333f), size, size)];
+    [spinner startSpinning];
+    [background addSubview:spinner];
     
     playdateStarting = NO;
     
@@ -329,6 +338,17 @@ BOOL postcardsShown;
                          completion:^(BOOL finished) {
                              [self performSelector:@selector(hideInviteBuddiesTooltip) withObject:nil afterDelay:3.0f];
                          }];
+    }
+    
+    // Remove the spinner
+    for (UIView *sub in background.subviews) {
+        if ([sub isKindOfClass:[PTSpinnerView class]]) {
+            [UIView animateWithDuration:0.7f animations:^{
+                sub.alpha = 0.0f;
+            } completion:^(BOOL finished) {
+                [sub removeFromSuperview];
+            }];
+        }
     }
 }
 
