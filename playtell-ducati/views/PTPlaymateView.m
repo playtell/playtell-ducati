@@ -14,6 +14,7 @@
 @implementation PTPlaymateView
 
 @synthesize delegate;
+@synthesize playmate;
 
 - (id)initWithFrame:(CGRect)frame playmate:(PTPlaymate *)playmateObj {
     self = [super initWithFrame:frame];

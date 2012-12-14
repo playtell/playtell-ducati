@@ -736,51 +736,75 @@ BOOL postcardsShown;
 
 - (void)joinPlaydateWithDelay:(float)delay {
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
-    // Hide the shim
-    [UIView animateWithDuration:0.5f animations:^{
-        shimView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        shimView.hidden = YES;
-    }];
-    
-    // Stop ringing sound
-    [self endRinging];
-    
-    // Unsubscribe from rendezvous channel
-    if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
-        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    }
-    
     PTPlaymate* otherPlaymate;
     if ([self.requestedPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         otherPlaymate = [self.requestedPlaydate playmate];
     } else {
         otherPlaymate = [self.requestedPlaydate initiator];
     }
-
-    self.chatController.playdate = self.requestedPlaydate;
-    [self.chatController setLoadingViewForPlaymate:otherPlaymate];
-    if (delay > 0) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-            [self.chatController connectToOpenTokSession];
+    
+    UIImage *playmateImage = [self.selectedPlaymateView.playmate userPhoto];
+    UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
+    CGRect buttonRect = CGRectZero;
+    buttonRect.origin = self.selectedPlaymateView.frame.origin; //[self.view convertPoint:self.selectedPlaymateView.frame.origin fromView:self.scrollView];
+    buttonRect.size = CGSizeMake(200.0f, 150.0f);//playmateImageView.frame.size;
+    playmateImageView.frame = buttonRect;
+    playmateImageView.layer.cornerRadius = 12.0;
+    playmateImageView.clipsToBounds = YES;
+    [self.view addSubview:playmateImageView];
+    
+    // Hide the shim
+    self.selectedPlaymateView.layer.zPosition = 0;
+    [UIView animateWithDuration:0.4f animations:^{
+        shimView.alpha = 0.0f;
+        [self.selectedPlaymateView stopShake];
+        
+        // Move the image to the chat view
+        CGRect imageViewFrame = playmateImageView.frame;
+        imageViewFrame.origin = CGPointMake(308.0f, 0.0f);
+        playmateImageView.frame = imageViewFrame;
+    } completion:^(BOOL finished) {
+        [playmateImageView removeFromSuperview];
+        [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+        
+        // Dispatching this asynchronously so the UI will update itself before trying to
+        // start a playdate
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Stop ringing sound
+            [self endRinging];
+            
+            // Unsubscribe from rendezvous channel
+            if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
+                [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+            }
+            
+            self.chatController.playdate = self.requestedPlaydate;
+            [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+            if (delay > 0) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+                    [self.chatController connectToOpenTokSession];
+                });
+            } else {
+                [self.chatController connectToOpenTokSession];
+            }
+            
+            self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                         bundle:nil];
+            
+            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+            [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+            
+            if (self.requestedPlaydate) {
+                [self.dateController setPlaydate:self.requestedPlaydate];
+                self.requestedPlaydate = nil;
+            }
+            
+            // Send analytics event for joining a playdate
+            [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+            
+            shimView.hidden = YES;
         });
-    } else {
-        [self.chatController connectToOpenTokSession];
-    }
-    
-    self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                 bundle:nil];
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-    
-    if (self.requestedPlaydate) {
-        [self.dateController setPlaydate:self.requestedPlaydate];
-        self.requestedPlaydate = nil;
-    }
-    
-    // Send analytics event for joining a playdate
-    [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+    }];
 }
 
 - (void)refreshPostcardButtonBadgeNumber {
