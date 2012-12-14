@@ -423,6 +423,14 @@ BOOL postcardsShown;
 }
 
 - (void)refreshPlaymates {
+    // Add the spinner to the background view
+    float width = background.frame.size.width;
+    float height = background.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, height - (size * 1.333f), size, size)];
+    [spinner startSpinning];
+    [background addSubview:spinner];
+    
     // Loop through the playmates and show the views as in playdate or not
     PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
     [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
@@ -456,8 +464,14 @@ BOOL postcardsShown;
          if (shouldRefreshPlaymateViews) {
              [self addNewPlaymate];
          }
+         
+         // Remove the spinner
+         [spinner removeFromSuperview];
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         
+         // Remove the spinner
+         [spinner removeFromSuperview];
      }];
 }
 
@@ -1226,6 +1240,8 @@ BOOL postcardsShown;
              // Hide the spinner
              [UIView animateWithDuration:0.3f animations:^{
                  spinner.alpha = 0.0f;
+             } completion:^(BOOL finished) {
+                 [spinner removeFromSuperview];
              }];
              
              playmateView.userInteractionEnabled = YES;
