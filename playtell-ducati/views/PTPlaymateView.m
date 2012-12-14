@@ -399,8 +399,8 @@
 }
 
 - (void)enableFriendshipConfirmationButtons {
-    acceptButton.enabled = NO;
-    rejectButton.enabled = NO;
+    acceptButton.enabled = YES;
+    rejectButton.enabled = YES;
 }
 
 - (void)showAnimated:(BOOL)animated {

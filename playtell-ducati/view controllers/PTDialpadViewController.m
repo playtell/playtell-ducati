@@ -1171,71 +1171,132 @@ BOOL postcardsShown;
 
 - (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     NSLog(@"API: Friendship accepting with playmate: %i", playmate.userID);
+    
+    // Spinner view
+    float width = playmateView.frame.size.width;
+    float height = playmateView.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, (height - size) / 2, size, size)];
+    spinner.alpha = 0.0f;
+    [spinner startSpinning];
+    [playmateView addSubview:spinner];
+    
+    // Animate in the spinner
+    [UIView animateWithDuration:0.3f animations:^{
+        spinner.alpha = 1.0f;
+    }];
+    
+    [playmateView hideFriendshipConfirmationAnimated:YES];
+    playmateView.userInteractionEnabled = NO;
+    
     PTFriendshipAcceptRequest *friendshipAcceptRequest = [[PTFriendshipAcceptRequest alloc] init];
     [friendshipAcceptRequest acceptFriendshipWith:playmate.userID
                                         authToken:[[PTUser currentUser] authToken]
-                                          success:^(NSDictionary *result) {
-                                              // Update playmate view to reflect change
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  // Update playmate friendship status
-                                                  playmate.friendshipStatus = @"confirmed";
-                                                  // Update playmate view to reflect change
-                                                  [playmateView hideFriendshipConfirmationAnimated:YES];
-                                              });
-                                          }
-                                          failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  // Show alert
-                                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                                  message:@"Could not accept friendship at this time. Please try again later."
-                                                                                                 delegate:nil
-                                                                                        cancelButtonTitle:@"Ok"
-                                                                                        otherButtonTitles:nil];
-                                                  [alert show];
-                                                  
-                                                  // Enable confirmation buttons again
-                                                  [playmateView enableFriendshipConfirmationButtons];
-                                              });
-                                          }];
+                                          success:^(NSDictionary *result)
+     {
+         // Update playmate view to reflect change
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Update playmate friendship status
+             playmate.friendshipStatus = @"confirmed";
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }
+                                          failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Show alert
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                             message:@"Could not accept friendship at this time. Please try again later."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"Ok"
+                                                   otherButtonTitles:nil];
+             [alert show];
+             
+             // Enable confirmation buttons again
+             [playmateView enableFriendshipConfirmationButtons];
+             [playmateView showFriendshipConfirmationAnimated:YES];
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }];
 }
 
 - (void)playmateDidDeclineFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     NSLog(@"API: Friendship declining with playmate: %i", playmate.userID);
+    
+    // Spinner view
+    float width = playmateView.frame.size.width;
+    float height = playmateView.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, (height - size) / 2, size, size)];
+    spinner.alpha = 0.0f;
+    [spinner startSpinning];
+    [playmateView addSubview:spinner];
+    
+    // Animate in the spinner
+    [UIView animateWithDuration:0.3f animations:^{
+        spinner.alpha = 1.0f;
+    }];
+    
+    [playmateView hideFriendshipConfirmationAnimated:YES];
+    playmateView.userInteractionEnabled = NO;
+    
     PTFriendshipDeclineRequest *friendshipDeclineRequest = [[PTFriendshipDeclineRequest alloc] init];
     [friendshipDeclineRequest declineFriendshipFrom:playmate.userID
                                           authToken:[[PTUser currentUser] authToken]
-                                            success:^(NSDictionary *result) {
-                                                // Update playmate view to reflect change
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    // Delete this playmate obj from factory
-                                                    [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
-
-                                                    // Refresh local playmates array
-                                                    self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-                                                    
-                                                    // Delete playmate view and move all others to reflect this change
-                                                    [UIView animateWithDuration:0.3f
-                                                                     animations:^{
-                                                                         playmateView.alpha = 0.0f;
-                                                                     } completion:^(BOOL finished) {
-                                                                         [self refreshPlaymateViews];
-                                                                     }];
-                                                });
-                                            }
-                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    // Show alert
-                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                                    message:@"Could not accept friendship at this time. Please try again later."
-                                                                                                   delegate:nil
-                                                                                          cancelButtonTitle:@"Ok"
-                                                                                          otherButtonTitles:nil];
-                                                    [alert show];
-                                                    
-                                                    // Enable confirmation buttons again
-                                                    [playmateView enableFriendshipConfirmationButtons];
-                                                });
-                                            }];
+                                            success:^(NSDictionary *result)
+     {
+         // Update playmate view to reflect change
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Delete this playmate obj from factory
+             [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
+             
+             // Refresh local playmates array
+             self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+             
+             // Delete playmate view and move all others to reflect this change
+             [UIView animateWithDuration:0.3f
+                              animations:^{
+                                  playmateView.alpha = 0.0f;
+                              } completion:^(BOOL finished) {
+                                  [self refreshPlaymateViews];
+                              }];
+         });
+     }
+                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Show alert
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                             message:@"Could not accept friendship at this time. Please try again later."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"Ok"
+                                                   otherButtonTitles:nil];
+             [alert show];
+             
+             // Enable confirmation buttons again
+             [playmateView enableFriendshipConfirmationButtons];
+             [playmateView showFriendshipConfirmationAnimated:YES];
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }];
 }
 
 - (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
