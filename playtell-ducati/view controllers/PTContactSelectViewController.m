@@ -90,7 +90,7 @@
     [super viewDidLoad];
 
     // Background
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"photo-bg-dark.png"]];
     
     // Header view container
     headerContainer.backgroundColor = [UIColor colorFromHex:@"#3FA9F5"];

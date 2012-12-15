@@ -43,7 +43,7 @@
     [super viewDidLoad];
     
     // Background
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"photo-bg-dark.png"]];
     
     // Navigation controller setup
     self.title = @"Compose A Message To Your Buddies";
