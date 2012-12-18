@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "PTSpinnerView.h"
+
 @interface PTNewUserPushNotificationsViewController : UIViewController {
     // Nav buttons
     UIBarButtonItem *buttonFinish;
@@ -28,6 +30,9 @@
 
     // Analytics
     NSDate *eventStart;
+    
+    // Spinner view
+    PTSpinnerView *spinner;
 }
 
 - (IBAction)showPushNotificationPrompt:(id)sender;

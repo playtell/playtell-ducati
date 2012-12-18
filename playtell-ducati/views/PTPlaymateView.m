@@ -14,6 +14,7 @@
 @implementation PTPlaymateView
 
 @synthesize delegate;
+@synthesize playmate;
 
 - (id)initWithFrame:(CGRect)frame playmate:(PTPlaymate *)playmateObj {
     self = [super initWithFrame:frame];
@@ -399,8 +400,8 @@
 }
 
 - (void)enableFriendshipConfirmationButtons {
-    acceptButton.enabled = NO;
-    rejectButton.enabled = NO;
+    acceptButton.enabled = YES;
+    rejectButton.enabled = YES;
 }
 
 - (void)showAnimated:(BOOL)animated {

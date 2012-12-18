@@ -34,6 +34,7 @@
 #import "PTPlaymateAddView.h"
 #import "PTPostcard.h"
 #import "PTSoloUser.h"
+#import "PTSpinnerView.h"
 #import "PTUser.h"
 #import "PTUsersGetStatusRequest.h"
 #import "TransitionController.h"
@@ -178,6 +179,14 @@ BOOL postcardsShown;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    // Add the spinner to the background view
+    float width = background.frame.size.width;
+    float height = background.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, height - (size * 1.333f), size, size)];
+    [spinner startSpinning];
+    [background addSubview:spinner];
     
     playdateStarting = NO;
     
@@ -330,6 +339,17 @@ BOOL postcardsShown;
                              [self performSelector:@selector(hideInviteBuddiesTooltip) withObject:nil afterDelay:3.0f];
                          }];
     }
+    
+    // Remove the spinner
+    for (UIView *sub in background.subviews) {
+        if ([sub isKindOfClass:[PTSpinnerView class]]) {
+            [UIView animateWithDuration:0.7f animations:^{
+                sub.alpha = 0.0f;
+            } completion:^(BOOL finished) {
+                [sub removeFromSuperview];
+            }];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -403,6 +423,14 @@ BOOL postcardsShown;
 }
 
 - (void)refreshPlaymates {
+    // Add the spinner to the background view
+    float width = background.frame.size.width;
+    float height = background.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, height - (size * 1.333f), size, size)];
+    [spinner startSpinning];
+    [background addSubview:spinner];
+    
     // Loop through the playmates and show the views as in playdate or not
     PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
     [playmateFactory refreshPlaymatesForUserID:[PTUser currentUser].userID
@@ -436,8 +464,14 @@ BOOL postcardsShown;
          if (shouldRefreshPlaymateViews) {
              [self addNewPlaymate];
          }
+         
+         // Remove the spinner
+         [spinner removeFromSuperview];
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
+         
+         // Remove the spinner
+         [spinner removeFromSuperview];
      }];
 }
 
@@ -716,51 +750,75 @@ BOOL postcardsShown;
 
 - (void)joinPlaydateWithDelay:(float)delay {
     LogTrace(@"Joining playdate: %@", self.requestedPlaydate);
-    // Hide the shim
-    [UIView animateWithDuration:0.5f animations:^{
-        shimView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        shimView.hidden = YES;
-    }];
-    
-    // Stop ringing sound
-    [self endRinging];
-    
-    // Unsubscribe from rendezvous channel
-    if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
-        [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
-    }
-    
     PTPlaymate* otherPlaymate;
     if ([self.requestedPlaydate isUserIDInitiator:[[PTUser currentUser] userID]]) {
         otherPlaymate = [self.requestedPlaydate playmate];
     } else {
         otherPlaymate = [self.requestedPlaydate initiator];
     }
-
-    self.chatController.playdate = self.requestedPlaydate;
-    [self.chatController setLoadingViewForPlaymate:otherPlaymate];
-    if (delay > 0) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-            [self.chatController connectToOpenTokSession];
+    
+    UIImage *playmateImage = [self.selectedPlaymateView.playmate userPhoto];
+    UIImageView *playmateImageView = [[UIImageView alloc] initWithImage:playmateImage];
+    CGRect buttonRect = CGRectZero;
+    buttonRect.origin = self.selectedPlaymateView.frame.origin; //[self.view convertPoint:self.selectedPlaymateView.frame.origin fromView:self.scrollView];
+    buttonRect.size = CGSizeMake(200.0f, 150.0f);//playmateImageView.frame.size;
+    playmateImageView.frame = buttonRect;
+    playmateImageView.layer.cornerRadius = 12.0;
+    playmateImageView.clipsToBounds = YES;
+    [self.view addSubview:playmateImageView];
+    
+    // Hide the shim
+    self.selectedPlaymateView.layer.zPosition = 0;
+    [UIView animateWithDuration:0.4f animations:^{
+        shimView.alpha = 0.0f;
+        [self.selectedPlaymateView stopShake];
+        
+        // Move the image to the chat view
+        CGRect imageViewFrame = playmateImageView.frame;
+        imageViewFrame.origin = CGPointMake(308.0f, 0.0f);
+        playmateImageView.frame = imageViewFrame;
+    } completion:^(BOOL finished) {
+        [playmateImageView removeFromSuperview];
+        [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+        
+        // Dispatching this asynchronously so the UI will update itself before trying to
+        // start a playdate
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Stop ringing sound
+            [self endRinging];
+            
+            // Unsubscribe from rendezvous channel
+            if ([[PTPlayTellPusher sharedPusher] isSubscribedToRendezvousChannel]) {
+                [[PTPlayTellPusher sharedPusher] unsubscribeFromRendezvousChannel];
+            }
+            
+            self.chatController.playdate = self.requestedPlaydate;
+            [self.chatController setLoadingViewForPlaymate:otherPlaymate];
+            if (delay > 0) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delay * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+                    [self.chatController connectToOpenTokSession];
+                });
+            } else {
+                [self.chatController connectToOpenTokSession];
+            }
+            
+            self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
+                                                                         bundle:nil];
+            
+            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+            [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+            
+            if (self.requestedPlaydate) {
+                [self.dateController setPlaydate:self.requestedPlaydate];
+                self.requestedPlaydate = nil;
+            }
+            
+            // Send analytics event for joining a playdate
+            [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+            
+            shimView.hidden = YES;
         });
-    } else {
-        [self.chatController connectToOpenTokSession];
-    }
-    
-    self.dateController = [[PTDateViewController alloc] initWithNibName:@"PTDateViewController"
-                                                                 bundle:nil];
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:self.dateController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
-    
-    if (self.requestedPlaydate) {
-        [self.dateController setPlaydate:self.requestedPlaydate];
-        self.requestedPlaydate = nil;
-    }
-    
-    // Send analytics event for joining a playdate
-    [PTAnalytics sendEventNamed:EventPlaydateJoined withProperties:[NSDictionary dictionaryWithObjectsAndKeys:otherPlaymate.username, PropPlaymateId, nil]];
+    }];
 }
 
 - (void)refreshPostcardButtonBadgeNumber {
@@ -1151,71 +1209,134 @@ BOOL postcardsShown;
 
 - (void)playmateDidAcceptFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     NSLog(@"API: Friendship accepting with playmate: %i", playmate.userID);
+    
+    // Spinner view
+    float width = playmateView.frame.size.width;
+    float height = playmateView.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, (height - size) / 2, size, size)];
+    spinner.alpha = 0.0f;
+    [spinner startSpinning];
+    [playmateView addSubview:spinner];
+    
+    // Animate in the spinner
+    [UIView animateWithDuration:0.3f animations:^{
+        spinner.alpha = 1.0f;
+    }];
+    
+    [playmateView hideFriendshipConfirmationAnimated:YES];
+    playmateView.userInteractionEnabled = NO;
+    
     PTFriendshipAcceptRequest *friendshipAcceptRequest = [[PTFriendshipAcceptRequest alloc] init];
     [friendshipAcceptRequest acceptFriendshipWith:playmate.userID
                                         authToken:[[PTUser currentUser] authToken]
-                                          success:^(NSDictionary *result) {
-                                              // Update playmate view to reflect change
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  // Update playmate friendship status
-                                                  playmate.friendshipStatus = @"confirmed";
-                                                  // Update playmate view to reflect change
-                                                  [playmateView hideFriendshipConfirmationAnimated:YES];
-                                              });
-                                          }
-                                          failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                  // Show alert
-                                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                                  message:@"Could not accept friendship at this time. Please try again later."
-                                                                                                 delegate:nil
-                                                                                        cancelButtonTitle:@"Ok"
-                                                                                        otherButtonTitles:nil];
-                                                  [alert show];
-                                                  
-                                                  // Enable confirmation buttons again
-                                                  [playmateView enableFriendshipConfirmationButtons];
-                                              });
-                                          }];
+                                          success:^(NSDictionary *result)
+     {
+         // Update playmate view to reflect change
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Update playmate friendship status
+             playmate.friendshipStatus = @"confirmed";
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             } completion:^(BOOL finished) {
+                 [spinner removeFromSuperview];
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }
+                                          failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Show alert
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                             message:@"Could not accept friendship at this time. Please try again later."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"Ok"
+                                                   otherButtonTitles:nil];
+             [alert show];
+             
+             // Enable confirmation buttons again
+             [playmateView enableFriendshipConfirmationButtons];
+             [playmateView showFriendshipConfirmationAnimated:YES];
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }];
 }
 
 - (void)playmateDidDeclineFriendship:(PTPlaymateView *)playmateView playmate:(PTPlaymate *)playmate {
     NSLog(@"API: Friendship declining with playmate: %i", playmate.userID);
+    
+    // Spinner view
+    float width = playmateView.frame.size.width;
+    float height = playmateView.frame.size.height;
+    float size = 75.0f;
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, (height - size) / 2, size, size)];
+    spinner.alpha = 0.0f;
+    [spinner startSpinning];
+    [playmateView addSubview:spinner];
+    
+    // Animate in the spinner
+    [UIView animateWithDuration:0.3f animations:^{
+        spinner.alpha = 1.0f;
+    }];
+    
+    [playmateView hideFriendshipConfirmationAnimated:YES];
+    playmateView.userInteractionEnabled = NO;
+    
     PTFriendshipDeclineRequest *friendshipDeclineRequest = [[PTFriendshipDeclineRequest alloc] init];
     [friendshipDeclineRequest declineFriendshipFrom:playmate.userID
                                           authToken:[[PTUser currentUser] authToken]
-                                            success:^(NSDictionary *result) {
-                                                // Update playmate view to reflect change
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    // Delete this playmate obj from factory
-                                                    [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
-
-                                                    // Refresh local playmates array
-                                                    self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
-                                                    
-                                                    // Delete playmate view and move all others to reflect this change
-                                                    [UIView animateWithDuration:0.3f
-                                                                     animations:^{
-                                                                         playmateView.alpha = 0.0f;
-                                                                     } completion:^(BOOL finished) {
-                                                                         [self refreshPlaymateViews];
-                                                                     }];
-                                                });
-                                            }
-                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                dispatch_async(dispatch_get_main_queue(), ^{
-                                                    // Show alert
-                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                                    message:@"Could not accept friendship at this time. Please try again later."
-                                                                                                   delegate:nil
-                                                                                          cancelButtonTitle:@"Ok"
-                                                                                          otherButtonTitles:nil];
-                                                    [alert show];
-                                                    
-                                                    // Enable confirmation buttons again
-                                                    [playmateView enableFriendshipConfirmationButtons];
-                                                });
-                                            }];
+                                            success:^(NSDictionary *result)
+     {
+         // Update playmate view to reflect change
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Delete this playmate obj from factory
+             [[PTConcretePlaymateFactory sharedFactory] removePlaymateUsingId:playmate.userID];
+             
+             // Refresh local playmates array
+             self.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+             
+             // Delete playmate view and move all others to reflect this change
+             [UIView animateWithDuration:0.3f
+                              animations:^{
+                                  playmateView.alpha = 0.0f;
+                              } completion:^(BOOL finished) {
+                                  [self refreshPlaymateViews];
+                              }];
+         });
+     }
+                                            failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             // Show alert
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                             message:@"Could not accept friendship at this time. Please try again later."
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"Ok"
+                                                   otherButtonTitles:nil];
+             [alert show];
+             
+             // Enable confirmation buttons again
+             [playmateView enableFriendshipConfirmationButtons];
+             [playmateView showFriendshipConfirmationAnimated:YES];
+             
+             // Hide the spinner
+             [UIView animateWithDuration:0.3f animations:^{
+                 spinner.alpha = 0.0f;
+             }];
+             
+             playmateView.userInteractionEnabled = YES;
+         });
+     }];
 }
 
 - (void)playmateDidPressAddFriends:(PTPlaymateView *)playmateView {
