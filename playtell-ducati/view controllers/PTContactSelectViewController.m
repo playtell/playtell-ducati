@@ -24,6 +24,7 @@
 #import "PTContactsNavNextButton.h"
 #import "PTContactsNavCancelButton.h"
 #import "PTUsersCreateFriendshipRequest.h"
+#import "PTSpinnerView.h"
 #import "GTMOAuth2Authentication.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -90,7 +91,7 @@
     [super viewDidLoad];
 
     // Background
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"photo-bg-dark.png"]];
     
     // Header view container
     headerContainer.backgroundColor = [UIColor colorFromHex:@"#3FA9F5"];
@@ -129,9 +130,10 @@
     // Setup loading view
     UILabel *loadingLbl = [[loadingView subviews] objectAtIndex:0];
     loadingLbl.textColor = [UIColor colorFromHex:@"#123542"];
-    UIView *loadingCrank = [self createLoadingCrank];
-    loadingCrank.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
-    [loadingView addSubview:loadingCrank];
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 75.0f, 75.0f)];
+    spinner.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
+    [spinner startSpinning];
+    [loadingView addSubview:spinner];
     
     // Setup bottom bar
     bottomBar.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -160,24 +162,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (UIView *)createLoadingCrank {
-    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
-    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
-    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
-    
-    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    
-    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
-    rotationAnimation.duration = 2.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 10000;
-    
-    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    return iconImageview;
 }
 
 - (void)getContactList {

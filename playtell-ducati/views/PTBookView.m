@@ -303,24 +303,24 @@
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     if (inFocus) {
-        [self performSelector:@selector(didCancelTouch) withObject:nil afterDelay:0.1f];
+        [self performSelector:@selector(fullOpacity) withObject:nil afterDelay:0.1f];
     }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (inFocus) {
         [self performSelector:@selector(didEndTouch) withObject:nil afterDelay:0.1f];
+        [self performSelector:@selector(fullOpacity) withObject:nil afterDelay:3.0f];
     } else {
         [delegate bookTouchedWithId:[self getId] AndView:self];
     }
 }
 
-- (void)didCancelTouch {
+- (void)fullOpacity {
     coverOut.opacity = 1.0f;
 }
 
 - (void)didEndTouch {
-    coverOut.opacity = 1.0f;
     [delegate bookTouchedWithId:[self getId] AndView:self];
 }
 

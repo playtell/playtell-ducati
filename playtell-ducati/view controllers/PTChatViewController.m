@@ -11,6 +11,7 @@
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
 #import "PTPlaydatePhotoCreateRequest.h"
+#import "PTSpinnerView.h"
 #import "PTUser.h"
 
 #import "PTPlaydate+InitatorChecking.h"
@@ -376,12 +377,11 @@ NSTimer *screenshotTimer;
     [anImageView addSubview:opacityView];
     
     // Create and align the loading crank in the opacity view
-    UIView *spinningCrank = [self createWaitingView];
-    spinningCrank.center = opacityView.center;
-    spinningCrank.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
-                                     UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
-    [opacityView addSubview:spinningCrank];
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 75.0f, 75.0f)];
+    spinner.center = opacityView.center;
+    spinner.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    [spinner startSpinning];
+    [opacityView addSubview:spinner];
     
     // Determine the playmate name label geometry
     CGSize maxSize = CGSizeMake(200.0f, 50.0f);
@@ -423,24 +423,6 @@ NSTimer *screenshotTimer;
     
     [dummyBackground addSubview:dummyContent];
     return dummyBackground;
-}
-
-- (UIView*)createWaitingView {
-    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
-    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
-    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
-    
-    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    
-    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
-    rotationAnimation.duration = 2.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 10000;
-    
-    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    return iconImageview;
 }
 
 - (UIImage*)placeholderImage {
