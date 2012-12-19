@@ -499,6 +499,10 @@
     return 0.0f;
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [textSearch resignFirstResponder];
+}
+
 #pragma mark - Button handlers
 
 - (IBAction)viewSelected:(id)sender {
@@ -524,6 +528,10 @@
 - (IBAction)didPressManualInvite:(id)sender {
     PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
     [self.navigationController pushViewController:contactImportViewController animated:YES];
+}
+
+- (IBAction)didPressOutsideTextField:(id)sender {
+    [textSearch resignFirstResponder];
 }
 
 #pragma mark - Contact select delegates

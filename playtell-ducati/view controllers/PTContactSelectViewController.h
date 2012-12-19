@@ -46,5 +46,6 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;
 - (IBAction)viewSelected:(id)sender;
 - (IBAction)didPressManualInvite:(id)sender;
+- (IBAction)didPressOutsideTextField:(id)sender;
 
 @end
