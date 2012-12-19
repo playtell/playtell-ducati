@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#define LABEL_DEFAULT @"Didn't find who you're looking for?"
+
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
 #import "PTContactImportViewController.h"
@@ -82,6 +84,16 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(receiveContactAction:)
                                                      name:@"actionPerformedOnContact"
+                                                   object:nil];
+        
+        // Notifications for keyboard actions
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide:)
+                                                     name:UIKeyboardWillHideNotification
                                                    object:nil];
     }
     return self;
@@ -253,10 +265,13 @@
     // Trim the string
     searchString = [textSearch.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([searchString isEqualToString:@""]) {
+        lblManualInvite.text = LABEL_DEFAULT;
         inSearchMode = NO;
         [contactsTableView reloadData];
         return;
     }
+    
+    lblManualInvite.text = [NSString stringWithFormat:@"Don't see %@ in your results?", searchString];
 
     // Filter contacts
     NSPredicate *resultPredicate = [NSPredicate
@@ -562,6 +577,30 @@
 
 - (void)contactDidPressManualInvite:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - Keyboard notifications
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    //CGRect beginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    //CGRect endFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    float duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    [UIView animateWithDuration:duration animations:^{
+        bottomBar.frame = CGRectOffset(bottomBar.frame, 0.0f, -352.0f);
+    }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    //CGRect beginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    //CGRect endFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    float duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    [UIView animateWithDuration:duration animations:^{
+        bottomBar.frame = CGRectOffset(bottomBar.frame, 0.0f, 352.0f);
+    }];
 }
 
 @end
