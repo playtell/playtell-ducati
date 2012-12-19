@@ -694,6 +694,7 @@ NSTimer *postcardTimer;
     //[self.chatController connectToPlaceholderOpenTokSession];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.dialpadController.playdateToIgnore = self.playdate;
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
     }
@@ -1094,12 +1095,13 @@ NSTimer *postcardTimer;
          {
              // We delay moving to the dialpad because it will be checking for
              // playdates when it appears
-             [self transitionToDialpad];
+             //[self transitionToDialpad];
          }
                                                           onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
          {
-             [self transitionToDialpad];
+             //[self transitionToDialpad];
          }];
+        [self transitionToDialpad];
     }
 }
 
