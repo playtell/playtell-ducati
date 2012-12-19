@@ -109,7 +109,7 @@ NSTimer *postcardTimer;
                                                         repeats:NO];
     } else {
         // Start taking automatic screenshots
-        [self.chatController startAutomaticPicturesWithInterval:15.0];
+        //[self.chatController startAutomaticPicturesWithInterval:15.0];
     }
     
     // Set the start time for use with analytics
@@ -1122,7 +1122,7 @@ NSTimer *postcardTimer;
         [self endRinging];
         
         // Start taking automatic pictures
-        [self.chatController startAutomaticPicturesWithInterval:15.0f];
+        //[self.chatController startAutomaticPicturesWithInterval:15.0f];
     }
 }
 
