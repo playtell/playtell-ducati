@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1A10583F163048EC001D9694 /* PTUsersGetStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A10583E163048EC001D9694 /* PTUsersGetStatusRequest.m */; };
+		1A1773AD16823B88009A8B2D /* postcard-button-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1773A916823B88009A8B2D /* postcard-button-press.png */; };
+		1A1773AE16823B88009A8B2D /* postcard-button-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1773AA16823B88009A8B2D /* postcard-button-press@2x.png */; };
+		1A1773AF16823B88009A8B2D /* postcard-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1773AB16823B88009A8B2D /* postcard-button.png */; };
+		1A1773B016823B88009A8B2D /* postcard-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1773AC16823B88009A8B2D /* postcard-button@2x.png */; };
 		1A30CB8D1677E52D00A33FD5 /* Manual-invite-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */; };
 		1A30CB8E1677E52D00A33FD5 /* Manual-invite-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */; };
 		1A30CB8F1677E52D00A33FD5 /* Manual-invite.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB831677E52D00A33FD5 /* Manual-invite.png */; };
@@ -1063,6 +1067,10 @@
 /* Begin PBXFileReference section */
 		1A10583D163048EC001D9694 /* PTUsersGetStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUsersGetStatusRequest.h; sourceTree = "<group>"; };
 		1A10583E163048EC001D9694 /* PTUsersGetStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUsersGetStatusRequest.m; sourceTree = "<group>"; };
+		1A1773A916823B88009A8B2D /* postcard-button-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "postcard-button-press.png"; sourceTree = "<group>"; };
+		1A1773AA16823B88009A8B2D /* postcard-button-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "postcard-button-press@2x.png"; sourceTree = "<group>"; };
+		1A1773AB16823B88009A8B2D /* postcard-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "postcard-button.png"; sourceTree = "<group>"; };
+		1A1773AC16823B88009A8B2D /* postcard-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "postcard-button@2x.png"; sourceTree = "<group>"; };
 		1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press.png"; path = "Inviter V2/Manual-invite-press.png"; sourceTree = "<group>"; };
 		1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press@2x.png"; path = "Inviter V2/Manual-invite-press@2x.png"; sourceTree = "<group>"; };
 		1A30CB831677E52D00A33FD5 /* Manual-invite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite.png"; path = "Inviter V2/Manual-invite.png"; sourceTree = "<group>"; };
@@ -2697,20 +2705,6 @@
 			isa = PBXGroup;
 			children = (
 				1A5D7F6C165BE65B006DBC32 /* Navigation */,
-				1A70D2E0166D19B700F66595 /* postcard-default.png */,
-				1A70D2E1166D19B700F66595 /* postcard-default@2x.png */,
-				1A70D2E2166D19B700F66595 /* postcard-new.png */,
-				1A70D2E3166D19B700F66595 /* postcard-new@2x.png */,
-				1A70D2E4166D19B700F66595 /* postcard-thinking.png */,
-				1A70D2E5166D19B700F66595 /* postcard-thinking@2x.png */,
-				1A70D2E6166D19B700F66595 /* postcard-wish.png */,
-				1A70D2E7166D19B700F66595 /* postcard-wish@2x.png */,
-				1A70D2E8166D19B700F66595 /* postcards-call.png */,
-				1A70D2E9166D19B700F66595 /* postcards-call@2x.png */,
-				1A70D2EA166D19B700F66595 /* postcards-thinking.png */,
-				1A70D2EB166D19B700F66595 /* postcards-thinking@2x.png */,
-				1A70D2EC166D19B700F66595 /* postcards-tip.png */,
-				1A70D2ED166D19B700F66595 /* postcards-tip@2x.png */,
 				1A66694E165193FE00792CDE /* bluebutton-press.png */,
 				1A66694F165193FE00792CDE /* bluebutton-press@2x.png */,
 				1A666950165193FE00792CDE /* bluebutton.png */,
@@ -2729,8 +2723,26 @@
 				1A7503891653EF2400EC507D /* photo-button@2x.png */,
 				1ABD6F1D1642BB2F0027609C /* photo-countdown.png */,
 				1ABD6F1E1642BB2F0027609C /* photo-countdown@2X.png */,
+				1A1773A916823B88009A8B2D /* postcard-button-press.png */,
+				1A1773AA16823B88009A8B2D /* postcard-button-press@2x.png */,
+				1A1773AB16823B88009A8B2D /* postcard-button.png */,
+				1A1773AC16823B88009A8B2D /* postcard-button@2x.png */,
+				1A70D2E0166D19B700F66595 /* postcard-default.png */,
+				1A70D2E1166D19B700F66595 /* postcard-default@2x.png */,
 				1ABD6F44164439020027609C /* postcard-icon.png */,
 				1ABD6F45164439020027609C /* postcard-icon@2X.png */,
+				1A70D2E2166D19B700F66595 /* postcard-new.png */,
+				1A70D2E3166D19B700F66595 /* postcard-new@2x.png */,
+				1A70D2E4166D19B700F66595 /* postcard-thinking.png */,
+				1A70D2E5166D19B700F66595 /* postcard-thinking@2x.png */,
+				1A70D2E6166D19B700F66595 /* postcard-wish.png */,
+				1A70D2E7166D19B700F66595 /* postcard-wish@2x.png */,
+				1A70D2E8166D19B700F66595 /* postcards-call.png */,
+				1A70D2E9166D19B700F66595 /* postcards-call@2x.png */,
+				1A70D2EA166D19B700F66595 /* postcards-thinking.png */,
+				1A70D2EB166D19B700F66595 /* postcards-thinking@2x.png */,
+				1A70D2EC166D19B700F66595 /* postcards-tip.png */,
+				1A70D2ED166D19B700F66595 /* postcards-tip@2x.png */,
 			);
 			path = "Postcard View";
 			sourceTree = "<group>";
@@ -5925,6 +5937,10 @@
 				1A30CB981677E7B000A33FD5 /* buttonInviteHighlighted@2x.png in Resources */,
 				1A30CB991677E7B000A33FD5 /* buttonInviteNormal@2x.png in Resources */,
 				1AC4EEE2167BFA8A00FE90EB /* date_bg@2x.png in Resources */,
+				1A1773AD16823B88009A8B2D /* postcard-button-press.png in Resources */,
+				1A1773AE16823B88009A8B2D /* postcard-button-press@2x.png in Resources */,
+				1A1773AF16823B88009A8B2D /* postcard-button.png in Resources */,
+				1A1773B016823B88009A8B2D /* postcard-button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
