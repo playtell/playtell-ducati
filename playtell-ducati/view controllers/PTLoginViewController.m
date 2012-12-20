@@ -271,7 +271,13 @@
                           onSuccess:^(NSDictionary *result) {
                               NSString* token = [result valueForKey:@"token"];
                               NSNumber* userID = [result valueForKey:@"user_id"];
-                              NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              NSURL* photoURL;
+                              @try {
+                                  photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              }
+                              @catch (NSException *exception) {
+                                  photoURL = [NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"];
+                              }
                               
                               // Save logged-in status
                               [[PTUser currentUser] setUsername:txtEmail.text];
