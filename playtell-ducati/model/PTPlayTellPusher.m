@@ -301,6 +301,11 @@ static PTPlayTellPusher* instance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanPlayTurn" object:self userInfo:eventData];
     }];
 
+    [aPlaydateChannel bindToEventNamed:@"client-games_hangman_draw" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanDraw" object:self userInfo:eventData];
+    }];
+    
     self.isSubscribedToPlaydateChannel = YES;
 }
 

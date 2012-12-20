@@ -258,11 +258,11 @@ NSTimer *postcardTimer;
     endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
     endPlaydatePopup.hidden = YES;
     
-    UIButton *blah = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [blah setTitle:@"Hangman" forState:UIControlStateNormal];
-    blah.frame = CGRectMake(100.0f, 100.0f, 150.0f, 35.0f);
-    [blah addTarget:self action:@selector(hangmanTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:blah];
+//    UIButton *blah = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [blah setTitle:@"Hangman" forState:UIControlStateNormal];
+//    blah.frame = CGRectMake(100.0f, 100.0f, 150.0f, 35.0f);
+//    [blah addTarget:self action:@selector(hangmanTapped:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:blah];
 }
 
 - (void)showPostcardPrompt {

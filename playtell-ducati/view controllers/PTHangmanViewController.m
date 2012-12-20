@@ -18,6 +18,7 @@
 #import "PTHangmanLetterView.h"
 #import "UIColor+ColorFromHex.h"
 #import "PTHangmanGuessLetterView.h"
+#import "PTPlayTellPusher.h"
 
 @interface PTHangmanViewController ()
 
@@ -71,12 +72,27 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayTurn:) name:@"PlayDateHangmanPlayTurn" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherEndGame:) name:@"PlayDateHangmanEndGame" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherRefreshGame:) name:@"PlayDateHangmanRefreshGame" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherDraw:) name:@"PlayDateHangmanDraw" object:nil];
         
         // Empty word at the start
         wordArray = [NSMutableArray array];
         wordLetterViews = [NSMutableArray array];
         isAnimatingLetters = NO;
         isSelectLetterViewSetup = NO;
+        
+        // Draw points
+        pusherDrawPoints = [NSMutableArray array];
+        frameLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(timerDraw)];
+        frameLink.frameInterval = 1;
+        [frameLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        frameLink.paused = YES;
+        
+        // Haven't guessed yet
+        isFirstTimeGuessing = YES;
+        
+        // Start with 0 guess attempts
+        guessAttempts = 0;
+        maxGuessAttempts = 7;
     }
     return self;
 }
@@ -127,10 +143,14 @@
     // Add backgrounds & shadows to all board views
     [self setupBoardView:viewSelectWord];
     [self setupBoardView:viewSelectLetter];
-    [self setupBoardView:viewDraw];
     [self setupBoardView:viewWaitForWord];
-    //[self setupBoardView:viewWaitForLetter];
     [self setupBoardView:viewWaitForDrawing];
+    viewDraw.backgroundColor = [UIColor clearColor];
+    drawSomethingButtonContainer.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"hangman-button-container"]];
+    drawSomethingButtonContainer.alpha = 0.0f;
+    drawSomethingButtonContainer.hidden = YES;
+    drawSomethingMan.alpha = 0.0f;
+    drawSomethingMan.hidden = YES;
     
     // Init gallows
     viewGallows = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"hangman-gallows"]];
@@ -138,6 +158,15 @@
     viewGallows.alpha = 0.0f;
     viewGallows.frame = CGRectMake(-135.0f, 172.0f, 228.0f, 430.0f);
     [self.view insertSubview:viewGallows atIndex:0];
+    
+    // Winner view
+    winnerView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
+    winnerView.backgroundColor = [UIColor clearColor];
+    winnerView.center = self.view.center;
+    winnerView.image = [UIImage imageNamed:@"memory-win"];
+    winnerView.alpha = 0.0f;
+    winnerView.hidden = YES;
+    [self.view addSubview:winnerView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -265,26 +294,32 @@
                 } else {
                     // Otherwise, it's my turn to pick a letter
 
-                    // Check if word length has been passed in
-                    // It's passed in as soon as word is chosen by initator
-                    NSNumber *wordLengthObj = [eventData objectForKey:@"word_length"];
-                    if (wordLengthObj != nil) {
-                        wordLength = [wordLengthObj integerValue];
-                        NSLog(@"Word length: %d", wordLength);
-                    }
+                    if (isFirstTimeGuessing == YES) {
+                        isFirstTimeGuessing = NO;
+                        // Check if word length has been passed in
+                        // It's passed in as soon as word is chosen by initator
+                        NSNumber *wordLengthObj = [eventData objectForKey:@"word_length"];
+                        if (wordLengthObj != nil) {
+                            wordLength = [wordLengthObj integerValue];
+                            NSLog(@"Word length: %d", wordLength);
+                        }
 
-                    // Setup letter pick view
-                    if (isSelectLetterViewSetup == NO) {
-                        [self setupSelectLetterView];
-                    }
+                        // Setup letter pick view
+                        if (isSelectLetterViewSetup == NO) {
+                            [self setupSelectLetterView];
+                        }
 
-                    // Switch to letter pick view
-                    viewWaitForWord.hidden = YES;
-                    viewWaitForDrawing.hidden = YES;
-                    viewSelectLetter.hidden = NO;
-                    
-                    // Fade in the guess letter views
-                    [self fadeInGuessLetterViews];
+                        // Switch to letter pick view
+                        viewWaitForWord.hidden = YES;
+                        viewWaitForDrawing.hidden = YES;
+                        viewSelectLetter.hidden = NO;
+                        
+                        // Fade in the guess letter views
+                        [self fadeInGuessLetterViews];
+                    } else {
+                        // Show 'waiting for letter' screen
+                        [self hideDrawView];
+                    }
                     
                     // Enable alphabet
                     [self enableAlphabet];
@@ -292,14 +327,17 @@
             }
                 break;
             case STATE_DRAW: {
+                // Increase number of attemps
+                guessAttempts++;
                 // Switch to drawing view
-                //viewWaitForLetter.hidden = YES;
-                viewSelectLetter.hidden = YES;
-                viewDraw.hidden = NO;
+                [self showDrawView];
             }
                 break;
             case STATE_FINISHED: {
-                if (initiator.userID == [PTUser currentUser].userID) {
+                // Save the winner
+                gameWinner = [[eventData objectForKey:@"winner"] integerValue];
+                
+                if (initiator.userID == [PTUser currentUser].userID) { // Playmate won, reveal last letter and display winner popup
                     // Reveal letter(s) in approprivate letterView(s)
                     NSArray *positions = [eventData objectForKey:@"positions"];
                     if (positions != nil && [positions count] > 0) {
@@ -309,6 +347,12 @@
                             guessLetterView.letter = letter;
                         }
                     }
+                    
+                    // Display winner view (even tho we lost ... everybody wins!)
+                    [self performSelector:@selector(showWinner) withObject:nil afterDelay:1.5f];
+                } else { // Initiator won, hang the man and display winner popup
+                    // Hang the view
+                    [self hangDrawingView];
                 }
             }
                 break;
@@ -333,62 +377,58 @@
 }
 
 - (void)pusherRefreshGame:(NSNotification*)notification {
-//    NSDictionary *eventData = notification.userInfo;
-//    
-//    // Get response parameters
-//    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
-//    NSInteger _boardId = [[eventData objectForKey:@"board_id"] integerValue];
-//    NSInteger _totalCards = [[eventData objectForKey:@"num_cards"] integerValue];
-//    NSString *filenamesFlat = [eventData valueForKey:@"filename_dump"];
-//    filenamesFlat = [filenamesFlat substringWithRange:NSMakeRange(2, [filenamesFlat length] - 4)];
-//    NSArray *_filenames = [filenamesFlat componentsSeparatedByString:@"\",\""];
-//    NSString *cardsString = [eventData valueForKey:@"card_array_string"];
-//    
-//    PTPlaymate *aInitiator;
-//    PTPlaymate *aPlaymate;
-//    if (playdate.initiator.userID == initiatorId) {
-//        aInitiator = playdate.initiator;
-//        aPlaymate = playdate.playmate;
-//    } else {
-//        aInitiator = playdate.playmate;
-//        aPlaymate = playdate.initiator;
-//    }
-//    
-//    // My turn?
-//    BOOL isMyTurn = [PTUser currentUser].userID == initiatorId;
-//    
-//    // Init the math game controller
-//    PTMathViewController *mathViewController = [[PTMathViewController alloc]
-//                                                initWithNibName:@"PTMathViewController"
-//                                                bundle:nil
-//                                                playdate:playdate
-//                                                boardId:_boardId
-//                                                themeId:2 // TODO: Hard coded
-//                                                initiator:aInitiator
-//                                                playmate:aPlaymate
-//                                                filenames:_filenames
-//                                                totalCards:_totalCards
-//                                                cardsString:cardsString
-//                                                myTurn:isMyTurn];
-//    mathViewController.chatController = self.chatController;
-//    
-//    // Init game splash
-//    UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
-//    splash.image = [UIImage imageNamed:@"math-splash"];
-//    
-//    // Notifications cleanup
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
-//    
-//    // Bring up the view controller of the new game
-//    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-//    [appDelegate.transitionController loadGame:mathViewController
-//                                   withOptions:UIViewAnimationOptionTransitionCurlUp
-//                                    withSplash:splash];
+    NSDictionary *eventData = notification.userInfo;
+    
+    // Get response parameters
+    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger _boardId = [[eventData objectForKey:@"board_id"] integerValue];
+    
+    PTPlaymate *aInitiator;
+    PTPlaymate *aPlaymate;
+    if (playdate.initiator.userID == initiatorId) {
+        aInitiator = playdate.initiator;
+        aPlaymate = playdate.playmate;
+    } else {
+        aInitiator = playdate.playmate;
+        aPlaymate = playdate.initiator;
+    }
+    
+    // Init the game controller
+    PTHangmanViewController *hangmanViewController = [[PTHangmanViewController alloc] initWithNibName:@"PTHangmanViewController"
+                                                                                               bundle:nil
+                                                                                             playdate:playdate
+                                                                                              boardId:_boardId
+                                                                                            initiator:aInitiator
+                                                                                             playmate:aPlaymate];
+    hangmanViewController.chatController = self.chatController;
+    
+    // Init game splash
+    UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+    splash.image = [UIImage imageNamed:@"hangman-bg"];
+    
+    // Notifications cleanup
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    // Bring up the view controller of the new game
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController loadGame:hangmanViewController
+                                   withOptions:UIViewAnimationOptionTransitionCurlUp
+                                    withSplash:splash];
 }
 
-- (void)viewDidUnload {
-    viewSelectWord = nil;
-    [super viewDidUnload];
+- (void)pusherDraw:(NSNotification*)notification {
+    NSDictionary *eventData = notification.userInfo;
+    NSString *allPoints = [eventData objectForKey:@"points"];
+    NSArray *allPointsArr = [allPoints componentsSeparatedByString:@":"];
+    for (int i=0; i<[allPointsArr count]; i++) {
+        NSArray *pointArr = [[allPointsArr objectAtIndex:i] componentsSeparatedByString:@","];
+        CGPoint point = CGPointMake([[pointArr objectAtIndex:0] floatValue], [[pointArr objectAtIndex:1] floatValue]);
+        [pusherDrawPoints addObject:[NSValue valueWithCGPoint:point]];
+        if (frameLink.paused == YES) {
+            // Start draw timer
+            frameLink.paused = NO;
+        }
+    }
 }
 
 #pragma mark - Game methods
@@ -420,7 +460,6 @@
                              
                              // Switch to letter pick view
                              viewSelectWord.hidden = YES;
-                             //viewWaitForLetter.hidden = NO;
                              viewSelectLetter.hidden = NO;
                              
                              // Fade in the guess letter views
@@ -447,13 +486,12 @@
                                     // Disable the alphabet
                                     [self disableAlphabet];
                                     
-                                    // Show 'waiting for drawing' screen
-                                    viewSelectLetter.hidden = YES;
-                                    viewWaitForDrawing.hidden = NO;
+                                    // Switch to drawing view for monitoring the drawing
+                                    [self showDrawView];
                                     
-                                    // Enable the alphabet again (for future)
+                                    // Remove alphabet lockup hook (so its available next time is slides up)
                                     isAnimatingLetters = NO;
-                                } else {
+                                } else if (newGameState == STATE_LETTER_PICK) {
                                     // Yes! We guessed it right
                                     // Reveal letter(s) in approprivate letterView(s)
                                     NSArray *positions = [result objectForKey:@"positions"];
@@ -466,6 +504,21 @@
                                     isAnimatingLetters = NO;
                                     letterScrollView.userInteractionEnabled = YES;
                                     letterScrollView.alpha = 1.0f;
+                                } else if (newGameState == STATE_FINISHED) {
+                                    // We guess last letter right and won!
+                                    
+                                    // Reveal letter(s) in approprivate letterView(s)
+                                    NSArray *positions = [result objectForKey:@"positions"];
+                                    for (int i=0; i<[positions count]; i++) {
+                                        PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:[[positions objectAtIndex:i] integerValue]];
+                                        guessLetterView.letter = letter;
+                                    }
+                                    
+                                    // Save the winner
+                                    gameWinner = [[result objectForKey:@"winner"] integerValue];
+                                    
+                                    // Show winner popup
+                                    [self performSelector:@selector(showWinner) withObject:nil afterDelay:1.2f];
                                 }
                             }
                             onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -475,19 +528,69 @@
 }
 
 - (IBAction)submitDrawing:(id)sender {
+    // Disable draw mode
+    drawBoard.isDrawing = NO;
+    
+    // Submit the rest of the drawing if any points haven't been sent yet
+    NSString *points = [drawPoints componentsJoinedByString:@":"];
+    NSDictionary *pusherData = [[NSDictionary alloc] initWithObjectsAndKeys:points, @"points", nil];
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-games_hangman_draw"
+                                               data:pusherData
+                                            channel:playdate.pusherChannelName];
+    drawPoints = [NSMutableArray array];
+    
+    // API request to submit drawing
     PTHangmanPlayTurnRequest *apiRequest = [[PTHangmanPlayTurnRequest alloc] init];
     [apiRequest drawShapeOnBoardId:boardId
                          authToken:[PTUser currentUser].authToken
                          onSuccess:^(NSDictionary *result) {
                              // Show 'waiting for letter' screen
-                             viewDraw.hidden = YES;
-                             //viewWaitForLetter.hidden = NO;
-                             viewSelectLetter.hidden = NO;
+                             [self hideDrawView];
                          }
                          onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                              NSLog(@"drawShapeOnBoardId fail: %@", error);
                              NSLog(@"drawShapeOnBoardId fail: %@", JSON);
                          }];
+}
+
+- (void)hangTheMan {
+    // Hang the view
+    [self hangDrawingView];
+    
+    // API call to hang the man
+    PTHangmanPlayTurnRequest *apiRequest = [[PTHangmanPlayTurnRequest alloc] init];
+    [apiRequest hangTheHangmanOnBoardId:boardId
+                              authToken:[PTUser currentUser].authToken
+                              onSuccess:^(NSDictionary *result) {
+                                  NSLog(@"hangTheHangmanOnBoardId: %@", result);
+                              }
+                              onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                  NSLog(@"hangTheHangmanOnBoardId fail: %@", error);
+                                  NSLog(@"hangTheHangmanOnBoardId fail: %@", JSON);
+                              }];
+}
+
+- (void)resetGame {
+    // Since inititor may have changed, find out real playmate
+    // It changes if user that won wasn't the original initiator
+    // If they won, they should be the new initiator so they can have the first turn
+    NSInteger newPlaymateId;
+    if ([PTUser currentUser].userID == initiator.userID) {
+        newPlaymateId = playmate.userID;
+    } else {
+        newPlaymateId = initiator.userID;
+    }
+    
+    // API call to refresh the game
+    PTHangmanRefreshGameRequest *apiRequest = [[PTHangmanRefreshGameRequest alloc] init];
+    [apiRequest refreshBoardWithPlaydateId:playdate.playdateID
+                                playmateId:newPlaymateId
+                                 authToken:[PTUser currentUser].authToken
+                                 onSuccess:nil
+                                 onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                     NSLog(@"refreshBoardWithPlaydateId Error: %@", error);
+                                     NSLog(@"refreshBoardWithPlaydateId Error: %@", JSON);
+                                 }];
 }
 
 #pragma mark - Handman delegate
@@ -643,6 +746,19 @@
     }
 }
 
+- (void)drawboardDidDraw:(CGPoint)point {
+    NSString *pointStr = [NSString stringWithFormat:@"%.0f,%.0f", point.x, point.y];
+    [drawPoints addObject:pointStr];
+    if ([drawPoints count] == 30) {
+        NSString *points = [drawPoints componentsJoinedByString:@":"];
+        NSDictionary *pusherData = [[NSDictionary alloc] initWithObjectsAndKeys:points, @"points", nil];
+        [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-games_hangman_draw"
+                                                   data:pusherData
+                                                channel:playdate.pusherChannelName];
+        drawPoints = [NSMutableArray array];
+    }
+}
+
 #pragma mark - UI methods
 
 - (void)setupBoardView:(UIView*)view {
@@ -720,6 +836,158 @@
     } completion:^(BOOL finished) {
         letterScrollView.userInteractionEnabled = YES;
     }];
+}
+
+- (void)showDrawView {
+    // Take screenshot of letters
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(viewSelectLetter.bounds.size.width, viewSelectLetter.bounds.size.height + 30.0f), NO, [UIScreen mainScreen].scale);
+	[viewSelectLetter.layer renderInContext:UIGraphicsGetCurrentContext()];
+	UIImage *viewSelectLetterImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+    
+    // Pop the image on top of the letters view and animate it
+    CGRect frame = CGRectMake(viewSelectLetter.frame.origin.x, viewSelectLetter.frame.origin.y, viewSelectLetter.frame.size.width, viewSelectLetter.frame.size.height + 30.0f);
+    viewSelectLetterImageView = [[UIImageView alloc] initWithFrame:frame];
+    viewSelectLetterImageView.image = viewSelectLetterImage;
+    [self.view insertSubview:viewSelectLetterImageView belowSubview:winnerView];
+    viewSelectLetter.hidden = YES;
+    if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
+        drawSomethingButtonContainer.hidden = NO;
+        drawSomethingMan.hidden = NO;
+    }
+    
+    // Init draw board
+    if (drawBoard == nil) {
+        drawBoard = [[PTHangmanDrawboard alloc] initWithFrame:viewDraw.bounds];
+        drawBoard.delegate = self;
+        [viewDraw insertSubview:drawBoard aboveSubview:drawSomethingMan];
+    }
+    
+    // Move letters view and show drawing view
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         // Letters view
+                         viewSelectLetterImageView.frame = CGRectMake(600.0f, 200.0f, 372.0f, 190.0f);
+                         // Gallows
+                         viewGallows.frame = CGRectOffset(viewGallows.frame, 412.0f, 0.0f);
+                         // Drawing view
+                         viewDraw.frame = CGRectOffset(viewDraw.frame, 412.0f, 0.0f);
+                         if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
+                             drawSomethingButtonContainer.alpha = 1.0f;
+                             drawSomethingMan.alpha = 1.0f;
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         // Enable drawing for initiator or pop up hang button
+                         if ([PTUser currentUser].userID == initiator.userID) {
+                             if (guessAttempts < maxGuessAttempts) {
+                                 drawPoints = [NSMutableArray array];
+                                 drawBoard.isDrawing = YES;
+                             } else {
+                                 // Setup button to hang the main and show it
+                                 hangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                                 hangButton.alpha = 0.0f;
+                                 hangButton.frame = CGRectMake(0.0f, 0.0f, 85.0f, 91.0f);
+                                 hangButton.center = CGPointMake(viewDraw.bounds.size.width / 2.0f, viewDraw.bounds.size.height / 2.0f);
+                                 hangButton.frame = CGRectOffset(hangButton.frame, 0.0f, -50.0f);
+                                 [hangButton setImage:[UIImage imageNamed:@"hangman-button-hang-normal"] forState:UIControlStateNormal];
+                                 [viewDraw addSubview:hangButton];
+                                 [hangButton addTarget:self action:@selector(hangTheMan) forControlEvents:UIControlEventTouchUpInside];
+                                 
+                                 // Show the button
+                                 [UIView animateWithDuration:0.3f animations:^{
+                                     hangButton.alpha = 1.0f;
+                                 }];
+                             }
+                         }
+                     }];
+}
+
+- (void)hideDrawView {
+    // Hide drawing view and move letters view and 
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         // Letters view
+                         viewSelectLetterImageView.frame = CGRectMake(viewSelectLetter.frame.origin.x, viewSelectLetter.frame.origin.y, viewSelectLetter.frame.size.width, viewSelectLetter.frame.size.height + 30.0f);
+                         // Gallows
+                         viewGallows.frame = CGRectOffset(viewGallows.frame, -412.0f, 0.0f);
+                         // Drawing view
+                         viewDraw.frame = CGRectOffset(viewDraw.frame, -412.0f, 0.0f);
+                         if ([PTUser currentUser].userID == initiator.userID) {
+                             drawSomethingButtonContainer.alpha = 0.0f;
+                             drawSomethingMan.alpha = 0.0f;
+                         }
+                     }
+                     completion:^(BOOL finished) {
+                         viewSelectLetter.hidden = NO;
+                         [viewSelectLetterImageView removeFromSuperview];
+                         viewSelectLetterImageView = nil;
+                         if ([PTUser currentUser].userID == initiator.userID) {
+                             drawSomethingButtonContainer.hidden = YES;
+                             drawSomethingMan.hidden = YES;
+                         }
+                     }];
+}
+
+- (void)timerDraw {
+    if ([pusherDrawPoints count] == 0) {
+        // Stop timer
+        frameLink.paused = YES;
+        return;
+    }
+
+    NSValue *pointObj = [pusherDrawPoints objectAtIndex:0];
+    [pusherDrawPoints removeObjectAtIndex:0];
+    CGPoint point = [pointObj CGPointValue];
+    [drawBoard addPointToBoard:point];
+}
+
+- (void)hangDrawingView {
+    if (hangButton) {
+        [hangButton removeFromSuperview];
+    }
+
+    CAKeyframeAnimation *rotationAnimation;
+    rotationAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
+    
+    rotationAnimation.values = [NSArray arrayWithObjects:
+                                [NSNumber numberWithFloat:0.0 * M_PI],
+                                [NSNumber numberWithFloat:0.05 * M_PI],
+                                [NSNumber numberWithFloat:0.0 * M_PI],
+                                [NSNumber numberWithFloat:-0.05 * M_PI],
+                                [NSNumber numberWithFloat:0.0 * M_PI], nil];
+    rotationAnimation.calculationMode = kCAAnimationPaced;
+    
+    rotationAnimation.removedOnCompletion = NO;
+    rotationAnimation.fillMode = kCAFillModeForwards;
+    
+    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    rotationAnimation.duration = 1.2f;
+    rotationAnimation.repeatCount = 3;
+    
+    CALayer *layer = [viewDraw layer];
+    [layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    
+    // Show winner after animation
+    [self performSelector:@selector(showWinner) withObject:nil afterDelay:3.6f];
+}
+
+- (void)showWinner {
+    winnerView.hidden = NO;
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         winnerView.alpha = 1.0f;
+                     }
+                     completion:^(BOOL finished) {
+                         // Refresh the game after 6 seconds (only initiator aka. winner)
+                         if (initiator.userID == [PTUser currentUser].userID && gameWinner == WHOSE_TURN_INITIATOR) {
+                             // Game refresh by hanging!
+                             [self performSelector:@selector(resetGame) withObject:nil afterDelay:5.0f];
+                         } else if (playmate.userID == [PTUser currentUser].userID && gameWinner == WHOSE_TURN_PLAYMATE) {
+                             // Game refresh by winner letters!
+                             [self performSelector:@selector(resetGame) withObject:nil afterDelay:5.0f];
+                         }
+                     }];
 }
 
 @end

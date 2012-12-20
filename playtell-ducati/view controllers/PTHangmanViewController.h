@@ -11,6 +11,7 @@
 #import "PTPlaymate.h"
 #import "PTChatViewController.h"
 #import "PTHangmanDelegate.h"
+#import "PTHangmanDrawboard.h"
 
 @interface PTHangmanViewController : UIViewController <PTHangmanDelegate> {
     // Game config
@@ -20,6 +21,7 @@
     PTPlaymate *playmate;
     BOOL myTurn;
     NSInteger gameState;
+    NSInteger gameWinner;
 
     // End playdate button
     IBOutlet UIButton *endPlaydate;
@@ -29,7 +31,6 @@
     IBOutlet UIView *viewSelectLetter;
     IBOutlet UIView *viewDraw;
     IBOutlet UIView *viewWaitForWord;
-    IBOutlet UIView *viewWaitForLetter;
     IBOutlet UIView *viewWaitForDrawing;
     IBOutlet UIScrollView *letterScrollView;
     
@@ -45,6 +46,25 @@
     NSInteger wordLength;
     NSMutableArray *guessLetterViews;
     BOOL isSelectLetterViewSetup;
+    BOOL isFirstTimeGuessing;
+    UIImageView *viewSelectLetterImageView;
+    
+    // Draw
+    PTHangmanDrawboard *drawBoard;
+    NSMutableArray *drawPoints;
+    NSMutableArray *pusherDrawPoints;
+    CADisplayLink *frameLink;
+    IBOutlet UIButton *drawSomethingButton;
+    IBOutlet UIView *drawSomethingButtonContainer;
+    IBOutlet UIImageView *drawSomethingMan;
+    NSInteger guessAttempts;
+    NSInteger maxGuessAttempts;
+    
+    // Hang
+    UIButton *hangButton;
+    
+    // Winner
+    UIImageView *winnerView;
 }
 
 @property (nonatomic, strong) PTChatViewController* chatController;

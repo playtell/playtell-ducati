@@ -13,5 +13,6 @@
 
 @optional
 - (void)letterViewDidPress:(PTHangmanLetterView*)letterView letter:(NSString*)letter;
+- (void)drawboardDidDraw:(CGPoint)point;
 
 @end

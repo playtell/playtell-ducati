@@ -363,6 +363,21 @@
 		2371A60915B59CDD007CEFEE /* UnitTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2371A5FB15B59CDD007CEFEE /* UnitTests-Info.plist */; };
 		2371A60D15B59D03007CEFEE /* PTContactImportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2371A60B15B59D03007CEFEE /* PTContactImportViewController.m */; };
 		2371A60E15B59D03007CEFEE /* PTContactImportViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2371A60C15B59D03007CEFEE /* PTContactImportViewController.xib */; };
+		237222731683B49800286B01 /* hangman-button-container.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372226D1683B49800286B01 /* hangman-button-container.png */; };
+		237222741683B49800286B01 /* hangman-button-container@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372226E1683B49800286B01 /* hangman-button-container@2x.png */; };
+		237222751683B49800286B01 /* hangman-button-done-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372226F1683B49800286B01 /* hangman-button-done-highlighted.png */; };
+		237222761683B49800286B01 /* hangman-button-done-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222701683B49800286B01 /* hangman-button-done-highlighted@2x.png */; };
+		237222771683B49800286B01 /* hangman-button-done-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222711683B49800286B01 /* hangman-button-done-normal.png */; };
+		237222781683B49800286B01 /* hangman-button-done-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222721683B49800286B01 /* hangman-button-done-normal@2x.png */; };
+		2372227E1683B79F00286B01 /* hangman-choose-letter.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372227A1683B79F00286B01 /* hangman-choose-letter.png */; };
+		2372227F1683B79F00286B01 /* hangman-choose-letter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372227B1683B79F00286B01 /* hangman-choose-letter@2x.png */; };
+		237222801683B79F00286B01 /* hangman-compose-word.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372227C1683B79F00286B01 /* hangman-compose-word.png */; };
+		237222811683B79F00286B01 /* hangman-compose-word@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2372227D1683B79F00286B01 /* hangman-compose-word@2x.png */; };
+		237222841683BAC800286B01 /* hangman-button-hang-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222821683BAC800286B01 /* hangman-button-hang-normal.png */; };
+		237222851683BAC800286B01 /* hangman-button-hang-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222831683BAC800286B01 /* hangman-button-hang-normal@2x.png */; };
+		237222881683BB9900286B01 /* hangman-man.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222861683BB9900286B01 /* hangman-man.png */; };
+		237222891683BB9900286B01 /* hangman-man@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 237222871683BB9900286B01 /* hangman-man@2x.png */; };
+		2373549216825B64008CA3F5 /* PTHangmanDrawboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 2373549116825B64008CA3F5 /* PTHangmanDrawboard.m */; };
 		237651DF161A17690000A4D5 /* kid.png in Resources */ = {isa = PBXBuildFile; fileRef = 237651DB161A17690000A4D5 /* kid.png */; };
 		237651E0161A17690000A4D5 /* kid@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 237651DC161A17690000A4D5 /* kid@2x.png */; };
 		237651E1161A17690000A4D5 /* mom.png in Resources */ = {isa = PBXBuildFile; fileRef = 237651DD161A17690000A4D5 /* mom.png */; };
@@ -1517,6 +1532,22 @@
 		2371A60A15B59D03007CEFEE /* PTContactImportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactImportViewController.h; sourceTree = "<group>"; };
 		2371A60B15B59D03007CEFEE /* PTContactImportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactImportViewController.m; sourceTree = "<group>"; };
 		2371A60C15B59D03007CEFEE /* PTContactImportViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTContactImportViewController.xib; sourceTree = "<group>"; };
+		2372226D1683B49800286B01 /* hangman-button-container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-container.png"; path = "Hangman/hangman-button-container.png"; sourceTree = "<group>"; };
+		2372226E1683B49800286B01 /* hangman-button-container@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-container@2x.png"; path = "Hangman/hangman-button-container@2x.png"; sourceTree = "<group>"; };
+		2372226F1683B49800286B01 /* hangman-button-done-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-done-highlighted.png"; path = "Hangman/hangman-button-done-highlighted.png"; sourceTree = "<group>"; };
+		237222701683B49800286B01 /* hangman-button-done-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-done-highlighted@2x.png"; path = "Hangman/hangman-button-done-highlighted@2x.png"; sourceTree = "<group>"; };
+		237222711683B49800286B01 /* hangman-button-done-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-done-normal.png"; path = "Hangman/hangman-button-done-normal.png"; sourceTree = "<group>"; };
+		237222721683B49800286B01 /* hangman-button-done-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-done-normal@2x.png"; path = "Hangman/hangman-button-done-normal@2x.png"; sourceTree = "<group>"; };
+		2372227A1683B79F00286B01 /* hangman-choose-letter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-choose-letter.png"; path = "Hangman/hangman-choose-letter.png"; sourceTree = "<group>"; };
+		2372227B1683B79F00286B01 /* hangman-choose-letter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-choose-letter@2x.png"; path = "Hangman/hangman-choose-letter@2x.png"; sourceTree = "<group>"; };
+		2372227C1683B79F00286B01 /* hangman-compose-word.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-compose-word.png"; path = "Hangman/hangman-compose-word.png"; sourceTree = "<group>"; };
+		2372227D1683B79F00286B01 /* hangman-compose-word@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-compose-word@2x.png"; path = "Hangman/hangman-compose-word@2x.png"; sourceTree = "<group>"; };
+		237222821683BAC800286B01 /* hangman-button-hang-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-hang-normal.png"; path = "Hangman/hangman-button-hang-normal.png"; sourceTree = "<group>"; };
+		237222831683BAC800286B01 /* hangman-button-hang-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-button-hang-normal@2x.png"; path = "Hangman/hangman-button-hang-normal@2x.png"; sourceTree = "<group>"; };
+		237222861683BB9900286B01 /* hangman-man.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-man.png"; path = "Hangman/hangman-man.png"; sourceTree = "<group>"; };
+		237222871683BB9900286B01 /* hangman-man@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-man@2x.png"; path = "Hangman/hangman-man@2x.png"; sourceTree = "<group>"; };
+		2373549016825B64008CA3F5 /* PTHangmanDrawboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTHangmanDrawboard.h; sourceTree = "<group>"; };
+		2373549116825B64008CA3F5 /* PTHangmanDrawboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTHangmanDrawboard.m; sourceTree = "<group>"; };
 		237651DB161A17690000A4D5 /* kid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = kid.png; sourceTree = "<group>"; };
 		237651DC161A17690000A4D5 /* kid@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "kid@2x.png"; sourceTree = "<group>"; };
 		237651DD161A17690000A4D5 /* mom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mom.png; sourceTree = "<group>"; };
@@ -3044,6 +3075,8 @@
 				2362505F167FA49400C12235 /* PTHangmanLetterView.m */,
 				23975B111680DE95003A9648 /* PTHangmanGuessLetterView.h */,
 				23975B121680DE95003A9648 /* PTHangmanGuessLetterView.m */,
+				2373549016825B64008CA3F5 /* PTHangmanDrawboard.h */,
+				2373549116825B64008CA3F5 /* PTHangmanDrawboard.m */,
 			);
 			name = hangman;
 			sourceTree = "<group>";
@@ -3182,6 +3215,20 @@
 		2382A0EE167B5F4B00D86F33 /* hangman */ = {
 			isa = PBXGroup;
 			children = (
+				237222861683BB9900286B01 /* hangman-man.png */,
+				237222871683BB9900286B01 /* hangman-man@2x.png */,
+				237222821683BAC800286B01 /* hangman-button-hang-normal.png */,
+				237222831683BAC800286B01 /* hangman-button-hang-normal@2x.png */,
+				2372227A1683B79F00286B01 /* hangman-choose-letter.png */,
+				2372227B1683B79F00286B01 /* hangman-choose-letter@2x.png */,
+				2372227C1683B79F00286B01 /* hangman-compose-word.png */,
+				2372227D1683B79F00286B01 /* hangman-compose-word@2x.png */,
+				2372226D1683B49800286B01 /* hangman-button-container.png */,
+				2372226E1683B49800286B01 /* hangman-button-container@2x.png */,
+				2372226F1683B49800286B01 /* hangman-button-done-highlighted.png */,
+				237222701683B49800286B01 /* hangman-button-done-highlighted@2x.png */,
+				237222711683B49800286B01 /* hangman-button-done-normal.png */,
+				237222721683B49800286B01 /* hangman-button-done-normal@2x.png */,
 				23975B0D1680C5A0003A9648 /* hangman-gallows.png */,
 				23975B0E1680C5A0003A9648 /* hangman-gallows@2x.png */,
 				23975AFC1680B17B003A9648 /* hangman-bg.png */,
@@ -6034,6 +6081,20 @@
 				23975B0B1680B17B003A9648 /* hangman-wordboard@2x.png in Resources */,
 				23975B0F1680C5A0003A9648 /* hangman-gallows.png in Resources */,
 				23975B101680C5A0003A9648 /* hangman-gallows@2x.png in Resources */,
+				237222731683B49800286B01 /* hangman-button-container.png in Resources */,
+				237222741683B49800286B01 /* hangman-button-container@2x.png in Resources */,
+				237222751683B49800286B01 /* hangman-button-done-highlighted.png in Resources */,
+				237222761683B49800286B01 /* hangman-button-done-highlighted@2x.png in Resources */,
+				237222771683B49800286B01 /* hangman-button-done-normal.png in Resources */,
+				237222781683B49800286B01 /* hangman-button-done-normal@2x.png in Resources */,
+				2372227E1683B79F00286B01 /* hangman-choose-letter.png in Resources */,
+				2372227F1683B79F00286B01 /* hangman-choose-letter@2x.png in Resources */,
+				237222801683B79F00286B01 /* hangman-compose-word.png in Resources */,
+				237222811683B79F00286B01 /* hangman-compose-word@2x.png in Resources */,
+				237222841683BAC800286B01 /* hangman-button-hang-normal.png in Resources */,
+				237222851683BAC800286B01 /* hangman-button-hang-normal@2x.png in Resources */,
+				237222881683BB9900286B01 /* hangman-man.png in Resources */,
+				237222891683BB9900286B01 /* hangman-man@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6263,6 +6324,7 @@
 				23C38E64167A63EE002FFE25 /* PTHangmanPlayTurnRequest.m in Sources */,
 				23625060167FA49400C12235 /* PTHangmanLetterView.m in Sources */,
 				23975B131680DE95003A9648 /* PTHangmanGuessLetterView.m in Sources */,
+				2373549216825B64008CA3F5 /* PTHangmanDrawboard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6334,8 +6396,8 @@
 		F4A9D5EF1576B5950015D977 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6366,8 +6428,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6E469B33-D795-4769-8E70-9C33F27AC866";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6E469B33-D795-4769-8E70-9C33F27AC866";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
