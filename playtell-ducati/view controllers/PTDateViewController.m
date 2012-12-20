@@ -109,7 +109,7 @@ NSTimer *postcardTimer;
                                                         repeats:NO];
     } else {
         // Start taking automatic screenshots
-        [self.chatController startAutomaticPicturesWithInterval:15.0];
+        //[self.chatController startAutomaticPicturesWithInterval:15.0];
     }
     
     // Set the start time for use with analytics
@@ -256,10 +256,11 @@ NSTimer *postcardTimer;
 }
 
 - (void)showPostcardPrompt {
+    float padding = 10.0f;
     UIView *prompt = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 150.0f)];
     prompt.backgroundColor = [UIColor colorFromHex:@"#2E4957"];
     
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(10.0f, 10.0f, prompt.frame.size.width - 20.0, 25.0)];
+    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(padding, padding, prompt.frame.size.width - (padding * 2), 25.0)];
     title.textAlignment = UITextAlignmentCenter;
     title.textColor = [UIColor whiteColor];
     title.backgroundColor = [UIColor clearColor];
@@ -268,21 +269,14 @@ NSTimer *postcardTimer;
     title.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     [prompt addSubview:title];
     
-    float iconWidth = 89.0f;
-    float iconHeight = 67.0f;
-    UIButton *icon = [[UIButton alloc] initWithFrame:CGRectMake((prompt.frame.size.width - iconWidth) / 2, (prompt.frame.size.height - iconHeight) / 2, iconWidth, iconHeight)];
-    [icon setBackgroundImage:[UIImage imageNamed:@"postcard-icon.png"] forState:UIControlStateNormal];
+    float iconHeight = prompt.frame.size.height - title.frame.size.height - (padding * 3);
+    float iconWidth = iconHeight * 1.32;
+    UIButton *icon = [[UIButton alloc] initWithFrame:CGRectMake((prompt.frame.size.width - iconWidth) / 2, (padding * 2) + title.frame.size.height, iconWidth, iconHeight)];
+    [icon setBackgroundImage:[UIImage imageNamed:@"postcard-button.png"] forState:UIControlStateNormal];
+    [icon setBackgroundImage:[UIImage imageNamed:@"postcard-button-press.png"] forState:UIControlStateHighlighted];
     [icon addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
     icon.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [prompt addSubview:icon];
-    
-    UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(icon.frame.origin.x, icon.frame.origin.y + icon.frame.size.height + 5.0, icon.frame.size.width, 30.0)];
-    [button setBackgroundImage:[UIImage imageNamed:@"bluebutton.png"] forState:UIControlStateNormal];
-    [button setBackgroundImage:[UIImage imageNamed:@"bluebutton-press.png"] forState:UIControlStateHighlighted];
-    [button setTitle:@"Postcard" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(showPostcardView) forControlEvents:UIControlEventTouchUpInside];
-    button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    [prompt addSubview:button];
     
     PTChatHUDView *chatView = (PTChatHUDView *)self.chatController.leftView;
     [chatView setView:prompt];
@@ -700,6 +694,7 @@ NSTimer *postcardTimer;
     //[self.chatController connectToPlaceholderOpenTokSession];
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    appDelegate.dialpadController.playdateToIgnore = self.playdate;
     if (appDelegate.dialpadController.loadingView != nil) {
         [appDelegate.dialpadController.loadingView removeFromSuperview];
     }
@@ -1100,12 +1095,13 @@ NSTimer *postcardTimer;
          {
              // We delay moving to the dialpad because it will be checking for
              // playdates when it appears
-             [self transitionToDialpad];
+             //[self transitionToDialpad];
          }
                                                           onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
          {
-             [self transitionToDialpad];
+             //[self transitionToDialpad];
          }];
+        [self transitionToDialpad];
     }
 }
 
@@ -1128,7 +1124,7 @@ NSTimer *postcardTimer;
         [self endRinging];
         
         // Start taking automatic pictures
-        [self.chatController startAutomaticPicturesWithInterval:15.0f];
+        //[self.chatController startAutomaticPicturesWithInterval:15.0f];
     }
 }
 

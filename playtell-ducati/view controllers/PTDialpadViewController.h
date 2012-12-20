@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UIScrollView* scrollView;
 @property (nonatomic, strong) NSArray* playmates;
 @property (nonatomic, strong) UIView *loadingView;
+@property (nonatomic, strong) PTPlaydate *playdateToIgnore;
 
 - (void)setAwaitingPlaydateRequest:(NSInteger)playdateId;
 - (void)loadPlaydateDataFromPushNotification;

@@ -70,6 +70,7 @@
 @synthesize cancelPlaydateRecognizer;
 @synthesize dateController;
 @synthesize loadingView;
+@synthesize playdateToIgnore;
 @synthesize audioPlayer;
 @synthesize chatController;
 @synthesize backgroundTask;
@@ -302,6 +303,8 @@ BOOL postcardsShown;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationDidEnterBackgroundNotification
                                                   object:nil];
+    
+    self.playdateToIgnore = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -649,10 +652,12 @@ BOOL postcardsShown;
          // TODO : need to refactor this and pusherDidReceivePlaydateRequestNotification: into
          // the same methods
          LogDebug(@"%@ received playdate on check: %@", NSStringFromSelector(_cmd), playdate);
-         self.requestedPlaydate = playdate;
-         dispatch_async(dispatch_get_main_queue(), ^{
-             [self notifyUserOfRequestedPlaydate];
-         });
+         if (playdate.playdateID != playdateToIgnore.playdateID) {
+             self.requestedPlaydate = playdate;
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 [self notifyUserOfRequestedPlaydate];
+             });
+         }
      } failure:nil];
 }
 
