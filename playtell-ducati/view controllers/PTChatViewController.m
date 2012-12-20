@@ -241,10 +241,12 @@ NSTimer *screenshotTimer;
         if (newWidth < CHATVIEW_SMALL_WIDTH) {
             newWidth = CHATVIEW_SMALL_WIDTH;
             self.isChatViewSmall = YES;
+        } else {
+            self.isChatViewSmall = NO;
         }
+        
         if (newWidth > CHATVIEW_LARGE_WIDTH) {
             newWidth = CHATVIEW_LARGE_WIDTH;
-            self.isChatViewSmall = NO;
         }
         
         // Min/max height
