@@ -29,21 +29,31 @@
 #define CHATVIEW_SMALL_WIDTH    200.0
 #define CHATVIEW_PADDING        8.0
 #define CHATVIEW_MARGIN         8.0
+#define OFFSCREEN_SIZE          100.0
 
 @interface PTChatViewController ()
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
 @property (nonatomic, strong) MPMoviePlayerController* movieController;
 @property (nonatomic, assign) BOOL restrictSizeToSmall;
-@property (nonatomic, assign) BOOL isChatViewSmall;
+@property (nonatomic, strong) PTFullscreenChatView *fullscreenView;
 @end
 
 @implementation PTChatViewController
 @synthesize leftView, rightView, videoPhone, playdate, playmate;
 @synthesize movieController;
 @synthesize restrictSizeToSmall;
-@synthesize isChatViewSmall;
+@synthesize fullscreenView;
 
 NSTimer *screenshotTimer;
+CGRect fullscreenOffscreenRect;
+CGRect fullscreenOnscreenRect;
+bool inFullscreen;
+UISwipeGestureRecognizer *swipeUpRecognizer;
+UISwipeGestureRecognizer *swipeDownRecognizer;
+UIPinchGestureRecognizer *pinchRecognizer;
+UITapGestureRecognizer *tapRecognizer;
+CGRect originalLeftBounds;
+CGRect originalRightBounds;
 
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL {
     self.movieController.contentURL = movieURL;
@@ -60,6 +70,8 @@ NSTimer *screenshotTimer;
 - (id)init {
     if (self = [super init]) {
         self.view = [[PTChatHUDParentView alloc] init];
+        
+        inFullscreen = NO;
 
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
@@ -69,28 +81,35 @@ NSTimer *screenshotTimer;
         [self.view addSubview:self.leftView];
         [self.view addSubview:self.rightView];
         
+        // Create the shim view
+        fullscreenOffscreenRect = CGRectMake(CHATVIEW_CENTERX - (OFFSCREEN_SIZE / 2), -OFFSCREEN_SIZE, OFFSCREEN_SIZE, OFFSCREEN_SIZE);
+        fullscreenOnscreenRect = CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f);
+        fullscreenView = [[PTFullscreenChatView alloc] init];
+        fullscreenView.delegate = self;
+        fullscreenView.frame = fullscreenOffscreenRect;
+        [self.view addSubview:fullscreenView];
+        
         self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
         self.restrictSizeToSmall = YES;
-        self.isChatViewSmall = YES;
         
         // Create the gesture recognizers
-        UISwipeGestureRecognizer *swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
-        swipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-        UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
+        swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
         swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
-        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
+        swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
+        swipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
+        tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
         tapRecognizer.numberOfTapsRequired = 1;
         
         // Set self to be the delegate for all gesture recognizers
-        swipeDownRecognizer.delegate = self;
         swipeUpRecognizer.delegate = self;
+        swipeDownRecognizer.delegate = self;
         pinchRecognizer.delegate = self;
         tapRecognizer.delegate = self;
         
         // Add the gesture recognizers to the views
-        [self.view addGestureRecognizer:swipeDownRecognizer];
         [self.view addGestureRecognizer:swipeUpRecognizer];
+        [self.view addGestureRecognizer:swipeDownRecognizer];
         [self.view addGestureRecognizer:pinchRecognizer];
         [self.view addGestureRecognizer:tapRecognizer];
     }
@@ -182,8 +201,75 @@ NSTimer *screenshotTimer;
     [screenshotTimer invalidate];
 }
 
+- (void)hideFullscreenChat:(BOOL)animated {
+    if (!inFullscreen) {
+        return;
+    }
+    inFullscreen = NO;
+    
+    float animationTime = 0.0f;
+    if (animated) {
+        animationTime = 1.0f;
+    }
+    
+    [UIView animateWithDuration:animationTime animations:^{
+        fullscreenView.leftView.alpha = 0.0f;
+        fullscreenView.rightView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        // Reset the original bounds
+        UIView *leftVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+        leftVideo.bounds = originalLeftBounds;
+        UIView *rightVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+        rightVideo.bounds = originalRightBounds;
+        
+        // Remove the videos from the fullscreen view
+        [fullscreenView.leftView removeAllSubviews];
+        [fullscreenView.rightView removeAllSubviews];
+        
+        // Set the opentok views
+        [leftView setOpentokVideoView:leftVideo];
+        [rightView setOpentokVideoView:rightVideo];
+        
+        [UIView animateWithDuration:animationTime animations:^{
+            fullscreenView.frame = fullscreenOffscreenRect;
+        }];
+    }];
+}
+
+- (void)showFullscreenChat:(BOOL)animated {
+    inFullscreen = YES;
+    float animationTime = 0.0f;
+    if (animated) {
+        animationTime = 1.0f;
+    }
+    
+    [UIView animateWithDuration:animationTime animations:^{
+        fullscreenView.frame = fullscreenOnscreenRect;
+    } completion:^(BOOL finished) {
+        // Save the original bounds so we can put them back when fullscreen ends
+        UIView *leftVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+        originalLeftBounds = leftVideo.bounds;
+        UIView *rightVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+        originalRightBounds = rightVideo.bounds;
+        
+        // Add the videos to the fullscreen view
+        leftVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.leftView.frame.size.width, fullscreenView.leftView.frame.size.height);
+        [fullscreenView.leftView addSubview:leftVideo];
+        rightVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.rightView.frame.size.width, fullscreenView.rightView.frame.size.height);
+        [fullscreenView.rightView addSubview:rightVideo];
+        
+        [UIView animateWithDuration:animationTime animations:^{
+            fullscreenView.leftView.alpha = 1.0f;
+            fullscreenView.rightView.alpha = 1.0f;
+        }];
+    }];
+}
+
 - (void)restrictToSmallSize:(BOOL)shouldRestrict {
-    if (shouldRestrict && self.isChatViewSmall == NO) {
+    if (shouldRestrict) {
+        // Hide fullscreen view
+        [self hideFullscreenChat:NO];
+        
         // Calculate width and height
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
@@ -199,33 +285,20 @@ NSTimer *screenshotTimer;
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.isChatViewSmall == YES) {
-        self.isChatViewSmall = NO;
-        NSLog(@"userSwipeDownEvent");
-        
-        // Calculate width and height
-        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
-        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
-        
-        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-    }
+    // Show the shim view for fullscreen chat
+    [self showFullscreenChat:YES];
 }
 
 - (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.isChatViewSmall == NO) {
-        self.isChatViewSmall = YES;
-        
-        // Calculate width and height
-        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
-        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
-        
-        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-    }
+    // Calculate width and height
+    CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
+    CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
+    
+    self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
 }
 
 - (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
@@ -240,9 +313,6 @@ NSTimer *screenshotTimer;
         float newWidth = (self.leftView.frame.size.width - (2.0f * CHATVIEW_PADDING)) * scale;
         if (newWidth < CHATVIEW_SMALL_WIDTH) {
             newWidth = CHATVIEW_SMALL_WIDTH;
-            self.isChatViewSmall = YES;
-        } else {
-            self.isChatViewSmall = NO;
         }
         
         if (newWidth > CHATVIEW_LARGE_WIDTH) {
@@ -440,6 +510,12 @@ NSTimer *screenshotTimer;
         return NO; // ignore the touch
     }
     return YES; // handle the touch
+}
+
+#pragma mark - PTFullscreenChatViewDelegate methods
+
+- (void)fullscreenChatViewShouldClose:(UIView *)closingView {
+    [self hideFullscreenChat:YES];
 }
 
 #pragma mark - Game-related methods

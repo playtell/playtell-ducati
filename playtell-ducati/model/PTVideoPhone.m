@@ -62,6 +62,10 @@ static PTVideoPhone* instance = nil;
     return self.publisher.view;
 }
 
+- (UIView *)currentSubscriberView {
+    return self.subscriber.view;
+}
+
 - (void)phoneDidBecomeActive:(NSNotification *)note {
     LOGMETHOD;
     [self wakeUp];

@@ -22,6 +22,7 @@ typedef void (^PTPublisherDidStopStreamingBlock) (OTPublisher* aPublisher);
 + (PTVideoPhone*)sharedPhone;
 
 - (UIView *)currentPublisherView;
+- (UIView *)currentSubscriberView;
 
 - (void)connectToUser:(NSString*)aUser;
 - (void)disconnect;

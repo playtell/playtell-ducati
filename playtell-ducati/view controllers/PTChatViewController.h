@@ -11,10 +11,11 @@
 #import "PTVideoPhone.h"
 #import "PTChatHUDView.h"
 #import "PTChatHUDParentView.h"
+#import "PTFullscreenChatView.h"
 
 #import <Foundation/Foundation.h>
 
-@interface PTChatViewController : NSObject <UIGestureRecognizerDelegate>
+@interface PTChatViewController : NSObject <UIGestureRecognizerDelegate, PTFullscreenChatViewDelegate>
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
@@ -37,6 +38,9 @@
 - (void)setActiveTurnToLeftChatView;
 - (void)setActiveTurnToRightChatView;
 - (void)hideAllBorders;
+
+- (void)hideFullscreenChat:(BOOL)animated;
+- (void)showFullscreenChat:(BOOL)animated;
 
 @property (nonatomic, strong) PTChatHUDParentView* view;
 @property (nonatomic, strong) PTPlaydate* playdate;
