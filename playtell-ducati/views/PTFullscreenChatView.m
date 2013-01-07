@@ -35,17 +35,15 @@
         [self addGestureRecognizer:swipeUpRecognizer];
         
         // Create the left and right views
-        leftView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, VIDEO_WIDTH, VIDEO_HEIGHT)];
-        leftView.center = CGPointMake(self.frame.size.width / 4, self.frame.size.height / 2);
-        leftView.alpha = 0.0f;
-        leftView.backgroundColor = [UIColor clearColor];
-        leftView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        leftView = [[UIView alloc] initWithFrame:self.bounds];
+        leftView.alpha = 1.0f;
+        leftView.backgroundColor = [UIColor blackColor];
+        leftView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:leftView];
-        rightView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, VIDEO_WIDTH, VIDEO_HEIGHT)];
-        rightView.center = CGPointMake(self.frame.size.width / 4 * 3, self.frame.size.height / 2);
-        rightView.alpha = 0.0f;
-        rightView.backgroundColor = [UIColor clearColor];
-        rightView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        rightView = [[UIView alloc] initWithFrame:CGRectMake(800.0f, 594.0f, 200.0f, 150.0f)];
+        rightView.alpha = 1.0f;
+        rightView.backgroundColor = [UIColor redColor];
+        rightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:rightView];
     }
     return self;
