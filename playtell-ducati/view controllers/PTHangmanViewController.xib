@@ -181,7 +181,7 @@
 						<string key="NSFrame">{{-42, 214}, {254, 520}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="1049413370"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -236,7 +236,7 @@
 								<string key="NSFrame">{{29, 20}, {686, 35}}</string>
 								<reference key="NSSuperview" ref="889664183"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="985817699"/>
+								<reference key="NSNextKeyView" ref="812229855"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -244,6 +244,41 @@
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">hangman-compose-word.png</string>
 								</object>
+							</object>
+							<object class="IBUILabel" id="812229855">
+								<reference key="NSNextResponder" ref="889664183"/>
+								<int key="NSvFlags">-2147483356</int>
+								<string key="NSFrame">{{198, 61}, {348, 22}}</string>
+								<reference key="NSSuperview" ref="889664183"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="985817699"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<int key="IBUIContentMode">7</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+								<string key="IBUIText">Tap letters to remove them.</string>
+								<object class="NSColor" key="IBUITextColor" id="434668807">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MCAwIDAAA</bytes>
+									<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
+								</object>
+								<nil key="IBUIHighlightedColor"/>
+								<int key="IBUIBaselineAdjustment">0</int>
+								<int key="IBUITextAlignment">1</int>
+								<object class="IBUIFontDescription" key="IBUIFontDescription">
+									<string key="name">ChalkboardSE-Regular</string>
+									<string key="family">Chalkboard SE</string>
+									<int key="traits">0</int>
+									<double key="pointSize">17</double>
+								</object>
+								<object class="NSFont" key="IBUIFont">
+									<string key="NSName">ChalkboardSE-Regular</string>
+									<double key="NSSize">17</double>
+									<int key="NSfFlags">16</int>
+								</object>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							</object>
 						</array>
 						<string key="NSFrame">{{140, 173}, {744, 350}}</string>
@@ -276,20 +311,16 @@
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 								<string key="IBUIText">Please wait. Friend is drawing!</string>
-								<object class="NSColor" key="IBUITextColor" id="323522706">
-									<int key="NSColorSpace">1</int>
-									<bytes key="NSRGB">MCAwIDAAA</bytes>
-									<string key="IBUIColorCocoaTouchKeyPath">darkTextColor</string>
-								</object>
+								<reference key="IBUITextColor" ref="434668807"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
 								<int key="IBUINumberOfLines">2</int>
 								<int key="IBUITextAlignment">1</int>
-								<object class="IBUIFontDescription" key="IBUIFontDescription" id="998384136">
+								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<int key="type">1</int>
 									<double key="pointSize">17</double>
 								</object>
-								<object class="NSFont" key="IBUIFont" id="285057963">
+								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica</string>
 									<double key="NSSize">17</double>
 									<int key="NSfFlags">16</int>
@@ -314,35 +345,26 @@
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">-2147483356</int>
 						<array class="NSMutableArray" key="NSSubviews">
-							<object class="IBUILabel" id="356640512">
+							<object class="IBUIImageView" id="731964258">
 								<reference key="NSNextResponder" ref="481759815"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{274, 147}, {196, 55}}</string>
+								<int key="NSvFlags">274</int>
+								<string key="NSFrame">{{70, 50}, {605, 250}}</string>
 								<reference key="NSSuperview" ref="481759815"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1029398051"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<bool key="IBUIOpaque">NO</bool>
-								<bool key="IBUIClipsSubviews">YES</bool>
-								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">Please wait. Friend is choosing a word.</string>
-								<reference key="IBUITextColor" ref="323522706"/>
-								<nil key="IBUIHighlightedColor"/>
-								<int key="IBUIBaselineAdjustment">0</int>
-								<int key="IBUINumberOfLines">2</int>
-								<int key="IBUITextAlignment">1</int>
-								<reference key="IBUIFontDescription" ref="998384136"/>
-								<reference key="IBUIFont" ref="285057963"/>
-								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
-								<double key="preferredMaxLayoutWidth">196</double>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">hangman-making-word</string>
+								</object>
 							</object>
 						</array>
 						<string key="NSFrame">{{140, 173}, {744, 350}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="356640512"/>
+						<reference key="NSNextKeyView" ref="731964258"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -487,6 +509,22 @@
 					<int key="connectionID">52</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">viewSelectLetterTitle</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="252788502"/>
+					</object>
+					<int key="connectionID">53</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">lblComposeWarning</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="812229855"/>
+					</object>
+					<int key="connectionID">58</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">endPlaydateHandle:</string>
 						<reference key="source" ref="86649276"/>
@@ -549,10 +587,10 @@
 							<reference ref="86649276"/>
 							<reference ref="1000491343"/>
 							<reference ref="455981008"/>
-							<reference ref="1029398051"/>
 							<reference ref="787335599"/>
-							<reference ref="889664183"/>
 							<reference ref="44659969"/>
+							<reference ref="889664183"/>
+							<reference ref="1029398051"/>
 							<reference ref="481759815"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -571,14 +609,9 @@
 						<int key="objectID">16</int>
 						<reference key="object" ref="481759815"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="356640512"/>
+							<reference ref="731964258"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">19</int>
-						<reference key="object" ref="356640512"/>
-						<reference key="parent" ref="481759815"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">29</int>
@@ -605,6 +638,7 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="985817699"/>
 							<reference ref="700234761"/>
+							<reference ref="812229855"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
@@ -658,6 +692,16 @@
 						<reference key="object" ref="1049413370"/>
 						<reference key="parent" ref="44659969"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">54</int>
+						<reference key="object" ref="731964258"/>
+						<reference key="parent" ref="481759815"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">55</int>
+						<reference key="object" ref="812229855"/>
+						<reference key="parent" ref="889664183"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -668,7 +712,6 @@
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="16.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="25.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -682,6 +725,8 @@
 				<string key="49.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="50.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="51.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="54.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="55.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="2" key="7.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
@@ -689,46 +734,34 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">52</int>
+			<int key="maxID">58</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">PTHangmanViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="endGame:">id</string>
-						<string key="endPlaydateHandle:">id</string>
-						<string key="selectWord:">id</string>
-						<string key="submitDrawing:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="endGame:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">endGame:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">endGame:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">endGame:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="endPlaydateHandle:">
-							<string key="name">endPlaydateHandle:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="selectWord:">
-							<string key="name">selectWord:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="submitDrawing:">
-							<string key="name">submitDrawing:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="drawSomethingButton">UIButton</string>
 						<string key="drawSomethingButtonContainer">UIView</string>
-						<string key="drawSomethingLbl">UILabel</string>
 						<string key="drawSomethingMan">UIImageView</string>
 						<string key="endPlaydate">UIButton</string>
+						<string key="lblComposeWarning">UILabel</string>
 						<string key="letterScrollView">UIScrollView</string>
 						<string key="viewDraw">UIView</string>
 						<string key="viewSelectLetter">UIView</string>
+						<string key="viewSelectLetterTitle">UIImageView</string>
 						<string key="viewSelectWord">UIView</string>
 						<string key="viewWaitForDrawing">UIView</string>
 						<string key="viewWaitForWord">UIView</string>
@@ -742,10 +775,6 @@
 							<string key="name">drawSomethingButtonContainer</string>
 							<string key="candidateClassName">UIView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="drawSomethingLbl">
-							<string key="name">drawSomethingLbl</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="drawSomethingMan">
 							<string key="name">drawSomethingMan</string>
 							<string key="candidateClassName">UIImageView</string>
@@ -753,6 +782,10 @@
 						<object class="IBToOneOutletInfo" key="endPlaydate">
 							<string key="name">endPlaydate</string>
 							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="lblComposeWarning">
+							<string key="name">lblComposeWarning</string>
+							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="letterScrollView">
 							<string key="name">letterScrollView</string>
@@ -765,6 +798,10 @@
 						<object class="IBToOneOutletInfo" key="viewSelectLetter">
 							<string key="name">viewSelectLetter</string>
 							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="viewSelectLetterTitle">
+							<string key="name">viewSelectLetterTitle</string>
+							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="viewSelectWord">
 							<string key="name">viewSelectWord</string>
@@ -803,6 +840,7 @@
 			<string key="hangman-button-done-normal.png">{163, 55}</string>
 			<string key="hangman-choose-letter.png">{686, 32}</string>
 			<string key="hangman-compose-word.png">{686, 35}</string>
+			<string key="hangman-making-word">{16, 16}</string>
 			<string key="hangman-man.png">{176, 298}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1926</string>

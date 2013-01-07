@@ -294,6 +294,8 @@
 		2346760415D1810E00B2A019 /* contactsHeader2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2346760215D1810E00B2A019 /* contactsHeader2.png */; };
 		2346760615D19F2500B2A019 /* contactsRelatedHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 2346760515D19F2500B2A019 /* contactsRelatedHeader.png */; };
 		2346F6DC161E03B40020DD69 /* PTNewUserNoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2346F6DB161E03B40020DD69 /* PTNewUserNoteView.m */; };
+		234930AC169632A000FF2DF1 /* hangman-title.png in Resources */ = {isa = PBXBuildFile; fileRef = 234930AA169632A000FF2DF1 /* hangman-title.png */; };
+		234930AD169632A000FF2DF1 /* hangman-title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 234930AB169632A000FF2DF1 /* hangman-title@2x.png */; };
 		234DBBA0164C53BB009B7481 /* PTMathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 234DBB9E164C53BB009B7481 /* PTMathViewController.m */; };
 		234DBBA1164C53BB009B7481 /* PTMathViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 234DBB9F164C53BB009B7481 /* PTMathViewController.xib */; };
 		23503950163AC80C001954A7 /* theme19artwork1_l.png in Resources */ = {isa = PBXBuildFile; fileRef = 23503938163AC80C001954A7 /* theme19artwork1_l.png */; };
@@ -482,6 +484,8 @@
 		23C64E5B161B3D9600C629A2 /* ipad-phone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23C64E59161B3D9600C629A2 /* ipad-phone@2x.png */; };
 		23C7314B1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */; };
 		23C7314F158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */; };
+		23CB4ECB1697419B004DD86D /* hangman-making-word.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CB4EC91697419B004DD86D /* hangman-making-word.png */; };
+		23CB4ECC1697419B004DD86D /* hangman-making-word@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CB4ECA1697419B004DD86D /* hangman-making-word@2x.png */; };
 		23CC06A015C9A9B6003CAA11 /* PTContactsTableBigCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23CC069F15C9A9B6003CAA11 /* PTContactsTableBigCell.m */; };
 		23CC06A415C9AA3B003CAA11 /* contactsTableInvite.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CC06A315C9AA3B003CAA11 /* contactsTableInvite.png */; };
 		23CC06AB15C9ABCE003CAA11 /* UIColor+HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 23CC06AA15C9ABCE003CAA11 /* UIColor+HexColor.m */; };
@@ -1431,6 +1435,8 @@
 		2346760515D19F2500B2A019 /* contactsRelatedHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contactsRelatedHeader.png; sourceTree = "<group>"; };
 		2346F6DA161E03B40020DD69 /* PTNewUserNoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTNewUserNoteView.h; sourceTree = "<group>"; };
 		2346F6DB161E03B40020DD69 /* PTNewUserNoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTNewUserNoteView.m; sourceTree = "<group>"; };
+		234930AA169632A000FF2DF1 /* hangman-title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-title.png"; path = "Hangman/hangman-title.png"; sourceTree = "<group>"; };
+		234930AB169632A000FF2DF1 /* hangman-title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-title@2x.png"; path = "Hangman/hangman-title@2x.png"; sourceTree = "<group>"; };
 		234DBB9D164C53BB009B7481 /* PTMathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMathViewController.h; sourceTree = "<group>"; };
 		234DBB9E164C53BB009B7481 /* PTMathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTMathViewController.m; sourceTree = "<group>"; };
 		234DBB9F164C53BB009B7481 /* PTMathViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTMathViewController.xib; sourceTree = "<group>"; };
@@ -1692,6 +1698,8 @@
 		23C7314A1586891C00B9A9E6 /* PTPlaydateFingerTapRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerTapRequest.m; sourceTree = "<group>"; };
 		23C7314D158689D000B9A9E6 /* PTPlaydateFingerEndRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaydateFingerEndRequest.h; sourceTree = "<group>"; };
 		23C7314E158689D000B9A9E6 /* PTPlaydateFingerEndRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaydateFingerEndRequest.m; sourceTree = "<group>"; };
+		23CB4EC91697419B004DD86D /* hangman-making-word.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-making-word.png"; path = "Hangman/hangman-making-word.png"; sourceTree = "<group>"; };
+		23CB4ECA1697419B004DD86D /* hangman-making-word@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-making-word@2x.png"; path = "Hangman/hangman-making-word@2x.png"; sourceTree = "<group>"; };
 		23CC069E15C9A9B6003CAA11 /* PTContactsTableBigCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsTableBigCell.h; sourceTree = "<group>"; };
 		23CC069F15C9A9B6003CAA11 /* PTContactsTableBigCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableBigCell.m; sourceTree = "<group>"; };
 		23CC06A315C9AA3B003CAA11 /* contactsTableInvite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contactsTableInvite.png; sourceTree = "<group>"; };
@@ -3215,6 +3223,10 @@
 		2382A0EE167B5F4B00D86F33 /* hangman */ = {
 			isa = PBXGroup;
 			children = (
+				23CB4EC91697419B004DD86D /* hangman-making-word.png */,
+				23CB4ECA1697419B004DD86D /* hangman-making-word@2x.png */,
+				234930AA169632A000FF2DF1 /* hangman-title.png */,
+				234930AB169632A000FF2DF1 /* hangman-title@2x.png */,
 				237222861683BB9900286B01 /* hangman-man.png */,
 				237222871683BB9900286B01 /* hangman-man@2x.png */,
 				237222821683BAC800286B01 /* hangman-button-hang-normal.png */,
@@ -6095,6 +6107,10 @@
 				237222851683BAC800286B01 /* hangman-button-hang-normal@2x.png in Resources */,
 				237222881683BB9900286B01 /* hangman-man.png in Resources */,
 				237222891683BB9900286B01 /* hangman-man@2x.png in Resources */,
+				234930AC169632A000FF2DF1 /* hangman-title.png in Resources */,
+				234930AD169632A000FF2DF1 /* hangman-title@2x.png in Resources */,
+				23CB4ECB1697419B004DD86D /* hangman-making-word.png in Resources */,
+				23CB4ECC1697419B004DD86D /* hangman-making-word@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6493,8 +6509,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dmytro Bentsionov (7HPVA3M36D)";
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6523,8 +6539,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "6E469B33-D795-4769-8E70-9C33F27AC866";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6E469B33-D795-4769-8E70-9C33F27AC866";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Staging";

@@ -33,6 +33,8 @@
     IBOutlet UIView *viewWaitForWord;
     IBOutlet UIView *viewWaitForDrawing;
     IBOutlet UIScrollView *letterScrollView;
+    IBOutlet UILabel *lblComposeWarning;
+    BOOL didDisplayRemoveLetterTip;
     
     // Gallows
     UIImageView *viewGallows;
@@ -48,8 +50,11 @@
     BOOL isSelectLetterViewSetup;
     BOOL isFirstTimeGuessing;
     UIImageView *viewSelectLetterImageView;
+    IBOutlet UIImageView *viewSelectLetterTitle;
+    NSArray *remainingLetters;
     
     // Draw
+    NSMutableArray *drawBoards;
     PTHangmanDrawboard *drawBoard;
     NSMutableArray *drawPoints;
     NSMutableArray *pusherDrawPoints;
@@ -57,6 +62,7 @@
     IBOutlet UIButton *drawSomethingButton;
     IBOutlet UIView *drawSomethingButtonContainer;
     IBOutlet UIImageView *drawSomethingMan;
+    BOOL hasDrawingStarted;
     NSInteger guessAttempts;
     NSInteger maxGuessAttempts;
     
@@ -65,6 +71,9 @@
     
     // Winner
     UIImageView *winnerView;
+    
+    // Chat HUD status
+    BOOL chatHUDTurnStatus;
 }
 
 @property (nonatomic, strong) PTChatViewController* chatController;

@@ -7,6 +7,7 @@
 //
 
 #import "PTHangmanDrawboard.h"
+#import "UIColor+HexColor.h"
 
 @implementation PTHangmanDrawboard
 
@@ -29,7 +30,7 @@
 
 - (void)drawRect:(CGRect)rect {
     [incrementalImage drawInRect:rect];
-    [[UIColor brownColor] setStroke];
+    [[UIColor colorFromHex:@"#d1775f"] setStroke];
     [path stroke];
 }
 
@@ -81,7 +82,7 @@
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0.0);
     [[UIColor blackColor] setStroke];
     [incrementalImage drawAtPoint:CGPointZero];
-    [[UIColor brownColor] setStroke];
+    [[UIColor colorFromHex:@"#d1775f"] setStroke];
     [path stroke];
     incrementalImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();

@@ -60,6 +60,7 @@
         
         // My turn at game start?
         myTurn = [PTUser currentUser].userID == initiator.userID;
+        chatHUDTurnStatus = !myTurn; // So that chat HUD is updated first time around
         
         // Default game state
         if (myTurn == YES) {
@@ -86,6 +87,7 @@
         frameLink.frameInterval = 1;
         [frameLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
         frameLink.paused = YES;
+        drawBoards = [NSMutableArray array];
         
         // Haven't guessed yet
         isFirstTimeGuessing = YES;
@@ -93,6 +95,12 @@
         // Start with 0 guess attempts
         guessAttempts = 0;
         maxGuessAttempts = 7;
+        
+        // Drawing is empty by default
+        hasDrawingStarted = NO;
+        
+        // Haven't displayed top yet by default
+        didDisplayRemoveLetterTip = NO;
     }
     return self;
 }
@@ -125,6 +133,7 @@
     letterScrollView.delaysContentTouches = YES;
     letterScrollView.showsHorizontalScrollIndicator = NO;
     letterScrollView.showsVerticalScrollIndicator = NO;
+    letterScrollView.clipsToBounds = NO;
     
     // Insert all the letters
     CGSize letterSize = CGSizeMake(100.0f, 150.0f);
@@ -167,6 +176,15 @@
     winnerView.alpha = 0.0f;
     winnerView.hidden = YES;
     [self.view addSubview:winnerView];
+    
+    // If my turn, show basic title during letter selection instead of "Choose a letter"
+    if (myTurn == YES) {
+        viewSelectLetterTitle.image = [UIImage imageNamed:@"hangman-title"];
+        viewSelectLetterTitle.frame = CGRectMake(29.0f, 20.0f, 686.0f, 35.0f);
+    }
+
+    // Set active chat HUD
+    [self performSelector:@selector(setActiveChatHUD) withObject:nil afterDelay:0.5f];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -262,7 +280,7 @@
 
 - (void)pusherPlayTurn:(NSNotification*)notification {
     NSDictionary *eventData = notification.userInfo;
-    NSLog(@"pusherPlayTurn: %@", eventData);
+    //NSLog(@"pusherPlayTurn: %@", eventData);
     NSInteger newGameState = [[eventData objectForKey:@"state"] integerValue];
     NSInteger currentPlayerId = [[eventData objectForKey:@"playmate_id"] integerValue];
     NSInteger whoseTurn = [[eventData objectForKey:@"whose_turn"] integerValue];
@@ -273,6 +291,9 @@
     } else {
         myTurn = [PTUser currentUser].userID == playmate.userID;
     }
+    
+    // Set active chat HUD
+    [self setActiveChatHUD];
 
     // Verify that it wasn't us who took this turn
     if (currentPlayerId != [[PTUser currentUser] userID]) {
@@ -286,22 +307,22 @@
                     NSArray *positions = [eventData objectForKey:@"positions"];
                     if (positions != nil && [positions count] > 0) {
                         NSString *letter = [wordArray objectAtIndex:[[positions objectAtIndex:0] integerValue]];
+                        NSLog(@"Letter: %@ Positions: %@ wordArray: %@", letter, positions, wordArray);
                         for (int i=0; i<[positions count]; i++) {
                             PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:[[positions objectAtIndex:i] integerValue]];
+                            guessLetterView.type = PTHangmanLetterTypeGuessedRight;
                             guessLetterView.letter = letter;
                         }
                     }
                 } else {
                     // Otherwise, it's my turn to pick a letter
-
                     if (isFirstTimeGuessing == YES) {
                         isFirstTimeGuessing = NO;
                         // Check if word length has been passed in
-                        // It's passed in as soon as word is chosen by initator
+                        // It's passed in as soon as word is chosen by initiator
                         NSNumber *wordLengthObj = [eventData objectForKey:@"word_length"];
                         if (wordLengthObj != nil) {
                             wordLength = [wordLengthObj integerValue];
-                            NSLog(@"Word length: %d", wordLength);
                         }
 
                         // Setup letter pick view
@@ -324,11 +345,26 @@
                     // Enable alphabet
                     [self enableAlphabet];
                 }
+                
+                // Mark the letter as used in the alphabet
+                if ([eventData objectForKey:@"letter"] != nil) {
+                    NSString *letter = [[eventData objectForKey:@"letter"] uppercaseString];
+                    PTHangmanLetterType letterGuessType = [[eventData objectForKey:@"guessed"] boolValue] == YES ? PTHangmanLetterTypeGuessedRight : PTHangmanLetterTypeGuessedWrong;
+                    [self markLetterAsUsedInAlphabet:letter type:letterGuessType];
+                }
             }
                 break;
             case STATE_DRAW: {
+                // Mark the letter as used in the alphabet
+                if ([eventData objectForKey:@"letter"] != nil) {
+                    NSString *letter = [[eventData objectForKey:@"letter"] uppercaseString];
+                    PTHangmanLetterType letterGuessType = [[eventData objectForKey:@"guessed"] boolValue] == YES ? PTHangmanLetterTypeGuessedRight : PTHangmanLetterTypeGuessedWrong;
+                    [self markLetterAsUsedInAlphabet:letter type:letterGuessType];
+                }
+
                 // Increase number of attemps
                 guessAttempts++;
+
                 // Switch to drawing view
                 [self showDrawView];
             }
@@ -338,21 +374,36 @@
                 gameWinner = [[eventData objectForKey:@"winner"] integerValue];
                 
                 if (initiator.userID == [PTUser currentUser].userID) { // Playmate won, reveal last letter and display winner popup
-                    // Reveal letter(s) in approprivate letterView(s)
+                    // Reveal letter(s) in appropiate letterView(s)
                     NSArray *positions = [eventData objectForKey:@"positions"];
                     if (positions != nil && [positions count] > 0) {
                         NSString *letter = [wordArray objectAtIndex:[[positions objectAtIndex:0] integerValue]];
                         for (int i=0; i<[positions count]; i++) {
                             PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:[[positions objectAtIndex:i] integerValue]];
+                            guessLetterView.type = PTHangmanLetterTypeGuessedRight;
                             guessLetterView.letter = letter;
                         }
                     }
                     
                     // Display winner view (even tho we lost ... everybody wins!)
                     [self performSelector:@selector(showWinner) withObject:nil afterDelay:1.5f];
-                } else { // Initiator won, hang the man and display winner popup
-                    // Hang the view
-                    [self hangDrawingView];
+                } else { // Initiator won, reveal the rest of the word, hang the man and display winner popup
+                    NSLog(@"Game ended, showing letter view, revealing last letters, hiding it and hanging the man!");
+                    // Show 'waiting for letter' screen
+                    [self hideDrawView]; // takes .5 seconds
+                    
+                    // Parse remaining letters
+                    remainingLetters = [[eventData objectForKey:@"word_bits"] componentsSeparatedByString:@","];
+                    
+                    // Reveal those letters after letters view is fully shown (in 0.5 seconds)
+                    [self performSelector:@selector(revealRemainingLetters) withObject:nil afterDelay:0.8f];
+                }
+                
+                // Mark the letter as used in the alphabet
+                if ([eventData objectForKey:@"letter"] != nil) {
+                    NSString *letter = [[eventData objectForKey:@"letter"] uppercaseString];
+                    PTHangmanLetterType letterGuessType = [[eventData objectForKey:@"guessed"] boolValue] == YES ? PTHangmanLetterTypeGuessedRight : PTHangmanLetterTypeGuessedWrong;
+                    [self markLetterAsUsedInAlphabet:letter type:letterGuessType];
                 }
             }
                 break;
@@ -421,7 +472,11 @@
     NSString *allPoints = [eventData objectForKey:@"points"];
     NSArray *allPointsArr = [allPoints componentsSeparatedByString:@":"];
     for (int i=0; i<[allPointsArr count]; i++) {
-        NSArray *pointArr = [[allPointsArr objectAtIndex:i] componentsSeparatedByString:@","];
+        NSString *pointStr = [allPointsArr objectAtIndex:i];
+        if ([pointStr isEqualToString:@""]) { // rogue point check (ex: if nothing was drawn)
+            continue;
+        }
+        NSArray *pointArr = [pointStr componentsSeparatedByString:@","];
         CGPoint point = CGPointMake([[pointArr objectAtIndex:0] floatValue], [[pointArr objectAtIndex:1] floatValue]);
         [pusherDrawPoints addObject:[NSValue valueWithCGPoint:point]];
         if (frameLink.paused == YES) {
@@ -452,7 +507,6 @@
                               word:word
                          authToken:[PTUser currentUser].authToken
                          onSuccess:^(NSDictionary *result) {
-                             NSLog(@"pickWordForBoardId: %@", result);
                              // Setup letter pick view
                              if (isSelectLetterViewSetup == NO) {
                                  [self setupSelectLetterView];
@@ -479,6 +533,13 @@
                             onSuccess:^(NSDictionary *result) {
                                 NSInteger newGameState = [[result objectForKey:@"state"] integerValue];
                                 
+                                // Mark the letter as used in the alphabet
+                                if ([result objectForKey:@"letter"] != nil) {
+                                    NSString *letter = [[result objectForKey:@"letter"] uppercaseString];
+                                    PTHangmanLetterType letterGuessType = [[result objectForKey:@"guessed"] boolValue] == YES ? PTHangmanLetterTypeGuessedRight : PTHangmanLetterTypeGuessedWrong;
+                                    [self markLetterAsUsedInAlphabet:letter type:letterGuessType];
+                                }
+                                
                                 // Did we guess correctly?
                                 if (newGameState == STATE_DRAW) {
                                     // No, we missed the letter
@@ -497,6 +558,7 @@
                                     NSArray *positions = [result objectForKey:@"positions"];
                                     for (int i=0; i<[positions count]; i++) {
                                         PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:[[positions objectAtIndex:i] integerValue]];
+                                        guessLetterView.type = PTHangmanLetterTypeGuessedRight;
                                         guessLetterView.letter = letter;
                                     }
                                     
@@ -511,6 +573,7 @@
                                     NSArray *positions = [result objectForKey:@"positions"];
                                     for (int i=0; i<[positions count]; i++) {
                                         PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:[[positions objectAtIndex:i] integerValue]];
+                                        guessLetterView.type = PTHangmanLetterTypeGuessedRight;
                                         guessLetterView.letter = letter;
                                     }
                                     
@@ -618,13 +681,59 @@
         // Check if we're adding or removing the letter (tag 1: adding, tag 2: removing)
         if (letterView.tag == 1) {
             if ([wordArray count] == 6) {
-                // We hit our max, do something
+                // We hit our letter max, do something
                 isAnimatingLetters = NO;
+                
+                // Show warning label and hide it after a few seconds
+                lblComposeWarning.text = @"Six letter maximum.";
+                lblComposeWarning.alpha = 0.0f;
+                lblComposeWarning.hidden = NO;
+                [UIView animateWithDuration:0.3f
+                                 animations:^{
+                                     lblComposeWarning.alpha = 1.0f;
+                                 }
+                                 completion:^(BOOL finished) {
+                                     // Wait 2 seconds, then hide it
+                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2000 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
+                                         [UIView animateWithDuration:0.3f
+                                                          animations:^{
+                                                              lblComposeWarning.alpha = 0.0f;
+                                                          }
+                                                          completion:^(BOOL finished) {
+                                                              lblComposeWarning.hidden = YES;
+                                                          }];
+                                     });
+                                 }];
                 return;
             }
             
             // Add new letter to array
             [wordArray addObject:letter];
+            
+            // Check if we added our first letter for the first time since game start
+            if ([wordArray count] == 1 && didDisplayRemoveLetterTip == NO) {
+                // Show warning label and hide it after a few seconds
+                didDisplayRemoveLetterTip = YES;
+                lblComposeWarning.text = @"Tap letters to remove them.";
+                lblComposeWarning.alpha = 0.0f;
+                lblComposeWarning.hidden = NO;
+                [UIView animateWithDuration:0.3f
+                                 animations:^{
+                                     lblComposeWarning.alpha = 1.0f;
+                                 }
+                                 completion:^(BOOL finished) {
+                                     // Wait 2 seconds, then hide it
+                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2000 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
+                                         [UIView animateWithDuration:0.3f
+                                                          animations:^{
+                                                              lblComposeWarning.alpha = 0.0f;
+                                                          }
+                                                          completion:^(BOOL finished) {
+                                                              lblComposeWarning.hidden = YES;
+                                                          }];
+                                     });
+                                 }];
+            }
             
             // Create a new letter object
             PTHangmanLetterView *newLetterView = [[PTHangmanLetterView alloc] initWithFrame:letterView.bounds letter:letter];
@@ -747,6 +856,16 @@
 }
 
 - (void)drawboardDidDraw:(CGPoint)point {
+    // Hide drawSomethingMan?
+    if (hasDrawingStarted == NO) {
+        hasDrawingStarted = YES;
+        [UIView animateWithDuration:0.5f animations:^{
+            drawSomethingMan.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            drawSomethingMan.hidden = YES;
+        }];
+    }
+
     NSString *pointStr = [NSString stringWithFormat:@"%.0f,%.0f", point.x, point.y];
     [drawPoints addObject:pointStr];
     if ([drawPoints count] == 30) {
@@ -853,15 +972,16 @@
     viewSelectLetter.hidden = YES;
     if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
         drawSomethingButtonContainer.hidden = NO;
-        drawSomethingMan.hidden = NO;
+        if (hasDrawingStarted == NO) {
+            drawSomethingMan.hidden = NO;
+        }
     }
     
-    // Init draw board
-    if (drawBoard == nil) {
-        drawBoard = [[PTHangmanDrawboard alloc] initWithFrame:viewDraw.bounds];
-        drawBoard.delegate = self;
-        [viewDraw insertSubview:drawBoard aboveSubview:drawSomethingMan];
-    }
+    // Init a new draw board
+    drawBoard = [[PTHangmanDrawboard alloc] initWithFrame:viewDraw.bounds];
+    drawBoard.delegate = self;
+    [viewDraw insertSubview:drawBoard belowSubview:drawSomethingButtonContainer];
+    [drawBoards addObject:drawBoard];
     
     // Move letters view and show drawing view
     [UIView animateWithDuration:0.5f
@@ -874,7 +994,9 @@
                          viewDraw.frame = CGRectOffset(viewDraw.frame, 412.0f, 0.0f);
                          if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
                              drawSomethingButtonContainer.alpha = 1.0f;
-                             drawSomethingMan.alpha = 1.0f;
+                             if (hasDrawingStarted == NO) {
+                                 drawSomethingMan.alpha = 1.0f;
+                             }
                          }
                      }
                      completion:^(BOOL finished) {
@@ -946,33 +1068,39 @@
     if (hangButton) {
         [hangButton removeFromSuperview];
     }
-
-    CAKeyframeAnimation *rotationAnimation;
-    rotationAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
     
-    rotationAnimation.values = [NSArray arrayWithObjects:
-                                [NSNumber numberWithFloat:0.0 * M_PI],
-                                [NSNumber numberWithFloat:0.05 * M_PI],
-                                [NSNumber numberWithFloat:0.0 * M_PI],
-                                [NSNumber numberWithFloat:-0.05 * M_PI],
-                                [NSNumber numberWithFloat:0.0 * M_PI], nil];
-    rotationAnimation.calculationMode = kCAAnimationPaced;
-    
-    rotationAnimation.removedOnCompletion = NO;
-    rotationAnimation.fillMode = kCAFillModeForwards;
-    
-    rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    rotationAnimation.duration = 1.2f;
-    rotationAnimation.repeatCount = 3;
-    
-    CALayer *layer = [viewDraw layer];
-    [layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    for (PTHangmanDrawboard *drawBoardItem in drawBoards) {
+        CGFloat animOffset = (CGFloat)(arc4random()%5) / 10.0f; // .1 to .5 sec offset
+        CAKeyframeAnimation *rotationAnimation;
+        rotationAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation.z"];
+        rotationAnimation.values = [NSArray arrayWithObjects:
+                                    [NSNumber numberWithFloat:0.0 * M_PI],
+                                    [NSNumber numberWithFloat:0.05 * M_PI],
+                                    [NSNumber numberWithFloat:0.0 * M_PI],
+                                    [NSNumber numberWithFloat:-0.05 * M_PI],
+                                    [NSNumber numberWithFloat:0.0 * M_PI], nil];
+        rotationAnimation.calculationMode = kCAAnimationPaced;
+        rotationAnimation.removedOnCompletion = NO;
+        rotationAnimation.fillMode = kCAFillModeForwards;
+        rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+        rotationAnimation.duration = 1.2f;
+        rotationAnimation.repeatCount = 3;
+        rotationAnimation.beginTime = CACurrentMediaTime() + animOffset;
+        [[drawBoardItem layer] addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+    }
     
     // Show winner after animation
     [self performSelector:@selector(showWinner) withObject:nil afterDelay:3.6f];
 }
 
 - (void)showWinner {
+    BOOL isWinner = (initiator.userID == [PTUser currentUser].userID && gameWinner == WHOSE_TURN_INITIATOR) || (playmate.userID == [PTUser currentUser].userID && gameWinner == WHOSE_TURN_PLAYMATE);
+
+    // Which graphic to display?
+    if (isWinner == NO) {
+        winnerView.image = [UIImage imageNamed:@"memory-loss"];
+    }
+    
     winnerView.hidden = NO;
     [UIView animateWithDuration:0.5f
                      animations:^{
@@ -988,6 +1116,87 @@
                              [self performSelector:@selector(resetGame) withObject:nil afterDelay:5.0f];
                          }
                      }];
+}
+
+- (void)markLetterAsUsedInAlphabet:(NSString *)letter type:(PTHangmanLetterType)type {
+    for (PTHangmanLetterView *letterView in letterScrollView.subviews) {
+        if ([letterView.letter isEqualToString:letter]) {
+            // Check if this letter is in view
+            if (CGRectIntersectsRect(letterScrollView.bounds, letterView.frame) == YES) { // Is in view
+                // Point the letter out
+                [UIView animateWithDuration:0.4f
+                                 animations:^{
+                                     letterView.frame = CGRectOffset(letterView.frame, 0.0f, -90.0f);
+                                 }
+                                 completion:^(BOOL finished) {
+                                     // Switch type
+                                     letterView.type = type;
+                                     
+                                     // Hide letter
+                                     [UIView animateWithDuration:0.4f
+                                                      animations:^{
+                                                          letterView.frame = CGRectOffset(letterView.frame, 0.0f, 90.0f);
+                                                      }];
+                                 }];
+            } else { // Not in view
+                // Navigate to it
+                [UIView animateWithDuration:1.0f
+                                 animations:^{
+                                     CGFloat xOffset = letterView.frame.origin.x - 17.0f; // spacing offset 17px
+                                     letterScrollView.bounds = CGRectMake(xOffset, 0.0f, letterScrollView.bounds.size.width, letterScrollView.bounds.size.height);
+                                 }
+                                 completion:^(BOOL finished) {
+                                     // Point the letter out
+                                     [UIView animateWithDuration:0.4f
+                                                      animations:^{
+                                                          letterView.frame = CGRectOffset(letterView.frame, 0.0f, -90.0f);
+                                                      }
+                                                      completion:^(BOOL finished) {
+                                                          // Switch type
+                                                          letterView.type = type;
+                                                          
+                                                          // Hide letter
+                                                          [UIView animateWithDuration:0.4f
+                                                                           animations:^{
+                                                                               letterView.frame = CGRectOffset(letterView.frame, 0.0f, 90.0f);
+                                                                           }];
+                                                      }];
+                                 }];
+            }
+            break;
+        }
+    }
+}
+
+- (void)revealRemainingLetters {
+    // Reveal all the remaining letters // takes 1 second
+    for (int i=0; i<[remainingLetters count]; i++) {
+        NSString *letter = [[remainingLetters objectAtIndex:i] uppercaseString];
+        if ([letter isEqualToString:@""]) {
+            continue;
+        }
+        PTHangmanGuessLetterView *guessLetterView = [guessLetterViews objectAtIndex:i];
+        guessLetterView.type = PTHangmanLetterTypeGuessedWrong;
+        guessLetterView.letter = letter;
+    }
+    
+    // Hide the letters view and show the hangman (after 1.5 seconds)
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1500 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
+        [self showDrawView]; // takes 0.5 seconds
+
+        // Hang the view (after 0.5 seconds)
+        [self performSelector:@selector(hangDrawingView) withObject:nil afterDelay:0.8f];
+    });
+}
+
+- (void)setActiveChatHUD {
+    // Change active HUD
+    if (myTurn == YES && chatHUDTurnStatus == NO) {
+        [self.chatController setActiveTurnToRightChatView];
+    } else if (myTurn == NO && chatHUDTurnStatus == YES) {
+        [self.chatController setActiveTurnToLeftChatView];
+    }
+    chatHUDTurnStatus = myTurn;
 }
 
 @end

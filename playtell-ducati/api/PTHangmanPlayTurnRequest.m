@@ -19,7 +19,6 @@
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/games/hangman/play_turn", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
     [request setPostParameters:postParameters];
-    NSLog(@"hangman/play_turn: %@", postParameters);
     
     AFJSONRequestOperation* playTurn;
     playTurn = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
