@@ -11,6 +11,7 @@
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
 #import "PTPlaydatePhotoCreateRequest.h"
+#import "PTPlayTellPusher.h"
 #import "PTSpinnerView.h"
 #import "PTUser.h"
 
@@ -112,6 +113,10 @@ CGRect originalRightBounds;
         [self.view addGestureRecognizer:swipeDownRecognizer];
         [self.view addGestureRecognizer:pinchRecognizer];
         [self.view addGestureRecognizer:tapRecognizer];
+        
+        // Notifications for when playmate uses fullscreen
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playmateStartedFullscreen) name:@"FullscreenStart" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playmateEndedFullscreen) name:@"FullscreenEnd" object:nil];
     }
     return self;
 }
@@ -201,6 +206,20 @@ CGRect originalRightBounds;
     [screenshotTimer invalidate];
 }
 
+- (void)playmateStartedFullscreen {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    [self showFullscreenChat:YES];
+}
+
+- (void)playmateEndedFullscreen {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    [self hideFullscreenChat:YES];
+}
+
 - (void)hideFullscreenChat:(BOOL)animated {
     if (!inFullscreen) {
         return;
@@ -287,6 +306,11 @@ CGRect originalRightBounds;
     
     // Show the shim view for fullscreen chat
     [self showFullscreenChat:YES];
+    
+    // Send a notification to pusher
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_start"
+                                               data:[[NSDictionary alloc] init]
+                                            channel:playdate.pusherChannelName];
 }
 
 - (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
@@ -516,6 +540,11 @@ CGRect originalRightBounds;
 
 - (void)fullscreenChatViewShouldClose:(UIView *)closingView {
     [self hideFullscreenChat:YES];
+    
+    // Send a notification to pusher
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_end"
+                                               data:[[NSDictionary alloc] init]
+                                            channel:playdate.pusherChannelName];
 }
 
 #pragma mark - Game-related methods
