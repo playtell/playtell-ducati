@@ -87,7 +87,7 @@ CGRect originalRightBounds;
         // Create the button to go to fullscreen mode
         UIImage *imgFullscreen = [UIImage imageNamed:@"full-screen.png"];
         UIImage *imgFullscreenPress = [UIImage imageNamed:@"full-screen-press.png"];
-        btnFullscreen = [[UIButton alloc] initWithFrame:CGRectMake(rightView.frame.origin.x + rightView.frame.size.width + CHATVIEW_PADDING, rightView.frame.origin.y, imgFullscreen.size.width, imgFullscreen.size.height)];
+        btnFullscreen = [[UIButton alloc] initWithFrame:CGRectMake(rightView.frame.origin.x + rightView.frame.size.width, rightView.frame.origin.y + CHATVIEW_PADDING, imgFullscreen.size.width, imgFullscreen.size.height)];
         [btnFullscreen setBackgroundImage:imgFullscreen forState:UIControlStateNormal];
         [btnFullscreen setBackgroundImage:imgFullscreenPress forState:UIControlStateHighlighted];
         btnFullscreen.alpha = 0.0f;
@@ -278,7 +278,7 @@ CGRect originalRightBounds;
 
 - (void)resetFullscreenButtonLocation {
     // Set the location of the fullscreen button
-    btnFullscreen.frame = CGRectMake(self.rightView.frame.origin.x + self.rightView.frame.size.width + CHATVIEW_PADDING, rightView.frame.origin.y, btnFullscreen.frame.size.width, btnFullscreen.frame.size.height);
+    btnFullscreen.frame = CGRectMake(self.rightView.frame.origin.x + self.rightView.frame.size.width, rightView.frame.origin.y + CHATVIEW_PADDING, btnFullscreen.frame.size.width, btnFullscreen.frame.size.height);
 }
 
 - (void)showFullscreenChat:(BOOL)animated {
