@@ -36,6 +36,7 @@
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
 @property (nonatomic, strong) MPMoviePlayerController* movieController;
 @property (nonatomic, assign) BOOL restrictSizeToSmall;
+@property (nonatomic, strong) UIButton *btnFullscreen;
 @property (nonatomic, strong) PTFullscreenChatView *fullscreenView;
 @end
 
@@ -43,6 +44,7 @@
 @synthesize leftView, rightView, videoPhone, playdate, playmate;
 @synthesize movieController;
 @synthesize restrictSizeToSmall;
+@synthesize btnFullscreen;
 @synthesize fullscreenView;
 
 NSTimer *screenshotTimer;
@@ -81,6 +83,16 @@ CGRect originalRightBounds;
         self.rightView = [[PTChatHUDView alloc] initWithFrame:CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding)];
         [self.view addSubview:self.leftView];
         [self.view addSubview:self.rightView];
+        
+        // Create the button to go to fullscreen mode
+        UIImage *imgFullscreen = [UIImage imageNamed:@"full-screen.png"];
+        UIImage *imgFullscreenPress = [UIImage imageNamed:@"full-screen-press.png"];
+        btnFullscreen = [[UIButton alloc] initWithFrame:CGRectMake(rightView.frame.origin.x + rightView.frame.size.width + CHATVIEW_PADDING, rightView.frame.origin.y, imgFullscreen.size.width, imgFullscreen.size.height)];
+        [btnFullscreen setBackgroundImage:imgFullscreen forState:UIControlStateNormal];
+        [btnFullscreen setBackgroundImage:imgFullscreenPress forState:UIControlStateHighlighted];
+        btnFullscreen.alpha = 0.0f;
+        [btnFullscreen addTarget:self action:@selector(fullscreenButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btnFullscreen];
         
         // Create the shim view
         fullscreenOffscreenRect = CGRectMake(CHATVIEW_CENTERX - (OFFSCREEN_SIZE / 2), -OFFSCREEN_SIZE, OFFSCREEN_SIZE, OFFSCREEN_SIZE);
@@ -220,6 +232,15 @@ CGRect originalRightBounds;
     [self hideFullscreenChat:YES];
 }
 
+- (void)fullscreenButtonPressed {
+    [self showFullscreenChat:YES];
+    
+    // Send a notification to pusher
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_start"
+                                               data:[[NSDictionary alloc] init]
+                                            channel:playdate.pusherChannelName];
+}
+
 - (void)hideFullscreenChat:(BOOL)animated {
     if (!inFullscreen) {
         return;
@@ -255,6 +276,11 @@ CGRect originalRightBounds;
     }];
 }
 
+- (void)resetFullscreenButtonLocation {
+    // Set the location of the fullscreen button
+    btnFullscreen.frame = CGRectMake(self.rightView.frame.origin.x + self.rightView.frame.size.width + CHATVIEW_PADDING, rightView.frame.origin.y, btnFullscreen.frame.size.width, btnFullscreen.frame.size.height);
+}
+
 - (void)showFullscreenChat:(BOOL)animated {
     inFullscreen = YES;
     float animationTime = 0.0f;
@@ -288,6 +314,7 @@ CGRect originalRightBounds;
     if (shouldRestrict) {
         // Hide fullscreen view
         [self hideFullscreenChat:NO];
+        btnFullscreen.alpha = 0.0f;
         
         // Calculate width and height
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
@@ -295,6 +322,12 @@ CGRect originalRightBounds;
 
         self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
         self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        
+        [self resetFullscreenButtonLocation];
+    } else {
+        [UIView animateWithDuration:0.5f animations:^{
+            btnFullscreen.alpha = 1.0f;
+        }];
     }
     
     self.restrictSizeToSmall = shouldRestrict;
@@ -304,13 +337,14 @@ CGRect originalRightBounds;
     if (self.restrictSizeToSmall)
         return;
     
-    // Show the shim view for fullscreen chat
-    [self showFullscreenChat:YES];
+    // Calculate final width and height
+    CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
+    CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
     
-    // Send a notification to pusher
-    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_start"
-                                               data:[[NSDictionary alloc] init]
-                                            channel:playdate.pusherChannelName];
+    self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    
+    [self resetFullscreenButtonLocation];
 }
 
 - (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
@@ -323,6 +357,8 @@ CGRect originalRightBounds;
     
     self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
     self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    
+    [self resetFullscreenButtonLocation];
 }
 
 - (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
@@ -358,6 +394,8 @@ CGRect originalRightBounds;
         
         self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
         self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        
+        [self resetFullscreenButtonLocation];
 
         recognizer.scale = 1;
     }
