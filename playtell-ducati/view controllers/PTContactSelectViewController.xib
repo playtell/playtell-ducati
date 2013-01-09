@@ -231,7 +231,7 @@
 							<object class="IBUIButton" id="6728470">
 								<reference key="NSNextResponder" ref="349643340"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{660, 8}, {126, 33}}</string>
+								<string key="NSFrame">{{663, 6}, {147, 38}}</string>
 								<reference key="NSSuperview" ref="349643340"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="426480467"/>
@@ -241,10 +241,10 @@
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUIContentEdgeInsets.top">0.0</double>
-								<double key="IBUIContentEdgeInsets.bottom">2</double>
-								<double key="IBUIContentEdgeInsets.left">0.0</double>
-								<double key="IBUIContentEdgeInsets.right">10</double>
-								<string key="IBUINormalTitle">Manual Invite</string>
+								<double key="IBUIContentEdgeInsets.bottom">0.0</double>
+								<double key="IBUIContentEdgeInsets.left">25</double>
+								<double key="IBUIContentEdgeInsets.right">0.0</double>
+								<string key="IBUINormalTitle">Invite Them</string>
 								<reference key="IBUIHighlightedTitleColor" ref="693996074"/>
 								<reference key="IBUINormalTitleColor" ref="693996074"/>
 								<object class="NSColor" key="IBUINormalTitleShadowColor">
@@ -253,11 +253,11 @@
 								</object>
 								<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">Manual-invite-press.png</string>
+									<string key="NSResourceName">invite-them-press.png</string>
 								</object>
 								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">Manual-invite.png</string>
+									<string key="NSResourceName">invite-them.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="1067802394"/>
 								<reference key="IBUIFont" ref="579678737"/>
@@ -543,7 +543,7 @@
 				<string key="41.CustomClassName">UIControl</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="43.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="1" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -626,8 +626,8 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="Manual-invite-press.png">{125, 32}</string>
-			<string key="Manual-invite.png">{125, 32}</string>
+			<string key="invite-them-press.png">{147, 38}</string>
+			<string key="invite-them.png">{147, 38}</string>
 			<string key="search-area.png">{607, 87}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
