@@ -17,13 +17,16 @@
 @interface PTFullscreenChatView()
 
 @property (nonatomic, strong) UIButton *btnClose;
+@property (nonatomic, strong) UIImageView *subscriberImageView;
+@property (nonatomic, strong) UIImageView *publisherImageView;
 
 @end
 
 @implementation PTFullscreenChatView
 
 @synthesize delegate;
-@synthesize leftView, rightView;
+@synthesize subscriberVideoView, publisherVideoView;
+@synthesize subscriberImageView, publisherImageView;
 
 @synthesize btnClose;
 
@@ -43,17 +46,28 @@
 //        swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
 //        [self addGestureRecognizer:swipeUpRecognizer];
         
-        // Create the left and right views
-        leftView = [[UIView alloc] initWithFrame:self.bounds];
-        leftView.alpha = 0.0f;
-        leftView.backgroundColor = [UIColor blackColor];
-        leftView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:leftView];
-        rightView = [[UIView alloc] initWithFrame:CGRectMake(800.0f, 594.0f, 200.0f, 150.0f)];
-        rightView.alpha = 0.0f;
-        rightView.backgroundColor = [UIColor redColor];
-        rightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:rightView];
+        // Create the subscriber and publisher views
+        subscriberVideoView = [[UIView alloc] initWithFrame:self.bounds];
+        subscriberVideoView.alpha = 0.0f;
+        subscriberVideoView.backgroundColor = [UIColor clearColor];
+        subscriberVideoView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:subscriberVideoView];
+        publisherVideoView = [[UIView alloc] initWithFrame:CGRectMake(800.0f, 594.0f, 200.0f, 150.0f)];
+        publisherVideoView.alpha = 0.0f;
+        publisherVideoView.backgroundColor = [UIColor clearColor];
+        publisherVideoView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:publisherVideoView];
+        
+        // Create the subscriber and publisher image views
+        subscriberImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 200.0f, 150.0f)];
+        subscriberImageView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+        subscriberImageView.backgroundColor = [UIColor clearColor];
+        subscriberImageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self insertSubview:subscriberImageView belowSubview:subscriberVideoView];
+        publisherImageView = [[UIImageView alloc] initWithFrame:publisherVideoView.frame];
+        publisherImageView.backgroundColor = [UIColor clearColor];
+        publisherImageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self insertSubview:publisherImageView belowSubview:publisherVideoView];
         
         // Create the button to close fullscreen mode
         UIImage *imgClose = [UIImage imageNamed:@"header-close.png"];
@@ -78,6 +92,14 @@
     if ([self.delegate respondsToSelector:@selector(fullscreenChatViewShouldClose:)]) {
         [delegate fullscreenChatViewShouldClose:self];
     }
+}
+
+- (void)setSubscriberImage:(UIImage *)subscriber {
+    subscriberImageView.image = subscriber;
+}
+
+- (void)setPublisherImage:(UIImage *)publisher {
+    publisherImageView.image = publisher;
 }
 
 @end

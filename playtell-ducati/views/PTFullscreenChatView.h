@@ -16,7 +16,10 @@
 @interface PTFullscreenChatView : UIView <PTFullscreenChatViewDelegate>
 
 @property (nonatomic, strong) id<PTFullscreenChatViewDelegate> delegate;
-@property (nonatomic, strong) UIView *leftView;
-@property (nonatomic, strong) UIView *rightView;
+@property (nonatomic, strong) UIView *subscriberVideoView;
+@property (nonatomic, strong) UIView *publisherVideoView;
+
+- (void)setSubscriberImage:(UIImage *)subscriber;
+- (void)setPublisherImage:(UIImage *)publisher;
 
 @end
