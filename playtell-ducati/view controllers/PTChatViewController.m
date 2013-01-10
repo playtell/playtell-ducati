@@ -7,6 +7,7 @@
 //
 
 #import "Logging.h"
+#import "PTAppDelegate.h"
 #import "PTChatViewController.h"
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
@@ -14,6 +15,7 @@
 #import "PTPlayTellPusher.h"
 #import "PTSpinnerView.h"
 #import "PTUser.h"
+#import "TransitionController.h"
 
 #import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
@@ -31,6 +33,7 @@
 #define CHATVIEW_PADDING        8.0
 #define CHATVIEW_MARGIN         8.0
 #define OFFSCREEN_SIZE          100.0
+#define TRANSITION_TIME         0.3
 
 @interface PTChatViewController ()
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
@@ -57,6 +60,7 @@ UIPinchGestureRecognizer *pinchRecognizer;
 UITapGestureRecognizer *tapRecognizer;
 CGRect originalSubscriberBounds;
 CGRect originalPublisherBounds;
+UIViewController *fullscreenController;
 
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL {
     self.movieController.contentURL = movieURL;
@@ -94,13 +98,13 @@ CGRect originalPublisherBounds;
         [btnFullscreen addTarget:self action:@selector(fullscreenButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:btnFullscreen];
         
-        // Create the shim view
+        // Create the fullscreen view
         fullscreenOffscreenRect = CGRectMake(CHATVIEW_CENTERX - (OFFSCREEN_SIZE / 2), -OFFSCREEN_SIZE, OFFSCREEN_SIZE, OFFSCREEN_SIZE);
         fullscreenOnscreenRect = CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f);
         fullscreenView = [[PTFullscreenChatView alloc] init];
         fullscreenView.delegate = self;
-        fullscreenView.frame = fullscreenOffscreenRect;
-        [self.view addSubview:fullscreenView];
+        fullscreenController = [[UIViewController alloc] init];
+        fullscreenController.view = fullscreenView;
         
         self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
         self.restrictSizeToSmall = YES;
@@ -249,7 +253,7 @@ CGRect originalPublisherBounds;
     
     float animationTime = 0.0f;
     if (animated) {
-        animationTime = 1.0f;
+        animationTime = TRANSITION_TIME;
     }
     
     [UIView animateWithDuration:animationTime animations:^{
@@ -270,9 +274,9 @@ CGRect originalPublisherBounds;
         [leftView setOpentokVideoView:leftVideo];
         [rightView setOpentokVideoView:rightVideo];
         
-        [UIView animateWithDuration:animationTime animations:^{
-            fullscreenView.frame = fullscreenOffscreenRect;
-        }];
+        // Dismiss the fullscreen view
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCurlDown | UIViewAnimationOptionCurveEaseOut];
     }];
 }
 
@@ -280,31 +284,31 @@ CGRect originalPublisherBounds;
     inFullscreen = YES;
     float animationTime = 0.0f;
     if (animated) {
-        animationTime = 1.0f;
+        animationTime = TRANSITION_TIME;
     }
     
     [fullscreenView setSubscriberImage:playmate.userPhoto];
     [fullscreenView setPublisherImage:[PTUser currentUser].userPhoto];
     
+    // Show the fullscreen view
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:fullscreenController withOptions:UIViewAnimationOptionTransitionCurlUp | UIViewAnimationOptionCurveEaseIn];
+    
+    // Save the original bounds so we can put them back when fullscreen ends
+    UIView *subscriberVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+    originalSubscriberBounds = subscriberVideo.bounds;
+    UIView *publisherVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+    originalPublisherBounds = publisherVideo.bounds;
+    
+    // Add the videos to the fullscreen view
+    subscriberVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.subscriberVideoView.frame.size.width, fullscreenView.subscriberVideoView.frame.size.height);
+    [fullscreenView.subscriberVideoView addSubview:subscriberVideo];
+    publisherVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.publisherVideoView.frame.size.width, fullscreenView.publisherVideoView.frame.size.height);
+    [fullscreenView.publisherVideoView addSubview:publisherVideo];
+    
     [UIView animateWithDuration:animationTime animations:^{
-        fullscreenView.frame = fullscreenOnscreenRect;
-    } completion:^(BOOL finished) {
-        // Save the original bounds so we can put them back when fullscreen ends
-        UIView *subscriberVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
-        originalSubscriberBounds = subscriberVideo.bounds;
-        UIView *publisherVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
-        originalPublisherBounds = publisherVideo.bounds;
-        
-        // Add the videos to the fullscreen view
-        subscriberVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.subscriberVideoView.frame.size.width, fullscreenView.subscriberVideoView.frame.size.height);
-        [fullscreenView.subscriberVideoView addSubview:subscriberVideo];
-        publisherVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.publisherVideoView.frame.size.width, fullscreenView.publisherVideoView.frame.size.height);
-        [fullscreenView.publisherVideoView addSubview:publisherVideo];
-        
-        [UIView animateWithDuration:animationTime animations:^{
-            fullscreenView.subscriberVideoView.alpha = 1.0f;
-            fullscreenView.publisherVideoView.alpha = 1.0f;
-        }];
+        fullscreenView.subscriberVideoView.alpha = 1.0f;
+        fullscreenView.publisherVideoView.alpha = 1.0f;
     }];
 }
 

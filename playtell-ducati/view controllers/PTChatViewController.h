@@ -15,7 +15,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PTChatViewController : NSObject <UIGestureRecognizerDelegate, PTFullscreenChatViewDelegate>
+@interface PTChatViewController : UIViewController <UIGestureRecognizerDelegate, PTFullscreenChatViewDelegate>
 
 - (id)initWithplaydate:(PTPlaydate*)aPlaydate;
 - (id)initWithPlaymate:(PTPlaymate*)aPlaymate;
