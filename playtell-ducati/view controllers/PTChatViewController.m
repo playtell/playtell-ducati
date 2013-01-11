@@ -493,7 +493,7 @@ UIViewController *fullscreenController;
      {
          [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
              LogDebug(@"Publisher started streaming");
-             [self.rightView setView:aPublisher.view];
+             [self.rightView setOpentokVideoView:aPublisher.view];
              
              // If we're in fullscreen mode set the publisher video
              if (inFullscreen) {
@@ -509,6 +509,7 @@ UIViewController *fullscreenController;
          [[PTVideoPhone sharedPhone] setPublisherDidStopStreamingBlock:^(OTPublisher *aPublisher) {
              [self setCurrentUserPhoto];
          }];
+         [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:nil];
          [[PTVideoPhone sharedPhone] connectToSession:openTokSession
                                             withToken:openTokToken
                                               success:^(OTPublisher* publisher)
