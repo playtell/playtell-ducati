@@ -986,6 +986,7 @@ BOOL postcardsShown;
     } else {
         // Cancel showing the playdate
         [self deactivatePlaymateView];
+        [self endRinging];
     }
 }
 
