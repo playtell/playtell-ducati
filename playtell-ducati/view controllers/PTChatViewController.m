@@ -276,7 +276,7 @@ UIViewController *fullscreenController;
         
         // Dismiss the fullscreen view
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionCurlDown | UIViewAnimationOptionCurveEaseOut];
+        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionCurveEaseInOut];
     }];
 }
 
@@ -292,7 +292,7 @@ UIViewController *fullscreenController;
     
     // Show the fullscreen view
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:fullscreenController withOptions:UIViewAnimationOptionTransitionCurlUp | UIViewAnimationOptionCurveEaseIn];
+    [appDelegate.transitionController transitionToViewController:fullscreenController withOptions:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionCurveEaseInOut];
     
     // Save the original bounds so we can put them back when fullscreen ends
     UIView *subscriberVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
