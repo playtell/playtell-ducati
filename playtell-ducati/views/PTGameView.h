@@ -20,6 +20,7 @@
     CALayer *cover;
     CALayer *imageLayer;
     CAShapeLayer *shadowRadial;
+    CAShapeLayer *shadowHighlight;
     
     BOOL inFocus;
     

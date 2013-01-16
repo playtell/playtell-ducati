@@ -78,6 +78,19 @@
     shadowRadial.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0.0f, shadowRadial.frame.size.height - 10, shadowRadial.frame.size.width, 50.0f)].CGPath;
     [cover insertSublayer:shadowRadial atIndex:0];
     
+    // Highlight shadow
+    shadowHighlight = [CAShapeLayer layer];
+    shadowHighlight.frame = cover.bounds;
+    shadowHighlight.masksToBounds = NO;
+    shadowHighlight.shadowColor = [UIColor whiteColor].CGColor;
+    shadowHighlight.shadowOffset = CGSizeMake(0.0f, -20.0f);
+    shadowHighlight.shadowOpacity = 1.0f;
+    shadowHighlight.shadowRadius = 10.0f;
+    shadowHighlight.shouldRasterize = YES;
+    shadowHighlight.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(cover.bounds.origin.x - 20, cover.bounds.origin.y, cover.bounds.size.width + 40, cover.bounds.size.height)].CGPath;
+    shadowHighlight.opacity = 0.0f;
+    [cover insertSublayer:shadowHighlight above:shadowRadial];
+    
     // Add sublayers
     [rootLayer addSublayer:cover];
 
@@ -92,9 +105,6 @@
     coverRotation = CATransform3DTranslate(coverRotation, -200.0f, 0.0f, -500.0f);
     coverRotation = CATransform3DRotate(coverRotation, degreesToRadians(0.0f), 0.0f, 1.0f, 0.0f);
     cover.transform = coverRotation;
-    
-    // Set opacity
-    cover.opacity = 0.6f;
 }
 
 - (void)setFocusLevel:(CGFloat)level {
@@ -106,10 +116,11 @@
     
     // Calculate needed values
     CGFloat z = -300.0f - (200.0f * (1.0f - level));
-    CGFloat opacity = 0.6f + (0.4f * level);
+    //CGFloat opacity = 0.6f + (0.4f * level);
     
     // Whole book
-    cover.opacity = opacity;
+    //cover.opacity = opacity;
+    shadowHighlight.opacity = level;
     
     // Cover
     CATransform3D coverRotation = CATransform3DIdentity;
