@@ -2033,7 +2033,7 @@ NSTimer *postcardTimer;
     [UIView animateWithDuration:0.5f
                      animations:^{
                          for (PTGameView *gameView in gameList) {
-                             gameView.alpha = 0.6f;
+                             gameView.alpha = 1.0f;
                          }
                      }];
 }

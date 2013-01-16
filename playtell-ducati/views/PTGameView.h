@@ -18,6 +18,8 @@
     NSMutableDictionary *layerActions;
     CALayer *rootLayer;
     CALayer *cover;
+    CALayer *imageLayer;
+    CAShapeLayer *shadowRadial;
     
     BOOL inFocus;
     

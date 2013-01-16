@@ -53,11 +53,30 @@
     cover.anchorPoint = CGPointMake(0, 0.5);
     cover.frame = CGRectMake(pagelet.width, 97.0f, pagelet.width, pagelet.height);
     cover.zPosition = -700;
-    cover.contents = (id)gameLogo.CGImage;
     
     [cover setMasksToBounds:NO];
     [cover setShouldRasterize:YES];
     [cover setActions:layerActions];
+    
+    // Image
+    imageLayer = [CALayer layer];
+    imageLayer.frame = cover.bounds;
+    imageLayer.contents = (id)gameLogo.CGImage;
+    imageLayer.masksToBounds = NO;
+    imageLayer.shouldRasterize = YES;
+    [cover addSublayer:imageLayer];
+    
+    // Radial shadow
+    shadowRadial = [CAShapeLayer layer];
+    shadowRadial.frame = cover.bounds;
+    shadowRadial.masksToBounds = NO;
+    shadowRadial.shadowColor = [UIColor blackColor].CGColor;
+    shadowRadial.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    shadowRadial.shadowOpacity = 0.5f;
+    shadowRadial.shadowRadius = 6.0f;
+    shadowRadial.shouldRasterize = YES;
+    shadowRadial.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0.0f, shadowRadial.frame.size.height - 10, shadowRadial.frame.size.width, 50.0f)].CGPath;
+    [cover insertSublayer:shadowRadial atIndex:0];
     
     // Add sublayers
     [rootLayer addSublayer:cover];
