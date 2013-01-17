@@ -166,6 +166,7 @@
 		1AE7D39E16767F8100180803 /* download-app@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D39C16767F8100180803 /* download-app@2x.png */; };
 		1AE7D3A21676820400180803 /* solo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A01676820400180803 /* solo-icon.png */; };
 		1AE7D3A31676820400180803 /* solo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A11676820400180803 /* solo-icon@2x.png */; };
+		1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF34D2816A8A94D002134A4 /* PTActivityListRequest.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1274,6 +1275,8 @@
 		1AE7D39C16767F8100180803 /* download-app@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download-app@2x.png"; path = "Inviter V2/download-app@2x.png"; sourceTree = "<group>"; };
 		1AE7D3A01676820400180803 /* solo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "solo-icon.png"; path = "Inviter V2/solo-icon.png"; sourceTree = "<group>"; };
 		1AE7D3A11676820400180803 /* solo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "solo-icon@2x.png"; path = "Inviter V2/solo-icon@2x.png"; sourceTree = "<group>"; };
+		1AF34D2716A8A94D002134A4 /* PTActivityListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTActivityListRequest.h; sourceTree = "<group>"; };
+		1AF34D2816A8A94D002134A4 /* PTActivityListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTActivityListRequest.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -3472,6 +3475,8 @@
 				1ABD6EF5163A912C0027609C /* PTPlaydatePhotoCreateRequest.m */,
 				2311E0B2157EA1250084859B /* PTBooksListRequest.h */,
 				2311E0B3157EA1250084859B /* PTBooksListRequest.m */,
+				1AF34D2716A8A94D002134A4 /* PTActivityListRequest.h */,
+				1AF34D2816A8A94D002134A4 /* PTActivityListRequest.m */,
 				F4A94EAB1623C0A9000D428F /* PTGetSampleOpenTokToken.h */,
 				F4A94EAC1623C0A9000D428F /* PTGetSampleOpenTokToken.m */,
 				2311E0B6157F8E480084859B /* PTPageTurnRequest.h */,
@@ -6293,6 +6298,7 @@
 				2340F38C16514974007C22EB /* PTMathPairingCardView.m in Sources */,
 				238F5F461677F2BC00272A56 /* PTVersionCheckRequest.m in Sources */,
 				1AD166CA1694FB05002CD175 /* PTFullscreenChatView.m in Sources */,
+				1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
