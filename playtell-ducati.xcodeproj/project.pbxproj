@@ -167,6 +167,8 @@
 		1AE7D3A21676820400180803 /* solo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A01676820400180803 /* solo-icon.png */; };
 		1AE7D3A31676820400180803 /* solo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A11676820400180803 /* solo-icon@2x.png */; };
 		1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF34D2816A8A94D002134A4 /* PTActivityListRequest.m */; };
+		1AF34D2E16A9D014002134A4 /* PTActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF34D2D16A9D014002134A4 /* PTActivity.m */; };
+		1AF34D3116A9D24B002134A4 /* PTBook.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF34D3016A9D24B002134A4 /* PTBook.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1277,6 +1279,10 @@
 		1AE7D3A11676820400180803 /* solo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "solo-icon@2x.png"; path = "Inviter V2/solo-icon@2x.png"; sourceTree = "<group>"; };
 		1AF34D2716A8A94D002134A4 /* PTActivityListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTActivityListRequest.h; sourceTree = "<group>"; };
 		1AF34D2816A8A94D002134A4 /* PTActivityListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTActivityListRequest.m; sourceTree = "<group>"; };
+		1AF34D2C16A9D014002134A4 /* PTActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTActivity.h; sourceTree = "<group>"; };
+		1AF34D2D16A9D014002134A4 /* PTActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTActivity.m; sourceTree = "<group>"; };
+		1AF34D2F16A9D24B002134A4 /* PTBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTBook.h; sourceTree = "<group>"; };
+		1AF34D3016A9D24B002134A4 /* PTBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTBook.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2844,6 +2850,17 @@
 				1A70D2ED166D19B700F66595 /* postcards-tip@2x.png */,
 			);
 			path = "Postcard View";
+			sourceTree = "<group>";
+		};
+		1AF34D2B16A9CFE7002134A4 /* activities */ = {
+			isa = PBXGroup;
+			children = (
+				1AF34D2C16A9D014002134A4 /* PTActivity.h */,
+				1AF34D2D16A9D014002134A4 /* PTActivity.m */,
+				1AF34D2F16A9D24B002134A4 /* PTBook.h */,
+				1AF34D3016A9D24B002134A4 /* PTBook.m */,
+			);
+			name = activities;
 			sourceTree = "<group>";
 		};
 		230AA55F15C85F1B004EAD7D /* contacts */ = {
@@ -5150,6 +5167,7 @@
 		F4A9D8E6157921630015D977 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				1AF34D2B16A9CFE7002134A4 /* activities */,
 				8A62E3A115E7EA330077CBB6 /* games */,
 				F4A94E8E1623BE7E000D428F /* PTSoloUser.h */,
 				F4A94E8F1623BE7F000D428F /* PTSoloUser.m */,
@@ -6299,6 +6317,8 @@
 				238F5F461677F2BC00272A56 /* PTVersionCheckRequest.m in Sources */,
 				1AD166CA1694FB05002CD175 /* PTFullscreenChatView.m in Sources */,
 				1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */,
+				1AF34D2E16A9D014002134A4 /* PTActivity.m in Sources */,
+				1AF34D3116A9D24B002134A4 /* PTBook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
