@@ -17,8 +17,12 @@ typedef enum {
 @interface PTActivity : NSObject
 
 @property (nonatomic, strong) NSNumber *activityId;
+@property (nonatomic, strong) NSString *activityName;
 @property (nonatomic) ActivityType type;
+@property (nonatomic, strong) NSNumber *bookId;
+@property (nonatomic, strong) NSNumber *gameId;
 
+- (id)initWithDictionary:(NSDictionary *)activity;
 - (NSString *)loggingString;
 
 @end

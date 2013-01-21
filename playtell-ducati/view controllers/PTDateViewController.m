@@ -44,7 +44,7 @@
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaydateJoinedRequest.h"
 #import "PTPlaydateFingerTapRequest.h"
-#import "PTBooksListRequest.h"
+#import "PTActivityListRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
@@ -341,10 +341,19 @@ NSTimer *postcardTimer;
 }
 
 - (void)loadBooksFromAPIWithWritePath:(NSString *)path {
-    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
-    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
-                               onSuccess:^(NSDictionary *result)
+    PTActivityListRequest* activityRequest = [[PTActivityListRequest alloc] init];
+    [activityRequest activityListWithAuthToken:[[PTUser currentUser] authToken]
+                                     onSuccess:^(NSDictionary *result)
     {
+        // Activity list
+        activities = [[NSMutableArray alloc] init];
+        NSArray *allActivities = [result valueForKey:@"activities"];
+        for (NSDictionary *a in allActivities) {
+            PTActivity *activity = [[PTActivity alloc] initWithDictionary:a];
+            [activities addObject:activity];
+        }
+        
+        // Books
         NSDictionary *allBooks = [result valueForKey:@"books"];  //TODOGIANCARLO valueforkey@"games"
         if (boolListLoadedFromPlist == NO) {
             // Parse all books into format we need
@@ -453,7 +462,9 @@ NSTimer *postcardTimer;
 //                [writeData writeToFile:path atomically:YES];
 //            }
         }
-    } onFailure:nil];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        LogError(@"Failed to load activities with error: %d %@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode]);
+    }];
 }
 
 - (void)loadBookViewsFromDictionary {
