@@ -22,7 +22,7 @@ NSDictionary *original;
     self = [super init];
     if (self) {
         self.type = ActivityBook;
-        self.bookId = -1;
+        self.bookId = [NSNumber numberWithInt:-1];
     }
     return self;
 }
@@ -34,10 +34,10 @@ NSDictionary *original;
         
         // Assign the id which could be different depending on where it's read from
         if ([[book allKeys] containsObject:@"id"]) {
-            bookId = [[book objectForKey:@"id"] intValue];
+            bookId = [NSNumber numberWithInt:[[book objectForKey:@"id"] intValue]];
         }
         if ([[book allKeys] containsObject:@"book_id"]) {
-            bookId = [[book objectForKey:@"book_id"] intValue];
+            bookId = [NSNumber numberWithInt:[[book objectForKey:@"book_id"] intValue]];
         }
         // Assign the cover
         NSDictionary *coverDict = [book objectForKey:@"cover"];
@@ -89,7 +89,7 @@ NSDictionary *original;
         }
         pagesString = [pagesString stringByAppendingString:[pages objectAtIndex:i]];
     }
-    return [NSString stringWithFormat:@"PTBook data values: bookId => %d, currentPage => %d, totalPages => %d, cover => %@, pages => { %@ } with superclass %@", bookId, currentPage, totalPages, cover, pagesString, [super loggingString]];
+    return [NSString stringWithFormat:@"PTBook data values: bookId => %d, currentPage => %d, totalPages => %d, cover => %@, pages => { %@ } with superclass %@", [bookId intValue], currentPage, totalPages, cover, pagesString, [super loggingString]];
 }
 
 @end

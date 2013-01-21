@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import "PTBook.h"
 #import "PTPagesScrollViewDelegate.h"
 
 @interface PTPageView : UIView <UIGestureRecognizerDelegate> {
-    NSMutableDictionary *book;
+    PTBook *book;
     NSInteger pageNumber;
     NSMutableDictionary *layerActions;
     CALayer *rootLayer;
@@ -32,7 +33,7 @@
 @property (nonatomic, retain) id<PTPagesScrollViewDelegate> delegate;
 @property (nonatomic) BOOL hasContent;
 
-- (id)initWithFrame:(CGRect)frame book:(NSMutableDictionary *)bookData pageNumber:(NSInteger)number;
+- (id)initWithFrame:(CGRect)frame book:(PTBook *)bookData pageNumber:(NSInteger)number;
 - (void)setCurrentPage:(CGFloat)page andForceOpen:(BOOL)forceOpen;
 - (void)open;
 - (void)setPageContentsWithImage:(UIImage *)image;

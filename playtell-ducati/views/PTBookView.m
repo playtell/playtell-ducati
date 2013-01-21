@@ -30,8 +30,8 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame andBook:(NSMutableDictionary *)bookDict {
-    book = bookDict;
+- (id)initWithFrame:(CGRect)frame andBook:(PTBook *)b {
+    book = b;
     return [self initWithFrame:frame];
 }
 
@@ -373,7 +373,7 @@
 }
 
 - (NSNumber *)getId {
-    return [book objectForKey:@"id"];
+    return book.bookId;
 }
 
 - (void)setBookPosition:(NSInteger)position {

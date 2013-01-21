@@ -10,8 +10,8 @@
 
 @interface PTBook : PTActivity
 
-@property (nonatomic) int bookId;
-@property (nonatomic, readonly) int currentPage;
+@property (nonatomic, strong) NSNumber *bookId;
+@property (nonatomic) int currentPage;
 @property (nonatomic, readonly) int totalPages;
 @property (nonatomic, strong, readonly) NSString *cover;
 @property (nonatomic, readonly) NSURL *coverUrl;

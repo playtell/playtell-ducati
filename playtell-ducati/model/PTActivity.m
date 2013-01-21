@@ -16,7 +16,7 @@
 - (id)init {
     self = [super init];
     if (self) {
-        self.activityId = -1;
+        self.activityId = [NSNumber numberWithInt:-1];
         self.type = ActivityUnknown;
     }
     return self;
@@ -35,7 +35,7 @@
             activityType = @"ActivityUnknown";
             break;
     }
-    return [NSString stringWithFormat:@"PTActivity data values: type => %@, activityId => %d", activityType, activityId];
+    return [NSString stringWithFormat:@"PTActivity data values: type => %@, activityId => %d", activityType, [activityId intValue]];
 }
 
 @end

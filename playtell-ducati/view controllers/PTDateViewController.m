@@ -25,6 +25,7 @@
 #import "PTGameView.h"
 
 //MODELS
+#import "PTBook.h"
 #import "PTUser.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
@@ -328,8 +329,8 @@ NSTimer *postcardTimer;
     books = [[NSMutableDictionary alloc] init];
     NSArray *fileData = [[NSArray alloc] initWithContentsOfFile:path];
     for (NSDictionary *book in fileData) {
-        NSNumber *bookId = [book objectForKey:@"id"];
-        [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+        PTBook *b = [[PTBook alloc] initWithDictionary:book];
+        [books setObject:b forKey:b.bookId];
     }
     
     // Load the actual views
@@ -349,14 +350,15 @@ NSTimer *postcardTimer;
             // Parse all books into format we need
             books = [[NSMutableDictionary alloc] init];
             for (NSDictionary *book in allBooks) {
-                NSNumber *bookId = [book objectForKey:@"id"];
-                [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+                PTBook *b = [[PTBook alloc] initWithDictionary:book];
+                [books setObject:b forKey:b.bookId];
             }
             
             // Write book list to plist file
             NSMutableArray *writeData = [[NSMutableArray alloc] init];
             for (NSNumber *bookId in books) {
-                [writeData addObject:[books objectForKey:bookId]];
+                PTBook *b = (PTBook *)[books objectForKey:bookId];
+                [writeData addObject:b.originalDictionary];
             }
             [writeData writeToFile:path atomically:YES];
             
@@ -373,11 +375,12 @@ NSTimer *postcardTimer;
             NSMutableArray *newBooks = [[NSMutableArray alloc] init];
             NSInteger oldTotalForBooks = [[books allKeys] count];
             for (NSDictionary *book in allBooks) {
-                NSNumber *bookId = [book objectForKey:@"id"];
+                PTBook *b = [[PTBook alloc] initWithDictionary:book];
+                NSNumber *bookId = b.bookId;
                 [apiBooks addObject:bookId];
                 if ([books objectForKey:bookId] == nil) {
                     [newBooks addObject:bookId];
-                    [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+                    [books setObject:b forKey:bookId];
                 }
             }
             
@@ -393,12 +396,13 @@ NSTimer *postcardTimer;
             }
             oldTotalForBooks = oldTotalForBooks - [oldBooks count];
             
-            // If there are books to add to remove, re-draw the books views
+            // If there are books to add or remove, re-draw the books views
             if ([newBooks count] > 0 || [oldBooks count] > 0) {
                 // Write book list to plist file
                 NSMutableArray *writeData = [[NSMutableArray alloc] init];
                 for (NSNumber *bookId in books) {
-                    [writeData addObject:[books objectForKey:bookId]];
+                    PTBook *b = [books objectForKey:bookId];
+                    [writeData addObject:b.originalDictionary];
                 }
                 [writeData writeToFile:path atomically:YES];
                 
@@ -467,7 +471,7 @@ NSTimer *postcardTimer;
             // Set current book id
             currentBookId = [bookId copy];
         }
-        NSMutableDictionary *book = [books objectForKey:bookId];
+        PTBook *book = [books objectForKey:bookId];
         bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
         [bookView setBookPosition:i];
         [bookView setDelegate:self];
@@ -1143,8 +1147,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:pageNum];
     
     // Save current page in book config
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:pageNum] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = pageNum;
     
     // Start loading pages
     [self beginBookPageLoading];
@@ -1484,13 +1488,11 @@ NSTimer *postcardTimer;
         // Before loading next cover, load first page of this book
         [self loadFirstPageFromFileOrURL];
     } else {
-        NSDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-        NSDictionary *cover = [book objectForKey:@"cover"];
-        NSString *cover_bitmap_url = [[cover objectForKey:@"front"] objectForKey:@"bitmap"];
+        PTBook *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
         
         // Load from URL (using the background thread)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-            NSURL *url = [NSURL URLWithString:cover_bitmap_url];
+            NSURL *url = book.coverUrl;
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Cover not loaded properly
@@ -1534,14 +1536,11 @@ NSTimer *postcardTimer;
             [self loadBookCoverFromFileOrURL];
         }
     } else {
-        NSMutableDictionary *book = [books objectForKey:bookId];
-        NSMutableArray *pages = [book objectForKey:@"pages"];
-        NSDictionary *page = [pages objectAtIndex:0];
-        NSString *page_bitmap_url = [page objectForKey:@"bitmap"];
+        PTBook *book = [books objectForKey:bookId];
         
         // Load from URL (using the background thread)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-            NSURL *url = [NSURL URLWithString:page_bitmap_url];
+            NSURL *url = [book.pageUrls objectAtIndex:0];
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Page not loaded properly
@@ -1722,9 +1721,9 @@ NSTimer *postcardTimer;
 
 - (void)beginBookPageLoading {
     // Setup loading of pages for book
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    currentPage = [[book objectForKey:@"current_page"] intValue];
-    NSInteger totalPages = [[book objectForKey:@"total_pages"] intValue];
+    PTBook *book = [books objectForKey:currentBookId];
+    currentPage = book.currentPage;
+    NSInteger totalPages = book.totalPages;
     
     // Build array of pages to load
     pagesToLoad = nil;
@@ -1771,8 +1770,8 @@ NSTimer *postcardTimer;
     
     // Notify server of new page turn
     if (self.playdate) {
-        NSMutableDictionary *book = [books objectForKey:currentBookId];
-        NSNumber *pageNum = [book objectForKey:@"current_page"];
+        PTBook *book = [books objectForKey:currentBookId];
+        NSNumber *pageNum = [NSNumber numberWithInt:book.currentPage];
         PTPageTurnRequest *pageTurnRequest = [[PTPageTurnRequest alloc] init];
         [pageTurnRequest pageTurnWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                      pageNumber:pageNum
@@ -1875,8 +1874,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:newPageNumber];
     
     // Update current page in the book obj
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = newPageNumber;
     
     // Notify delegate to start loading new page content
     [self pageTurnedTo:newPageNumber];
@@ -1893,8 +1892,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:newPageNumber];
     
     // Update current page in the book obj
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = newPageNumber;
     
     // Notify delegate to start loading new page content
     [self pageTurnedTo:newPageNumber];

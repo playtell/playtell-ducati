@@ -12,7 +12,7 @@
 
 @synthesize delegate, hasContent;
 
-- (id)initWithFrame:(CGRect)frame book:(NSMutableDictionary *)bookData pageNumber:(NSInteger)number {
+- (id)initWithFrame:(CGRect)frame book:(PTBook *)bookData pageNumber:(NSInteger)number {
     self = [super initWithFrame:frame];
     if (self) {
         [self initLayers];
@@ -494,13 +494,10 @@
         // Notify delegate of page load
         [delegate pageLoaded:pageNumber];
     } else {
-        NSMutableArray *pages = [book objectForKey:@"pages"];
-        NSDictionary *page = [pages objectAtIndex:(pageNumber - 1)];
-        NSString *page_bitmap_url = [page objectForKey:@"bitmap"];
+        NSURL *url = [book.pageUrls objectAtIndex:(pageNumber - 1)];
         
         // Load from URL (using the background thread)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-            NSURL *url = [NSURL URLWithString:page_bitmap_url];
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Page not loaded right
@@ -526,7 +523,7 @@
 }
 
 - (NSString *)imagePathForBook {
-    NSNumber *bookId = [book objectForKey:@"id"];
+    NSNumber *bookId = book.bookId;
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [documentDirectories objectAtIndex:0];
     return [[[documentDirectory stringByAppendingPathComponent:@"Books"] stringByAppendingPathComponent:[bookId stringValue]] stringByAppendingPathComponent:[NSString stringWithFormat:@"page%i.jpg", pageNumber]];
