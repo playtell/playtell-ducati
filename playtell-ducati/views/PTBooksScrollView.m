@@ -8,6 +8,7 @@
 
 #import "PTBooksScrollView.h"
 #import "PTBookView.h"
+#import "PTGameView.h"
 
 @implementation PTBooksScrollView
 
@@ -59,7 +60,7 @@
 //        if (![bookView isKindOfClass:[PTBookView class]]) {
 //            continue;
 //        }
-        if ([[bookView getId] isEqualToNumber:bookId]) {
+        if (![bookView isKindOfClass:[PTGameView class]] && [[bookView getId] isEqualToNumber:bookId]) {
             break;
         }
         index++;
