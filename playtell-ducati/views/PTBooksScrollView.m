@@ -56,9 +56,9 @@
     // Go through all the books and find the one we need
     int index = 0;
     for (PTBookView *bookView in self.subviews) {
-        if (![bookView isKindOfClass:[PTBookView class]]) {
-            continue;
-        }
+//        if (![bookView isKindOfClass:[PTBookView class]]) {
+//            continue;
+//        }
         if ([[bookView getId] isEqualToNumber:bookId]) {
             break;
         }

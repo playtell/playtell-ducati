@@ -1676,26 +1676,51 @@ NSTimer *postcardTimer;
 #pragma mark - Books scroll delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    // Adjust size/opacity of each book as they scroll
     CGFloat x = scrollView.contentOffset.x;
     CGFloat width = booksScrollView.frame.size.width;
-    for (int i=0, l=[books count]; i<l; i++) {
+    
+    // Adjust size/opacity of each activity as they scroll
+    for (int i = 0; i < [activities count]; i++) {
         CGFloat pos = ABS(i * width - x);
         if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
             CGFloat level = 1.0f - pos / width;
-            [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
+            PTActivity *act = [activities objectAtIndex:i];
+            if (act.type == ActivityBook) {
+                for (PTBookView *bookView in bookList) {
+                    if ([[bookView getId] intValue] == [act.bookId intValue]) {
+                        [bookView setFocusLevel:level];
+                        break;
+                    }
+                }
+            } else if (act.type == ActivityGame) {
+                for (PTGameView *gameView in gameList) {
+                    if ([[gameView getId] intValue] == [act.gameId intValue]) {
+                        [gameView setFocusLevel:level];
+                        break;
+                    }
+                }
+            }
         }
     }
     
-    // Same for each game
-    for (int i=0, l=[gameList count]; i<l; i++) {
-        int actual_i = i + [books count];
-        CGFloat pos = ABS(actual_i * width - x);
-        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
-            CGFloat level = 1.0f - pos / width;
-            [(PTGameView *)[gameList objectAtIndex:i] setFocusLevel:level];
-        }
-    }
+//    // Adjust size/opacity of each book as they scroll
+//    for (int i=0, l=[books count]; i<l; i++) {
+//        CGFloat pos = ABS(i * width - x);
+//        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
+//            CGFloat level = 1.0f - pos / width;
+//            [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
+//        }
+//    }
+//    
+//    // Same for each game
+//    for (int i=0, l=[gameList count]; i<l; i++) {
+//        int actual_i = i + [books count];
+//        CGFloat pos = ABS(actual_i * width - x);
+//        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
+//            CGFloat level = 1.0f - pos / width;
+//            [(PTGameView *)[gameList objectAtIndex:i] setFocusLevel:level];
+//        }
+//    }
 }
 
 #pragma mark - Book delegates
