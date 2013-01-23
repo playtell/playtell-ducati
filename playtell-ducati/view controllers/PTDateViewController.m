@@ -475,72 +475,129 @@ NSTimer *postcardTimer;
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
     PTBookView *bookView;
     int i = 0;
+    BOOL currentBookSet = NO;
     bookList = [[NSMutableArray alloc] initWithCapacity:[books count]];
+    gameList = [[NSMutableArray alloc] init];
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
-    for (NSNumber *bookId in books) {
-        if (i == 0) {
-            // Set current book id
-            currentBookId = [bookId copy];
+    
+    for (PTActivity *activity in activities) {
+        NSLog(@"Activity %d: %@", i + 1, activity.activityName);
+        if (activity.type == ActivityBook) {
+            PTBook *book = [books objectForKey:activity.bookId];
+            if (!currentBookSet) {
+                // Set current book id
+                currentBookId = book.bookId;
+                currentBookSet = YES;
+            }
+            bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+            [bookView setBookPosition:i];
+            [bookView setDelegate:self];
+            [booksScrollView addSubview:bookView];
+            xPos += booksScrollView.frame.size.width;
+            i++;
+            [bookList addObject:bookView];
+            
+            // Book cover pages load
+            [coversToLoad addObject:book.bookId];
+        } else if (activity.type == ActivityGame) {
+            UIImage *coverImage;
+            switch ([activity.gameId intValue]) {
+                case 1:
+                    // Memory
+                    coverImage = [UIImage imageNamed:@"Memory-logo"];
+                    break;
+                case 2:
+                    // Tic tac toe
+                    coverImage = [UIImage imageNamed:@"TTT-logo"];
+                    break;
+                case 3:
+                    // Matching
+                    coverImage = [UIImage imageNamed:@"matching-logo"];
+                    break;
+                case 4:
+                    // Math
+                    coverImage = [UIImage imageNamed:@"math-logo"];
+                    break;
+                default:
+                    break;
+            }
+            
+            PTGameView *gameView = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                               gameId:[activity.gameId intValue]
+                                                             gameLogo:coverImage];
+            [gameView setPosition:i];
+            [gameView setDelegate:self];
+            [booksScrollView addSubview:gameView];
+            [gameList addObject:gameView];
+            
+            xPos += booksScrollView.frame.size.width;
+            i++;
         }
-        PTBook *book = [books objectForKey:bookId];
-        bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
-        [bookView setBookPosition:i];
-        [bookView setDelegate:self];
-        [booksScrollView addSubview:bookView];
-        xPos += booksScrollView.frame.size.width;
-        i++;
-        [bookList addObject:bookView];
-        
-        // Book cover pages load
-        [coversToLoad addObject:bookId];
     }
-    
-    // Load the game views (hardcoded for now)
-    gameList = [[NSMutableArray alloc] initWithCapacity:2];
-
-    PTGameView *gameView1 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:1
-                                                     gameLogo:[UIImage imageNamed:@"Memory-logo"]];
-    [gameView1 setPosition:i];
-    [gameView1 setDelegate:self];
-    [booksScrollView addSubview:gameView1];
-    [gameList addObject:gameView1];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView2 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:2
-                                                     gameLogo:[UIImage imageNamed:@"TTT-logo"]];
-    [gameView2 setPosition:i];
-    [gameView2 setDelegate:self];
-    [booksScrollView addSubview:gameView2];
-    [gameList addObject:gameView2];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:3
-                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
-    [gameView3 setPosition:i];
-    [gameView3 setDelegate:self];
-    [booksScrollView addSubview:gameView3];
-    [gameList addObject:gameView3];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView4 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:4
-                                                     gameLogo:[UIImage imageNamed:@"math-logo"]];
-    [gameView4 setPosition:i];
-    [gameView4 setDelegate:self];
-    [booksScrollView addSubview:gameView4];
-    [gameList addObject:gameView4];
+//    for (NSNumber *bookId in books) {
+//        if (i == 0) {
+//            // Set current book id
+//            currentBookId = [bookId copy];
+//        }
+//        PTBook *book = [books objectForKey:bookId];
+//        bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+//        [bookView setBookPosition:i];
+//        [bookView setDelegate:self];
+//        [booksScrollView addSubview:bookView];
+//        xPos += booksScrollView.frame.size.width;
+//        i++;
+//        [bookList addObject:bookView];
+//        
+//        // Book cover pages load
+//        [coversToLoad addObject:bookId];
+//    }
+//    
+//    // Load the game views (hardcoded for now)
+//    gameList = [[NSMutableArray alloc] initWithCapacity:2];
+//
+//    PTGameView *gameView1 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:1
+//                                                     gameLogo:[UIImage imageNamed:@"Memory-logo"]];
+//    [gameView1 setPosition:i];
+//    [gameView1 setDelegate:self];
+//    [booksScrollView addSubview:gameView1];
+//    [gameList addObject:gameView1];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView2 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:2
+//                                                     gameLogo:[UIImage imageNamed:@"TTT-logo"]];
+//    [gameView2 setPosition:i];
+//    [gameView2 setDelegate:self];
+//    [booksScrollView addSubview:gameView2];
+//    [gameList addObject:gameView2];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:3
+//                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
+//    [gameView3 setPosition:i];
+//    [gameView3 setDelegate:self];
+//    [booksScrollView addSubview:gameView3];
+//    [gameList addObject:gameView3];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView4 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:4
+//                                                     gameLogo:[UIImage imageNamed:@"math-logo"]];
+//    [gameView4 setPosition:i];
+//    [gameView4 setDelegate:self];
+//    [booksScrollView addSubview:gameView4];
+//    [gameList addObject:gameView4];
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 4); // 4 hardcoded games
+    CGFloat scroll_width = booksScrollView.frame.size.width * [activities count];
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
@@ -1489,6 +1546,9 @@ NSTimer *postcardTimer;
 }
 
 - (void)loadBookCoverFromFileOrURL {
+    if (coversToLoadIndex >= [coversToLoad count])
+        return;
+    
     NSString *imagePath = [self coverImagePathForBook:[coversToLoad objectAtIndex:coversToLoadIndex]];
     UIImage *coverImage = [UIImage imageWithContentsOfFile:imagePath];
     if (coverImage) {
