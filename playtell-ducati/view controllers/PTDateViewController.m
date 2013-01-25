@@ -417,12 +417,12 @@ NSTimer *postcardTimer;
                 
                 // Make sure this file isn't backed up by iCloud
                 [self addSkipBackupAttributeToItemAtURLstring:path];
-
-                // Load the actual views
-                dispatch_async(dispatch_get_main_queue(), ^() {
-                    [self loadBookViewsFromDictionary];
-                });
             }
+            
+            // Load the actual views
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                [self loadBookViewsFromDictionary];
+            });
             
 //            // If there are new books, create views for them and load their covers
 //            if ([newBooks count] > 0) {
