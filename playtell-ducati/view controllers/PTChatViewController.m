@@ -165,46 +165,84 @@ UIViewController *fullscreenController;
 - (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
     dispatch_async(dispatch_get_current_queue(), ^{
         // Get images from left and right chat HUDs
-        UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
-        UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
-        UIImage *leftVideo = [self.leftView.opentokView screenshotWithSave:NO];
-        UIImage *rightVideo = [self.rightView.opentokView screenshotWithSave:NO];
+        __block UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
+        __block UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
         
-        // Resize if chatview was expanded
-        if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
-            leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            leftVideo = [leftVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            rightVideo = [rightVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-        }
+        OTVideoView *subscriber = (OTVideoView *)[[PTVideoPhone sharedPhone] currentSubscriberView];
+        OTVideoView *publisher = (OTVideoView *)[[PTVideoPhone sharedPhone] currentPublisherView];
         
-        // Merge the two images
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
-        [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
-        [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
-        [leftVideo drawAtPoint:CGPointMake(0.0f, 0.0f)];
-        [rightVideo drawAtPoint:CGPointMake(200.0f, 0.0f)];
-        UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        // Save to photo roll?
-        if (saveToCameraRoll) {
-            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
-        }
-        
-        // Save to the server (only if logged in)
-        if ([PTUser currentUser].isLoggedIn == YES) {
-            PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-            [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-                                                   playdateId:self.playdate.playdateID
-                                                        photo:screenshot
-                                                      success:^(NSDictionary *result) {
-                                                          //NSLog(@"Playdate photo successfully uploaded.");
-                                                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                          NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-                                                      }];
+        if (subscriber && publisher) {
+            [subscriber getImageWithBlock:^(UIImage *blockLeftVideo) {
+                __block UIImage *leftVideo = [blockLeftVideo copy];
+                [publisher getImageWithBlock:^(UIImage *rightVideo) {
+                    [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, leftVideo, rightVideo, nil] shouldSave:saveToCameraRoll];
+                }];
+            }];
+        } else if (subscriber) {
+            [subscriber getImageWithBlock:^(UIImage *leftVideo) {
+                [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, leftVideo, [rightScreen copy], nil] shouldSave:saveToCameraRoll];
+            }];
+        } else if (publisher) {
+            [publisher getImageWithBlock:^(UIImage *rightVideo) {
+                [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, [leftScreen copy], rightVideo, nil] shouldSave:saveToCameraRoll];
+            }];
+        } else {
+            [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, nil] shouldSave:saveToCameraRoll];
         }
     });
+}
+
+// Should pass in an array with either 2 or 4 images:
+// 2 images: left static view, right static view
+// 4 images: left static view, right static view, left video view, right video view
+- (void)createSnapshotImage:(NSArray *)images shouldSave:(BOOL)saveToCameraRoll {
+    UIImage *leftScreen = [images objectAtIndex:0];
+    UIImage *rightScreen = [images objectAtIndex:1];
+    UIImage *leftVideo;
+    UIImage *rightVideo;
+    
+    if ([images count] == 4) {
+        leftVideo = [images objectAtIndex:2];
+        rightVideo = [images objectAtIndex:3];
+    } else {
+        leftVideo = [leftScreen copy];
+        rightVideo = [rightScreen copy];
+    }
+    
+    // Resize if chatview was expanded
+    if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
+        leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        leftVideo = [leftVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        rightVideo = [rightVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+    }
+    
+    // Merge the two images
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
+    [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
+    [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
+    [leftVideo drawAtPoint:CGPointMake(0.0f, 0.0f)];
+    [rightVideo drawAtPoint:CGPointMake(200.0f, 0.0f)];
+    UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // Save to photo roll?
+    if (saveToCameraRoll) {
+        UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+    }
+    
+    // Save to the server (only if logged in)
+    if ([PTUser currentUser].isLoggedIn == YES) {
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdate.playdateID
+                                                    photo:screenshot
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Playdate photo successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
+    }
 }
 
 - (void)takeAutomaticScreenshot {
