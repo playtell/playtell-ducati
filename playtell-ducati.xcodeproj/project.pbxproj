@@ -39,8 +39,6 @@
 		1A666953165193FE00792CDE /* bluebutton-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A66694F165193FE00792CDE /* bluebutton-press@2x.png */; };
 		1A666954165193FE00792CDE /* bluebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A666950165193FE00792CDE /* bluebutton.png */; };
 		1A666955165193FE00792CDE /* bluebutton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A666951165193FE00792CDE /* bluebutton@2x.png */; };
-		1A69020316768E2800E6703C /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A69020216768E2800E6703C /* Opentok.framework */; };
-		1A69020616768E3500E6703C /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A69020516768E3400E6703C /* opentok.bundle */; };
 		1A69020816768E9000E6703C /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A69020716768E9000E6703C /* libstdc++.dylib */; };
 		1A6E982F1626E16100E63F6C /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 1A6E97EC1626E16100E63F6C /* .gitignore */; };
 		1A6E984A1626E16100E63F6C /* MPCJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6E98201626E16100E63F6C /* MPCJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -103,6 +101,7 @@
 		1A83B4E616651F7800B37368 /* PTNumNewPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E516651F7800B37368 /* PTNumNewPostcardsRequest.m */; };
 		1A83B4E9166531C600B37368 /* PTAllPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */; };
 		1A83B4EC1665437800B37368 /* PTPostcard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4EB1665437800B37368 /* PTPostcard.m */; };
+		1A84124216B2EED6001A7F62 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1A84124116B2EED6001A7F62 /* opentok.bundle */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
 		1A9B784B167260B600F38174 /* addbuddies-tip.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B7837167260B600F38174 /* addbuddies-tip.png */; };
 		1A9B784C167260B600F38174 /* addbuddies-tip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B7838167260B600F38174 /* addbuddies-tip@2x.png */; };
@@ -140,6 +139,7 @@
 		1AE7D39E16767F8100180803 /* download-app@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D39C16767F8100180803 /* download-app@2x.png */; };
 		1AE7D3A21676820400180803 /* solo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A01676820400180803 /* solo-icon.png */; };
 		1AE7D3A31676820400180803 /* solo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AE7D3A11676820400180803 /* solo-icon@2x.png */; };
+		1AF34D9616B22BEF002134A4 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF34D9516B22BEF002134A4 /* Opentok.framework */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1103,8 +1103,6 @@
 		1A66694F165193FE00792CDE /* bluebutton-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluebutton-press@2x.png"; sourceTree = "<group>"; };
 		1A666950165193FE00792CDE /* bluebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bluebutton.png; sourceTree = "<group>"; };
 		1A666951165193FE00792CDE /* bluebutton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bluebutton@2x.png"; sourceTree = "<group>"; };
-		1A69020216768E2800E6703C /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/webrtc/Opentok.framework; sourceTree = "<group>"; };
-		1A69020516768E3400E6703C /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = submodules/webrtc/Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		1A69020716768E9000E6703C /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		1A6E97EC1626E16100E63F6C /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		1A6E981F1626E16100E63F6C /* MPCJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONDataSerializer.h; sourceTree = "<group>"; };
@@ -1180,6 +1178,7 @@
 		1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllPostcardsRequest.m; sourceTree = "<group>"; };
 		1A83B4EA1665437800B37368 /* PTPostcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPostcard.h; sourceTree = "<group>"; };
 		1A83B4EB1665437800B37368 /* PTPostcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcard.m; sourceTree = "<group>"; };
+		1A84124116B2EED6001A7F62 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = Opentok.framework/Versions/A/Resources/opentok.bundle; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
 		1A9B7837167260B600F38174 /* addbuddies-tip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "addbuddies-tip.png"; path = "Inviter V2/addbuddies-tip.png"; sourceTree = "<group>"; };
@@ -1219,6 +1218,7 @@
 		1AE7D39C16767F8100180803 /* download-app@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download-app@2x.png"; path = "Inviter V2/download-app@2x.png"; sourceTree = "<group>"; };
 		1AE7D3A01676820400180803 /* solo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "solo-icon.png"; path = "Inviter V2/solo-icon.png"; sourceTree = "<group>"; };
 		1AE7D3A11676820400180803 /* solo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "solo-icon@2x.png"; path = "Inviter V2/solo-icon@2x.png"; sourceTree = "<group>"; };
+		1AF34D9516B22BEF002134A4 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = submodules/webrtc/Opentok.framework; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2527,7 +2527,7 @@
 				F4A9D7CA15771CAE0015D977 /* libPusher-combined.a in Frameworks */,
 				F4A9D83A15771F3F0015D977 /* libCrittercism_v3_1_5.a in Frameworks */,
 				F4A9D5D91576B5950015D977 /* CoreGraphics.framework in Frameworks */,
-				1A69020316768E2800E6703C /* Opentok.framework in Frameworks */,
+				1AF34D9616B22BEF002134A4 /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4100,9 +4100,8 @@
 		F4A9D5D31576B5950015D977 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1A69020716768E9000E6703C /* libstdc++.dylib */,
-				1A69020516768E3400E6703C /* opentok.bundle */,
-				1A69020216768E2800E6703C /* Opentok.framework */,
+				1A84124116B2EED6001A7F62 /* opentok.bundle */,
+				1AF34D9516B22BEF002134A4 /* Opentok.framework */,
 				2371A5C915B59C64007CEFEE /* AddressBook.framework */,
 				F4A9D7A91576C3AD0015D977 /* AudioToolbox.framework */,
 				F468878115813A880086D351 /* AVFoundation.framework */,
@@ -4113,6 +4112,7 @@
 				F4A9D7A11576C3850015D977 /* CoreTelephony.framework */,
 				F468878515813AE20086D351 /* CoreVideo.framework */,
 				F4A9D5D61576B5950015D977 /* Foundation.framework */,
+				1A69020716768E9000E6703C /* libstdc++.dylib */,
 				F4A9D8F415798DBF0015D977 /* libicucore.dylib */,
 				F4A9D79F1576C37C0015D977 /* libsqlite3.dylib */,
 				F4A9D79D1576C3710015D977 /* libz.dylib */,
@@ -5927,7 +5927,6 @@
 				2340F43D1651CB0F007C22EB /* math-placeholder-outline@2x.png in Resources */,
 				23E40FAA1652AEE9001041CA /* matching-bg.png in Resources */,
 				23E40FAB1652AEE9001041CA /* matching-bg@2x.png in Resources */,
-                1A69020616768E3500E6703C /* opentok.bundle in Resources */,
 				1AE7D39D16767F8100180803 /* download-app.png in Resources */,
 				1AE7D39E16767F8100180803 /* download-app@2x.png in Resources */,
 				1AE7D3A21676820400180803 /* solo-icon.png in Resources */,
@@ -5947,6 +5946,7 @@
 				1A1773B016823B88009A8B2D /* postcard-button@2x.png in Resources */,
 				1AD166BA1683A881002CD175 /* page_loading.png in Resources */,
 				1AD166BB1683A881002CD175 /* page_loading@2x.png in Resources */,
+				1A84124216B2EED6001A7F62 /* opentok.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
