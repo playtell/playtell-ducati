@@ -1117,6 +1117,7 @@ NSTimer *postcardTimer;
     // Make sure the information is about this playdate
     if (joinedPlaydate.initiator.userID == [[PTUser currentUser] userID] && joinedPlaydate.playmate.userID == playmate.userID) {
         [postcardTimer invalidate];
+        [self.chatController setLoadingViewForPlaymate:playmate];
         
         // Send analytics event for joining a playdate
         [PTAnalytics sendEventNamed:EventPlaymateJoinedMyPlaydate withProperties:[NSDictionary dictionaryWithObjectsAndKeys:playmate.username, PropPlaymateId, nil]];
@@ -2032,7 +2033,7 @@ NSTimer *postcardTimer;
     [UIView animateWithDuration:0.5f
                      animations:^{
                          for (PTGameView *gameView in gameList) {
-                             gameView.alpha = 0.6f;
+                             gameView.alpha = 1.0f;
                          }
                      }];
 }

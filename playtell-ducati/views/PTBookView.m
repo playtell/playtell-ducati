@@ -93,6 +93,34 @@
     [right setMasksToBounds:NO];
     [right setActions:layerActions];
     [right setShouldRasterize:YES];
+    
+    // Radial shadow
+    shadowRadial = [CAShapeLayer layer];
+    shadowRadial.frame = cover.bounds;
+    shadowRadial.masksToBounds = NO;
+    shadowRadial.shadowColor = [UIColor blackColor].CGColor;
+    shadowRadial.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    shadowRadial.shadowOpacity = 0.6f;
+    shadowRadial.shadowRadius = 20.0f;
+    shadowRadial.shouldRasterize = YES;
+    float inset = 10.0f;
+    shadowRadial.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(inset, shadowRadial.frame.size.height - 20, shadowRadial.frame.size.width - (inset * 2), 60.0f)].CGPath;
+    [shadowRadial setActions:layerActions];
+    [cover insertSublayer:shadowRadial atIndex:0];
+    
+    // Highlight shadow
+    shadowHighlight = [CAShapeLayer layer];
+    shadowHighlight.frame = cover.bounds;
+    shadowHighlight.masksToBounds = NO;
+    shadowHighlight.shadowColor = [UIColor whiteColor].CGColor;
+    shadowHighlight.shadowOffset = CGSizeMake(0.0f, -20.0f);
+    shadowHighlight.shadowOpacity = 1.0f;
+    shadowHighlight.shadowRadius = 15.0f;
+    shadowHighlight.shouldRasterize = YES;
+    shadowHighlight.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(cover.bounds.origin.x - 20, cover.bounds.origin.y, cover.bounds.size.width + 40, cover.bounds.size.height)].CGPath;
+    shadowHighlight.opacity = 0.0f;
+    [shadowHighlight setActions:layerActions];
+    [cover insertSublayer:shadowHighlight above:shadowRadial];
 
     // Add sublayers
     [rootLayer addSublayer:cover];
@@ -120,9 +148,11 @@
     right.transform = rightRotation;
     
     // Set opacities
-    coverOut.opacity = 0.6f;
+    coverOut.opacity = 1.0f;
     coverIn.opacity = 0.0f;
     right.opacity = 0.0f;
+    shadowRadial.opacity = 1.0f;
+    shadowHighlight.opacity = 0.0f;
 }
 
 - (void)open {
@@ -143,6 +173,8 @@
     coverOut.opacity = 1.0f;
     coverIn.opacity = 1.0f;
     right.opacity = 1.0f;
+    shadowRadial.opacity = 0.0f;
+    shadowHighlight.opacity = 0.0f;
     
     // Cover
     CATransform3D coverRotation = CATransform3DIdentity;
@@ -182,6 +214,9 @@
     if (animating) {
         return;
     }
+    
+    shadowRadial.opacity = 1.0f;
+    shadowHighlight.opacity = 1.0f;
     
     animating = YES;
     isOpen = NO;
@@ -241,6 +276,8 @@
     
     coverIn.opacity = 0.0f;
     right.opacity = 0.0f;
+    shadowRadial.opacity = 1.0f;
+    shadowHighlight.opacity = 1.0f;
 }
 
 - (void)setFocusLevel:(CGFloat)level {
@@ -252,10 +289,12 @@
 
     // Calculate needed values
     CGFloat z = -300.0f - (200.0f * (1.0f - level));
-    CGFloat opacity = 0.6f + (0.4f * level);
+    //CGFloat opacity = 0.6f + (0.4f * level);
     
     // Whole book
-    coverOut.opacity = opacity;
+    //coverOut.opacity = opacity;
+    //shadowRadial.opacity = opacity;
+    shadowHighlight.opacity = level;
     
     // Cover
     CATransform3D coverRotation = CATransform3DIdentity;
@@ -298,6 +337,8 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (inFocus) {
         coverOut.opacity = 0.5f;
+        shadowRadial.opacity = 0.5f;
+        shadowHighlight.opacity = 0.5f;
     }
 }
 
@@ -318,6 +359,8 @@
 
 - (void)fullOpacity {
     coverOut.opacity = 1.0f;
+    shadowRadial.opacity = 1.0f;
+    shadowHighlight.opacity = 1.0f;
 }
 
 - (void)didEndTouch {
@@ -349,6 +392,8 @@
     coverAnim.duration = BOOK_HIDE_SHOW_ANIMATION_SPEED;
     coverAnim.removedOnCompletion = NO;
     coverOut.opacity = 0.0f;
+    shadowRadial.opacity = 0.0f;
+    shadowHighlight.opacity = 0.0f;
     [coverOut addAnimation:coverAnim forKey:nil];
 }
 
@@ -360,13 +405,15 @@
     coverAnim.repeatCount = 0;
     coverAnim.duration = BOOK_HIDE_SHOW_ANIMATION_SPEED;
     coverAnim.removedOnCompletion = NO;
-    coverOut.opacity = 0.6f;
+    coverOut.opacity = 1.0f;
+    shadowRadial.opacity = 1.0f;
     [coverOut addAnimation:coverAnim forKey:nil];
 }
 
 - (void)showImmediately {
     [coverOut removeAllAnimations];
-    coverOut.opacity = 0.6f;
+    coverOut.opacity = 1.0f;
+    shadowRadial.opacity = 1.0f;
 }
 
 - (NSInteger)getBookPosition {

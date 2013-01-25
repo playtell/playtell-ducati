@@ -48,7 +48,6 @@
 								<int key="NSvFlags">276</int>
 								<string key="NSFrameSize">{606, 594}</string>
 								<reference key="NSSuperview" ref="426480467"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="521974093"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="693996074">
@@ -75,8 +74,6 @@
 										<int key="NSvFlags">292</int>
 										<string key="NSFrame">{{221, 282}, {164, 28}}</string>
 										<reference key="NSSuperview" ref="521974093"/>
-										<reference key="NSWindow"/>
-										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -105,7 +102,6 @@
 								</array>
 								<string key="NSFrameSize">{606, 594}</string>
 								<reference key="NSSuperview" ref="426480467"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="774417523"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -113,7 +109,6 @@
 						</array>
 						<string key="NSFrame">{{209, 105}, {606, 594}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="940971936"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -134,7 +129,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{209, 18}, {606, 87}}</string>
 								<reference key="NSSuperview" ref="73020421"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="24302622"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -149,7 +143,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{292, 46}, {440, 31}}</string>
 								<reference key="NSSuperview" ref="73020421"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="349643340"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -187,7 +180,6 @@
 						</array>
 						<string key="NSFrameSize">{1024, 105}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="721609836"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -205,7 +197,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{294, 0}, {350, 50}}</string>
 								<reference key="NSSuperview" ref="349643340"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="6728470"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -231,9 +222,8 @@
 							<object class="IBUIButton" id="6728470">
 								<reference key="NSNextResponder" ref="349643340"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{660, 8}, {126, 33}}</string>
+								<string key="NSFrame">{{663, 6}, {147, 38}}</string>
 								<reference key="NSSuperview" ref="349643340"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="426480467"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -241,10 +231,10 @@
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUIContentEdgeInsets.top">0.0</double>
-								<double key="IBUIContentEdgeInsets.bottom">2</double>
-								<double key="IBUIContentEdgeInsets.left">0.0</double>
-								<double key="IBUIContentEdgeInsets.right">10</double>
-								<string key="IBUINormalTitle">Manual Invite</string>
+								<double key="IBUIContentEdgeInsets.bottom">0.0</double>
+								<double key="IBUIContentEdgeInsets.left">25</double>
+								<double key="IBUIContentEdgeInsets.right">0.0</double>
+								<string key="IBUINormalTitle">Invite Them</string>
 								<reference key="IBUIHighlightedTitleColor" ref="693996074"/>
 								<reference key="IBUINormalTitleColor" ref="693996074"/>
 								<object class="NSColor" key="IBUINormalTitleShadowColor">
@@ -253,11 +243,11 @@
 								</object>
 								<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">Manual-invite-press.png</string>
+									<string key="NSResourceName">invite-them-press.png</string>
 								</object>
 								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">Manual-invite.png</string>
+									<string key="NSResourceName">invite-them.png</string>
 								</object>
 								<reference key="IBUIFontDescription" ref="1067802394"/>
 								<reference key="IBUIFont" ref="579678737"/>
@@ -265,7 +255,6 @@
 						</array>
 						<string key="NSFrame">{{-10, 698}, {1044, 50}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="149835444"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -277,7 +266,6 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {1024, 748}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="73020421"/>
 				<reference key="IBUIBackgroundColor" ref="693996074"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -543,7 +531,7 @@
 				<string key="41.CustomClassName">UIControl</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="43.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="1" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="43.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -626,9 +614,9 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="Manual-invite-press.png">{125, 32}</string>
-			<string key="Manual-invite.png">{125, 32}</string>
-			<string key="search-area.png">{607, 87}</string>
+			<string key="invite-them-press.png">{147, 38}</string>
+			<string key="invite-them.png">{147, 38}</string>
+			<string key="search-area.png">{16, 16}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>

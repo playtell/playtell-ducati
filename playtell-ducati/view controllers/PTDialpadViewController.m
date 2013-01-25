@@ -986,6 +986,7 @@ BOOL postcardsShown;
     } else {
         // Cancel showing the playdate
         [self deactivatePlaymateView];
+        [self endRinging];
     }
 }
 
@@ -1365,6 +1366,18 @@ BOOL postcardsShown;
                         // Permission granted?
                         if (granted && !error) {
                             [self getContactsFromAddressBook:addressBook];
+                        } else {
+                            // Go to the inviter screen with no contacts
+                            PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
+                                                                                          initWithNibName:@"PTContactSelectViewController"
+                                                                                          bundle:nil
+                                                                                          withContacts:[NSArray array]];
+                            contactSelectViewController.sourceType = @"Address Book";
+                            
+                            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
+                            
+                            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                            [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
                         }
                     });
                 });

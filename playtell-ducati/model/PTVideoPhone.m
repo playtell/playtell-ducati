@@ -62,6 +62,10 @@ static PTVideoPhone* instance = nil;
     return self.publisher.view;
 }
 
+- (UIView *)currentSubscriberView {
+    return self.subscriber.view;
+}
+
 - (void)phoneDidBecomeActive:(NSNotification *)note {
     LOGMETHOD;
     [self wakeUp];
@@ -229,8 +233,11 @@ static PTVideoPhone* instance = nil;
 #pragma mark - OTSubscriberDelegate methods
 - (void)subscriberDidConnectToStream:(OTSubscriber*)aSubscriber {
     LOGMETHOD;
-    if (self.subscribedBlock) {
-        self.subscribedBlock(aSubscriber);
+    // Only send this message on if the subscriber is not ourselves
+    if (![aSubscriber.stream.connection.connectionId isEqualToString:self.session.connection.connectionId]) {
+        if (self.subscribedBlock) {
+            self.subscribedBlock(aSubscriber);
+        }
     }
 }
 - (void)subscriber:(OTSubscriber*)subscriber didFailWithError:(OTError*)error {}

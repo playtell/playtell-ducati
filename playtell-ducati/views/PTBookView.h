@@ -20,6 +20,8 @@
     CALayer *coverOut;
     CALayer *coverIn;
     CALayer *right;
+    CAShapeLayer *shadowRadial;
+    CAShapeLayer *shadowHighlight;
 
     BOOL animating;
     BOOL isOpen;
