@@ -126,7 +126,7 @@
     [self.navigationItem setLeftBarButtonItem:buttonBack];
     
     // Filtering
-    [textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
+    //[textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
@@ -364,11 +364,14 @@
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     [textField performSelector:@selector(resignFirstResponder) withObject:nil afterDelay:0.1f];
-    return YES;
+    textField.text = @"";
+    [self searchStringDidChange:self];
+    return NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textSearch resignFirstResponder];
+    [self searchStringDidChange:self];
     return YES;
 }
 
