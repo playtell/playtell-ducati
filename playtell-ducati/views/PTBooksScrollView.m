@@ -8,6 +8,7 @@
 
 #import "PTBooksScrollView.h"
 #import "PTBookView.h"
+#import "PTGameView.h"
 
 @implementation PTBooksScrollView
 
@@ -56,10 +57,10 @@
     // Go through all the books and find the one we need
     int index = 0;
     for (PTBookView *bookView in self.subviews) {
-        if (![bookView isKindOfClass:[PTBookView class]]) {
-            continue;
-        }
-        if ([[bookView getId] isEqualToNumber:bookId]) {
+//        if (![bookView isKindOfClass:[PTBookView class]]) {
+//            continue;
+//        }
+        if (![bookView isKindOfClass:[PTGameView class]] && [[bookView getId] isEqualToNumber:bookId]) {
             break;
         }
         index++;

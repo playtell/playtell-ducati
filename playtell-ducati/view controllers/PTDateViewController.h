@@ -49,6 +49,7 @@
     PTBooksScrollView *booksScrollView;
     NSNumber *currentBookId;
     NSMutableDictionary *books;
+    NSMutableArray *activities;
     NSMutableArray *bookList;
     BOOL isBookOpen;
     NSMutableArray *coversToLoad;
