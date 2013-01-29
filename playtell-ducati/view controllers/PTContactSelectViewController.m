@@ -537,6 +537,11 @@
     [textSearch resignFirstResponder];
 }
 
+- (IBAction)didPressSearchButton:(id)sender {
+    [textSearch resignFirstResponder];
+    [self searchStringDidChange:self];
+}
+
 #pragma mark - Contact select delegates
 
 - (void)contactDidInvite:(NSMutableDictionary *)contact cell:(id)sender {
