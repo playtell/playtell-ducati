@@ -16,6 +16,7 @@
 #import "PTContactsCreateListRequest.h"
 #import "PTContactsGetListRequest.h"
 #import "PTContactsGetRelatedRequest.h"
+#import "PTContactsSearchRequest.h"
 #import "PTUser.h"
 #import "PTInviteContactButton.h"
 #import "PTContactsTableBigCell.h"
@@ -262,6 +263,33 @@
 }
 
 - (void)searchStringDidChange:(id)sender {
+    typedef NSComparisonResult (^ContactsCompareBlock)(NSMutableDictionary *, NSMutableDictionary *);
+    ContactsCompareBlock contactsCompareBlock = ^NSComparisonResult(NSMutableDictionary *contact1, NSMutableDictionary *contact2) {
+        NSString *name1 = [contact1 objectForKey:@"name"];
+        NSRange spaceLoc = [name1 rangeOfString:@" "];
+        NSString *compare1;
+        if (spaceLoc.location == NSNotFound) {
+            compare1 = name1;
+        } else {
+            NSString *last_name1 = [name1 substringFromIndex:(spaceLoc.location + spaceLoc.length)];
+            NSString *first_name1 = [name1 substringToIndex:spaceLoc.location];
+            compare1 = [NSString stringWithFormat:@"%@ %@", last_name1, first_name1];
+        }
+        
+        NSString *name2 = [contact2 objectForKey:@"name"];
+        spaceLoc = [name2 rangeOfString:@" "];
+        NSString *compare2;
+        if (spaceLoc.location == NSNotFound) {
+            compare2 = name2;
+        } else {
+            NSString *last_name2 = [name2 substringFromIndex:(spaceLoc.location + spaceLoc.length)];
+            NSString *first_name2 = [name2 substringToIndex:spaceLoc.location];
+            compare2 = [NSString stringWithFormat:@"%@ %@", last_name2, first_name2];
+        }
+        
+        return [compare1 compare:compare2];
+    };
+    
     // Trim the string
     searchString = [textSearch.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([searchString isEqualToString:@""]) {
@@ -272,8 +300,8 @@
     }
     
     lblManualInvite.text = [NSString stringWithFormat:@"Don't see %@ in your results?", searchString];
-
-    // Filter contacts
+    
+    // Show the results from the local address book
     NSPredicate *resultPredicate = [NSPredicate
                                     predicateWithFormat:@"name contains[cd] %@ || email contains[cd] %@",
                                     searchString, searchString];
@@ -283,8 +311,26 @@
     filteredContactsNotOnPT = [contactsNotOnPT filteredArrayUsingPredicate:resultPredicate];
     inSearchMode = YES;
     
-    // Reload table
-    [contactsTableView reloadData];
+    // Search on the server
+    PTContactsSearchRequest *contactsSearchRequest = [[PTContactsSearchRequest alloc] init];
+    [contactsSearchRequest searchWithAuthToken:[PTUser currentUser].authToken
+                                  searchString:searchString
+                                       success:^(NSArray *matches, NSString *responseSearchString)
+     {
+         // Add the results from the search to the ones we know from the address book
+         NSMutableArray *mutableFiltered = [NSMutableArray arrayWithArray:filteredContactsOnPT];
+         for (NSDictionary *match in matches) {
+             [mutableFiltered addObject:[NSMutableDictionary dictionaryWithDictionary:match]];
+         }
+         [mutableFiltered sortUsingComparator:contactsCompareBlock];
+         filteredContactsOnPT = mutableFiltered;
+         
+         // Reload table
+         [contactsTableView reloadData];
+     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+         // Reload table
+         [contactsTableView reloadData];
+     }];
 }
 
 - (void)showComposeMessageController:(id)sender {
