@@ -311,26 +311,69 @@
     filteredContactsNotOnPT = [contactsNotOnPT filteredArrayUsingPredicate:resultPredicate];
     inSearchMode = YES;
     
-    // Search on the server
-    PTContactsSearchRequest *contactsSearchRequest = [[PTContactsSearchRequest alloc] init];
-    [contactsSearchRequest searchWithAuthToken:[PTUser currentUser].authToken
-                                  searchString:searchString
-                                       success:^(NSArray *matches, NSString *responseSearchString)
-     {
-         // Add the results from the search to the ones we know from the address book
-         NSMutableArray *mutableFiltered = [NSMutableArray arrayWithArray:filteredContactsOnPT];
-         for (NSDictionary *match in matches) {
-             [mutableFiltered addObject:[NSMutableDictionary dictionaryWithDictionary:match]];
-         }
-         [mutableFiltered sortUsingComparator:contactsCompareBlock];
-         filteredContactsOnPT = mutableFiltered;
-         
-         // Reload table
-         [contactsTableView reloadData];
-     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-         // Reload table
-         [contactsTableView reloadData];
-     }];
+    // Show the loading view
+    [UIView animateWithDuration:0.2f animations:^{
+        // Hide table
+        contactsTableView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        contactsTableView.hidden = YES;
+        
+        // Show the loading view
+        loadingView.alpha = 0.0f;
+        loadingView.hidden = NO;
+        [UIView animateWithDuration:0.2f animations:^{
+            loadingView.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            // Search on the server
+            PTContactsSearchRequest *contactsSearchRequest = [[PTContactsSearchRequest alloc] init];
+            [contactsSearchRequest searchWithAuthToken:[PTUser currentUser].authToken
+                                          searchString:searchString
+                                               success:^(NSArray *matches, NSString *responseSearchString)
+             {
+                 // Add the results from the search to the ones we know from the address book
+                 NSMutableArray *mutableFiltered = [NSMutableArray arrayWithArray:filteredContactsOnPT];
+                 for (NSDictionary *match in matches) {
+                     [mutableFiltered addObject:[NSMutableDictionary dictionaryWithDictionary:match]];
+                 }
+                 [mutableFiltered sortUsingComparator:contactsCompareBlock];
+                 filteredContactsOnPT = mutableFiltered;
+                 
+                 // Reload table
+                 [contactsTableView reloadData];
+                 
+                 // Hide the loading view
+                 [UIView animateWithDuration:0.2f animations:^{
+                     loadingView.alpha = 0.0f;
+                 } completion:^(BOOL finished) {
+                     loadingView.hidden = YES;
+                     
+                     // Show table
+                     contactsTableView.alpha = 0.0f;
+                     contactsTableView.hidden = NO;
+                     [UIView animateWithDuration:0.2f animations:^{
+                         contactsTableView.alpha = 1.0f;
+                     }];
+                 }];
+             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                 // Reload table
+                 [contactsTableView reloadData];
+                 
+                 // Hide the loading view
+                 [UIView animateWithDuration:0.2f animations:^{
+                     loadingView.alpha = 0.0f;
+                 } completion:^(BOOL finished) {
+                     loadingView.hidden = YES;
+                     
+                     // Show table
+                     contactsTableView.alpha = 0.0f;
+                     contactsTableView.hidden = NO;
+                     [UIView animateWithDuration:0.5f animations:^{
+                         contactsTableView.alpha = 1.0f;
+                     }];
+                 }];
+             }];
+        }];
+    }];
 }
 
 - (void)showComposeMessageController:(id)sender {

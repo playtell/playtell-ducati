@@ -28,7 +28,6 @@
     searchRequest = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
                                                                     success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                      {
-                         NSLog(@"JSON: %@", JSON);
                          if (success) {
                              NSArray *matches = [JSON objectForKey:@"matches"];
                              NSString *searchString = [JSON objectForKey:@"search_string"];
