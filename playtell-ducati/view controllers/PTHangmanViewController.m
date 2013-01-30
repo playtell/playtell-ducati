@@ -39,6 +39,8 @@
 #define WHOSE_TURN_INITIATOR 0
 #define WHOSE_TURN_PLAYMATE  1
 
+#define MAX_TURNS          3 // How many turns until game over?
+
 @implementation PTHangmanViewController
 
 @synthesize chatController;
@@ -94,7 +96,6 @@
         
         // Start with 0 guess attempts
         guessAttempts = 0;
-        maxGuessAttempts = 7;
         
         // Drawing is empty by default
         hasDrawingStarted = NO;
@@ -620,6 +621,9 @@
     // Hang the view
     [self hangDrawingView];
     
+    // Show HANDMAN lbl
+    [self showHangmanLbl];
+    
     // API call to hang the man
     PTHangmanPlayTurnRequest *apiRequest = [[PTHangmanPlayTurnRequest alloc] init];
     [apiRequest hangTheHangmanOnBoardId:boardId
@@ -957,6 +961,15 @@
     }];
 }
 
+- (void)hideAlphabet {
+    // Hide the alphabet letters competely off-screen
+    letterScrollView.userInteractionEnabled = NO;
+    [UIView animateWithDuration:0.3f animations:^{
+        letterScrollView.frame = CGRectOffset(letterScrollView.frame, 0.0f, 200.0f);
+        letterScrollView.alpha = 0.0f;
+    }];
+}
+
 - (void)showDrawView {
     // Take screenshot of letters
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(viewSelectLetter.bounds.size.width, viewSelectLetter.bounds.size.height + 30.0f), NO, [UIScreen mainScreen].scale);
@@ -970,7 +983,7 @@
     viewSelectLetterImageView.image = viewSelectLetterImage;
     [self.view insertSubview:viewSelectLetterImageView belowSubview:winnerView];
     viewSelectLetter.hidden = YES;
-    if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
+    if ([PTUser currentUser].userID == initiator.userID && guessAttempts < MAX_TURNS) {
         drawSomethingButtonContainer.hidden = NO;
         if (hasDrawingStarted == NO) {
             drawSomethingMan.hidden = NO;
@@ -992,7 +1005,7 @@
                          viewGallows.frame = CGRectOffset(viewGallows.frame, 412.0f, 0.0f);
                          // Drawing view
                          viewDraw.frame = CGRectOffset(viewDraw.frame, 412.0f, 0.0f);
-                         if ([PTUser currentUser].userID == initiator.userID && guessAttempts < maxGuessAttempts) {
+                         if ([PTUser currentUser].userID == initiator.userID && guessAttempts < MAX_TURNS) {
                              drawSomethingButtonContainer.alpha = 1.0f;
                              if (hasDrawingStarted == NO) {
                                  drawSomethingMan.alpha = 1.0f;
@@ -1002,23 +1015,31 @@
                      completion:^(BOOL finished) {
                          // Enable drawing for initiator or pop up hang button
                          if ([PTUser currentUser].userID == initiator.userID) {
-                             if (guessAttempts < maxGuessAttempts) {
+                             if (guessAttempts < MAX_TURNS) {
                                  drawPoints = [NSMutableArray array];
                                  drawBoard.isDrawing = YES;
                              } else {
                                  // Setup button to hang the main and show it
-                                 hangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+                                 hangButton = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 85.0f, 91.0f)];
                                  hangButton.alpha = 0.0f;
-                                 hangButton.frame = CGRectMake(0.0f, 0.0f, 85.0f, 91.0f);
                                  hangButton.center = CGPointMake(viewDraw.bounds.size.width / 2.0f, viewDraw.bounds.size.height / 2.0f);
                                  hangButton.frame = CGRectOffset(hangButton.frame, 0.0f, -50.0f);
-                                 [hangButton setImage:[UIImage imageNamed:@"hangman-button-hang-normal"] forState:UIControlStateNormal];
+                                 hangButton.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"hangman-button-hang-normal"]];
                                  [viewDraw addSubview:hangButton];
-                                 [hangButton addTarget:self action:@selector(hangTheMan) forControlEvents:UIControlEventTouchUpInside];
-                                 
-                                 // Show the button
-                                 [UIView animateWithDuration:0.3f animations:^{
+                                 UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hangTheMan)];
+                                 UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(hangButtonDidPan:)];
+                                 [hangButton addGestureRecognizer:panGestureRecognizer];
+                                 [hangButton addGestureRecognizer:tapGestureRecognizer];
+                                 hasHangmanBeenHung = NO;
+
+                                 // Show & bounce the button
+                                 [UIView animateWithDuration:0.8f animations:^{
                                      hangButton.alpha = 1.0f;
+                                     hangButton.frame = CGRectOffset(hangButton.frame, 0.0f, -65.0f);
+                                 } completion:^(BOOL finished) {
+                                     [UIView animateWithDuration:0.5f animations:^{
+                                         hangButton.frame = CGRectOffset(hangButton.frame, 0.0f, 65.0f);
+                                     }];
                                  }];
                              }
                          }
@@ -1066,9 +1087,27 @@
 
 - (void)hangDrawingView {
     if (hangButton) {
-        [hangButton removeFromSuperview];
+        // Move the button out of the way
+        [UIView animateWithDuration:0.3f
+                         animations:^{
+                             hangButton.frame = CGRectOffset(hangButton.frame, 0.0f, 400.0f);
+                         }
+                         completion:^(BOOL finished) {
+                             [hangButton removeFromSuperview];
+                         }];
     }
     
+    // Move the man up and down off the screen
+    [UIView animateWithDuration:0.5f delay:1.0f options:0 animations:^{
+        viewDraw.frame = CGRectOffset(viewDraw.frame, 0.0f, -50.0f);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.4f animations:^{
+            CGFloat yOffset = [UIScreen mainScreen].bounds.size.width - viewDraw.frame.origin.y;
+            viewDraw.frame = CGRectOffset(viewDraw.frame, 0.0f, yOffset);
+        }];
+    }];
+    
+    // Add shaking animation
     for (PTHangmanDrawboard *drawBoardItem in drawBoards) {
         CGFloat animOffset = (CGFloat)(arc4random()%5) / 10.0f; // .1 to .5 sec offset
         CAKeyframeAnimation *rotationAnimation;
@@ -1083,7 +1122,7 @@
         rotationAnimation.removedOnCompletion = NO;
         rotationAnimation.fillMode = kCAFillModeForwards;
         rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-        rotationAnimation.duration = 1.2f;
+        rotationAnimation.duration = 0.8f;
         rotationAnimation.repeatCount = 3;
         rotationAnimation.beginTime = CACurrentMediaTime() + animOffset;
         [[drawBoardItem layer] addAnimation:rotationAnimation forKey:@"rotationAnimation"];
@@ -1184,8 +1223,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1500 * NSEC_PER_MSEC), dispatch_get_current_queue(), ^{
         [self showDrawView]; // takes 0.5 seconds
 
-        // Hang the view (after 0.5 seconds)
+        // Hang the view (after 0.8 seconds)
         [self performSelector:@selector(hangDrawingView) withObject:nil afterDelay:0.8f];
+
+        // Show HANDMAN lbl (after 0.8 seconds)
+        [self performSelector:@selector(showHangmanLbl) withObject:nil afterDelay:0.8f];
     });
 }
 
@@ -1197,6 +1239,70 @@
         [self.chatController setActiveTurnToLeftChatView];
     }
     chatHUDTurnStatus = myTurn;
+}
+
+- (void)hangButtonDidPan:(UIPanGestureRecognizer *)recognizer {
+    CGPoint tran = [recognizer translationInView:self.view];
+    switch(recognizer.state) {
+        case UIGestureRecognizerStateBegan: {
+            hangButtonStartY = hangButton.frame.origin.y;
+        }
+            break;
+        case UIGestureRecognizerStateChanged: {
+            CGFloat actualY = hangButtonStartY + tran.y;
+            if (tran.y >= 0.0f) {
+                hangButton.frame = CGRectMake(hangButton.frame.origin.x, actualY, hangButton.bounds.size.width, hangButton.bounds.size.height);
+                
+                // If we moved it a good bit, hang the man
+                if (tran.y > 100.0f && hasHangmanBeenHung == NO) {
+                    // Don't hang more than once
+                    hasHangmanBeenHung = YES;
+                    recognizer.enabled = NO;
+
+                    // Hang the man
+                    [self hangTheMan];
+                }
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+            // If we didn't move enough, move the button back
+            if (tran.y <= 100.0f) {
+                [UIView animateWithDuration:0.2f
+                                 animations:^{
+                                     hangButton.frame = CGRectMake(hangButton.frame.origin.x, hangButtonStartY, hangButton.bounds.size.width, hangButton.bounds.size.height);
+                                 }];
+            }
+            break;
+        case UIGestureRecognizerStateCancelled:
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)showHangmanLbl {
+    // Remove the alphabet
+    [self hideAlphabet];
+    
+    // Build the lbl and show it
+    UILabel *lblHangman = [[UILabel alloc] init];
+    lblHangman.text = @"HANGMAN";
+    lblHangman.font = [UIFont boldSystemFontOfSize:65.0f];
+    lblHangman.textAlignment = NSTextAlignmentCenter;
+    lblHangman.frame = CGRectMake(0.0f, 642.0f, 1024.0f, 68.0f);
+    lblHangman.backgroundColor = [UIColor clearColor];
+    lblHangman.userInteractionEnabled = NO;
+    lblHangman.textColor = [UIColor colorFromHex:@"#d8b683"];
+    lblHangman.layer.shadowColor = [UIColor colorFromHex:@"#00000"].CGColor;
+    lblHangman.layer.shadowOffset = CGSizeMake(1.0f, 1.0f);
+    lblHangman.layer.shadowRadius = 1.0f;
+    lblHangman.layer.shadowOpacity = 0.2f;
+    lblHangman.alpha = 0.0f;
+    [self.view addSubview:lblHangman];
+    [UIView animateWithDuration:0.3f animations:^{
+        lblHangman.alpha = 1.0f;
+    }];
 }
 
 @end

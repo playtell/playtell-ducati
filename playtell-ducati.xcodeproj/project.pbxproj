@@ -497,6 +497,8 @@
 		23CC06B915CA8BF7003CAA11 /* PTContactsTableRemoveCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 23CC06B815CA8BF7003CAA11 /* PTContactsTableRemoveCell.m */; };
 		23CC06BC15CA8CD9003CAA11 /* buttonRemoveHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CC06BA15CA8CD9003CAA11 /* buttonRemoveHighlighted.png */; };
 		23CC06BD15CA8CD9003CAA11 /* buttonRemoveNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 23CC06BB15CA8CD9003CAA11 /* buttonRemoveNormal.png */; };
+		23D087BD16B9D5B30080D461 /* hangman-splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D087BB16B9D5B30080D461 /* hangman-splash.png */; };
+		23D087BE16B9D5B30080D461 /* hangman-splash@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23D087BC16B9D5B30080D461 /* hangman-splash@2x.png */; };
 		23D291DE162372BB006ADBCE /* endCallButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484115FA8865005BF396 /* endCallButton.png */; };
 		23D291DF162372BB006ADBCE /* endCallButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 23BE484215FA8865005BF396 /* endCallButton@2x.png */; };
 		23D4EE6116260A84007CE611 /* PTMemoryGameScoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 23D4EE6016260A84007CE611 /* PTMemoryGameScoreView.m */; };
@@ -1715,6 +1717,8 @@
 		23CC06B815CA8BF7003CAA11 /* PTContactsTableRemoveCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsTableRemoveCell.m; sourceTree = "<group>"; };
 		23CC06BA15CA8CD9003CAA11 /* buttonRemoveHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonRemoveHighlighted.png; sourceTree = "<group>"; };
 		23CC06BB15CA8CD9003CAA11 /* buttonRemoveNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonRemoveNormal.png; sourceTree = "<group>"; };
+		23D087BB16B9D5B30080D461 /* hangman-splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-splash.png"; path = "Hangman/hangman-splash.png"; sourceTree = "<group>"; };
+		23D087BC16B9D5B30080D461 /* hangman-splash@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hangman-splash@2x.png"; path = "Hangman/hangman-splash@2x.png"; sourceTree = "<group>"; };
 		23D291EA1623AC3F006ADBCE /* PTMemoryGameDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTMemoryGameDelegate.h; sourceTree = "<group>"; };
 		23D41A8D159CAEF900677E03 /* dialad-live.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialad-live.png"; sourceTree = "<group>"; };
 		23D41A90159CB09800677E03 /* dialpad-pending.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dialpad-pending.png"; sourceTree = "<group>"; };
@@ -3223,6 +3227,8 @@
 		2382A0EE167B5F4B00D86F33 /* hangman */ = {
 			isa = PBXGroup;
 			children = (
+				23D087BB16B9D5B30080D461 /* hangman-splash.png */,
+				23D087BC16B9D5B30080D461 /* hangman-splash@2x.png */,
 				23CB4EC91697419B004DD86D /* hangman-making-word.png */,
 				23CB4ECA1697419B004DD86D /* hangman-making-word@2x.png */,
 				234930AA169632A000FF2DF1 /* hangman-title.png */,
@@ -6111,6 +6117,8 @@
 				234930AD169632A000FF2DF1 /* hangman-title@2x.png in Resources */,
 				23CB4ECB1697419B004DD86D /* hangman-making-word.png in Resources */,
 				23CB4ECC1697419B004DD86D /* hangman-making-word@2x.png in Resources */,
+				23D087BD16B9D5B30080D461 /* hangman-splash.png in Resources */,
+				23D087BE16B9D5B30080D461 /* hangman-splash@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6430,6 +6438,7 @@
 					"LOGGING_ENABLED=0",
 					"LOGGING_LEVEL_TRACE=1",
 				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
@@ -6444,8 +6453,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6E469B33-D795-4769-8E70-9C33F27AC866";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6E469B33-D795-4769-8E70-9C33F27AC866";
+				PROVISIONING_PROFILE = "5BCBFD21-E2DC-448C-9B1F-FC505EA8151F";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5BCBFD21-E2DC-448C-9B1F-FC505EA8151F";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -6465,6 +6474,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "playtell-ducati/playtell-ducati-Prefix.pch";
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
@@ -6525,6 +6535,7 @@
 					"LOGGING_LEVEL_TRACE=1",
 					"LOGGING_ENABLED=1",
 				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (
@@ -6539,8 +6550,8 @@
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6E469B33-D795-4769-8E70-9C33F27AC866";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6E469B33-D795-4769-8E70-9C33F27AC866";
+				PROVISIONING_PROFILE = "42ACE061-861C-427D-ACE4-1B4C2AE0C278";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "42ACE061-861C-427D-ACE4-1B4C2AE0C278";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Distribution - Staging";
@@ -6585,6 +6596,7 @@
 					"LOGGING_ENABLED=1",
 					"LOGGING_LEVEL_TRACE=1",
 				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
 				INFOPLIST_FILE = "playtell-ducati/playtell-ducati-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				LIBRARY_SEARCH_PATHS = (

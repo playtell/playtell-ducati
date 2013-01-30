@@ -64,10 +64,11 @@
     IBOutlet UIImageView *drawSomethingMan;
     BOOL hasDrawingStarted;
     NSInteger guessAttempts;
-    NSInteger maxGuessAttempts;
     
     // Hang
-    UIButton *hangButton;
+    UIView *hangButton;
+    CGFloat hangButtonStartY;
+    BOOL hasHangmanBeenHung;
     
     // Winner
     UIImageView *winnerView;

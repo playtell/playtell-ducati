@@ -1140,7 +1140,7 @@ NSTimer *postcardTimer;
                                      
                                      // Init game splash
                                      UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
-                                     splash.image = [UIImage imageNamed:@"hangman-bg"];
+                                     splash.image = [UIImage imageNamed:@"hangman-splash"];
                                      
                                      // Bring up the view controller of the new game
                                      PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -1551,7 +1551,7 @@ NSTimer *postcardTimer;
         
         // Init game splash
         UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
-        splash.image = [UIImage imageNamed:@"hangman-bg"];
+        splash.image = [UIImage imageNamed:@"hangman-splash"];
         
         // Bring up the view controller of the new game
         PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
