@@ -101,6 +101,8 @@
 		1A83B4E9166531C600B37368 /* PTAllPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */; };
 		1A83B4EC1665437800B37368 /* PTPostcard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4EB1665437800B37368 /* PTPostcard.m */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
+		1A8F90DB16BB036200C78BF2 /* PTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F90D916BB036200C78BF2 /* PTSettingsViewController.m */; };
+		1A8F90DC16BB036200C78BF2 /* PTSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A8F90DA16BB036200C78BF2 /* PTSettingsViewController.xib */; };
 		1A9B784B167260B600F38174 /* addbuddies-tip.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B7837167260B600F38174 /* addbuddies-tip.png */; };
 		1A9B784C167260B600F38174 /* addbuddies-tip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B7838167260B600F38174 /* addbuddies-tip@2x.png */; };
 		1A9B784D167260B600F38174 /* addressbook-title.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A9B7839167260B600F38174 /* addressbook-title.png */; };
@@ -1210,6 +1212,9 @@
 		1A83B4EB1665437800B37368 /* PTPostcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcard.m; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
+		1A8F90D816BB036200C78BF2 /* PTSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSettingsViewController.h; sourceTree = "<group>"; };
+		1A8F90D916BB036200C78BF2 /* PTSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSettingsViewController.m; sourceTree = "<group>"; };
+		1A8F90DA16BB036200C78BF2 /* PTSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PTSettingsViewController.xib; sourceTree = "<group>"; };
 		1A9B7837167260B600F38174 /* addbuddies-tip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "addbuddies-tip.png"; path = "Inviter V2/addbuddies-tip.png"; sourceTree = "<group>"; };
 		1A9B7838167260B600F38174 /* addbuddies-tip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "addbuddies-tip@2x.png"; path = "Inviter V2/addbuddies-tip@2x.png"; sourceTree = "<group>"; };
 		1A9B7839167260B600F38174 /* addressbook-title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "addressbook-title.png"; path = "Inviter V2/addressbook-title.png"; sourceTree = "<group>"; };
@@ -2736,6 +2741,16 @@
 				1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */,
 			);
 			name = postcards;
+			sourceTree = "<group>";
+		};
+		1A8F90D116BB02DC00C78BF2 /* settings */ = {
+			isa = PBXGroup;
+			children = (
+				1A8F90D816BB036200C78BF2 /* PTSettingsViewController.h */,
+				1A8F90D916BB036200C78BF2 /* PTSettingsViewController.m */,
+				1A8F90DA16BB036200C78BF2 /* PTSettingsViewController.xib */,
+			);
+			name = settings;
 			sourceTree = "<group>";
 		};
 		1A9B78361672607700F38174 /* Inviter V2 */ = {
@@ -5009,6 +5024,7 @@
 		F4A9D88C1577FBB40015D977 /* view controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1A8F90D116BB02DC00C78BF2 /* settings */,
 				23391EA815B7535800761268 /* contact import */,
 				8A62E3A215E7EA4F0077CBB6 /* games */,
 				23F1E5551610E86A00EE023B /* login */,
@@ -6093,6 +6109,7 @@
 				1A9F9D2C169DF5D100DBFDAB /* Invite@2x.png in Resources */,
 				1A9F9D2D169DF5D100DBFDAB /* invited.png in Resources */,
 				1A9F9D2E169DF5D100DBFDAB /* invited@2x.png in Resources */,
+				1A8F90DC16BB036200C78BF2 /* PTSettingsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6319,6 +6336,7 @@
 				1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */,
 				1AF34D2E16A9D014002134A4 /* PTActivity.m in Sources */,
 				1AF34D3116A9D24B002134A4 /* PTBook.m in Sources */,
+				1A8F90DB16BB036200C78BF2 /* PTSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
