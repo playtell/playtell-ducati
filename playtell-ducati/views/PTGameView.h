@@ -34,6 +34,7 @@
 
 - (id)initWithFrame:(CGRect)frame gameId:(NSInteger)_gameId gameLogo:(UIImage *)_gameLogo;
 - (void)setFocusLevel:(CGFloat)level;
+- (NSNumber *)getId;
 - (void)setPosition:(NSInteger)_position;
 - (NSInteger)getPosition;
 

@@ -25,6 +25,7 @@
 #import "PTGameView.h"
 
 //MODELS
+#import "PTBook.h"
 #import "PTUser.h"
 #import "PTCheckForPlaydateRequest.h"
 #import "PTConcretePlaymateFactory.h"
@@ -43,7 +44,7 @@
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTPlaydateJoinedRequest.h"
 #import "PTPlaydateFingerTapRequest.h"
-#import "PTBooksListRequest.h"
+#import "PTActivityListRequest.h"
 #import "PTPlaydateFingerEndRequest.h"
 #import "PTPlayTellPusher.h"
 #import "PTPlaydate+InitatorChecking.h"
@@ -328,8 +329,8 @@ NSTimer *postcardTimer;
     books = [[NSMutableDictionary alloc] init];
     NSArray *fileData = [[NSArray alloc] initWithContentsOfFile:path];
     for (NSDictionary *book in fileData) {
-        NSNumber *bookId = [book objectForKey:@"id"];
-        [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+        PTBook *b = [[PTBook alloc] initWithDictionary:book];
+        [books setObject:b forKey:b.bookId];
     }
     
     // Load the actual views
@@ -340,23 +341,33 @@ NSTimer *postcardTimer;
 }
 
 - (void)loadBooksFromAPIWithWritePath:(NSString *)path {
-    PTBooksListRequest* booksRequest = [[PTBooksListRequest alloc] init];
-    [booksRequest booksListWithAuthToken:[[PTUser currentUser] authToken]
-                               onSuccess:^(NSDictionary *result)
+    PTActivityListRequest* activityRequest = [[PTActivityListRequest alloc] init];
+    [activityRequest activityListWithAuthToken:[[PTUser currentUser] authToken]
+                                     onSuccess:^(NSDictionary *result)
     {
+        // Activity list
+        activities = [[NSMutableArray alloc] init];
+        NSArray *allActivities = [result valueForKey:@"activities"];
+        for (NSDictionary *a in allActivities) {
+            PTActivity *activity = [[PTActivity alloc] initWithDictionary:a];
+            [activities addObject:activity];
+        }
+        
+        // Books
         NSDictionary *allBooks = [result valueForKey:@"books"];  //TODOGIANCARLO valueforkey@"games"
         if (boolListLoadedFromPlist == NO) {
             // Parse all books into format we need
             books = [[NSMutableDictionary alloc] init];
             for (NSDictionary *book in allBooks) {
-                NSNumber *bookId = [book objectForKey:@"id"];
-                [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+                PTBook *b = [[PTBook alloc] initWithDictionary:book];
+                [books setObject:b forKey:b.bookId];
             }
             
             // Write book list to plist file
             NSMutableArray *writeData = [[NSMutableArray alloc] init];
             for (NSNumber *bookId in books) {
-                [writeData addObject:[books objectForKey:bookId]];
+                PTBook *b = (PTBook *)[books objectForKey:bookId];
+                [writeData addObject:b.originalDictionary];
             }
             [writeData writeToFile:path atomically:YES];
             
@@ -373,11 +384,12 @@ NSTimer *postcardTimer;
             NSMutableArray *newBooks = [[NSMutableArray alloc] init];
             NSInteger oldTotalForBooks = [[books allKeys] count];
             for (NSDictionary *book in allBooks) {
-                NSNumber *bookId = [book objectForKey:@"id"];
+                PTBook *b = [[PTBook alloc] initWithDictionary:book];
+                NSNumber *bookId = b.bookId;
                 [apiBooks addObject:bookId];
                 if ([books objectForKey:bookId] == nil) {
                     [newBooks addObject:bookId];
-                    [books setObject:[[NSMutableDictionary alloc] initWithDictionary:book] forKey:bookId];
+                    [books setObject:b forKey:bookId];
                 }
             }
             
@@ -393,23 +405,24 @@ NSTimer *postcardTimer;
             }
             oldTotalForBooks = oldTotalForBooks - [oldBooks count];
             
-            // If there are books to add to remove, re-draw the books views
+            // If there are books to add or remove, re-draw the books views
             if ([newBooks count] > 0 || [oldBooks count] > 0) {
                 // Write book list to plist file
                 NSMutableArray *writeData = [[NSMutableArray alloc] init];
                 for (NSNumber *bookId in books) {
-                    [writeData addObject:[books objectForKey:bookId]];
+                    PTBook *b = [books objectForKey:bookId];
+                    [writeData addObject:b.originalDictionary];
                 }
                 [writeData writeToFile:path atomically:YES];
                 
                 // Make sure this file isn't backed up by iCloud
                 [self addSkipBackupAttributeToItemAtURLstring:path];
-
-                // Load the actual views
-                dispatch_async(dispatch_get_main_queue(), ^() {
-                    [self loadBookViewsFromDictionary];
-                });
             }
+            
+            // Load the actual views
+            dispatch_async(dispatch_get_main_queue(), ^() {
+                [self loadBookViewsFromDictionary];
+            });
             
 //            // If there are new books, create views for them and load their covers
 //            if ([newBooks count] > 0) {
@@ -449,7 +462,9 @@ NSTimer *postcardTimer;
 //                [writeData writeToFile:path atomically:YES];
 //            }
         }
-    } onFailure:nil];
+    } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        LogError(@"Failed to load activities with error: %d %@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:response.statusCode]);
+    }];
 }
 
 - (void)loadBookViewsFromDictionary {
@@ -460,72 +475,128 @@ NSTimer *postcardTimer;
     CGFloat xPos = (800.0f - booksScrollView.frame.size.width) / -2.0f; // full width (800) - scrollview width (350) divided by 2 (centered)
     PTBookView *bookView;
     int i = 0;
+    BOOL currentBookSet = NO;
     bookList = [[NSMutableArray alloc] initWithCapacity:[books count]];
+    gameList = [[NSMutableArray alloc] init];
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
-    for (NSNumber *bookId in books) {
-        if (i == 0) {
-            // Set current book id
-            currentBookId = [bookId copy];
+    
+    for (PTActivity *activity in activities) {
+        if (activity.type == ActivityBook) {
+            PTBook *book = [books objectForKey:activity.bookId];
+            if (!currentBookSet) {
+                // Set current book id
+                currentBookId = book.bookId;
+                currentBookSet = YES;
+            }
+            bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+            [bookView setBookPosition:i];
+            [bookView setDelegate:self];
+            [booksScrollView addSubview:bookView];
+            xPos += booksScrollView.frame.size.width;
+            i++;
+            [bookList addObject:bookView];
+            
+            // Book cover pages load
+            [coversToLoad addObject:book.bookId];
+        } else if (activity.type == ActivityGame) {
+            UIImage *coverImage;
+            switch ([activity.gameId intValue]) {
+                case 1:
+                    // Memory
+                    coverImage = [UIImage imageNamed:@"Memory-logo"];
+                    break;
+                case 2:
+                    // Tic tac toe
+                    coverImage = [UIImage imageNamed:@"TTT-logo"];
+                    break;
+                case 3:
+                    // Matching
+                    coverImage = [UIImage imageNamed:@"matching-logo"];
+                    break;
+                case 4:
+                    // Math
+                    coverImage = [UIImage imageNamed:@"math-logo"];
+                    break;
+                default:
+                    break;
+            }
+            
+            PTGameView *gameView = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+                                                               gameId:[activity.gameId intValue]
+                                                             gameLogo:coverImage];
+            [gameView setPosition:i];
+            [gameView setDelegate:self];
+            [booksScrollView addSubview:gameView];
+            [gameList addObject:gameView];
+            
+            xPos += booksScrollView.frame.size.width;
+            i++;
         }
-        NSMutableDictionary *book = [books objectForKey:bookId];
-        bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
-        [bookView setBookPosition:i];
-        [bookView setDelegate:self];
-        [booksScrollView addSubview:bookView];
-        xPos += booksScrollView.frame.size.width;
-        i++;
-        [bookList addObject:bookView];
-        
-        // Book cover pages load
-        [coversToLoad addObject:bookId];
     }
-    
-    // Load the game views (hardcoded for now)
-    gameList = [[NSMutableArray alloc] initWithCapacity:2];
-
-    PTGameView *gameView1 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:1
-                                                     gameLogo:[UIImage imageNamed:@"Memory-logo"]];
-    [gameView1 setPosition:i];
-    [gameView1 setDelegate:self];
-    [booksScrollView addSubview:gameView1];
-    [gameList addObject:gameView1];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView2 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:2
-                                                     gameLogo:[UIImage imageNamed:@"TTT-logo"]];
-    [gameView2 setPosition:i];
-    [gameView2 setDelegate:self];
-    [booksScrollView addSubview:gameView2];
-    [gameList addObject:gameView2];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:3
-                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
-    [gameView3 setPosition:i];
-    [gameView3 setDelegate:self];
-    [booksScrollView addSubview:gameView3];
-    [gameList addObject:gameView3];
-    
-    xPos += booksScrollView.frame.size.width;
-    i++;
-    
-    PTGameView *gameView4 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
-                                                       gameId:4
-                                                     gameLogo:[UIImage imageNamed:@"math-logo"]];
-    [gameView4 setPosition:i];
-    [gameView4 setDelegate:self];
-    [booksScrollView addSubview:gameView4];
-    [gameList addObject:gameView4];
+//    for (NSNumber *bookId in books) {
+//        if (i == 0) {
+//            // Set current book id
+//            currentBookId = [bookId copy];
+//        }
+//        PTBook *book = [books objectForKey:bookId];
+//        bookView = [[PTBookView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f) andBook:book]; // 800x600
+//        [bookView setBookPosition:i];
+//        [bookView setDelegate:self];
+//        [booksScrollView addSubview:bookView];
+//        xPos += booksScrollView.frame.size.width;
+//        i++;
+//        [bookList addObject:bookView];
+//        
+//        // Book cover pages load
+//        [coversToLoad addObject:bookId];
+//    }
+//    
+//    // Load the game views (hardcoded for now)
+//    gameList = [[NSMutableArray alloc] initWithCapacity:2];
+//
+//    PTGameView *gameView1 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:1
+//                                                     gameLogo:[UIImage imageNamed:@"Memory-logo"]];
+//    [gameView1 setPosition:i];
+//    [gameView1 setDelegate:self];
+//    [booksScrollView addSubview:gameView1];
+//    [gameList addObject:gameView1];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView2 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:2
+//                                                     gameLogo:[UIImage imageNamed:@"TTT-logo"]];
+//    [gameView2 setPosition:i];
+//    [gameView2 setDelegate:self];
+//    [booksScrollView addSubview:gameView2];
+//    [gameList addObject:gameView2];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView3 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:3
+//                                                     gameLogo:[UIImage imageNamed:@"matching-logo"]];
+//    [gameView3 setPosition:i];
+//    [gameView3 setDelegate:self];
+//    [booksScrollView addSubview:gameView3];
+//    [gameList addObject:gameView3];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView4 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:4
+//                                                     gameLogo:[UIImage imageNamed:@"math-logo"]];
+//    [gameView4 setPosition:i];
+//    [gameView4 setDelegate:self];
+//    [booksScrollView addSubview:gameView4];
+//    [gameList addObject:gameView4];
     
     // Update scroll view width (based on # of books)
-    CGFloat scroll_width = booksScrollView.frame.size.width * ([books count] + 4); // 4 hardcoded games
+    CGFloat scroll_width = booksScrollView.frame.size.width * [activities count];
     [booksScrollView setDelegate:self];
     [booksScrollView setContentSize:CGSizeMake(scroll_width, 600.0f)];
     isBookOpen = NO;
@@ -1143,8 +1214,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:pageNum];
     
     // Save current page in book config
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:pageNum] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = pageNum;
     
     // Start loading pages
     [self beginBookPageLoading];
@@ -1474,6 +1545,9 @@ NSTimer *postcardTimer;
 }
 
 - (void)loadBookCoverFromFileOrURL {
+    if (coversToLoadIndex >= [coversToLoad count])
+        return;
+    
     NSString *imagePath = [self coverImagePathForBook:[coversToLoad objectAtIndex:coversToLoadIndex]];
     UIImage *coverImage = [UIImage imageWithContentsOfFile:imagePath];
     if (coverImage) {
@@ -1484,13 +1558,11 @@ NSTimer *postcardTimer;
         // Before loading next cover, load first page of this book
         [self loadFirstPageFromFileOrURL];
     } else {
-        NSDictionary *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
-        NSDictionary *cover = [book objectForKey:@"cover"];
-        NSString *cover_bitmap_url = [[cover objectForKey:@"front"] objectForKey:@"bitmap"];
+        PTBook *book = [books objectForKey:[coversToLoad objectAtIndex:coversToLoadIndex]];
         
         // Load from URL (using the background thread)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-            NSURL *url = [NSURL URLWithString:cover_bitmap_url];
+            NSURL *url = book.coverUrl;
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Cover not loaded properly
@@ -1534,14 +1606,11 @@ NSTimer *postcardTimer;
             [self loadBookCoverFromFileOrURL];
         }
     } else {
-        NSMutableDictionary *book = [books objectForKey:bookId];
-        NSMutableArray *pages = [book objectForKey:@"pages"];
-        NSDictionary *page = [pages objectAtIndex:0];
-        NSString *page_bitmap_url = [page objectForKey:@"bitmap"];
+        PTBook *book = [books objectForKey:bookId];
         
         // Load from URL (using the background thread)
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^() {
-            NSURL *url = [NSURL URLWithString:page_bitmap_url];
+            NSURL *url = [book.pageUrls objectAtIndex:0];
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
             if (image == nil) {
                 // TODO: Page not loaded properly
@@ -1606,26 +1675,51 @@ NSTimer *postcardTimer;
 #pragma mark - Books scroll delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    // Adjust size/opacity of each book as they scroll
     CGFloat x = scrollView.contentOffset.x;
     CGFloat width = booksScrollView.frame.size.width;
-    for (int i=0, l=[books count]; i<l; i++) {
+    
+    // Adjust size/opacity of each activity as they scroll
+    for (int i = 0; i < [activities count]; i++) {
         CGFloat pos = ABS(i * width - x);
         if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
             CGFloat level = 1.0f - pos / width;
-            [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
+            PTActivity *act = [activities objectAtIndex:i];
+            if (act.type == ActivityBook) {
+                for (PTBookView *bookView in bookList) {
+                    if ([[bookView getId] intValue] == [act.bookId intValue]) {
+                        [bookView setFocusLevel:level];
+                        break;
+                    }
+                }
+            } else if (act.type == ActivityGame) {
+                for (PTGameView *gameView in gameList) {
+                    if ([[gameView getId] intValue] == [act.gameId intValue]) {
+                        [gameView setFocusLevel:level];
+                        break;
+                    }
+                }
+            }
         }
     }
     
-    // Same for each game
-    for (int i=0, l=[gameList count]; i<l; i++) {
-        int actual_i = i + [books count];
-        CGFloat pos = ABS(actual_i * width - x);
-        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
-            CGFloat level = 1.0f - pos / width;
-            [(PTGameView *)[gameList objectAtIndex:i] setFocusLevel:level];
-        }
-    }
+//    // Adjust size/opacity of each book as they scroll
+//    for (int i=0, l=[books count]; i<l; i++) {
+//        CGFloat pos = ABS(i * width - x);
+//        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
+//            CGFloat level = 1.0f - pos / width;
+//            [(PTBookView *)[bookList objectAtIndex:i] setFocusLevel:level];
+//        }
+//    }
+//    
+//    // Same for each game
+//    for (int i=0, l=[gameList count]; i<l; i++) {
+//        int actual_i = i + [books count];
+//        CGFloat pos = ABS(actual_i * width - x);
+//        if (pos < (width * 2.0f)) { // Ignore all the views out of view (whole view fits about 3 books)
+//            CGFloat level = 1.0f - pos / width;
+//            [(PTGameView *)[gameList objectAtIndex:i] setFocusLevel:level];
+//        }
+//    }
 }
 
 #pragma mark - Book delegates
@@ -1722,9 +1816,9 @@ NSTimer *postcardTimer;
 
 - (void)beginBookPageLoading {
     // Setup loading of pages for book
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    currentPage = [[book objectForKey:@"current_page"] intValue];
-    NSInteger totalPages = [[book objectForKey:@"total_pages"] intValue];
+    PTBook *book = [books objectForKey:currentBookId];
+    currentPage = book.currentPage;
+    NSInteger totalPages = book.totalPages;
     
     // Build array of pages to load
     pagesToLoad = nil;
@@ -1771,8 +1865,8 @@ NSTimer *postcardTimer;
     
     // Notify server of new page turn
     if (self.playdate) {
-        NSMutableDictionary *book = [books objectForKey:currentBookId];
-        NSNumber *pageNum = [book objectForKey:@"current_page"];
+        PTBook *book = [books objectForKey:currentBookId];
+        NSNumber *pageNum = [NSNumber numberWithInt:book.currentPage];
         PTPageTurnRequest *pageTurnRequest = [[PTPageTurnRequest alloc] init];
         [pageTurnRequest pageTurnWithPlaydateId:[NSNumber numberWithInt:playdate.playdateID]
                                      pageNumber:pageNum
@@ -1875,8 +1969,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:newPageNumber];
     
     // Update current page in the book obj
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = newPageNumber;
     
     // Notify delegate to start loading new page content
     [self pageTurnedTo:newPageNumber];
@@ -1893,8 +1987,8 @@ NSTimer *postcardTimer;
     [pagesScrollView navigateToPage:newPageNumber];
     
     // Update current page in the book obj
-    NSMutableDictionary *book = [books objectForKey:currentBookId];
-    [book setObject:[NSNumber numberWithInt:newPageNumber] forKey:@"current_page"];
+    PTBook *book = [books objectForKey:currentBookId];
+    book.currentPage = newPageNumber;
     
     // Notify delegate to start loading new page content
     [self pageTurnedTo:newPageNumber];

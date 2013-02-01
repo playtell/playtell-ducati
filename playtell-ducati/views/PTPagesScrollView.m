@@ -45,7 +45,7 @@
     // Notify delegate of page turn & save book config
     if (page == round(page) && currentPage != round(page)) {
         currentPage = (NSInteger)round(page);
-        [book setObject:[NSNumber numberWithInt:currentPage] forKey:@"current_page"];
+        book.currentPage = currentPage;
         [pagesScrollDelegate pageTurnedTo:currentPage];
     }
 }
@@ -57,9 +57,9 @@
     [self setContentOffset:CGPointMake(self.frame.size.width * (currentPage - 1), 0.0f) animated:![self isHidden]];
 }
 
-- (void)setCurrentBook:(NSMutableDictionary *)bookData {
+- (void)setCurrentBook:(PTBook *)bookData {
     // Check if current book is already the one set
-    if (book != nil && [[book objectForKey:@"id"] isEqualToNumber:[bookData objectForKey:@"id"]]) {
+    if (book != nil && [book.bookId isEqualToNumber:bookData.bookId]) {
         return;
     }
 
@@ -67,13 +67,13 @@
     book = bookData;
 
     // Get book's current page
-    currentPage = [[book objectForKey:@"current_page"] intValue];
+    currentPage = book.currentPage;
 
     // Delete all current page views
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // Create new pages
-    totalPages = [[book objectForKey:@"total_pages"] intValue];
+    totalPages = book.totalPages;
     pages = [[NSMutableArray alloc] initWithCapacity:totalPages];
     
     for (int i=0; i<totalPages; i++) {
