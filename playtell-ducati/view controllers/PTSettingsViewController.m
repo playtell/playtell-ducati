@@ -24,7 +24,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        // Custom implementation
     }
     return self;
 }
@@ -49,6 +49,18 @@
     
     // Container view
     containerView.layer.cornerRadius = 5.0f;
+    containerView.backgroundColor = [UIColor colorFromHex:@"#E4ECEF"];
+    
+    // Create the view controllers for the different tabs
+    accountViewController = [[PTAccountViewController alloc] init];
+    accountViewController.view.frame = CGRectMake(0.0f, 0.0f, containerView.frame.size.width, containerView.frame.size.height);
+    passwordViewController = [[PTPasswordViewController alloc] init];
+    passwordViewController.view.frame = CGRectMake(0.0f, 0.0f, containerView.frame.size.width, containerView.frame.size.height);
+    passwordViewController.view.alpha = 0.0f;
+    
+    // Add the subviews from the view controllers
+    [containerView addSubview:accountViewController.view];
+    [containerView addSubview:passwordViewController.view];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,6 +72,50 @@
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+#pragma mark - Button press methods
+
+- (IBAction)accountButtonPressed:(id)sender {
+    // If we're showing the right view, just return
+    if (accountViewController.view.alpha == 1.0) {
+        return;
+    }
+    
+    // Setup the buttons
+    btnAccount.selected = YES;
+    btnPassword.selected = NO;
+    
+    [UIView animateWithDuration:0.2f animations:^{
+        // Hide the other views
+        passwordViewController.view.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2f animations:^{
+            // Show the account view
+            accountViewController.view.alpha = 1.0f;
+        }];
+    }];
+}
+
+- (IBAction)passwordButtonPressed:(id)sender {
+    // If we're showing the right view, just return
+    if (passwordViewController.view.alpha == 1.0) {
+        return;
+    }
+    
+    // Setup the buttons
+    btnAccount.selected = NO;
+    btnPassword.selected = YES;
+    
+    [UIView animateWithDuration:0.2f animations:^{
+        // Hide the other views
+        accountViewController.view.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.2f animations:^{
+            // Show the password view
+            passwordViewController.view.alpha = 1.0f;
+        }];
+    }];
 }
 
 @end

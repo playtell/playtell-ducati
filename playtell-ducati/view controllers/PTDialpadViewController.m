@@ -33,6 +33,7 @@
 #import "PTPlaymateView.h"
 #import "PTPlaymateAddView.h"
 #import "PTPostcard.h"
+#import "PTSettingsViewController.h"
 #import "PTSoloUser.h"
 #import "PTSpinnerView.h"
 #import "PTUser.h"
@@ -59,6 +60,7 @@
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic, retain) PTBadgeButton* postcardButton;
+@property (nonatomic, retain) UIButton *settingsButton;
 @end
 
 @implementation PTDialpadViewController
@@ -75,6 +77,7 @@
 @synthesize chatController;
 @synthesize backgroundTask;
 @synthesize postcardButton;
+@synthesize settingsButton;
 
 BOOL playdateStarting;
 BOOL postcardsShown;
@@ -176,6 +179,15 @@ BOOL postcardsShown;
     // Postcards view
     postcardsView = [[PTShowPostcardsView alloc] initWithFrame:background.frame];
     [self.view insertSubview:postcardsView belowSubview:background];
+    
+    // Settings button
+    UIImage *settingsImage = [UIImage imageNamed:@"Settings.png"];
+    UIImage *settingsPressImage = [UIImage imageNamed:@"settings-press.png"];
+    settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - settingsImage.size.width - 15, 15.0f, settingsImage.size.width, settingsImage.size.height)];
+    [settingsButton setBackgroundImage:settingsImage forState:UIControlStateNormal];
+    [settingsButton setBackgroundImage:settingsPressImage forState:UIControlStateHighlighted];
+    [settingsButton addTarget:self action:@selector(settingsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:settingsButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -889,6 +901,15 @@ BOOL postcardsShown;
     }
     
     postcardsShown = !postcardsShown;
+}
+
+- (void)settingsButtonPressed {
+    PTSettingsViewController *settingsViewController = [[PTSettingsViewController alloc] initWithNibName:@"PTSettingsViewController" bundle:nil];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - Ringer methods

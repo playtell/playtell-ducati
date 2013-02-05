@@ -8,7 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "PTAccountViewController.h"
+#import "PTPasswordViewController.h"
+
 @interface PTSettingsViewController : UIViewController {
+    // View controllers for settings tabs
+    PTAccountViewController *accountViewController;
+    PTPasswordViewController *passwordViewController;
+    
     // Nav bar buttons
     UIBarButtonItem *buttonBack;
     UIBarButtonItem *buttonSave;
@@ -20,5 +27,8 @@
     // Container view
     IBOutlet UIView *containerView;
 }
+
+- (IBAction)accountButtonPressed:(id)sender;
+- (IBAction)passwordButtonPressed:(id)sender;
 
 @end
