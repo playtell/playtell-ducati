@@ -252,11 +252,18 @@
                               }
                               
                               // Save logged-in status
-                              [[PTUser currentUser] setUsername:newUserNavigationController.currentUser.email];
-                              [[PTUser currentUser] setEmail:newUserNavigationController.currentUser.email];
-                              [[PTUser currentUser] setAuthToken:token];
-                              [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-                              [[PTUser currentUser] setPhotoURL:photoURL];
+                              PTUser *currentUser = [PTUser currentUser];
+                              [currentUser setUsername:newUserNavigationController.currentUser.email];
+                              [currentUser setEmail:newUserNavigationController.currentUser.email];
+                              [currentUser setAuthToken:token];
+                              [currentUser setUserID:[userID unsignedIntValue]];
+                              [currentUser setPhotoURL:photoURL];
+                              
+                              // Setup people attributes in analytics
+                              NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+                              [attr setObject:currentUser.email forKey:PeopleEmail];
+                              [attr setObject:currentUser.username forKey:PeopleUsername];
+                              [PTAnalytics setPeopleProperties:attr];
                               
                               // Get Urban Airship device token
                               PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
