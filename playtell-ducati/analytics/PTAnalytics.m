@@ -54,4 +54,9 @@
     [mixpanel.people set:properties];
 }
 
++ (void)registerPushDeviceToken:(NSData *)token {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people addPushDeviceToken:token];
+}
+
 @end

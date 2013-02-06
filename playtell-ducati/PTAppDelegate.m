@@ -212,6 +212,9 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
+    // Register the token with Mixpanel for analytics
+    [PTAnalytics registerPushDeviceToken:deviceToken];
+    
     // Register device if user is logged in
     NSLog(@"Logged in? %@", [[PTUser currentUser] isLoggedIn] == YES ? @"YES" : @"NO");
     if ([[PTUser currentUser] isLoggedIn] == YES) {

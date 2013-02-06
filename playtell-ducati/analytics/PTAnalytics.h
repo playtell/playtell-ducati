@@ -51,5 +51,6 @@
 + (void)flush;
 
 + (void)setPeopleProperties:(NSDictionary *)properties;
++ (void)registerPushDeviceToken:(NSData *)token;
 
 @end
