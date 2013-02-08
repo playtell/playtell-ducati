@@ -186,6 +186,7 @@
 		1AF89FE116C0B34D003CA8A5 /* settings-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AF89FD516C0B34D003CA8A5 /* settings-press@2x.png */; };
 		1AF89FE216C0B34D003CA8A5 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AF89FD616C0B34D003CA8A5 /* Settings.png */; };
 		1AF89FE316C0B34D003CA8A5 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AF89FD716C0B34D003CA8A5 /* Settings@2x.png */; };
+		1AF89FFA16C48837003CA8A5 /* PTErrorTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF89FF916C48837003CA8A5 /* PTErrorTableView.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1321,6 +1322,8 @@
 		1AF89FD516C0B34D003CA8A5 /* settings-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-press@2x.png"; sourceTree = "<group>"; };
 		1AF89FD616C0B34D003CA8A5 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
 		1AF89FD716C0B34D003CA8A5 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings@2x.png"; sourceTree = "<group>"; };
+		1AF89FF816C48837003CA8A5 /* PTErrorTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTErrorTableView.h; sourceTree = "<group>"; };
+		1AF89FF916C48837003CA8A5 /* PTErrorTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTErrorTableView.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2920,6 +2923,8 @@
 			children = (
 				1AF89FC816C04FB5003CA8A5 /* PTSettingsTitleView.h */,
 				1AF89FC916C04FB5003CA8A5 /* PTSettingsTitleView.m */,
+				1AF89FF816C48837003CA8A5 /* PTErrorTableView.h */,
+				1AF89FF916C48837003CA8A5 /* PTErrorTableView.m */,
 			);
 			name = settings;
 			sourceTree = "<group>";
@@ -6419,6 +6424,7 @@
 				1ACF3F5A16C03B2E00D7EC2E /* PTAccountViewController.m in Sources */,
 				1ACF3F5E16C0446000D7EC2E /* PTPasswordViewController.m in Sources */,
 				1AF89FCA16C04FB5003CA8A5 /* PTSettingsTitleView.m in Sources */,
+				1AF89FFA16C48837003CA8A5 /* PTErrorTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
