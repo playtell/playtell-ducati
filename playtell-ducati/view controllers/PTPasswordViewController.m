@@ -6,8 +6,10 @@
 //  Copyright (c) 2013 PlayTell. All rights reserved.
 //
 
+#import "PTPasswordChangeRequest.h"
 #import "PTPasswordViewController.h"
 #import "PTSettingsTitleView.h"
+#import "PTUser.h"
 
 #import "UIColor+ColorFromHex.h"
 
@@ -109,6 +111,8 @@
 }
 
 - (void)resetButtonPressed {
+    resetButton.enabled = NO;
+    
     errorCurrent.hidden = YES;
     errorNew.hidden = YES;
     errorConfirm.hidden = YES;
@@ -125,6 +129,45 @@
     }
     
     [self showErrors:errors];
+    
+    if (errors.count == 0) {
+        // Send the request to change the password
+        PTPasswordChangeRequest *passwordChange = [[PTPasswordChangeRequest alloc] init];
+        [passwordChange changePasswordTo:self.password
+                     withCurrentPassword:self.currentPassword
+                                  userId:[PTUser currentUser].userID
+                               authToken:[PTUser currentUser].authToken
+                               onSuccess:^(NSDictionary *result) {
+                                   txtCurrent.text = @"";
+                                   txtNew.text = @"";
+                                   txtConfirm.text = @"";
+                                   resetButton.enabled = YES;
+                                   
+                                   UIAlertView *alert = [[UIAlertView alloc]
+                                                         initWithTitle:@"Password Changed"
+                                                         message:@"Your password was successfully changed."
+                                                         delegate:nil
+                                                         cancelButtonTitle:@"OK"
+                                                         otherButtonTitles:nil];
+                                   [alert show];
+                               } onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                   NSLog(@"Error changing password: %@", error);
+                                   txtCurrent.text = @"";
+                                   txtNew.text = @"";
+                                   txtConfirm.text = @"";
+                                   resetButton.enabled = YES;
+                                   
+                                   UIAlertView *alert = [[UIAlertView alloc]
+                                                         initWithTitle:@"Please Try Again"
+                                                         message:@"Your password could not be changed with the information that was entered. Please try entering your information again."
+                                                         delegate:nil
+                                                         cancelButtonTitle:@"OK"
+                                                         otherButtonTitles:nil];
+                                   [alert show];
+                               }];
+    } else {
+        resetButton.enabled = YES;
+    }
 }
 
 - (NSMutableArray *)compareNewPasswordWithConfirmation {
