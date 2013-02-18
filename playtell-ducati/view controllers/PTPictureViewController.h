@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "PTDropDownButton.h"
 #import "PTErrorTableView.h"
 
 @interface PTPictureViewController : UIViewController {
     UIView *pictureContainer;
     UIImageView *pictureView;
+    PTDropDownButton *btnDropDown;
     
     PTErrorTableView *errorTable;
     

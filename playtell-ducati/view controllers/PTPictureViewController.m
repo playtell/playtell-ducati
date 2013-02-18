@@ -61,6 +61,12 @@
             pictureView.image = currentUser.userPhoto;
         }
         
+        // Drop down button
+        float buttonWidth = 267.0f;
+        float buttonHeight = 45.0f;
+        btnDropDown = [[PTDropDownButton alloc] initWithFrame:CGRectMake((pictureContainer.frame.size.width - buttonWidth) / 2, pictureView.frame.size.height + 20, buttonWidth, buttonHeight)];
+        [btnDropDown setTitle:@"Change Pic" forState:UIControlStateNormal];
+        [pictureContainer addSubview:btnDropDown];
     }
     return self;
 }
