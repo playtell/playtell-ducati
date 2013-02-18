@@ -26,7 +26,7 @@
         
         PTSettingsTitleView *topTitle = [[PTSettingsTitleView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 30.0f)];
         topTitle.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        topTitle.textLabel.text = @"Your Buddy Pic";
+        topTitle.textLabel.text = @"Contact Info";
         [self.view addSubview:topTitle];
     }
     return self;

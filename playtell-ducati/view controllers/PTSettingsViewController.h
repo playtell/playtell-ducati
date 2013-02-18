@@ -10,11 +10,13 @@
 
 #import "PTAccountViewController.h"
 #import "PTPasswordViewController.h"
+#import "PTPictureViewController.h"
 
 @interface PTSettingsViewController : UIViewController {
     // View controllers for settings tabs
     PTAccountViewController *accountViewController;
     PTPasswordViewController *passwordViewController;
+    PTPictureViewController *pictureViewController;
     
     // Nav bar buttons
     UIBarButtonItem *buttonBack;
@@ -23,6 +25,7 @@
     // Buttons
     IBOutlet UIButton *btnAccount;
     IBOutlet UIButton *btnPassword;
+    IBOutlet UIButton *btnPicture;
     
     // Container view
     IBOutlet UIView *containerView;
@@ -30,5 +33,6 @@
 
 - (IBAction)accountButtonPressed:(id)sender;
 - (IBAction)passwordButtonPressed:(id)sender;
+- (IBAction)pictureButtonPressed:(id)sender;
 
 @end

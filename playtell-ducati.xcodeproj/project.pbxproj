@@ -188,6 +188,7 @@
 		1AF89FE316C0B34D003CA8A5 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AF89FD716C0B34D003CA8A5 /* Settings@2x.png */; };
 		1AF89FFA16C48837003CA8A5 /* PTErrorTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF89FF916C48837003CA8A5 /* PTErrorTableView.m */; };
 		1AF89FFF16C559B3003CA8A5 /* PTPasswordChangeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF89FFE16C559B3003CA8A5 /* PTPasswordChangeRequest.m */; };
+		1AF8A00216D2A85D003CA8A5 /* PTPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00116D2A85D003CA8A5 /* PTPictureViewController.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1327,6 +1328,8 @@
 		1AF89FF916C48837003CA8A5 /* PTErrorTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTErrorTableView.m; sourceTree = "<group>"; };
 		1AF89FFD16C559B3003CA8A5 /* PTPasswordChangeRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPasswordChangeRequest.h; sourceTree = "<group>"; };
 		1AF89FFE16C559B3003CA8A5 /* PTPasswordChangeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPasswordChangeRequest.m; sourceTree = "<group>"; };
+		1AF8A00016D2A85D003CA8A5 /* PTPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPictureViewController.h; sourceTree = "<group>"; };
+		1AF8A00116D2A85D003CA8A5 /* PTPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPictureViewController.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2792,6 +2795,8 @@
 				1ACF3F5916C03B2E00D7EC2E /* PTAccountViewController.m */,
 				1ACF3F5C16C0446000D7EC2E /* PTPasswordViewController.h */,
 				1ACF3F5D16C0446000D7EC2E /* PTPasswordViewController.m */,
+				1AF8A00016D2A85D003CA8A5 /* PTPictureViewController.h */,
+				1AF8A00116D2A85D003CA8A5 /* PTPictureViewController.m */,
 			);
 			name = settings;
 			sourceTree = "<group>";
@@ -6439,6 +6444,7 @@
 				1AF89FCA16C04FB5003CA8A5 /* PTSettingsTitleView.m in Sources */,
 				1AF89FFA16C48837003CA8A5 /* PTErrorTableView.m in Sources */,
 				1AF89FFF16C559B3003CA8A5 /* PTPasswordChangeRequest.m in Sources */,
+				1AF8A00216D2A85D003CA8A5 /* PTPictureViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
