@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 PlayTell. All rights reserved.
 //
 
+#define MARGIN  20.0
+
 #import <QuartzCore/QuartzCore.h>
 
 #import "PTPictureViewController.h"
@@ -40,7 +42,7 @@
         [self.view addSubview:errorTable];
         
         // Picture view
-        pictureContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, topTitle.frame.size.height + 20, self.view.frame.size.width, 400.0f)];
+        pictureContainer = [[UIView alloc] initWithFrame:CGRectMake(0.0f, topTitle.frame.size.height + MARGIN, self.view.frame.size.width, 400.0f)];
         pictureContainer.autoresizesSubviews = YES;
         pictureContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         pictureContainer.backgroundColor = [UIColor clearColor];
@@ -49,6 +51,7 @@
         float picWidth = 300.0f;
         float picHeight = 225.0f;
         pictureView = [[UIImageView alloc] initWithFrame:CGRectMake((pictureContainer.frame.size.width - picWidth) / 2, 0.0f, picWidth, picHeight)];
+        pictureView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         pictureView.clipsToBounds = YES;
         pictureView.layer.cornerRadius = 15.0f;
         pictureView.layer.borderColor = [UIColor colorWithWhite:0.0f alpha:0.5f].CGColor;
@@ -61,12 +64,25 @@
             pictureView.image = currentUser.userPhoto;
         }
         
-        // Drop down button
-        float buttonWidth = 267.0f;
-        float buttonHeight = 45.0f;
-        btnDropDown = [[PTDropDownButton alloc] initWithFrame:CGRectMake((pictureContainer.frame.size.width - buttonWidth) / 2, pictureView.frame.size.height + 20, buttonWidth, buttonHeight)];
-        [btnDropDown setTitle:@"Change Pic" forState:UIControlStateNormal];
-        [pictureContainer addSubview:btnDropDown];
+        // Take picture button
+        btnTakePicture = [[UIButton alloc] initWithFrame:CGRectMake(pictureContainer.frame.size.width / 4, pictureView.frame.size.height + MARGIN, pictureContainer.frame.size.width / 2, 50.0f)];
+        btnTakePicture.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [btnTakePicture setBackgroundImage:[UIImage imageNamed:@"buttonSendInviteNormal.png"] forState:UIControlStateNormal];
+        [btnTakePicture setTitle:@"Take a photo" forState:UIControlStateNormal];
+        [btnTakePicture setTitleColor:[UIColor colorFromHex:@"#223844"] forState:UIControlStateNormal];
+        [btnTakePicture setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btnTakePicture addTarget:self action:@selector(takePictureButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [pictureContainer addSubview:btnTakePicture];
+        
+        // Choose picture button
+        btnChoosePicture = [[UIButton alloc] initWithFrame:CGRectMake(pictureContainer.frame.size.width / 4, btnTakePicture.frame.origin.y + btnTakePicture.frame.size.height + MARGIN, pictureContainer.frame.size.width / 2, 50.0f)];
+        btnChoosePicture.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [btnChoosePicture setBackgroundImage:[UIImage imageNamed:@"buttonSendInviteNormal.png"] forState:UIControlStateNormal];
+        [btnChoosePicture setTitle:@"Choose a photo" forState:UIControlStateNormal];
+        [btnChoosePicture setTitleColor:[UIColor colorFromHex:@"#223844"] forState:UIControlStateNormal];
+        [btnChoosePicture setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btnChoosePicture addTarget:self action:@selector(choosePictureButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [pictureContainer addSubview:btnChoosePicture];
     }
     return self;
 }
@@ -88,7 +104,7 @@
         // Hide the error table
         [UIView animateWithDuration:0.2f animations:^{
             errorTable.frame = CGRectMake(errorTable.frame.origin.x, errorTable.frame.origin.y, errorTable.frame.size.width, 1.0f);
-            pictureContainer.frame = CGRectMake(pictureContainer.frame.origin.x, errorTable.frame.origin.y + errorTable.frame.size.height + 20, pictureContainer.frame.size.width, pictureContainer.frame.size.height);
+            pictureContainer.frame = CGRectMake(pictureContainer.frame.origin.x, errorTable.frame.origin.y + errorTable.frame.size.height + MARGIN, pictureContainer.frame.size.width, pictureContainer.frame.size.height);
         } completion:^(BOOL finished) {
             errorTable.hidden = YES;
         }];
@@ -98,9 +114,19 @@
         errorTable.hidden = NO;
         [UIView animateWithDuration:0.2f animations:^{
             errorTable.frame = CGRectMake(errorTable.frame.origin.x, errorTable.frame.origin.y, errorTable.frame.size.width, [errorsToShow count] * 24 + errorsToShow.count);
-            pictureContainer.frame = CGRectMake(pictureContainer.frame.origin.x, errorTable.frame.origin.y + errorTable.frame.size.height + 20, pictureContainer.frame.size.width, pictureContainer.frame.size.height);
+            pictureContainer.frame = CGRectMake(pictureContainer.frame.origin.x, errorTable.frame.origin.y + errorTable.frame.size.height + MARGIN, pictureContainer.frame.size.width, pictureContainer.frame.size.height);
         }];
     }
+}
+
+#pragma mark - Button pressed methods
+
+- (void)takePictureButtonPressed {
+    
+}
+
+- (void)choosePictureButtonPressed {
+    
 }
 
 @end

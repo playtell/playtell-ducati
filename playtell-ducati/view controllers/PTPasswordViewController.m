@@ -79,9 +79,11 @@
         
         // Reset button
         resetButton = [[UIButton alloc] initWithFrame:CGRectMake(tableContainer.frame.size.width / 4, inputTable.frame.size.height + 20, tableContainer.frame.size.width / 2, 50.0f)];
-        resetButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        resetButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [resetButton setBackgroundImage:[UIImage imageNamed:@"buttonSendInviteNormal.png"] forState:UIControlStateNormal];
         [resetButton setTitle:@"Change Password" forState:UIControlStateNormal];
+        [resetButton setTitleColor:[UIColor colorFromHex:@"#223844"] forState:UIControlStateNormal];
+        [resetButton setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [resetButton addTarget:self action:@selector(resetButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [tableContainer addSubview:resetButton];
         
