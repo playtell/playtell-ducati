@@ -10,17 +10,21 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "NonRotatingUIImagePickerController.h"
 #import "PTPictureViewController.h"
 #import "PTSettingsTitleView.h"
 #import "PTUser.h"
 
 #import "UIColor+ColorFromHex.h"
+#import "UIImage+Resize.h"
 
 @interface PTPictureViewController ()
 
 @end
 
 @implementation PTPictureViewController
+
+@synthesize cameraPopoverController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,20 +87,19 @@
         [btnChoosePicture setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btnChoosePicture addTarget:self action:@selector(choosePictureButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [pictureContainer addSubview:btnChoosePicture];
+        
+        // Camera control
+        camera = [[NonRotatingUIImagePickerController alloc] init];
+        camera.delegate = self;
+        camera.allowsEditing = YES;
+        self.cameraPopoverController = [[UIPopoverController alloc] initWithContentViewController:camera];
+        self.cameraPopoverController.delegate = self;
+        
+        // Camera-
+        btnTakePicture.enabled = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+        btnChoosePicture.enabled = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
     }
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)showErrors:(NSMutableArray *)errorsToShow {
@@ -122,11 +125,33 @@
 #pragma mark - Button pressed methods
 
 - (void)takePictureButtonPressed {
-    
+    camera.sourceType = UIImagePickerControllerSourceTypeCamera;
+    camera.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+    [self.cameraPopoverController presentPopoverFromRect:pictureView.frame inView:pictureContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 - (void)choosePictureButtonPressed {
+    camera.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    [self.cameraPopoverController presentPopoverFromRect:pictureView.frame inView:pictureContainer permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+}
+
+#pragma mark - UIImagePicker delegates
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
+    // Resize and crop to 200x150
+    UIImage *resizedImage = [image scaleProportionallyToSize:CGSizeMake(200.0f, 200.0f)];
+    resizedImage = [resizedImage croppedImage:CGRectMake(0.0f, 25.0f, 200.0f, 150.0f)];
     
+    // Display photo
+    pictureView.image = resizedImage;
+    
+    // Get rid of camera
+    [self.cameraPopoverController dismissPopoverAnimated:YES];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    // Get rid of camera
+    [self.cameraPopoverController dismissPopoverAnimated:YES];
 }
 
 @end

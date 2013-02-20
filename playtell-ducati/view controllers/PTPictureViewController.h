@@ -10,7 +10,7 @@
 
 #import "PTErrorTableView.h"
 
-@interface PTPictureViewController : UIViewController {
+@interface PTPictureViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPopoverControllerDelegate> {
     UIView *pictureContainer;
     UIImageView *pictureView;
     UIButton *btnTakePicture;
@@ -19,6 +19,10 @@
     PTErrorTableView *errorTable;
     
     NSMutableArray *errorsShown;
+    
+    UIImagePickerController *camera;
 }
+
+@property (nonatomic, retain) UIPopoverController *cameraPopoverController;
 
 @end

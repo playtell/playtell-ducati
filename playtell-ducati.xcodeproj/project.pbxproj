@@ -190,6 +190,7 @@
 		1AF89FFF16C559B3003CA8A5 /* PTPasswordChangeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF89FFE16C559B3003CA8A5 /* PTPasswordChangeRequest.m */; };
 		1AF8A00216D2A85D003CA8A5 /* PTPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00116D2A85D003CA8A5 /* PTPictureViewController.m */; };
 		1AF8A00516D2EB4E003CA8A5 /* PTDropDownButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00416D2EB4E003CA8A5 /* PTDropDownButton.m */; };
+		1AF8A00816D53460003CA8A5 /* NonRotatingUIImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00716D53460003CA8A5 /* NonRotatingUIImagePickerController.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1333,6 +1334,8 @@
 		1AF8A00116D2A85D003CA8A5 /* PTPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPictureViewController.m; sourceTree = "<group>"; };
 		1AF8A00316D2EB4E003CA8A5 /* PTDropDownButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTDropDownButton.h; sourceTree = "<group>"; };
 		1AF8A00416D2EB4E003CA8A5 /* PTDropDownButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTDropDownButton.m; sourceTree = "<group>"; };
+		1AF8A00616D53460003CA8A5 /* NonRotatingUIImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonRotatingUIImagePickerController.h; sourceTree = "<group>"; };
+		1AF8A00716D53460003CA8A5 /* NonRotatingUIImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonRotatingUIImagePickerController.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -3353,6 +3356,8 @@
 				23B31AAC15C1C5C90044A2D8 /* NSString+UrlEncode.m */,
 				23CC06A915C9ABCE003CAA11 /* UIColor+HexColor.h */,
 				23CC06AA15C9ABCE003CAA11 /* UIColor+HexColor.m */,
+				1AF8A00616D53460003CA8A5 /* NonRotatingUIImagePickerController.h */,
+				1AF8A00716D53460003CA8A5 /* NonRotatingUIImagePickerController.m */,
 			);
 			name = extras;
 			sourceTree = "<group>";
@@ -6451,6 +6456,7 @@
 				1AF89FFF16C559B3003CA8A5 /* PTPasswordChangeRequest.m in Sources */,
 				1AF8A00216D2A85D003CA8A5 /* PTPictureViewController.m in Sources */,
 				1AF8A00516D2EB4E003CA8A5 /* PTDropDownButton.m in Sources */,
+				1AF8A00816D53460003CA8A5 /* NonRotatingUIImagePickerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
