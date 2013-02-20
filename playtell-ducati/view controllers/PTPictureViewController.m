@@ -13,6 +13,7 @@
 #import "NonRotatingUIImagePickerController.h"
 #import "PTPictureViewController.h"
 #import "PTSettingsTitleView.h"
+#import "PTUpdatePhotoRequest.h"
 #import "PTUser.h"
 
 #import "UIColor+ColorFromHex.h"
@@ -147,6 +148,21 @@
     
     // Get rid of camera
     [self.cameraPopoverController dismissPopoverAnimated:YES];
+    
+    // Send updated photo to the server
+    PTUser *currentUser = [PTUser currentUser];
+    PTUpdatePhotoRequest *updatePhotoRequest = [[PTUpdatePhotoRequest alloc] init];
+    [updatePhotoRequest updatePhotoWithUserId:currentUser.userID
+                                    authToken:currentUser.authToken
+                                        photo:resizedImage
+                                      success:^(NSDictionary *result)
+     {
+         NSLog(@"Successfully updated photo");
+     }
+                                      failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         NSLog(@"Failed to update photo");
+     }];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
