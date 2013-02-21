@@ -67,11 +67,6 @@
     [containerView addSubview:pictureViewController.view];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)navigateBack:(id)sender {
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:(UIViewController *)appDelegate.dialpadController

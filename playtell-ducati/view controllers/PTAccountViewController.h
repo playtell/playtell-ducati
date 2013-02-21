@@ -6,8 +6,29 @@
 //  Copyright (c) 2013 PlayTell. All rights reserved.
 //
 
+#define kNameTag    0
+#define kEmailTag   1
+
 #import <UIKit/UIKit.h>
 
-@interface PTAccountViewController : UIViewController
+#import "PTErrorTableView.h"
+
+@interface PTAccountViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
+    // Text fields
+    UITextField *txtName;
+    UITextField *txtEmail;
+    
+    UIImageView *errorName;
+    UIImageView *errorEmail;
+    
+    UIView *tableContainer;
+    UITableView *inputTable;
+    PTErrorTableView *errorTable;
+    
+    NSMutableArray *errorsShown;
+}
+
+@property (nonatomic, readonly) NSString *name;
+@property (nonatomic, readonly) NSString *email;
 
 @end

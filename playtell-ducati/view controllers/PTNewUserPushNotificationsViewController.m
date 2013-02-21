@@ -252,7 +252,7 @@
                               }
                               
                               // Save logged-in status
-                              [[PTUser currentUser] setUsername:newUserNavigationController.currentUser.email];
+                              [[PTUser currentUser] setUsername:newUserNavigationController.currentUser.name];
                               [[PTUser currentUser] setEmail:newUserNavigationController.currentUser.email];
                               [[PTUser currentUser] setAuthToken:token];
                               [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
