@@ -121,7 +121,6 @@
     }
     
     float margin = 40.0f;
-    PTUser *currentUser = [PTUser currentUser];
     
     switch (indexPath.row) {
         case 0: {
@@ -135,7 +134,6 @@
             txtName.autocapitalizationType = UITextAutocapitalizationTypeWords;
             txtName.tag = kNameTag;
             txtName.delegate = self;
-            txtName.text = currentUser.username;
             [cellView addSubview:txtName];
             errorName.frame = CGRectMake(cellView.frame.size.width - errorName.frame.size.width, 2.0f, errorName.frame.size.width, errorName.frame.size.height);
             [cellView addSubview:errorName];
@@ -153,7 +151,6 @@
             txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
             txtEmail.tag = kEmailTag;
             txtEmail.delegate = self;
-            txtEmail.text = currentUser.email;
             [cellView addSubview:txtEmail];
             errorEmail.frame = CGRectMake(cellView.frame.size.width - errorEmail.frame.size.width, 2.0f, errorEmail.frame.size.width, errorEmail.frame.size.height);
             [cellView addSubview:errorEmail];
@@ -195,12 +192,26 @@
     }
 }
 
+- (void)setName:(NSString *)aName {
+    if (!txtName) {
+        txtName = [[UITextField alloc] init];
+    }
+    txtName.text = aName;
+}
+
 - (NSString *)email {
     if (txtEmail) {
         return txtEmail.text;
     } else {
         return nil;
     }
+}
+
+- (void)setEmail:(NSString *)aEmail {
+    if (!txtEmail) {
+        txtEmail = [[UITextField alloc] init];
+    }
+    txtEmail.text = aEmail;
 }
 
 @end

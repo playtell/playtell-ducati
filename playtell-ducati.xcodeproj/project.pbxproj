@@ -193,6 +193,7 @@
 		1AF8A00816D53460003CA8A5 /* NonRotatingUIImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00716D53460003CA8A5 /* NonRotatingUIImagePickerController.m */; };
 		1AF8A00B16D53B97003CA8A5 /* PTUpdatePhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00A16D53B97003CA8A5 /* PTUpdatePhotoRequest.m */; };
 		1AF8A00E16D6B8A0003CA8A5 /* NSDate+Rails.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00D16D6B8A0003CA8A5 /* NSDate+Rails.m */; };
+		1AF8A01116D6D706003CA8A5 /* PTUserSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A01016D6D706003CA8A5 /* PTUserSettingsRequest.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1342,6 +1343,8 @@
 		1AF8A00A16D53B97003CA8A5 /* PTUpdatePhotoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdatePhotoRequest.m; sourceTree = "<group>"; };
 		1AF8A00C16D6B8A0003CA8A5 /* NSDate+Rails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Rails.h"; sourceTree = "<group>"; };
 		1AF8A00D16D6B8A0003CA8A5 /* NSDate+Rails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Rails.m"; sourceTree = "<group>"; };
+		1AF8A00F16D6D705003CA8A5 /* PTUserSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUserSettingsRequest.h; sourceTree = "<group>"; };
+		1AF8A01016D6D706003CA8A5 /* PTUserSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUserSettingsRequest.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2977,6 +2980,8 @@
 				1AF89FFE16C559B3003CA8A5 /* PTPasswordChangeRequest.m */,
 				1AF8A00916D53B97003CA8A5 /* PTUpdatePhotoRequest.h */,
 				1AF8A00A16D53B97003CA8A5 /* PTUpdatePhotoRequest.m */,
+				1AF8A00F16D6D705003CA8A5 /* PTUserSettingsRequest.h */,
+				1AF8A01016D6D706003CA8A5 /* PTUserSettingsRequest.m */,
 			);
 			name = settings;
 			sourceTree = "<group>";
@@ -6469,6 +6474,7 @@
 				1AF8A00816D53460003CA8A5 /* NonRotatingUIImagePickerController.m in Sources */,
 				1AF8A00B16D53B97003CA8A5 /* PTUpdatePhotoRequest.m in Sources */,
 				1AF8A00E16D6B8A0003CA8A5 /* NSDate+Rails.m in Sources */,
+				1AF8A01116D6D706003CA8A5 /* PTUserSettingsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

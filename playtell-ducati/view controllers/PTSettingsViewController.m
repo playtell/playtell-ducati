@@ -11,6 +11,8 @@
 #import "PTAppDelegate.h"
 #import "PTContactsNavBackButton.h"
 #import "PTSettingsViewController.h"
+#import "PTUser.h"
+#import "PTUserSettingsRequest.h"
 #import "TransitionController.h"
 
 #import "UIColor+ColorFromHex.h"
@@ -65,6 +67,25 @@
     [containerView addSubview:accountViewController.view];
     [containerView addSubview:passwordViewController.view];
     [containerView addSubview:pictureViewController.view];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Get the current settings and load those into account tab
+    PTUserSettingsRequest *settingsRequest = [[PTUserSettingsRequest alloc] init];
+    [settingsRequest getUserSettingsWithUserId:[PTUser currentUser].userID
+                                     authToken:[PTUser currentUser].authToken
+                                       success:^(NSDictionary *result)
+     {
+         NSDictionary *user = [result objectForKey:@"user"];
+         accountViewController.name = [user objectForKey:@"displayName"];
+         accountViewController.email = [user objectForKey:@"email"];
+     }
+                                       failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+     {
+         NSLog(@"Could not retrieve user settings");
+     }];
 }
 
 - (void)navigateBack:(id)sender {

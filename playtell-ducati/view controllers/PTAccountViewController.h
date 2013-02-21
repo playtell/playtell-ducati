@@ -28,7 +28,7 @@
     NSMutableArray *errorsShown;
 }
 
-@property (nonatomic, readonly) NSString *name;
-@property (nonatomic, readonly) NSString *email;
+@property (nonatomic, readwrite) NSString *name;
+@property (nonatomic, readwrite) NSString *email;
 
 @end
