@@ -21,6 +21,9 @@
 
 @synthesize name;
 @synthesize email;
+@synthesize birthday;
+
+@synthesize datePopoverController;
 
 - (id)init {
     self = [super init];
@@ -71,16 +74,38 @@
         lblEmail.backgroundColor = [UIColor clearColor];
         lblEmail.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
         [tableContainer addSubview:lblEmail];
+        UILabel *lblBirthday = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 130.0f, tableContainer.frame.size.width / 3 - 20, 22.0f)];
+        lblBirthday.text = @"Birthday";
+        lblBirthday.textAlignment = UITextAlignmentRight;
+        lblBirthday.textColor = [UIColor colorFromHex:@"#2E4957"];
+        lblBirthday.backgroundColor = [UIColor clearColor];
+        lblBirthday.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+        [tableContainer addSubview:lblBirthday];
                 
         // Text fields
         txtName = [[UITextField alloc] init];
         txtEmail = [[UITextField alloc] init];
+        txtBirthday = [[UITextField alloc] init];
         
         // Error images
         errorName = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-error"]];
         errorName.hidden = YES;
         errorEmail = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-error"]];
         errorEmail.hidden = YES;
+        errorBirthday = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"text-error"]];
+        errorBirthday.hidden = YES;
+        
+        // Date picker popover
+        float popoverWidth = 320.0f;
+        float popoverHeight = 160.0f;
+        datePickerView = [[UIDatePicker alloc] init];
+        datePickerView.datePickerMode = UIDatePickerModeDate;
+        datePickerView.frame = CGRectMake(datePickerView.frame.origin.x, datePickerView.frame.origin.y, popoverWidth, popoverHeight);
+        UIViewController *popoverContent = [[UIViewController alloc] init];
+        popoverContent.view = datePickerView;
+        self.datePopoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+        self.datePopoverController.delegate = self;
+        [self.datePopoverController setPopoverContentSize:CGSizeMake(popoverWidth, popoverHeight) animated:NO];
     }
     return self;
 }
@@ -105,14 +130,50 @@
     }
 }
 
+- (BOOL)isAbove13:(NSDate *)compareDate {
+    NSTimeInterval diff = [compareDate timeIntervalSinceNow];
+    
+    NSDate *date1 = [[NSDate alloc] init];
+    NSDate *date2 = [[NSDate alloc] initWithTimeInterval:diff sinceDate:date1];
+    NSDateComponents *conversionInfo = [[NSCalendar currentCalendar] components:NSYearCalendarUnit
+                                                                       fromDate:date1
+                                                                         toDate:date2
+                                                                        options:0];
+    
+    NSInteger years = conversionInfo.year * -1;
+    return (years >= 13);
+}
+
+- (void)updateBirthdayLabelUsingDate:(NSDate *)date {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterLongStyle];
+    txtBirthday.text = [dateFormatter stringFromDate:date];
+}
+
+- (void)accountHasNoBirthday {
+    self.birthday = [NSDate date];
+    [self showErrors:[NSMutableArray arrayWithObject:@"Please set your birthday"]];
+    errorBirthday.hidden = NO;
+}
+
 #pragma mark - Tableview delegate and data source methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    switch (section) {
+        case 0: // account info
+            return 2;
+            break;
+        case 1: // birthday
+            return 1;
+            break;
+        default:
+            return 0;
+            break;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,38 +184,60 @@
     
     float margin = 40.0f;
     
-    switch (indexPath.row) {
+    switch (indexPath.section) {
         case 0: {
-            // Name
-            UIView *cellView = [[UIView alloc] initWithFrame:CGRectMake(margin, 0.0f, tableView.frame.size.width - margin, 21.0f)];
-            txtName.frame = cellView.bounds;
-            txtName.font = [UIFont systemFontOfSize:16.0f];
-            txtName.autocorrectionType = UITextAutocorrectionTypeNo;
-            [txtName setClearButtonMode:UITextFieldViewModeNever];
-            txtName.returnKeyType = UIReturnKeyDone;
-            txtName.autocapitalizationType = UITextAutocapitalizationTypeWords;
-            txtName.tag = kNameTag;
-            txtName.delegate = self;
-            [cellView addSubview:txtName];
-            errorName.frame = CGRectMake(cellView.frame.size.width - errorName.frame.size.width, 2.0f, errorName.frame.size.width, errorName.frame.size.height);
-            [cellView addSubview:errorName];
-            cell.accessoryView = cellView;
+            switch (indexPath.row) {
+                case 0: {
+                    // Name
+                    UIView *cellView = [[UIView alloc] initWithFrame:CGRectMake(margin, 0.0f, tableView.frame.size.width - margin, 21.0f)];
+                    txtName.frame = cellView.bounds;
+                    txtName.font = [UIFont systemFontOfSize:16.0f];
+                    txtName.autocorrectionType = UITextAutocorrectionTypeNo;
+                    [txtName setClearButtonMode:UITextFieldViewModeNever];
+                    txtName.returnKeyType = UIReturnKeyDone;
+                    txtName.autocapitalizationType = UITextAutocapitalizationTypeWords;
+                    txtName.tag = kNameTag;
+                    txtName.delegate = self;
+                    [cellView addSubview:txtName];
+                    errorName.frame = CGRectMake(cellView.frame.size.width - errorName.frame.size.width, 2.0f, errorName.frame.size.width, errorName.frame.size.height);
+                    [cellView addSubview:errorName];
+                    cell.accessoryView = cellView;
+                    break;
+                }
+                case 1: {
+                    // Email
+                    UIView *cellView = [[UIView alloc] initWithFrame:CGRectMake(margin, 0.0f, tableView.frame.size.width - margin, 21.0f)];
+                    txtEmail.frame = cellView.bounds;
+                    txtEmail.font = [UIFont systemFontOfSize:16.0f];
+                    txtEmail.autocorrectionType = UITextAutocorrectionTypeNo;
+                    [txtEmail setClearButtonMode:UITextFieldViewModeNever];
+                    txtEmail.returnKeyType = UIReturnKeyDone;
+                    txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
+                    txtEmail.tag = kEmailTag;
+                    txtEmail.delegate = self;
+                    [cellView addSubview:txtEmail];
+                    errorEmail.frame = CGRectMake(cellView.frame.size.width - errorEmail.frame.size.width, 2.0f, errorEmail.frame.size.width, errorEmail.frame.size.height);
+                    [cellView addSubview:errorEmail];
+                    cell.accessoryView = cellView;
+                    break;
+                }
+            }
             break;
         }
         case 1: {
-            // Email
+            // Birthday
             UIView *cellView = [[UIView alloc] initWithFrame:CGRectMake(margin, 0.0f, tableView.frame.size.width - margin, 21.0f)];
-            txtEmail.frame = cellView.bounds;
-            txtEmail.font = [UIFont systemFontOfSize:16.0f];
-            txtEmail.autocorrectionType = UITextAutocorrectionTypeNo;
-            [txtEmail setClearButtonMode:UITextFieldViewModeNever];
-            txtEmail.returnKeyType = UIReturnKeyDone;
-            txtEmail.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            txtEmail.tag = kEmailTag;
-            txtEmail.delegate = self;
-            [cellView addSubview:txtEmail];
-            errorEmail.frame = CGRectMake(cellView.frame.size.width - errorEmail.frame.size.width, 2.0f, errorEmail.frame.size.width, errorEmail.frame.size.height);
-            [cellView addSubview:errorEmail];
+            txtBirthday.frame = cellView.bounds;
+            txtBirthday.font = [UIFont systemFontOfSize:16.0f];
+            txtBirthday.autocorrectionType = UITextAutocorrectionTypeNo;
+            [txtBirthday setClearButtonMode:UITextFieldViewModeNever];
+            txtBirthday.returnKeyType = UIReturnKeyDone;
+            txtBirthday.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            txtBirthday.tag = kBirthdayTag;
+            txtBirthday.delegate = self;
+            [cellView addSubview:txtBirthday];
+            errorBirthday.frame = CGRectMake(cellView.frame.size.width - errorBirthday.frame.size.width, 2.0f, errorBirthday.frame.size.width, errorBirthday.frame.size.height);
+            [cellView addSubview:errorBirthday];
             cell.accessoryView = cellView;
             break;
         }
@@ -183,10 +266,12 @@
         
         if (errors.count == 0) {
             [txtName resignFirstResponder];
+            errorName.hidden = YES;
             PTUpdateSettingsRequest *updateSettings = [[PTUpdateSettingsRequest alloc] init];
             [updateSettings updateSettingsWithUserId:[PTUser currentUser].userID
                                                email:nil
                                             username:txtName.text
+                                            birthday:nil
                                            authToken:[PTUser currentUser].authToken
                                            onSuccess:^(NSDictionary *result)
              {
@@ -196,6 +281,8 @@
              {
                  NSLog(@"User name was not updated: %@", error);
              }];
+        } else {
+            errorName.hidden = NO;
         }
     } else if (textField.tag == kEmailTag) {
         // Verify email string
@@ -215,10 +302,12 @@
         
         if (errors.count == 0) {
             [txtEmail resignFirstResponder];
+            errorEmail.hidden = YES;
             PTUpdateSettingsRequest *updateSettings = [[PTUpdateSettingsRequest alloc] init];
             [updateSettings updateSettingsWithUserId:[PTUser currentUser].userID
                                                email:txtEmail.text
                                             username:nil
+                                            birthday:nil
                                            authToken:[PTUser currentUser].authToken
                                            onSuccess:^(NSDictionary *result)
              {
@@ -228,10 +317,55 @@
              {
                  NSLog(@"Email was not updated: %@", error);
              }];
+        } else {
+            errorEmail.hidden = NO;
         }
     }
     
     return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if (textField.tag == kBirthdayTag) {
+        // Show the popover date picker control
+        datePickerView.date = birthday;
+        [datePopoverController presentPopoverFromRect:txtBirthday.frame inView:txtBirthday.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        return NO;
+    }
+    
+    return YES;
+}
+
+#pragma mark - UIPopoverControllerDelegate methods
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    NSMutableArray *errors = [[NSMutableArray alloc] init];
+    
+    if (![self isAbove13:datePickerView.date]) {
+        [errors addObject:@"The birthday should be at least thirteen years ago"];
+    }
+    [self showErrors:errors];
+    
+    if (errors.count == 0) {
+        errorBirthday.hidden = YES;
+        PTUpdateSettingsRequest *updateSettings = [[PTUpdateSettingsRequest alloc] init];
+        [updateSettings updateSettingsWithUserId:[PTUser currentUser].userID
+                                           email:nil
+                                        username:nil
+                                        birthday:datePickerView.date
+                                       authToken:[PTUser currentUser].authToken
+                                       onSuccess:^(NSDictionary *result)
+         {
+             NSLog(@"Birthday successfully updated");
+             self.birthday = datePickerView.date;
+         }
+                                       onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+         {
+             NSLog(@"Birthday was not updated: %@", error);
+         }];
+    } else {
+        errorBirthday.hidden = NO;
+    }
 }
 
 #pragma mark - Text field accessors
@@ -264,6 +398,11 @@
         txtEmail = [[UITextField alloc] init];
     }
     txtEmail.text = aEmail;
+}
+
+- (void)setBirthday:(NSDate *)aBirthday {
+    birthday = aBirthday;
+    [self updateBirthdayLabelUsingDate:aBirthday];
 }
 
 @end

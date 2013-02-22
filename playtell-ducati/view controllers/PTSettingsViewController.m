@@ -15,6 +15,7 @@
 #import "PTUserSettingsRequest.h"
 #import "TransitionController.h"
 
+#import "NSDate+Rails.h"
 #import "UIColor+ColorFromHex.h"
 
 @interface PTSettingsViewController ()
@@ -81,6 +82,14 @@
          NSDictionary *user = [result objectForKey:@"user"];
          accountViewController.name = [user objectForKey:@"displayName"];
          accountViewController.email = [user objectForKey:@"email"];
+         
+         // Check the date
+         NSString *dateString = [user objectForKey:@"birthday"];
+         if (![dateString isKindOfClass:[NSNull class]]) {
+             accountViewController.birthday = [NSDate dateFromRailsString:dateString];
+         } else {
+             [accountViewController accountHasNoBirthday];
+         }
      }
                                        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
      {

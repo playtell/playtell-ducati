@@ -10,6 +10,7 @@
 #import "Logging.h"
 #import "PTUpdateSettingsRequest.h"
 
+#import "NSDate+Rails.h"
 #import "NSMutableURLRequest+POSTParameters.h"
 
 @implementation PTUpdateSettingsRequest
@@ -17,6 +18,7 @@
 - (void)updateSettingsWithUserId:(NSInteger)userId
                            email:(NSString *)email
                         username:(NSString *)username
+                        birthday:(NSDate *)birthday
                        authToken:(NSString *)token
                        onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
                        onFailure:(PTUpdateSettingsRequestFailureBlock)failure {
@@ -31,6 +33,9 @@
     }
     if (username != nil) {
         [postParameters setObject:username forKey:@"user[username]"];
+    }
+    if (birthday != nil) {
+        [postParameters setObject:[birthday railsString] forKey:@"user[birthday]"];
     }
     
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/users/update.json", ROOT_URL]];

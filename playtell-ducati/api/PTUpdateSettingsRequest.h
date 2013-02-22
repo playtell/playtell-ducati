@@ -16,6 +16,7 @@ typedef void (^PTUpdateSettingsRequestFailureBlock) (NSURLRequest* request, NSHT
 - (void)updateSettingsWithUserId:(NSInteger)userId
                            email:(NSString *)email
                         username:(NSString *)username
+                        birthday:(NSDate *)birthday
                        authToken:(NSString *)token
                        onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
                        onFailure:(PTUpdateSettingsRequestFailureBlock)failure;
