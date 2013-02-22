@@ -13,11 +13,11 @@ typedef void (^PTUpdateSettingsRequestFailureBlock) (NSURLRequest* request, NSHT
 
 @interface PTUpdateSettingsRequest : PTRequest
 
-- (void)updateSettingsWithEmail:(NSString*)email
-                       password:(NSString*)password
-           passwordConfirmation:(NSString*)confirmation
-                      authToken:(NSString*)token
-                      onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
-                      onFailure:(PTUpdateSettingsRequestFailureBlock)failure;
+- (void)updateSettingsWithUserId:(NSInteger)userId
+                           email:(NSString *)email
+                        username:(NSString *)username
+                       authToken:(NSString *)token
+                       onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
+                       onFailure:(PTUpdateSettingsRequestFailureBlock)failure;
 
 @end

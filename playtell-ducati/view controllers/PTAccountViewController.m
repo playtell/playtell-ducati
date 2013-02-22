@@ -8,6 +8,7 @@
 
 #import "PTAccountViewController.h"
 #import "PTSettingsTitleView.h"
+#import "PTUpdateSettingsRequest.h"
 #import "PTUser.h"
 
 #import "UIColor+ColorFromHex.h"
@@ -170,13 +171,64 @@
 #pragma mark - Textfield delegates & notification handler
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    switch (textField.tag) {
-        case kNameTag:
-            [txtEmail becomeFirstResponder];
-            break;
-        case kEmailTag:
+    NSMutableArray *errors = [[NSMutableArray alloc] init];
+    
+    if (textField.tag == kNameTag) {
+        // Validate first & last name presence
+        NSArray *nameParts = [txtName.text componentsSeparatedByString:@" "];
+        if ([nameParts count] < 2) {
+            [errors addObject:@"Please enter both first and last names"];
+        }
+        [self showErrors:errors];
+        
+        if (errors.count == 0) {
+            [txtName resignFirstResponder];
+            PTUpdateSettingsRequest *updateSettings = [[PTUpdateSettingsRequest alloc] init];
+            [updateSettings updateSettingsWithUserId:[PTUser currentUser].userID
+                                               email:nil
+                                            username:txtName.text
+                                           authToken:[PTUser currentUser].authToken
+                                           onSuccess:^(NSDictionary *result)
+             {
+                 NSLog(@"User name successfully updated");
+             }
+                                           onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+             {
+                 NSLog(@"User name was not updated: %@", error);
+             }];
+        }
+    } else if (textField.tag == kEmailTag) {
+        // Verify email string
+        NSString *emailRegEx =
+        @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+        @"~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+        @"x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+        @"z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+        @"]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+        @"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+        @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+        NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+        if (![emailTest evaluateWithObject:txtEmail.text]) {
+            [errors addObject:@"Email is invalid, must have an \"@\" and a \".\""];
+        }
+        [self showErrors:errors];
+        
+        if (errors.count == 0) {
             [txtEmail resignFirstResponder];
-            break;
+            PTUpdateSettingsRequest *updateSettings = [[PTUpdateSettingsRequest alloc] init];
+            [updateSettings updateSettingsWithUserId:[PTUser currentUser].userID
+                                               email:txtEmail.text
+                                            username:nil
+                                           authToken:[PTUser currentUser].authToken
+                                           onSuccess:^(NSDictionary *result)
+             {
+                 NSLog(@"Email successfully updated");
+             }
+                                           onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+             {
+                 NSLog(@"Email was not updated: %@", error);
+             }];
+        }
     }
     
     return YES;

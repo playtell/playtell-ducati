@@ -14,24 +14,29 @@
 
 @implementation PTUpdateSettingsRequest
 
-
-- (void)updateSettingsWithEmail:(NSString*)email
-                       password:(NSString*)password
-           passwordConfirmation:(NSString*)confirmation
-                      authToken:(NSString*)token
-                      onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
-                      onFailure:(PTUpdateSettingsRequestFailureBlock)failure {
-
-    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:token, @"authentication_token",
-                                    email, @"user[email]",
-                                    password, @"user[password]",
-                                    confirmation, @"user[password_confirmation]",
-                                    nil];
-
-    NSURL* url = [NSURL URLWithString:[self loginSettingsURL]];
+- (void)updateSettingsWithUserId:(NSInteger)userId
+                           email:(NSString *)email
+                        username:(NSString *)username
+                       authToken:(NSString *)token
+                       onSuccess:(PTUpdateSettingsRequestSuccessBlock)success
+                       onFailure:(PTUpdateSettingsRequestFailureBlock)failure {
+    
+    NSMutableDictionary* postParameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           token, @"authentication_token",
+                                           [NSNumber numberWithInteger:userId], @"user_id",
+                                           nil];
+    
+    if (email != nil) {
+        [postParameters setObject:email forKey:@"user[email]"];
+    }
+    if (username != nil) {
+        [postParameters setObject:username forKey:@"user[username]"];
+    }
+    
+    NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/users/update.json", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
     [request setPostParameters:postParameters];
-
+    
     AFJSONRequestOperation* updateSettings;
     updateSettings = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
                                                                      success:^(NSURLRequest *request,
@@ -45,10 +50,6 @@
                           failure(request, response, error, JSON);
                       }];
     [updateSettings start];
-}
-
-- (NSString*)loginSettingsURL {
-    return [NSString stringWithFormat:@"%@/api/update_settings.json", ROOT_URL];
 }
 
 @end

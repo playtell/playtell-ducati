@@ -194,6 +194,7 @@
 		1AF8A00B16D53B97003CA8A5 /* PTUpdatePhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00A16D53B97003CA8A5 /* PTUpdatePhotoRequest.m */; };
 		1AF8A00E16D6B8A0003CA8A5 /* NSDate+Rails.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A00D16D6B8A0003CA8A5 /* NSDate+Rails.m */; };
 		1AF8A01116D6D706003CA8A5 /* PTUserSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A01016D6D706003CA8A5 /* PTUserSettingsRequest.m */; };
+		1AF8A01416D6EDC0003CA8A5 /* PTUpdateSettingsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8A01316D6EDBD003CA8A5 /* PTUpdateSettingsRequest.m */; };
 		2309B9E115D3F75300B27282 /* inviteExternalBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E015D3F75300B27282 /* inviteExternalBg.png */; };
 		2309B9E315D3FA2D00B27282 /* buttonNextDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */; };
 		2309B9E515D3FB1C00B27282 /* buttonSendNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */; };
@@ -1345,6 +1346,8 @@
 		1AF8A00D16D6B8A0003CA8A5 /* NSDate+Rails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Rails.m"; sourceTree = "<group>"; };
 		1AF8A00F16D6D705003CA8A5 /* PTUserSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUserSettingsRequest.h; sourceTree = "<group>"; };
 		1AF8A01016D6D706003CA8A5 /* PTUserSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUserSettingsRequest.m; sourceTree = "<group>"; };
+		1AF8A01216D6EDBC003CA8A5 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUpdateSettingsRequest.h; sourceTree = "<group>"; };
+		1AF8A01316D6EDBD003CA8A5 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
 		2309B9E015D3F75300B27282 /* inviteExternalBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inviteExternalBg.png; sourceTree = "<group>"; };
 		2309B9E215D3FA2D00B27282 /* buttonNextDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonNextDisabled.png; sourceTree = "<group>"; };
 		2309B9E415D3FB1C00B27282 /* buttonSendNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonSendNormal.png; sourceTree = "<group>"; };
@@ -2592,8 +2595,6 @@
 		F4A9D8E81579217E0015D977 /* PTPlaymate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPlaymate.m; sourceTree = "<group>"; };
 		F4A9D8EA1579218E0015D977 /* PTUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUser.h; sourceTree = "<group>"; };
 		F4A9D8EB1579218E0015D977 /* PTUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUser.m; sourceTree = "<group>"; };
-		F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTUpdateSettingsRequest.h; sourceTree = "<group>"; };
-		F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTUpdateSettingsRequest.m; sourceTree = "<group>"; };
 		F4A9D8F415798DBF0015D977 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		F4A9D8F6157A864B0015D977 /* PTDialpadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PTDialpadViewController.h; sourceTree = "<group>"; };
 		F4A9D8F9157A86A20015D977 /* PTPlaymateButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPlaymateButton.h; sourceTree = "<group>"; };
@@ -2978,6 +2979,8 @@
 			children = (
 				1AF89FFD16C559B3003CA8A5 /* PTPasswordChangeRequest.h */,
 				1AF89FFE16C559B3003CA8A5 /* PTPasswordChangeRequest.m */,
+				1AF8A01216D6EDBC003CA8A5 /* PTUpdateSettingsRequest.h */,
+				1AF8A01316D6EDBD003CA8A5 /* PTUpdateSettingsRequest.m */,
 				1AF8A00916D53B97003CA8A5 /* PTUpdatePhotoRequest.h */,
 				1AF8A00A16D53B97003CA8A5 /* PTUpdatePhotoRequest.m */,
 				1AF8A00F16D6D705003CA8A5 /* PTUserSettingsRequest.h */,
@@ -3247,8 +3250,6 @@
 			children = (
 				236DBB311630451300FBE728 /* PTLoginRequest.h */,
 				236DBB321630451300FBE728 /* PTLoginRequest.m */,
-				F4A9D8ED15796EA70015D977 /* PTUpdateSettingsRequest.h */,
-				F4A9D8EE15796EA70015D977 /* PTUpdateSettingsRequest.m */,
 				23B2D19E1628AAEA0076408D /* PTUpdateTokenRequest.h */,
 				23B2D19F1628AAEA0076408D /* PTUpdateTokenRequest.m */,
 				238F5F441677F2BC00272A56 /* PTVersionCheckRequest.h */,
@@ -6475,6 +6476,7 @@
 				1AF8A00B16D53B97003CA8A5 /* PTUpdatePhotoRequest.m in Sources */,
 				1AF8A00E16D6B8A0003CA8A5 /* NSDate+Rails.m in Sources */,
 				1AF8A01116D6D706003CA8A5 /* PTUserSettingsRequest.m in Sources */,
+				1AF8A01416D6EDC0003CA8A5 /* PTUpdateSettingsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
