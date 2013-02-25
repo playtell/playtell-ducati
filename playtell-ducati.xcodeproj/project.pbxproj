@@ -100,6 +100,11 @@
 		1A83B4E616651F7800B37368 /* PTNumNewPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E516651F7800B37368 /* PTNumNewPostcardsRequest.m */; };
 		1A83B4E9166531C600B37368 /* PTAllPostcardsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */; };
 		1A83B4EC1665437800B37368 /* PTPostcard.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4EB1665437800B37368 /* PTPostcard.m */; };
+		1A84126E16B74681001A7F62 /* search-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A84126A16B74681001A7F62 /* search-press.png */; };
+		1A84126F16B74681001A7F62 /* search-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A84126B16B74681001A7F62 /* search-press@2x.png */; };
+		1A84127016B74681001A7F62 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A84126C16B74681001A7F62 /* search.png */; };
+		1A84127116B74681001A7F62 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A84126D16B74681001A7F62 /* search@2x.png */; };
+		1A84127516B749E8001A7F62 /* PTContactsSearchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A84127416B749E8001A7F62 /* PTContactsSearchRequest.m */; };
 		1A8BD311165D2D84000000C1 /* PTShowPostcardsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */; };
 		1A8F90DB16BB036200C78BF2 /* PTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8F90D916BB036200C78BF2 /* PTSettingsViewController.m */; };
 		1A8F90DC16BB036200C78BF2 /* PTSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A8F90DA16BB036200C78BF2 /* PTSettingsViewController.xib */; };
@@ -1234,6 +1239,12 @@
 		1A83B4E8166531C600B37368 /* PTAllPostcardsRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTAllPostcardsRequest.m; sourceTree = "<group>"; };
 		1A83B4EA1665437800B37368 /* PTPostcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPostcard.h; sourceTree = "<group>"; };
 		1A83B4EB1665437800B37368 /* PTPostcard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTPostcard.m; sourceTree = "<group>"; };
+		1A84126A16B74681001A7F62 /* search-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-press.png"; path = "Inviter V2/search-press.png"; sourceTree = "<group>"; };
+		1A84126B16B74681001A7F62 /* search-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search-press@2x.png"; path = "Inviter V2/search-press@2x.png"; sourceTree = "<group>"; };
+		1A84126C16B74681001A7F62 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = search.png; path = "Inviter V2/search.png"; sourceTree = "<group>"; };
+		1A84126D16B74681001A7F62 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search@2x.png"; path = "Inviter V2/search@2x.png"; sourceTree = "<group>"; };
+		1A84127316B749E8001A7F62 /* PTContactsSearchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTContactsSearchRequest.h; sourceTree = "<group>"; };
+		1A84127416B749E8001A7F62 /* PTContactsSearchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTContactsSearchRequest.m; sourceTree = "<group>"; };
 		1A8BD30F165D2D84000000C1 /* PTShowPostcardsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTShowPostcardsView.h; sourceTree = "<group>"; };
 		1A8BD310165D2D84000000C1 /* PTShowPostcardsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTShowPostcardsView.m; sourceTree = "<group>"; };
 		1A8F90D816BB036200C78BF2 /* PTSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSettingsViewController.h; sourceTree = "<group>"; };
@@ -2820,6 +2831,10 @@
 		1A9B78361672607700F38174 /* Inviter V2 */ = {
 			isa = PBXGroup;
 			children = (
+				1A84126A16B74681001A7F62 /* search-press.png */,
+				1A84126B16B74681001A7F62 /* search-press@2x.png */,
+				1A84126C16B74681001A7F62 /* search.png */,
+				1A84126D16B74681001A7F62 /* search@2x.png */,
 				1A9F9D07169DF5D100DBFDAB /* add-buddy-press.png */,
 				1A9F9D08169DF5D100DBFDAB /* add-buddy-press@2x.png */,
 				1A9F9D09169DF5D100DBFDAB /* add-buddy.png */,
@@ -3442,6 +3457,8 @@
 				23C443D115C3244F009536D8 /* PTContactsGetRelatedRequest.m */,
 				2309B9ED15D445DC00B27282 /* PTContactsNotifyRequest.h */,
 				2309B9EE15D445DC00B27282 /* PTContactsNotifyRequest.m */,
+				1A84127316B749E8001A7F62 /* PTContactsSearchRequest.h */,
+				1A84127416B749E8001A7F62 /* PTContactsSearchRequest.m */,
 			);
 			name = "contact inviter";
 			sourceTree = "<group>";
@@ -6238,6 +6255,10 @@
 				1AF89FE116C0B34D003CA8A5 /* settings-press@2x.png in Resources */,
 				1AF89FE216C0B34D003CA8A5 /* Settings.png in Resources */,
 				1AF89FE316C0B34D003CA8A5 /* Settings@2x.png in Resources */,
+				1A84126E16B74681001A7F62 /* search-press.png in Resources */,
+				1A84126F16B74681001A7F62 /* search-press@2x.png in Resources */,
+				1A84127016B74681001A7F62 /* search.png in Resources */,
+				1A84127116B74681001A7F62 /* search@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6461,6 +6482,7 @@
 				2340F38C16514974007C22EB /* PTMathPairingCardView.m in Sources */,
 				238F5F461677F2BC00272A56 /* PTVersionCheckRequest.m in Sources */,
 				1AD166CA1694FB05002CD175 /* PTFullscreenChatView.m in Sources */,
+				1A84127516B749E8001A7F62 /* PTContactsSearchRequest.m in Sources */,
 				1AF34D2916A8A94D002134A4 /* PTActivityListRequest.m in Sources */,
 				1AF34D2E16A9D014002134A4 /* PTActivity.m in Sources */,
 				1AF34D3116A9D24B002134A4 /* PTBook.m in Sources */,

@@ -36,6 +36,10 @@
 #define PropNumContacts               @"Number invited"
 #define PropContactSource             @"Contact source"
 
+// Names of people properties
+#define PeopleEmail                   @"$email"
+#define PeopleUsername                @"$username"
+
 #import <Foundation/Foundation.h>
 
 @interface PTAnalytics : NSObject
@@ -45,5 +49,8 @@
 + (void)sendEventNamed:(NSString *)eventName;
 + (void)sendEventNamed:(NSString *)eventName withProperties:(NSDictionary *)properties;
 + (void)flush;
+
++ (void)setPeopleProperties:(NSDictionary *)properties;
++ (void)registerPushDeviceToken:(NSData *)token;
 
 @end

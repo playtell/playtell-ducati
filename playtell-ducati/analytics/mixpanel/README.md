@@ -22,6 +22,13 @@ Recursively create groups for any added folders.
 
 ![Copy][copy]
 
+3. Make sure the following Apple frameworks have been added to your project in Targets > Build Phases > Link Binary With Libraries:
+
+- Foundation.framework
+- UIKit.framework
+- SystemConfiguration.framework
+- CoreTelephony.framework
+
 And that's it. 
 
 ![Project][project]
@@ -62,7 +69,7 @@ for the current user in Mixpanel People.
 
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel.people identify:@"user123"];
-    [mixpanel.people.set:@"Bought Premium Plan" to:[NSDate date]];
+    [mixpanel.people set:@"Bought Premium Plan" to:[NSDate date]];
 
 To send your users push notifications through Mixpanel People, register device
 tokens as follows.
@@ -70,6 +77,21 @@ tokens as follows.
     - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
         [self.mixpanel.people addPushDeviceToken:devToken];
     }
+
+# ARC #
+The Mixpanel library does not currently use ARC. We've chosen to do this
+because a large number of customers have not moved to ARC yet. To integrate
+with an ARC project: Go to Project > Target > Build Phases, double-click on
+each Mixpanel file and add the flag: `-fno-objc-arc`.
+
+# Logging #
+You can turn on Mixpanel logging by adding the following Preprocessor Macros in
+Build Settings: `MIXPANEL_LOG=1` and `MIXPANEL_DEBUG=1`. Setting
+`MIXPANEL_LOG=1` will cause the Mixpanel library to log tracked events and set
+People properties. Setting `MIXPANEL_DEBUG=1` will cause Mixpanel to log
+everything it's doing—queuing, formatting and uploading data—in a very
+fine-grained way, and is useful for understanding how the library works and
+debugging issues.
 
 # Further Documentation #
 1. [Events iOS Library Documentation](https://mixpanel.com/docs/integration-libraries/iphone)

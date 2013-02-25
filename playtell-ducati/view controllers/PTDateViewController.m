@@ -481,7 +481,6 @@ NSTimer *postcardTimer;
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
     
     for (PTActivity *activity in activities) {
-        NSLog(@"Activity %d: %@", i + 1, activity.activityName);
         if (activity.type == ActivityBook) {
             PTBook *book = [books objectForKey:activity.bookId];
             if (!currentBookSet) {
