@@ -55,6 +55,7 @@
 - (void)enableFriendshipConfirmationButtons;
 - (void)showAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated;
+- (void)reloadProfilePhoto:(NSURL *)url;
 
 @end
 

@@ -19,19 +19,20 @@
 #import "PTNewUserBirthdateViewController.h"
 #import "UIImage+Resize.h"
 #import "PTAnalytics.h"
+#import "NonRotatingUIImagePickerController.h"
 
-// iOS 6 hack to make UIImagePickerController work in landscape
-
-@interface NonRotatingUIImagePickerController : UIImagePickerController
-@end
-
-@implementation NonRotatingUIImagePickerController
-- (BOOL)shouldAutorotate {
-    return NO;
-}
-@end
-
-// End hack
+//// iOS 6 hack to make UIImagePickerController work in landscape
+//
+//@interface NonRotatingUIImagePickerController : UIImagePickerController
+//@end
+//
+//@implementation NonRotatingUIImagePickerController
+//- (BOOL)shouldAutorotate {
+//    return NO;
+//}
+//@end
+//
+//// End hack
 
 @interface PTNewUserPhotoViewController ()
 

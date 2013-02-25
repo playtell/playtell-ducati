@@ -214,8 +214,16 @@
 
 - (void)actionPerformedOnContact:(NSNotification *)notification {
     NSMutableDictionary *contact = [[notification userInfo] objectForKey:@"contact"];
-    if (![[self.contact objectForKey:@"uid"] isEqualToString:[contact objectForKey:@"uid"]]) {
-        return;
+    if ([self.contact objectForKey:@"uid"] == nil) {
+        // This is from a server search
+        if ([self.contact objectForKey:@"user_id"] != [contact objectForKey:@"user_id"]) {
+            return;
+        }
+    } else {
+        // This is from the address book
+        if (![[self.contact objectForKey:@"uid"] isEqualToString:[contact objectForKey:@"uid"]]) {
+            return;
+        }
     }
 
     PTContactsTableBigCellAction action = [[[notification userInfo] objectForKey:@"action"] intValue];

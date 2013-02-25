@@ -18,6 +18,7 @@
 #import "PTUser.h"
 #import "PTErrorTableCell.h"
 #import "UAirship.h"
+#import "PTAnalytics.h"
 
 @interface PTLoginViewController ()
 
@@ -280,11 +281,18 @@
                               }
                               
                               // Save logged-in status
-                              [[PTUser currentUser] setUsername:txtEmail.text];
-                              [[PTUser currentUser] setEmail:txtEmail.text];
-                              [[PTUser currentUser] setAuthToken:token];
-                              [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-                              [[PTUser currentUser] setPhotoURL:photoURL];
+                              PTUser *currentUser = [PTUser currentUser];
+                              [currentUser setUsername:txtEmail.text];
+                              [currentUser setEmail:txtEmail.text];
+                              [currentUser setAuthToken:token];
+                              [currentUser setUserID:[userID unsignedIntValue]];
+                              [currentUser setPhotoURL:photoURL];
+                              
+                              // Setup people attributes in analytics
+                              NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+                              [attr setObject:currentUser.email forKey:PeopleEmail];
+                              [attr setObject:currentUser.username forKey:PeopleUsername];
+                              [PTAnalytics setPeopleProperties:attr];
                               
                               // Get Urban Airship device token
                               PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];

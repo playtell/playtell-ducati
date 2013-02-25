@@ -33,6 +33,7 @@
 #import "PTPlaymateView.h"
 #import "PTPlaymateAddView.h"
 #import "PTPostcard.h"
+#import "PTSettingsViewController.h"
 #import "PTSoloUser.h"
 #import "PTSpinnerView.h"
 #import "PTUser.h"
@@ -59,6 +60,7 @@
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic, retain) PTBadgeButton* postcardButton;
+@property (nonatomic, retain) UIButton *settingsButton;
 @end
 
 @implementation PTDialpadViewController
@@ -75,6 +77,7 @@
 @synthesize chatController;
 @synthesize backgroundTask;
 @synthesize postcardButton;
+@synthesize settingsButton;
 
 BOOL playdateStarting;
 BOOL postcardsShown;
@@ -176,6 +179,16 @@ BOOL postcardsShown;
     // Postcards view
     postcardsView = [[PTShowPostcardsView alloc] initWithFrame:background.frame];
     [self.view insertSubview:postcardsView belowSubview:background];
+    
+    // Settings button
+    UIImage *settingsImage = [UIImage imageNamed:@"Settings.png"];
+    UIImage *settingsPressImage = [UIImage imageNamed:@"settings-press.png"];
+    settingsButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - settingsImage.size.width - 15, 15.0f, settingsImage.size.width, settingsImage.size.height)];
+    [settingsButton setBackgroundImage:settingsImage forState:UIControlStateNormal];
+    [settingsButton setBackgroundImage:settingsPressImage forState:UIControlStateHighlighted];
+    [settingsButton addTarget:self action:@selector(settingsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    settingsButton.hidden = YES;
+    [self.view addSubview:settingsButton];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -193,6 +206,9 @@ BOOL postcardsShown;
     
     if ([[PTUser currentUser] isLoggedIn]) {
         [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+        settingsButton.hidden = NO;
+    } else {
+        settingsButton.hidden = YES;
     }
     
     CGRect backgroundFrame = self.view.frame;
@@ -445,6 +461,8 @@ BOOL postcardsShown;
          for (PTPlaymate *pm in refresh) {
              PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
              if (pmView) {
+                 [pmView reloadProfilePhoto:pm.photoURL];
+                 
                  if ([pm.userStatus isEqualToString:@"playdate"]) {
                      [pmView showUserInPlaydateAnimated:NO];
                  } else {
@@ -850,6 +868,10 @@ BOOL postcardsShown;
             self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, -height);
             self.chatController.view.alpha = 1.0f;
             signUpBubbleContainer.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            if ([PTUser currentUser].isLoggedIn) {
+                settingsButton.hidden = NO;
+            }
         }];
         
         // Set the button images
@@ -869,11 +891,13 @@ BOOL postcardsShown;
              }
              postcardsView.postcards = postcards;
          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+             postcardsView.postcards = [NSArray array];
              LogError(@"AllPostcardsRequest failed: %@", error);
          }];
         
         // Move the dialpad views off the screen
         float margin = 50.0f;
+        settingsButton.hidden = YES;
         
         [UIView animateWithDuration:1.0f animations:^{
             background.frame = CGRectMake(margin, height, width - (2 * margin), height);
@@ -889,6 +913,15 @@ BOOL postcardsShown;
     }
     
     postcardsShown = !postcardsShown;
+}
+
+- (void)settingsButtonPressed {
+    PTSettingsViewController *settingsViewController = [[PTSettingsViewController alloc] initWithNibName:@"PTSettingsViewController" bundle:nil];
+    
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
 }
 
 #pragma mark - Ringer methods

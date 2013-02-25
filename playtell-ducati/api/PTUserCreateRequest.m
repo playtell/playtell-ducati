@@ -9,6 +9,7 @@
 #import "PTUserCreateRequest.h"
 #import "AFNetworking.h"
 #import "NSMutableURLRequest+POSTParameters.h"
+#import "NSDate+Rails.h"
 #import "NSString+UrlEncode.h"
 
 @implementation PTUserCreateRequest
@@ -25,6 +26,7 @@
                                     name, @"name",
                                     email, @"email",
                                     password, @"password",
+                                    [birthdate railsString], @"birthday",
                                     nil];
     
     AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:ROOT_URL]];
