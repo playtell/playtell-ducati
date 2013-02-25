@@ -187,6 +187,7 @@ BOOL postcardsShown;
     [settingsButton setBackgroundImage:settingsImage forState:UIControlStateNormal];
     [settingsButton setBackgroundImage:settingsPressImage forState:UIControlStateHighlighted];
     [settingsButton addTarget:self action:@selector(settingsButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    settingsButton.hidden = YES;
     [self.view addSubview:settingsButton];
 }
 
@@ -205,6 +206,9 @@ BOOL postcardsShown;
     
     if ([[PTUser currentUser] isLoggedIn]) {
         [[PTPlayTellPusher sharedPusher] subscribeToRendezvousChannel];
+        settingsButton.hidden = NO;
+    } else {
+        settingsButton.hidden = YES;
     }
     
     CGRect backgroundFrame = self.view.frame;
@@ -864,6 +868,10 @@ BOOL postcardsShown;
             self.scrollView.frame = CGRectOffset(self.scrollView.frame, 0.0f, -height);
             self.chatController.view.alpha = 1.0f;
             signUpBubbleContainer.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            if ([PTUser currentUser].isLoggedIn) {
+                settingsButton.hidden = NO;
+            }
         }];
         
         // Set the button images
@@ -883,11 +891,13 @@ BOOL postcardsShown;
              }
              postcardsView.postcards = postcards;
          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+             postcardsView.postcards = [NSArray array];
              LogError(@"AllPostcardsRequest failed: %@", error);
          }];
         
         // Move the dialpad views off the screen
         float margin = 50.0f;
+        settingsButton.hidden = YES;
         
         [UIView animateWithDuration:1.0f animations:^{
             background.frame = CGRectMake(margin, height, width - (2 * margin), height);
