@@ -63,6 +63,12 @@
         pictureView.layer.borderWidth = 2.0f;
         [pictureContainer addSubview:pictureView];
         
+        // Spinner view
+        spinnerView = [[PTSpinnerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, picHeight / 2, picHeight / 2)];
+        spinnerView.center = pictureView.center;
+        spinnerView.hidden = YES;
+        [pictureContainer addSubview:spinnerView];
+        
         // Set the user picture
         PTUser *currentUser = [PTUser currentUser];
         if (currentUser) {
@@ -123,6 +129,16 @@
     }
 }
 
+- (void)showSpinnerView {
+    [spinnerView startSpinning];
+    spinnerView.hidden = NO;
+}
+
+- (void)hideSpinnerView {
+    spinnerView.hidden = YES;
+    [spinnerView stopSpinning];
+}
+
 #pragma mark - Button pressed methods
 
 - (void)takePictureButtonPressed {
@@ -143,11 +159,9 @@
     UIImage *resizedImage = [image scaleProportionallyToSize:CGSizeMake(200.0f, 200.0f)];
     resizedImage = [resizedImage croppedImage:CGRectMake(0.0f, 25.0f, 200.0f, 150.0f)];
     
-    // Display photo
-    pictureView.image = resizedImage;
-    
     // Get rid of camera
     [self.cameraPopoverController dismissPopoverAnimated:YES];
+    [self showSpinnerView];
     
     // Send updated photo to the server
     PTUser *currentUser = [PTUser currentUser];
@@ -157,11 +171,30 @@
                                         photo:resizedImage
                                       success:^(NSDictionary *result)
      {
-         NSLog(@"Successfully updated photo");
+         [self showErrors:[NSMutableArray array]];
+         
+         // Save the URL of the new photo
+         NSURL* photoURL;
+         @try {
+             photoURL = [NSURL URLWithString:[result valueForKey:@"profile_photo"]];
+         }
+         @catch (NSException *exception) {
+             [self showErrors:[NSMutableArray arrayWithObject:@"Could not update photo, please try again"]];
+             [self hideSpinnerView];
+             return;
+         }
+         [[PTUser currentUser] setPhotoURL:photoURL];
+         UIImage *newProfilePhoto = [UIImage imageWithData:[NSData dataWithContentsOfURL:photoURL]];
+         
+         // Display photo
+         pictureView.image = newProfilePhoto;
+         [[PTUser currentUser] setUserPhoto:newProfilePhoto];
+         [self hideSpinnerView];
      }
                                       failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
      {
-         NSLog(@"Failed to update photo");
+         [self showErrors:[NSMutableArray arrayWithObject:@"Could not update photo, please try again"]];
+         [self hideSpinnerView];
      }];
 }
 

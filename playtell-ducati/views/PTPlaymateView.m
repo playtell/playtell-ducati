@@ -134,6 +134,17 @@
     [photoRequest start];
 }
 
+- (void)reloadProfilePhoto:(NSURL *)url {    
+    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url];
+    AFImageRequestOperation* photoRequest = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                                              success:^(UIImage *image)
+                                             {
+                                                 playmate.userPhoto = image;
+                                                 profilePhotoView.image = image;
+                                             }];
+    [photoRequest start];
+}
+
 - (void)loadFriendshipConfirmView {
     confirmView = [[UIView alloc] initWithFrame:contentsView.frame];
     confirmView.backgroundColor = [UIColor colorFromHex:@"#2a4552"];

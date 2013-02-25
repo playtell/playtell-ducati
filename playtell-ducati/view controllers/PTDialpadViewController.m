@@ -457,6 +457,8 @@ BOOL postcardsShown;
          for (PTPlaymate *pm in refresh) {
              PTPlaymateView *pmView = [playmateViews objectForKey:[NSNumber numberWithInteger:pm.userID]];
              if (pmView) {
+                 [pmView reloadProfilePhoto:pm.photoURL];
+                 
                  if ([pm.userStatus isEqualToString:@"playdate"]) {
                      [pmView showUserInPlaydateAnimated:NO];
                  } else {

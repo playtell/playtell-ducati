@@ -9,10 +9,12 @@
 #import <UIKit/UIKit.h>
 
 #import "PTErrorTableView.h"
+#import "PTSpinnerView.h"
 
 @interface PTPictureViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIPopoverControllerDelegate> {
     UIView *pictureContainer;
     UIImageView *pictureView;
+    PTSpinnerView *spinnerView;
     UIButton *btnTakePicture;
     UIButton *btnChoosePicture;
     
