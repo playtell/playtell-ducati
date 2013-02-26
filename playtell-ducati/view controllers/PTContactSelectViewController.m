@@ -16,6 +16,7 @@
 #import "PTContactsCreateListRequest.h"
 #import "PTContactsGetListRequest.h"
 #import "PTContactsGetRelatedRequest.h"
+#import "PTContactsNavSendButton.h"
 #import "PTContactsSearchRequest.h"
 #import "PTUser.h"
 #import "PTInviteContactButton.h"
@@ -119,12 +120,12 @@
     [self.navigationController.navigationBar setTintColor:[UIColor colorFromHex:@"#3FA9F5"]];
     
     // Nav buttons
-    PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
-    buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
-    [buttonBackView setTitle:@"Cancel" forState:UIControlStateNormal];
-    [buttonBackView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-    buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
-    [self.navigationItem setLeftBarButtonItem:buttonBack];
+    PTContactsNavSendButton *buttonDoneView = [PTContactsNavSendButton buttonWithType:UIButtonTypeCustom];
+    [buttonDoneView setTitle:@"Done" forState:UIControlStateNormal];
+    buttonDoneView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
+    [buttonDoneView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *navBackButton = [[UIBarButtonItem alloc] initWithCustomView:buttonDoneView];
+    [self.navigationItem setLeftBarButtonItem:navBackButton];
     
     // Filtering
     //[textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];

@@ -258,7 +258,7 @@
             txtCurrent.secureTextEntry = YES;
             txtCurrent.autocorrectionType = UITextAutocorrectionTypeNo;
             [txtCurrent setClearButtonMode:UITextFieldViewModeNever];
-            txtCurrent.returnKeyType = UIReturnKeyDone;
+            txtCurrent.returnKeyType = UIReturnKeyNext;
             txtCurrent.autocapitalizationType = UITextAutocapitalizationTypeNone;
             txtCurrent.tag = kCurrentTag;
             txtCurrent.delegate = self;
@@ -279,7 +279,7 @@
                     txtNew.secureTextEntry = YES;
                     txtNew.autocorrectionType = UITextAutocorrectionTypeNo;
                     [txtNew setClearButtonMode:UITextFieldViewModeNever];
-                    txtNew.returnKeyType = UIReturnKeyDone;
+                    txtNew.returnKeyType = UIReturnKeyNext;
                     txtNew.autocapitalizationType = UITextAutocapitalizationTypeNone;
                     txtNew.tag = kNewTag;
                     txtNew.delegate = self;
