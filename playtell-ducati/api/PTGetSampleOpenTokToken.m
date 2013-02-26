@@ -8,6 +8,7 @@
 
 #import "AFNetworking.h"
 #import "PTGetSampleOpenTokToken.h"
+#import "NSMutableURLRequest+POSTParameters.h"
 
 @implementation PTGetSampleOpenTokToken
 
@@ -17,7 +18,12 @@ const NSString* TOKEN_KEY = @"token";
 - (void)requestOpenTokSessionAndTokenWithSuccess:(PTGetOpenTokSessionSuccessBlock)success
                                          failure:(PTGetOpenTokSessionFailureBlock)failure {
 
-    NSURLRequest* request = [NSURLRequest requestWithURL:[self getTokenURL]];
+    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:@"true", @"p2p_enabled", nil];
+    
+    NSURL* url = [self getTokenURL];
+    NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];
+    [request setPostParameters:postParameters];
+    
     AFJSONRequestOperation* op = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
                                                                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
     {
