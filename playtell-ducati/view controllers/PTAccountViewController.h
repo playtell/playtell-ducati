@@ -10,11 +10,14 @@
 #define kEmailTag       1
 #define kBirthdayTag    2
 
+#define kLogoutTitle    @"Sign Out"
+#define kCancelTitle    @"Cancel"
+
 #import <UIKit/UIKit.h>
 
 #import "PTErrorTableView.h"
 
-@interface PTAccountViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate> {
+@interface PTAccountViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate, UIAlertViewDelegate> {
     // Text fields
     UITextField *txtName;
     UITextField *txtEmail;

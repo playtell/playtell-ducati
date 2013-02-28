@@ -132,6 +132,9 @@
                                          token:currentUser.authToken
                                        success:^
      {
+         if (self.dialpadController) {
+             self.dialpadController = nil;
+         }
          self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
          self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
          // Check if push notification came in with playdate
@@ -152,6 +155,9 @@
                                          token:nil
                                        success:^
      {
+         if (self.dialpadController) {
+             self.dialpadController = nil;
+         }
          self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
          self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
          [self.transitionController transitionToViewController:self.dialpadController

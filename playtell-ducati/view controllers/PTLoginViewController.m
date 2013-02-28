@@ -287,6 +287,7 @@
                               [currentUser setAuthToken:token];
                               [currentUser setUserID:[userID unsignedIntValue]];
                               [currentUser setPhotoURL:photoURL];
+                              [currentUser setUserPhoto:nil];
                               
                               // Setup people attributes in analytics
                               NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];

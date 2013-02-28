@@ -7,6 +7,8 @@
 //
 
 #import "PTAccountViewController.h"
+#import "PTAnalytics.h"
+#import "PTAppDelegate.h"
 #import "PTSettingsTitleView.h"
 #import "PTUpdateSettingsRequest.h"
 #import "PTUser.h"
@@ -106,6 +108,19 @@
         self.datePopoverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
         self.datePopoverController.delegate = self;
         [self.datePopoverController setPopoverContentSize:CGSizeMake(popoverWidth, popoverHeight) animated:NO];
+        
+        // Logout button
+        UIImage *background = [UIImage imageNamed:@"logout-button.png"];
+        UIImage *backgroundPressed = [UIImage imageNamed:@"logout-button-press.png"];
+        UIButton *btnLogout = [[UIButton alloc] initWithFrame:CGRectMake((self.view.frame.size.width - background.size.width) / 2, self.view.frame.size.height - background.size.height - 60, background.size.width, background.size.height)];
+        btnLogout.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        [btnLogout setBackgroundImage:background forState:UIControlStateNormal];
+        [btnLogout setBackgroundImage:backgroundPressed forState:UIControlStateHighlighted];
+        [btnLogout setTitle:@"Sign Out" forState:UIControlStateNormal];
+        [btnLogout setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btnLogout setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btnLogout addTarget:self action:@selector(logoutButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btnLogout];
     }
     return self;
 }
@@ -154,6 +169,41 @@
     self.birthday = [NSDate date];
     [self showErrors:[NSMutableArray arrayWithObject:@"Please set your birthday"]];
     errorBirthday.hidden = NO;
+}
+
+- (void)logoutButtonPressed {
+    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Sign Out"
+                                                      message:@"Are you sure you want to sign out?"
+                                                     delegate:self
+                                            cancelButtonTitle:kCancelTitle
+                                            otherButtonTitles:kLogoutTitle, nil];
+    [message show];
+}
+
+#pragma mark - UIAlertViewDelegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSString *title = [alertView buttonTitleAtIndex:buttonIndex];
+    if([title isEqualToString:kLogoutTitle])
+    {
+        NSURL *defaultImageURL = [NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"];
+        PTUser *currentUser = [PTUser currentUser];
+        [currentUser setUsername:@""];
+        [currentUser setEmail:@""];
+        [currentUser setAuthToken:@""];
+        [currentUser setUserID:0];
+        [currentUser setPhotoURL:defaultImageURL];
+        [currentUser setUserPhoto:nil];
+        
+        // Setup people attributes in analytics
+        NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+        [attr setObject:currentUser.email forKey:PeopleEmail];
+        [attr setObject:currentUser.username forKey:PeopleUsername];
+        [PTAnalytics setPeopleProperties:attr];
+        
+        PTAppDelegate *appDelegate = (PTAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [appDelegate runNewUserWorkflow];
+    }
 }
 
 #pragma mark - Tableview delegate and data source methods
