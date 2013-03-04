@@ -28,6 +28,16 @@
 		1A241CF316DFDAE100D3D2A0 /* settings-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CE316DFDAE100D3D2A0 /* settings-press@2x.png */; };
 		1A241CF416DFDAE100D3D2A0 /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CE416DFDAE100D3D2A0 /* Settings.png */; };
 		1A241CF516DFDAE100D3D2A0 /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CE516DFDAE100D3D2A0 /* Settings@2x.png */; };
+		1A241D0016E5088600D3D2A0 /* grandma.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CF616E5088200D3D2A0 /* grandma.png */; };
+		1A241D0116E5088600D3D2A0 /* grandma@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CF716E5088200D3D2A0 /* grandma@2x.png */; };
+		1A241D0216E5088600D3D2A0 /* Member-button-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CF816E5088300D3D2A0 /* Member-button-press.png */; };
+		1A241D0316E5088600D3D2A0 /* Member-button-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CF916E5088300D3D2A0 /* Member-button-press@2x.png */; };
+		1A241D0416E5088600D3D2A0 /* Member-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFA16E5088400D3D2A0 /* Member-button.png */; };
+		1A241D0516E5088600D3D2A0 /* Member-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFB16E5088400D3D2A0 /* Member-button@2x.png */; };
+		1A241D0616E5088600D3D2A0 /* SignIn-Press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFC16E5088400D3D2A0 /* SignIn-Press.png */; };
+		1A241D0716E5088600D3D2A0 /* SignIn-Press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFD16E5088500D3D2A0 /* SignIn-Press@2x.png */; };
+		1A241D0816E5088600D3D2A0 /* SignIn.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFE16E5088500D3D2A0 /* SignIn.png */; };
+		1A241D0916E5088600D3D2A0 /* SignIn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241CFF16E5088600D3D2A0 /* SignIn@2x.png */; };
 		1A30CB8D1677E52D00A33FD5 /* Manual-invite-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */; };
 		1A30CB8E1677E52D00A33FD5 /* Manual-invite-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */; };
 		1A30CB8F1677E52D00A33FD5 /* Manual-invite.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB831677E52D00A33FD5 /* Manual-invite.png */; };
@@ -1156,6 +1166,16 @@
 		1A241CE316DFDAE100D3D2A0 /* settings-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-press@2x.png"; sourceTree = "<group>"; };
 		1A241CE416DFDAE100D3D2A0 /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
 		1A241CE516DFDAE100D3D2A0 /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings@2x.png"; sourceTree = "<group>"; };
+		1A241CF616E5088200D3D2A0 /* grandma.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = grandma.png; path = Signup/grandma.png; sourceTree = "<group>"; };
+		1A241CF716E5088200D3D2A0 /* grandma@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "grandma@2x.png"; path = "Signup/grandma@2x.png"; sourceTree = "<group>"; };
+		1A241CF816E5088300D3D2A0 /* Member-button-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Member-button-press.png"; path = "Signup/Member-button-press.png"; sourceTree = "<group>"; };
+		1A241CF916E5088300D3D2A0 /* Member-button-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Member-button-press@2x.png"; path = "Signup/Member-button-press@2x.png"; sourceTree = "<group>"; };
+		1A241CFA16E5088400D3D2A0 /* Member-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Member-button.png"; path = "Signup/Member-button.png"; sourceTree = "<group>"; };
+		1A241CFB16E5088400D3D2A0 /* Member-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Member-button@2x.png"; path = "Signup/Member-button@2x.png"; sourceTree = "<group>"; };
+		1A241CFC16E5088400D3D2A0 /* SignIn-Press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SignIn-Press.png"; path = "Signup/SignIn-Press.png"; sourceTree = "<group>"; };
+		1A241CFD16E5088500D3D2A0 /* SignIn-Press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SignIn-Press@2x.png"; path = "Signup/SignIn-Press@2x.png"; sourceTree = "<group>"; };
+		1A241CFE16E5088500D3D2A0 /* SignIn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SignIn.png; path = Signup/SignIn.png; sourceTree = "<group>"; };
+		1A241CFF16E5088600D3D2A0 /* SignIn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SignIn@2x.png"; path = "Signup/SignIn@2x.png"; sourceTree = "<group>"; };
 		1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press.png"; path = "Inviter V2/Manual-invite-press.png"; sourceTree = "<group>"; };
 		1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press@2x.png"; path = "Inviter V2/Manual-invite-press@2x.png"; sourceTree = "<group>"; };
 		1A30CB831677E52D00A33FD5 /* Manual-invite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite.png"; path = "Inviter V2/Manual-invite.png"; sourceTree = "<group>"; };
@@ -3347,6 +3367,16 @@
 		237651D9161A167D0000A4D5 /* new user */ = {
 			isa = PBXGroup;
 			children = (
+				1A241CF616E5088200D3D2A0 /* grandma.png */,
+				1A241CF716E5088200D3D2A0 /* grandma@2x.png */,
+				1A241CF816E5088300D3D2A0 /* Member-button-press.png */,
+				1A241CF916E5088300D3D2A0 /* Member-button-press@2x.png */,
+				1A241CFA16E5088400D3D2A0 /* Member-button.png */,
+				1A241CFB16E5088400D3D2A0 /* Member-button@2x.png */,
+				1A241CFC16E5088400D3D2A0 /* SignIn-Press.png */,
+				1A241CFD16E5088500D3D2A0 /* SignIn-Press@2x.png */,
+				1A241CFE16E5088500D3D2A0 /* SignIn.png */,
+				1A241CFF16E5088600D3D2A0 /* SignIn@2x.png */,
 				23AA8AFF16303ABE00377D52 /* tooltip-birthday.png */,
 				23AA8B0016303ABE00377D52 /* tooltip-birthday@2x.png */,
 				23A416B3162884560092C6B6 /* tooltip-invite-buddies.png */,
@@ -6277,6 +6307,16 @@
 				1A241CF316DFDAE100D3D2A0 /* settings-press@2x.png in Resources */,
 				1A241CF416DFDAE100D3D2A0 /* Settings.png in Resources */,
 				1A241CF516DFDAE100D3D2A0 /* Settings@2x.png in Resources */,
+				1A241D0016E5088600D3D2A0 /* grandma.png in Resources */,
+				1A241D0116E5088600D3D2A0 /* grandma@2x.png in Resources */,
+				1A241D0216E5088600D3D2A0 /* Member-button-press.png in Resources */,
+				1A241D0316E5088600D3D2A0 /* Member-button-press@2x.png in Resources */,
+				1A241D0416E5088600D3D2A0 /* Member-button.png in Resources */,
+				1A241D0516E5088600D3D2A0 /* Member-button@2x.png in Resources */,
+				1A241D0616E5088600D3D2A0 /* SignIn-Press.png in Resources */,
+				1A241D0716E5088600D3D2A0 /* SignIn-Press@2x.png in Resources */,
+				1A241D0816E5088600D3D2A0 /* SignIn.png in Resources */,
+				1A241D0916E5088600D3D2A0 /* SignIn@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

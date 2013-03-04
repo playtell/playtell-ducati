@@ -12,10 +12,14 @@
     // Nav buttons
     UIBarButtonItem *buttonBack;
     UIBarButtonItem *buttonNext;
+    IBOutlet UIButton *buttonBecomeMember;
     
     // Content container
     IBOutlet UIView *contentContainer;
     UIView *topShadow;
+    
+    // Bottom container
+    IBOutlet UIView *bottomContainer;
     
     // Textfield
     UITextField *txtName;
@@ -33,6 +37,7 @@
     NSDate *eventStart;
 }
 
+- (IBAction)becomeMemberDidPress:(id)sender;
 - (IBAction)signInDidPress:(id)sender;
 
 @end

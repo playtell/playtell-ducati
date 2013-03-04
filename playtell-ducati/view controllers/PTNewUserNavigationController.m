@@ -51,7 +51,7 @@
     self.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorFromHex:@"#E3F1FF"], UITextAttributeTextColor, nil];
     
     // Page control
-    pageControl = [[PTPageIndicatorView alloc] initWithFrame:CGRectMake(462.0f, 666.0f, 100.0f, 21.0f) andPage:1];
+    pageControl = [[PTPageIndicatorView alloc] initWithFrame:CGRectMake(462.0f, 620.0f, 100.0f, 21.0f) andPage:1];
     [self.view addSubview:pageControl];
 }
 

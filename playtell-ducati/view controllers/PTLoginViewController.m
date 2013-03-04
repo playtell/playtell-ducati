@@ -100,11 +100,15 @@
     [contentContainer.layer insertSublayer:roundedLayer atIndex:1];
     
     // Create the mom/kid layers
+    float momWidth = 142.0f;
+    float momHeight = 312.0f;
+    float kidWidth = 169.0f;
+    float kidHeight = 199.0f;
     CALayer *momLayer = [CALayer layer];
-    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - 280.0f, 170.0f, 280.0f);
-    momLayer.contents = (id)[UIImage imageNamed:@"mom"].CGImage;
+    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - momHeight, momWidth, momHeight);
+    momLayer.contents = (id)[UIImage imageNamed:@"grandma"].CGImage;
     CALayer *kidLayer = [CALayer layer];
-    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - 135.0f + 1.0f, contentContainer.bounds.size.height - 203.0f, 135.0f, 203.0f);
+    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - kidWidth, contentContainer.bounds.size.height - kidHeight, kidWidth, kidHeight);
     kidLayer.contents = (id)[UIImage imageNamed:@"kid"].CGImage;
     [roundedLayer addSublayer:momLayer];
     [roundedLayer addSublayer:kidLayer];
