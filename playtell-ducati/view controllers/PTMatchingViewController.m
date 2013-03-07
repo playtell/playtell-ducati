@@ -146,7 +146,6 @@
     drawView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
     drawView.backgroundColor = [UIColor clearColor];
     drawView.center = self.view.center;
-    drawView.backgroundColor = [UIColor blackColor];
     drawView.image = [UIImage imageNamed:@"memory-win"]; // Everybody wins!
     drawView.alpha = 0.0f;
     
