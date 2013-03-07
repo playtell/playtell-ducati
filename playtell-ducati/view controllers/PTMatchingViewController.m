@@ -76,9 +76,6 @@
 //    viewBgShim.hidden = YES;
 //    [self.view insertSubview:viewBgShim atIndex:0];
     
-    // Display chat HUD
-    [self.view addSubview:self.chatController.view];
-    
     // Setup "end playdate" button
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
     endPlaydate.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
@@ -154,9 +151,9 @@
     drawView.alpha = 0.0f;
     
     // Score views
-    scoreViewMe = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(768.0f, 75.0f, 56.0f, 75.0f) myScore:YES];
+    scoreViewMe = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(934.0f, 88.0f, 56.0f, 75.0f) myScore:YES];
     [self.view addSubview:scoreViewMe];
-    scoreViewOpponent = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(200.0f, 75.0f, 56.0f, 75.0f) myScore:NO];
+    scoreViewOpponent = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(36.0f, 88.0f, 56.0f, 75.0f) myScore:NO];
     [self.view addSubview:scoreViewOpponent];
     
     // Bottom shadow
@@ -165,6 +162,9 @@
     viewBottomShawdow.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-bottom-shadow"]];
     viewBottomShawdow.alpha = 0;
     [self.view insertSubview:viewBottomShawdow aboveSubview:viewAvailableCards];
+    
+    // Display chat HUD
+    [self.view addSubview:self.chatController.view];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -207,6 +207,7 @@
         x += sizeCard.width;
     }
     [viewAvailableCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 150.0f)];
+    [viewAvailableCardsScroll setContentOffset:CGPointMake(((totalCards / 2) * sizeCard.width), 0.0f) animated:NO];
 }
 
 #pragma mark - Game actions
@@ -325,7 +326,7 @@
     viewTrackingCardImage = [[UIImageView alloc] initWithFrame:CGRectMake(6.0f, 6.0f, 120.0f, 160.0f)];
     viewTrackingCardImage.image = [cardView getCardImage];
     [viewTrackingCard addSubview:viewTrackingCardImage];
-    [self.view addSubview:viewTrackingCard];
+    [self.view insertSubview:viewTrackingCard belowSubview:self.chatController.view];
     
     // Tracking card shadow
     viewTrackingCard.layer.masksToBounds = NO;
@@ -794,21 +795,21 @@
 }
 
 - (void)displayWin {
-    [self.view addSubview:winnerView];
+    [self.view insertSubview:winnerView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         winnerView.alpha = 1.0f;
     }];
 }
 
 - (void)displayLose {
-    [self.view addSubview:loserView];
+    [self.view insertSubview:loserView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         loserView.alpha = 1.0f;
     }];
 }
 
 - (void)displayDraw {
-    [self.view addSubview:drawView];
+    [self.view insertSubview:drawView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         drawView.alpha = 1.0f;
     }];
