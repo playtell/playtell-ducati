@@ -305,7 +305,7 @@
 			<string key="close.png">{42, 42}</string>
 			<string key="end-call-button-press.png">{92, 37}</string>
 			<string key="end-call-button.png">{92, 37}</string>
-			<string key="memory-background.png">{1025, 769}</string>
+			<string key="memory-background.png">{1024, 768}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
