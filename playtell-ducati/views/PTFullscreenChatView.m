@@ -8,7 +8,7 @@
 
 #define VIDEO_WIDTH     400.0
 #define VIDEO_HEIGHT    300.0
-#define CLOSE_MARGIN    10.0
+#define CLOSE_MARGIN    20.0
 #define CORNER_RADIUS   12.0
 
 #import "PTFullscreenChatView.h"
@@ -73,8 +73,8 @@
         [self insertSubview:publisherImageView belowSubview:publisherVideoView];
         
         // Create the button to close fullscreen mode
-        UIImage *imgClose = [UIImage imageNamed:@"header-close.png"];
-        UIImage *imgClosePress = [UIImage imageNamed:@"header-close-press.png"];
+        UIImage *imgClose = [UIImage imageNamed:@"close.png"];
+        UIImage *imgClosePress = [UIImage imageNamed:@"close-press.png"];
         btnClose = [[UIButton alloc] initWithFrame:CGRectMake(self.frame.size.width - imgClose.size.width - CLOSE_MARGIN, CLOSE_MARGIN, imgClose.size.width, imgClose.size.height)];
         [btnClose setBackgroundImage:imgClose forState:UIControlStateNormal];
         [btnClose setBackgroundImage:imgClosePress forState:UIControlStateHighlighted];

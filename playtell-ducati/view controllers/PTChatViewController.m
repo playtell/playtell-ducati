@@ -26,8 +26,8 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define CHATVIEW_CENTERX        512.0
-#define CHATVIEW_LARGE_HEIGHT   300.0
-#define CHATVIEW_LARGE_WIDTH    400.0
+#define CHATVIEW_LARGE_HEIGHT   270.0
+#define CHATVIEW_LARGE_WIDTH    360.0
 #define CHATVIEW_SMALL_HEIGHT   150.0
 #define CHATVIEW_SMALL_WIDTH    200.0
 #define CHATVIEW_PADDING        8.0

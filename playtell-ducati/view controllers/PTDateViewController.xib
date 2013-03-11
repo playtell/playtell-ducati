@@ -54,7 +54,7 @@
 					<object class="IBUIButton" id="874734354">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {48, 48}}</string>
+						<string key="NSFrame">{{20, 20}, {92, 37}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="214727244"/>
@@ -75,9 +75,13 @@
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
+						<object class="NSCustomResource" key="IBUIHighlightedImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">end-call-button-press.png</string>
+						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">endCallButton.png</string>
+							<string key="NSResourceName">end-call-button.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="382520803">
 							<int key="type">2</int>
@@ -92,9 +96,10 @@
 					<object class="IBUIButton" id="214727244">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{960, 20}, {44, 44}}</string>
+						<string key="NSFrame">{{960, 20}, {42, 42}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -106,9 +111,13 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="972985284"/>
+						<object class="NSCustomResource" key="IBUIHighlightedImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">close-press.png</string>
+						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">CloseBookNormal.png</string>
+							<string key="NSResourceName">close.png</string>
 						</object>
 						<reference key="IBUIFontDescription" ref="382520803"/>
 						<reference key="IBUIFont" ref="1012905385"/>
@@ -232,7 +241,9 @@
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="10.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="1" key="10.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="14.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="1" key="14.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -248,28 +259,13 @@
 					<string key="className">PTDateViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="closeBookButtonPressed:">id</string>
 						<string key="endPlaydateHandle:">id</string>
-						<string key="endPlaydatePopupToggle:">id</string>
-						<string key="playMemoryGame:">id</string>
 						<string key="playTictactoe:">id</string>
 						<string key="playdateDisconnect:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="closeBookButtonPressed:">
-							<string key="name">closeBookButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="endPlaydateHandle:">
 							<string key="name">endPlaydateHandle:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="endPlaydatePopupToggle:">
-							<string key="name">endPlaydatePopupToggle:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="playMemoryGame:">
-							<string key="name">playMemoryGame:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="playTictactoe:">
@@ -327,9 +323,11 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="CloseBookNormal.png">{44, 44}</string>
+			<string key="close-press.png">{42, 42}</string>
+			<string key="close.png">{42, 42}</string>
 			<string key="date_bg.png">{1024, 768}</string>
-			<string key="endCallButton.png">{48, 48}</string>
+			<string key="end-call-button-press.png">{92, 37}</string>
+			<string key="end-call-button.png">{92, 37}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
