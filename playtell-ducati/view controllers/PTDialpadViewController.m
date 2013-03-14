@@ -260,6 +260,12 @@ BOOL postcardsShown;
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(refreshPlaymates)
+                                                 name:PTReachabilityActiveNotification
+                                               object:nil];
+
+    
     if (self.selectedPlaymateView) {
         [self deactivatePlaymateView];
     }

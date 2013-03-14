@@ -6,10 +6,14 @@
 //  Copyright (c) 2012 PlayTell. All rights reserved.
 //
 
+#define PTReachabilityActiveNotification    @"PTReachabilityActiveNotification"
+#define PTReachabilityInactiveNotification  @"PTReachabilityInactiveNotification"
+
 #import "PTLoginViewController.h"
 #import "PTPlayTellPusher.h"
 #import "PTDateViewController.h"
 #import "PTMemoryViewController.h"
+#import "UA_Reachability.h"
 
 #import <UIKit/UIKit.h>
 
@@ -25,6 +29,10 @@
     
     // Tooltip
     BOOL ttInviteBuddiesShownThisInstance;
+    
+    // Reachability
+    Reachability *serverReachable;
+    BOOL internetActive;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -39,5 +47,6 @@
 - (void)runNewUserWorkflow;
 - (BOOL)shouldShowInviteBuddiesTooltip;
 - (void)setupPushNotifications;
+- (void)checkNetworkStatus:(NSNotification *)notice;
 
 @end
