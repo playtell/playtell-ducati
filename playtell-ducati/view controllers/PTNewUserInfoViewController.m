@@ -108,7 +108,7 @@
     float momHeight = 312.0f;
     float kidWidth = 169.0f;
     float kidHeight = 199.0f;
-    float bottomMargin = 80.0f;
+    float bottomMargin = 150.0f;
     CALayer *momLayer = [CALayer layer];
     momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - momHeight, momWidth, momHeight);
     momLayer.contents = (id)[UIImage imageNamed:@"grandma"].CGImage;
