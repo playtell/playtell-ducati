@@ -40,5 +40,6 @@
 @property (nonatomic, strong) NSString *initialEmailAddress;
 
 - (IBAction)signInDidPress:(id)sender;
+- (IBAction)resetPasswordDidPress:(id)sender;
 
 @end

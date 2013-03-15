@@ -19,6 +19,7 @@
 #import "PTErrorTableCell.h"
 #import "UAirship.h"
 #import "PTAnalytics.h"
+#import "PTResetPasswordRequest.h"
 
 @interface PTLoginViewController ()
 
@@ -339,6 +340,31 @@
     // Transition to it
     [appDelegate.transitionController transitionToViewController:newUserNavigationController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)resetPasswordDidPress:(id)sender {
+    [self clearErrorsWithType:@"password"];
+    [self validateEmailQuietly:NO];
+    if ([formErrors count] == 0) {
+        PTResetPasswordRequest *request = [[PTResetPasswordRequest alloc] init];
+        [request resetPasswordForEmail:txtEmail.text
+                             onSuccess:^(NSDictionary *result) {
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset Password"
+                                                                                 message:@"Instructions for resetting your password have been sent to your email address."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"OK"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }
+                             onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset Password"
+                                                                                 message:@"The password cannot be reset at this time. Please check the email address you entered and try again."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"OK"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }];
+    }
 }
 
 #pragma mark - Textfield delegates & notification handler
