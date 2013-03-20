@@ -11,6 +11,7 @@
 #import "PTPlaydate.h"
 #import "PTMemoryGameDelegate.h"
 #import "PTMemoryGameScoreView.h"
+#import "PTConnectionLossViewController.h"
 
 @interface PTMemoryViewController : UIViewController <PTMemoryGameDelegate> {
     // Game data
@@ -48,6 +49,10 @@
     // Winner/loser
     UIImageView *winnerView;
     UIImageView *loserView;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, strong) PTChatViewController* chatController;

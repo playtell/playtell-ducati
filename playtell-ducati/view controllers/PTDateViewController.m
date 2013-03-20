@@ -653,11 +653,33 @@ NSTimer *postcardTimer;
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(internetConnectionLost)
+                                                 name:PTReachabilityInactiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(internetConnectionFound)
+                                                 name:PTReachabilityActiveNotification
+                                               object:nil];
+    
     // Remove borders from chat hud
     [self.chatController hideAllBorders];
     
     // Reset game open status
     isGameOpen = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityInactiveNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityActiveNotification
+                                                  object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -667,6 +689,42 @@ NSTimer *postcardTimer;
     if (self.delegate && [self.delegate respondsToSelector:@selector(dateViewControllerWillAppear:)]) {
         [self.delegate dateViewControllerWillAppear:self];
     }
+}
+
+- (void)internetConnectionLost {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (!showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(showConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)internetConnectionFound {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(hideConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)showConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController startBlinking];
+    [self presentModalViewController:connectionLossController animated:YES];
+    showingConnectionLossController = YES;
+}
+
+- (void)hideConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController stopBlinking];
+    [self dismissModalViewControllerAnimated:YES];
+    showingConnectionLossController = NO;
 }
 
 - (void)dateControllerDidEnterBackground:(NSNotification*)note {
@@ -687,6 +745,11 @@ NSTimer *postcardTimer;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationWillEnterForegroundNotification
                                                   object:nil];
+    
+    PTAppDelegate *appDelegate = (PTAppDelegate *)[[UIApplication sharedApplication] delegate];
+    if (!appDelegate.internetActive) {
+        return;
+    }
 
     // When the view controller enters the foreground, the playdate is checked
     // for existence. It's possible the other end hung up while the application

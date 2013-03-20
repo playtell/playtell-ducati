@@ -11,6 +11,7 @@
 #import "PTChatViewController.h"
 #import "PTPagesScrollView.h"
 #import "PTPlaydate.h"
+#import "PTConnectionLossViewController.h"
 
 @interface PTTictactoeViewController : UIViewController {
     
@@ -32,6 +33,10 @@
 
     // Tooltip
     UIImageView *ttWaitYourTurn;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 //playdate specific

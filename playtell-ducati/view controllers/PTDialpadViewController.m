@@ -261,9 +261,20 @@ BOOL postcardsShown;
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(refreshPlaymates)
+                                             selector:@selector(internetConnectionLost)
+                                                 name:PTReachabilityInactiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(internetConnectionFound)
                                                  name:PTReachabilityActiveNotification
                                                object:nil];
+    
+    // Check reachability now
+    PTAppDelegate *appDelegate = (PTAppDelegate *)[[UIApplication sharedApplication] delegate];
+    if (!appDelegate.internetActive) {
+        [self internetConnectionLost];
+    }
 
     
     if (self.selectedPlaymateView) {
@@ -324,6 +335,14 @@ BOOL postcardsShown;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityInactiveNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityActiveNotification
                                                   object:nil];
     
     self.playdateToIgnore = nil;
@@ -928,6 +947,43 @@ BOOL postcardsShown;
     
     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (void)internetConnectionLost {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (!showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(showConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)internetConnectionFound {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(hideConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)showConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController startBlinking];
+    [self presentModalViewController:connectionLossController animated:YES];
+    showingConnectionLossController = YES;
+}
+
+- (void)hideConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController stopBlinking];
+    [self dismissModalViewControllerAnimated:YES];
+    showingConnectionLossController = NO;
+    [self refreshPlaymates];
 }
 
 #pragma mark - Ringer methods

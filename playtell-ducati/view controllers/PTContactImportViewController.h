@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GTMOAuth2Authentication.h"
+#import "PTConnectionLossViewController.h"
 
 @interface PTContactImportViewController : UIViewController <UITextFieldDelegate> {
     GTMOAuth2Authentication *googleAuth;
@@ -26,6 +27,10 @@
     
     // Contacts
     NSMutableArray *contacts;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, retain) NSMutableArray *contacts;

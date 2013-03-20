@@ -8,6 +8,7 @@
 
 #define PTReachabilityActiveNotification    @"PTReachabilityActiveNotification"
 #define PTReachabilityInactiveNotification  @"PTReachabilityInactiveNotification"
+#define PTReachabilityDefaultTime           2.0
 
 #import "PTLoginViewController.h"
 #import "PTPlayTellPusher.h"
@@ -32,7 +33,6 @@
     
     // Reachability
     Reachability *serverReachable;
-    BOOL internetActive;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -43,6 +43,7 @@
 @property (strong, nonatomic) PTDateViewController *dateViewController;
 @property (nonatomic, retain) PTChatViewController* chatController;
 @property (strong, nonatomic) PTMemoryViewController *memoryViewController;
+@property (nonatomic) BOOL internetActive;
 
 - (void)runNewUserWorkflow;
 - (BOOL)shouldShowInviteBuddiesTooltip;

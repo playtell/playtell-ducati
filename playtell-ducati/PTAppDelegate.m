@@ -48,6 +48,7 @@
 @synthesize client;
 @synthesize phone;
 @synthesize chatController;
+@synthesize internetActive;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setup analytics
@@ -210,12 +211,12 @@
         case UA_NotReachable:
         {
             if (internetActive) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
-                                                                message:@"There is no connection to the PlayTell server. Please make sure the iPad is connected to the Internet."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
+//                                                                message:@"There is no connection to the PlayTell server. Please make sure the iPad is connected to the Internet."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"OK"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
                 internetActive = NO;
                 [[NSNotificationCenter defaultCenter] postNotificationName:PTReachabilityInactiveNotification object:self];
             }
@@ -225,12 +226,12 @@
         case UA_ReachableViaWWAN:
         {
             if (!internetActive) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
-                                                                message:@"The connection to the PlayTell server is back. Have fun playing on PlayTell."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
+//                                                                message:@"The connection to the PlayTell server is back. Have fun playing on PlayTell."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"OK"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
                 internetActive = YES;
                 [[NSNotificationCenter defaultCenter] postNotificationName:PTReachabilityActiveNotification object:self];
             }

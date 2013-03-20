@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "PTAccountViewController.h"
+#import "PTConnectionLossViewController.h"
 #import "PTPasswordViewController.h"
 #import "PTPictureViewController.h"
 
@@ -29,6 +30,10 @@
     
     // Container view
     IBOutlet UIView *containerView;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 - (IBAction)accountButtonPressed:(id)sender;

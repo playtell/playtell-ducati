@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UAPushNotificationHandler.h"
+#import "PTConnectionLossViewController.h"
 #import "PTPlaymateView.h"
 #import "PTShowPostcardsView.h"
 
@@ -20,6 +21,10 @@
     UIView *signUpBubbleContainer; // Shown only when user isn't logged in
     UIImageView *ttInviteBuddies; // "Invite Buddies" tooltip
     PTShowPostcardsView *postcardsView;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, strong) UIScrollView* scrollView;

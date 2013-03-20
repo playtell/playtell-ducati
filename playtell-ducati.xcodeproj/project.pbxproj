@@ -50,6 +50,11 @@
 		1A241D4916EE4BC300D3D2A0 /* end-call-button-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D4516EE4BC300D3D2A0 /* end-call-button-press@2x.png */; };
 		1A241D4A16EE4BC300D3D2A0 /* end-call-button.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D4616EE4BC300D3D2A0 /* end-call-button.png */; };
 		1A241D4B16EE4BC300D3D2A0 /* end-call-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D4716EE4BC300D3D2A0 /* end-call-button@2x.png */; };
+		1A241D6B16F3A3D200D3D2A0 /* PTConnectionLossViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A241D6A16F3A3D200D3D2A0 /* PTConnectionLossViewController.m */; };
+		1A241D7116F3A5C500D3D2A0 /* nowifi.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D6D16F3A5C500D3D2A0 /* nowifi.png */; };
+		1A241D7216F3A5C500D3D2A0 /* nowifi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D6E16F3A5C500D3D2A0 /* nowifi@2x.png */; };
+		1A241D7316F3A5C500D3D2A0 /* wifi.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D6F16F3A5C500D3D2A0 /* wifi.png */; };
+		1A241D7416F3A5C500D3D2A0 /* wifi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A241D7016F3A5C500D3D2A0 /* wifi@2x.png */; };
 		1A30CB8D1677E52D00A33FD5 /* Manual-invite-press.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */; };
 		1A30CB8E1677E52D00A33FD5 /* Manual-invite-press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */; };
 		1A30CB8F1677E52D00A33FD5 /* Manual-invite.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A30CB831677E52D00A33FD5 /* Manual-invite.png */; };
@@ -1186,6 +1191,12 @@
 		1A241D4516EE4BC300D3D2A0 /* end-call-button-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call-button-press@2x.png"; sourceTree = "<group>"; };
 		1A241D4616EE4BC300D3D2A0 /* end-call-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call-button.png"; sourceTree = "<group>"; };
 		1A241D4716EE4BC300D3D2A0 /* end-call-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "end-call-button@2x.png"; sourceTree = "<group>"; };
+		1A241D6916F3A3D200D3D2A0 /* PTConnectionLossViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTConnectionLossViewController.h; sourceTree = "<group>"; };
+		1A241D6A16F3A3D200D3D2A0 /* PTConnectionLossViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTConnectionLossViewController.m; sourceTree = "<group>"; };
+		1A241D6D16F3A5C500D3D2A0 /* nowifi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nowifi.png; sourceTree = "<group>"; };
+		1A241D6E16F3A5C500D3D2A0 /* nowifi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nowifi@2x.png"; sourceTree = "<group>"; };
+		1A241D6F16F3A5C500D3D2A0 /* wifi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wifi.png; sourceTree = "<group>"; };
+		1A241D7016F3A5C500D3D2A0 /* wifi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wifi@2x.png"; sourceTree = "<group>"; };
 		1A30CB811677E52D00A33FD5 /* Manual-invite-press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press.png"; path = "Inviter V2/Manual-invite-press.png"; sourceTree = "<group>"; };
 		1A30CB821677E52D00A33FD5 /* Manual-invite-press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite-press@2x.png"; path = "Inviter V2/Manual-invite-press@2x.png"; sourceTree = "<group>"; };
 		1A30CB831677E52D00A33FD5 /* Manual-invite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Manual-invite.png"; path = "Inviter V2/Manual-invite.png"; sourceTree = "<group>"; };
@@ -2700,6 +2711,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A241D7516F3A5C900D3D2A0 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				1A241D6D16F3A5C500D3D2A0 /* nowifi.png */,
+				1A241D6E16F3A5C500D3D2A0 /* nowifi@2x.png */,
+				1A241D6F16F3A5C500D3D2A0 /* wifi.png */,
+				1A241D7016F3A5C500D3D2A0 /* wifi@2x.png */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
 		1A5D7F6C165BE65B006DBC32 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -4465,6 +4487,7 @@
 		F4A9D6061576B8B00015D977 /* artwork */ = {
 			isa = PBXGroup;
 			children = (
+				1A241D7516F3A5C900D3D2A0 /* Reachability */,
 				1A9F9CE9169CEDA800DBFDAB /* Header */,
 				1A9B78361672607700F38174 /* Inviter V2 */,
 				1A70D2FD166D1D9000F66595 /* Spinner */,
@@ -5217,6 +5240,8 @@
 				23AD27EE15DA9FCC00279018 /* PTPlaydateEndViewController.xib */,
 				F420B73F1585BA1800DCAF10 /* TransitionController.h */,
 				F420B7401585BA1800DCAF10 /* TransitionController.m */,
+				1A241D6916F3A3D200D3D2A0 /* PTConnectionLossViewController.h */,
+				1A241D6A16F3A3D200D3D2A0 /* PTConnectionLossViewController.m */,
 			);
 			path = "view controllers";
 			sourceTree = "<group>";
@@ -6309,6 +6334,10 @@
 				1A241D4916EE4BC300D3D2A0 /* end-call-button-press@2x.png in Resources */,
 				1A241D4A16EE4BC300D3D2A0 /* end-call-button.png in Resources */,
 				1A241D4B16EE4BC300D3D2A0 /* end-call-button@2x.png in Resources */,
+				1A241D7116F3A5C500D3D2A0 /* nowifi.png in Resources */,
+				1A241D7216F3A5C500D3D2A0 /* nowifi@2x.png in Resources */,
+				1A241D7316F3A5C500D3D2A0 /* wifi.png in Resources */,
+				1A241D7416F3A5C500D3D2A0 /* wifi@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6549,6 +6578,7 @@
 				1AF8A00E16D6B8A0003CA8A5 /* NSDate+Rails.m in Sources */,
 				1AF8A01116D6D706003CA8A5 /* PTUserSettingsRequest.m in Sources */,
 				1AF8A01416D6EDC0003CA8A5 /* PTUpdateSettingsRequest.m in Sources */,
+				1A241D6B16F3A3D200D3D2A0 /* PTConnectionLossViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
