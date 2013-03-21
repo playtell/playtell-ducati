@@ -202,6 +202,7 @@
 								<string key="NSFrame">{{162, 392}, {261, 28}}</string>
 								<reference key="NSSuperview" ref="874992888"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -221,7 +222,7 @@
 								<reference key="IBUIFont" ref="399779145"/>
 							</object>
 						</array>
-						<string key="NSFrame">{{220, 44}, {585, 420}}</string>
+						<string key="NSFrame">{{220, 44}, {585, 440}}</string>
 						<reference key="NSSuperview" ref="766721923"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="162011589"/>
