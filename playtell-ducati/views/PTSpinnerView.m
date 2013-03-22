@@ -50,6 +50,36 @@
     return self;
 }
 
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setImage:[UIImage imageNamed:@"crank-circle.png"]];
+        self.autoresizesSubviews = YES;
+        
+        // Create animation
+        animationView = [[UIImageView alloc] initWithFrame:self.bounds];
+        animationView.frame = CGRectOffset(animationView.frame, 0.0f, -0.008333 * frame.size.height);
+        [animationView setImage:[UIImage imageNamed:@"crank1.png"]];
+        animationView.animationImages = [NSArray arrayWithObjects:
+                                         [UIImage imageNamed:@"crank1.png"],
+                                         [UIImage imageNamed:@"crank2.png"],
+                                         [UIImage imageNamed:@"crank3.png"],
+                                         [UIImage imageNamed:@"crank4.png"],
+                                         [UIImage imageNamed:@"crank5.png"],
+                                         [UIImage imageNamed:@"crank6.png"],
+                                         [UIImage imageNamed:@"crank7.png"],
+                                         [UIImage imageNamed:@"crank8.png"],
+                                         [UIImage imageNamed:@"crank9.png"],
+                                         [UIImage imageNamed:@"crank10.png"],
+                                         nil];
+        animationView.animationDuration = 1.0;
+        animationView.animationRepeatCount = 0;
+        animationView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:animationView];
+    }
+    return self;
+}
+
 - (void)startSpinning {
     [animationView startAnimating];
 }

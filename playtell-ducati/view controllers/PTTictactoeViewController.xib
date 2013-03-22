@@ -2,13 +2,13 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
-		<string key="IBDocument.SystemVersion">12C54</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2840</string>
-		<string key="IBDocument.AppKitVersion">1187.34</string>
-		<string key="IBDocument.HIToolboxVersion">625.00</string>
+		<string key="IBDocument.SystemVersion">11G63</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
+		<string key="IBDocument.AppKitVersion">1138.51</string>
+		<string key="IBDocument.HIToolboxVersion">569.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1926</string>
+			<string key="NS.object.0">1929</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -320,7 +320,7 @@
 					<object class="IBUIButton" id="768623729">
 						<reference key="NSNextResponder" ref="997250884"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {48, 48}}</string>
+						<string key="NSFrame">{{20, 20}, {92, 37}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
 						<reference key="NSNextKeyView" ref="23713229"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -334,9 +334,13 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="201001922"/>
+						<object class="NSCustomResource" key="IBUIHighlightedImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">end-call-button-press.png</string>
+						</object>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">endCallButton.png</string>
+							<string key="NSResourceName">end-call-button.png</string>
 						</object>
 						<object class="IBUIFontDescription" key="IBUIFontDescription" id="481554105">
 							<int key="type">2</int>
@@ -351,7 +355,7 @@
 					<object class="IBUIButton" id="23713229">
 						<reference key="NSNextResponder" ref="997250884"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{960, 20}, {44, 44}}</string>
+						<string key="NSFrame">{{960, 20}, {42, 42}}</string>
 						<reference key="NSSuperview" ref="997250884"/>
 						<reference key="NSNextKeyView" ref="640151437"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -366,10 +370,6 @@
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="201001922"/>
 						<object class="NSCustomResource" key="IBUIHighlightedImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">close-press-animate.png</string>
-						</object>
-						<object class="NSCustomResource" key="IBUISelectedImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">close-press.png</string>
 						</object>
@@ -722,6 +722,7 @@
 				<string key="125.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="126.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="157.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<real value="1" key="157.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="27.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -741,7 +742,7 @@
 				<string key="36.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="36.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="2" key="73.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="73.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="92.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
@@ -757,14 +758,14 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="close-press-animate.png">{45, 45}</string>
-			<string key="close-press.png">{45, 45}</string>
-			<string key="close.png">{46, 48}</string>
-			<string key="endCallButton.png">{48, 48}</string>
+			<string key="close-press.png">{42, 42}</string>
+			<string key="close.png">{42, 42}</string>
+			<string key="end-call-button-press.png">{92, 37}</string>
+			<string key="end-call-button.png">{92, 37}</string>
 			<string key="grid-press.png">{185, 175}</string>
 			<string key="shadow.png">{750, 666}</string>
 			<string key="tictactoe-background.png">{1027, 771}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1926</string>
+		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>

@@ -23,6 +23,7 @@
 #import "PTAnalytics.h"
 #import "UIView+PlayTell.h"
 #import "PTPostcardCreateRequest.h"
+#import "PTSpinnerView.h"
 
 @interface PTNewUserPushNotificationsViewController ()
 
@@ -122,6 +123,14 @@
         UILabel *childLbl = (UILabel *)childView;
         childLbl.textColor = [UIColor colorFromHex:@"#90b81c"];
     }
+    
+    // Create the spinner view
+    float width = self.view.frame.size.width;
+    float height = self.view.frame.size.height;
+    float size = 75.0f;
+    spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake((width - size) / 2, height - (size * 1.333f), size, size)];
+    [spinner startSpinning];
+    [self.view addSubview:spinner];
 }
 
 - (void)viewDidUnload {
@@ -221,6 +230,9 @@
 #pragma mark - Success/failure cases of account creation
 
 - (void)accountCreatedSuccessfully {
+    // Show the spinner view
+    spinner.alpha = 1.0f;
+    
     PTNewUserNavigationController *newUserNavigationController = (PTNewUserNavigationController *)self.navigationController;
 
     // Log the person in and transition directly to dialpad
@@ -231,14 +243,27 @@
                           onSuccess:^(NSDictionary *result) {
                               NSString* token = [result valueForKey:@"token"];
                               NSNumber* userID = [result valueForKey:@"user_id"];
-                              NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              NSURL* photoURL;
+                              @try {
+                                  photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              }
+                              @catch (NSException *exception) {
+                                  photoURL = [NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"];
+                              }
                               
                               // Save logged-in status
-                              [[PTUser currentUser] setUsername:newUserNavigationController.currentUser.email];
-                              [[PTUser currentUser] setEmail:newUserNavigationController.currentUser.email];
-                              [[PTUser currentUser] setAuthToken:token];
-                              [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-                              [[PTUser currentUser] setPhotoURL:photoURL];
+                              PTUser *currentUser = [PTUser currentUser];
+                              [currentUser setUsername:newUserNavigationController.currentUser.name];
+                              [currentUser setEmail:newUserNavigationController.currentUser.email];
+                              [currentUser setAuthToken:token];
+                              [currentUser setUserID:[userID unsignedIntValue]];
+                              [currentUser setPhotoURL:photoURL];
+                              
+                              // Setup people attributes in analytics
+                              NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+                              [attr setObject:currentUser.email forKey:PeopleEmail];
+                              [attr setObject:currentUser.username forKey:PeopleUsername];
+                              [PTAnalytics setPeopleProperties:attr];
                               
                               // Get Urban Airship device token
                               PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -279,6 +304,8 @@
         // Transition to dialpad to start using app
         [self accountCreatedSuccessfully];
     } else {
+        spinner.alpha = 0.0f;
+        
         // Transition to push notification views
         [UIView transitionFromView:contentContainer
                             toView:contentContainer2

@@ -29,6 +29,7 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     mixpanel.distinctId = uniqueId;
     mixpanel.nameTag = uniqueId;
+    [mixpanel.people identify:uniqueId];
 }
 
 + (void)sendEventNamed:(NSString *)eventName {
@@ -44,6 +45,18 @@
 + (void)flush {
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel flush];
+}
+
+#pragma mark - People analytics
+
++ (void)setPeopleProperties:(NSDictionary *)properties {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people set:properties];
+}
+
++ (void)registerPushDeviceToken:(NSData *)token {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel.people addPushDeviceToken:token];
 }
 
 @end

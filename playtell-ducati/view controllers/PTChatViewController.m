@@ -7,11 +7,15 @@
 //
 
 #import "Logging.h"
+#import "PTAppDelegate.h"
 #import "PTChatViewController.h"
 #import "PTGetSampleOpenTokToken.h"
 #import "PTNullPlaymate.h"
 #import "PTPlaydatePhotoCreateRequest.h"
+#import "PTPlayTellPusher.h"
+#import "PTSpinnerView.h"
 #import "PTUser.h"
+#import "TransitionController.h"
 
 #import "PTPlaydate+InitatorChecking.h"
 #import "UIView+PlayTell.h"
@@ -22,27 +26,41 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define CHATVIEW_CENTERX        512.0
-#define CHATVIEW_LARGE_HEIGHT   300.0
-#define CHATVIEW_LARGE_WIDTH    400.0
+#define CHATVIEW_LARGE_HEIGHT   270.0
+#define CHATVIEW_LARGE_WIDTH    360.0
 #define CHATVIEW_SMALL_HEIGHT   150.0
 #define CHATVIEW_SMALL_WIDTH    200.0
 #define CHATVIEW_PADDING        8.0
 #define CHATVIEW_MARGIN         8.0
+#define OFFSCREEN_SIZE          100.0
+#define TRANSITION_TIME         0.3
 
 @interface PTChatViewController ()
 @property (nonatomic, strong) PTVideoPhone* videoPhone;
 @property (nonatomic, strong) MPMoviePlayerController* movieController;
 @property (nonatomic, assign) BOOL restrictSizeToSmall;
-@property (nonatomic, assign) BOOL isChatViewSmall;
+@property (nonatomic, strong) UIButton *btnFullscreen;
+@property (nonatomic, strong) PTFullscreenChatView *fullscreenView;
 @end
 
 @implementation PTChatViewController
 @synthesize leftView, rightView, videoPhone, playdate, playmate;
 @synthesize movieController;
 @synthesize restrictSizeToSmall;
-@synthesize isChatViewSmall;
+@synthesize btnFullscreen;
+@synthesize fullscreenView;
 
 NSTimer *screenshotTimer;
+CGRect fullscreenOffscreenRect;
+CGRect fullscreenOnscreenRect;
+bool inFullscreen;
+UISwipeGestureRecognizer *swipeUpRecognizer;
+UISwipeGestureRecognizer *swipeDownRecognizer;
+UIPinchGestureRecognizer *pinchRecognizer;
+UITapGestureRecognizer *tapRecognizer;
+CGRect originalSubscriberBounds;
+CGRect originalPublisherBounds;
+UIViewController *fullscreenController;
 
 - (void)playMovieURLInLeftPane:(NSURL*)movieURL {
     self.movieController.contentURL = movieURL;
@@ -59,6 +77,8 @@ NSTimer *screenshotTimer;
 - (id)init {
     if (self = [super init]) {
         self.view = [[PTChatHUDParentView alloc] init];
+        
+        inFullscreen = NO;
 
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
@@ -68,30 +88,51 @@ NSTimer *screenshotTimer;
         [self.view addSubview:self.leftView];
         [self.view addSubview:self.rightView];
         
+        // Create the button to go to fullscreen mode
+        UIImage *imgFullscreen = [UIImage imageNamed:@"full-screen.png"];
+        UIImage *imgFullscreenPress = [UIImage imageNamed:@"full-screen-press.png"];
+        btnFullscreen = [[UIButton alloc] initWithFrame:CGRectMake(rightView.frame.origin.x + rightView.frame.size.width, rightView.frame.origin.y + CHATVIEW_PADDING, imgFullscreen.size.width, imgFullscreen.size.height)];
+        [btnFullscreen setBackgroundImage:imgFullscreen forState:UIControlStateNormal];
+        [btnFullscreen setBackgroundImage:imgFullscreenPress forState:UIControlStateHighlighted];
+        btnFullscreen.alpha = 0.0f;
+        [btnFullscreen addTarget:self action:@selector(fullscreenButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btnFullscreen];
+        
+        // Create the fullscreen view
+        fullscreenOffscreenRect = CGRectMake(CHATVIEW_CENTERX - (OFFSCREEN_SIZE / 2), -OFFSCREEN_SIZE, OFFSCREEN_SIZE, OFFSCREEN_SIZE);
+        fullscreenOnscreenRect = CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f);
+        fullscreenView = [[PTFullscreenChatView alloc] init];
+        fullscreenView.delegate = self;
+        fullscreenController = [[UIViewController alloc] init];
+        fullscreenController.view = fullscreenView;
+        
         self.movieController = [[MPMoviePlayerController alloc] initWithContentURL:nil];
         self.restrictSizeToSmall = YES;
-        self.isChatViewSmall = YES;
         
         // Create the gesture recognizers
-        UISwipeGestureRecognizer *swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
-        swipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-        UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
+        swipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeUpEvent:)];
         swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
-        UIPinchGestureRecognizer *pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
-        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
+        swipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(userSwipeDownEvent:)];
+        swipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        pinchRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(userPinchEvent:)];
+        tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(userTapEvent:)];
         tapRecognizer.numberOfTapsRequired = 1;
         
         // Set self to be the delegate for all gesture recognizers
-        swipeDownRecognizer.delegate = self;
         swipeUpRecognizer.delegate = self;
+        swipeDownRecognizer.delegate = self;
         pinchRecognizer.delegate = self;
         tapRecognizer.delegate = self;
         
         // Add the gesture recognizers to the views
-        [self.view addGestureRecognizer:swipeDownRecognizer];
         [self.view addGestureRecognizer:swipeUpRecognizer];
+        [self.view addGestureRecognizer:swipeDownRecognizer];
         [self.view addGestureRecognizer:pinchRecognizer];
         [self.view addGestureRecognizer:tapRecognizer];
+        
+        // Notifications for when playmate uses fullscreen
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playmateStartedFullscreen) name:@"FullscreenStart" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playmateEndedFullscreen) name:@"FullscreenEnd" object:nil];
     }
     return self;
 }
@@ -124,46 +165,84 @@ NSTimer *screenshotTimer;
 - (void)takeScreenshotWithSave:(BOOL)saveToCameraRoll {
     dispatch_async(dispatch_get_current_queue(), ^{
         // Get images from left and right chat HUDs
-        UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
-        UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
-        UIImage *leftVideo = [self.leftView.opentokView screenshotWithSave:NO];
-        UIImage *rightVideo = [self.rightView.opentokView screenshotWithSave:NO];
+        __block UIImage *leftScreen = [self.leftView.contentView screenshotWithSave:NO];
+        __block UIImage *rightScreen = [self.rightView.contentView screenshotWithSave:NO];
         
-        // Resize if chatview was expanded
-        if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
-            leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            leftVideo = [leftVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-            rightVideo = [rightVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
-        }
+        OTVideoView *subscriber = (OTVideoView *)[[PTVideoPhone sharedPhone] currentSubscriberView];
+        OTVideoView *publisher = (OTVideoView *)[[PTVideoPhone sharedPhone] currentPublisherView];
         
-        // Merge the two images
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
-        [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
-        [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
-        [leftVideo drawAtPoint:CGPointMake(0.0f, 0.0f)];
-        [rightVideo drawAtPoint:CGPointMake(200.0f, 0.0f)];
-        UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        // Save to photo roll?
-        if (saveToCameraRoll) {
-            UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
-        }
-        
-        // Save to the server (only if logged in)
-        if ([PTUser currentUser].isLoggedIn == YES) {
-            PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
-            [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
-                                                   playdateId:self.playdate.playdateID
-                                                        photo:screenshot
-                                                      success:^(NSDictionary *result) {
-                                                          //NSLog(@"Playdate photo successfully uploaded.");
-                                                      } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-                                                          NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
-                                                      }];
+        if (subscriber && publisher) {
+            [subscriber getImageWithBlock:^(UIImage *blockLeftVideo) {
+                __block UIImage *leftVideo = [blockLeftVideo copy];
+                [publisher getImageWithBlock:^(UIImage *rightVideo) {
+                    [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, leftVideo, rightVideo, nil] shouldSave:saveToCameraRoll];
+                }];
+            }];
+        } else if (subscriber) {
+            [subscriber getImageWithBlock:^(UIImage *leftVideo) {
+                [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, leftVideo, [rightScreen copy], nil] shouldSave:saveToCameraRoll];
+            }];
+        } else if (publisher) {
+            [publisher getImageWithBlock:^(UIImage *rightVideo) {
+                [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, [leftScreen copy], rightVideo, nil] shouldSave:saveToCameraRoll];
+            }];
+        } else {
+            [self createSnapshotImage:[NSArray arrayWithObjects:leftScreen, rightScreen, nil] shouldSave:saveToCameraRoll];
         }
     });
+}
+
+// Should pass in an array with either 2 or 4 images:
+// 2 images: left static view, right static view
+// 4 images: left static view, right static view, left video view, right video view
+- (void)createSnapshotImage:(NSArray *)images shouldSave:(BOOL)saveToCameraRoll {
+    UIImage *leftScreen = [images objectAtIndex:0];
+    UIImage *rightScreen = [images objectAtIndex:1];
+    UIImage *leftVideo;
+    UIImage *rightVideo;
+    
+    if ([images count] == 4) {
+        leftVideo = [images objectAtIndex:2];
+        rightVideo = [images objectAtIndex:3];
+    } else {
+        leftVideo = [leftScreen copy];
+        rightVideo = [rightScreen copy];
+    }
+    
+    // Resize if chatview was expanded
+    if (leftScreen.size.width > CHATVIEW_SMALL_WIDTH) {
+        leftScreen = [leftScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        rightScreen = [rightScreen scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        leftVideo = [leftVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+        rightVideo = [rightVideo scaleProportionallyToSize:CGSizeMake(CHATVIEW_SMALL_WIDTH, CHATVIEW_SMALL_HEIGHT)];
+    }
+    
+    // Merge the two images
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(400.0f, 150.0f), NO, 0);
+    [leftScreen drawAtPoint:CGPointMake(0.0f, 0.0f)];
+    [rightScreen drawAtPoint:CGPointMake(200.0f, 0.0f)];
+    [leftVideo drawAtPoint:CGPointMake(0.0f, 0.0f)];
+    [rightVideo drawAtPoint:CGPointMake(200.0f, 0.0f)];
+    UIImage *screenshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // Save to photo roll?
+    if (saveToCameraRoll) {
+        UIImageWriteToSavedPhotosAlbum(screenshot, nil, nil, nil);
+    }
+    
+    // Save to the server (only if logged in)
+    if ([PTUser currentUser].isLoggedIn == YES) {
+        PTPlaydatePhotoCreateRequest *photoCreateRequest = [[PTPlaydatePhotoCreateRequest alloc] init];
+        [photoCreateRequest playdatePhotoCreateWithUserId:[PTUser currentUser].userID
+                                               playdateId:self.playdate.playdateID
+                                                    photo:screenshot
+                                                  success:^(NSDictionary *result) {
+                                                      //NSLog(@"Playdate photo successfully uploaded.");
+                                                  } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                                      NSLog(@"Playdate photo creation failure!! %@ - %@", error, JSON);
+                                                  }];
+    }
 }
 
 - (void)takeAutomaticScreenshot {
@@ -181,14 +260,119 @@ NSTimer *screenshotTimer;
     [screenshotTimer invalidate];
 }
 
+- (void)playmateStartedFullscreen {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    [self showFullscreenChat:YES];
+}
+
+- (void)playmateEndedFullscreen {
+    if (self.restrictSizeToSmall)
+        return;
+    
+    [self hideFullscreenChat:YES];
+}
+
+- (void)fullscreenButtonPressed {
+    [self showFullscreenChat:YES];
+    
+    // Send a notification to pusher
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_start"
+                                               data:[[NSDictionary alloc] init]
+                                            channel:playdate.pusherChannelName];
+}
+
+- (void)hideFullscreenChat:(BOOL)animated {
+    if (!inFullscreen) {
+        return;
+    }
+    inFullscreen = NO;
+    
+    float animationTime = 0.0f;
+    if (animated) {
+        animationTime = TRANSITION_TIME;
+    }
+    
+    [UIView animateWithDuration:animationTime animations:^{
+        fullscreenView.subscriberVideoView.alpha = 0.0f;
+        fullscreenView.publisherVideoView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        // Reset the original bounds
+        UIView *leftVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+        leftVideo.bounds = originalSubscriberBounds;
+        UIView *rightVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+        rightVideo.bounds = originalPublisherBounds;
+        
+        // Remove the videos from the fullscreen view
+        [fullscreenView.subscriberVideoView removeAllSubviews];
+        [fullscreenView.publisherVideoView removeAllSubviews];
+        
+        // Set the opentok views
+        [leftView setOpentokVideoView:leftVideo];
+        [rightView setOpentokVideoView:rightVideo];
+        
+        // Dismiss the fullscreen view
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController transitionToViewController:[appDelegate dateViewController] withOptions:UIViewAnimationOptionTransitionFlipFromRight | UIViewAnimationOptionCurveEaseInOut];
+    }];
+}
+
+- (void)showFullscreenChat:(BOOL)animated {
+    inFullscreen = YES;
+    float animationTime = 0.0f;
+    if (animated) {
+        animationTime = TRANSITION_TIME;
+    }
+    
+    [fullscreenView setSubscriberImage:playmate.userPhoto];
+    [fullscreenView setPublisherImage:[PTUser currentUser].userPhoto];
+    
+    // Show the fullscreen view
+    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.transitionController transitionToViewController:fullscreenController withOptions:UIViewAnimationOptionTransitionFlipFromLeft | UIViewAnimationOptionCurveEaseInOut];
+    
+    // Save the original bounds so we can put them back when fullscreen ends
+    UIView *subscriberVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+    originalSubscriberBounds = subscriberVideo.bounds;
+    UIView *publisherVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+    originalPublisherBounds = publisherVideo.bounds;
+    
+    // Add the videos to the fullscreen view
+    subscriberVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.subscriberVideoView.frame.size.width, fullscreenView.subscriberVideoView.frame.size.height);
+    [fullscreenView.subscriberVideoView addSubview:subscriberVideo];
+    publisherVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.publisherVideoView.frame.size.width, fullscreenView.publisherVideoView.frame.size.height);
+    [fullscreenView.publisherVideoView addSubview:publisherVideo];
+    
+    [UIView animateWithDuration:animationTime animations:^{
+        fullscreenView.subscriberVideoView.alpha = 1.0f;
+        fullscreenView.publisherVideoView.alpha = 1.0f;
+    }];
+}
+
+- (void)resetFullscreenButtonLocation {
+    // Set the location of the fullscreen button
+    btnFullscreen.frame = CGRectMake(self.rightView.frame.origin.x + self.rightView.frame.size.width, rightView.frame.origin.y + CHATVIEW_PADDING, btnFullscreen.frame.size.width, btnFullscreen.frame.size.height);
+}
+
 - (void)restrictToSmallSize:(BOOL)shouldRestrict {
-    if (shouldRestrict && self.isChatViewSmall == NO) {
+    if (shouldRestrict) {
+        // Hide fullscreen view
+        [self hideFullscreenChat:NO];
+        btnFullscreen.alpha = 0.0f;
+        
         // Calculate width and height
         CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
         CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
 
         self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
         self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        
+        [self resetFullscreenButtonLocation];
+    } else {
+        [UIView animateWithDuration:0.5f animations:^{
+            btnFullscreen.alpha = 1.0f;
+        }];
     }
     
     self.restrictSizeToSmall = shouldRestrict;
@@ -198,33 +382,28 @@ NSTimer *screenshotTimer;
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.isChatViewSmall == YES) {
-        self.isChatViewSmall = NO;
-        NSLog(@"userSwipeDownEvent");
-        
-        // Calculate width and height
-        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
-        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
-        
-        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-    }
+    // Calculate final width and height
+    CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_LARGE_WIDTH; // Account for padding around chat view
+    CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_LARGE_HEIGHT;
+    
+    self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    
+    [self resetFullscreenButtonLocation];
 }
 
 - (void)userSwipeUpEvent:(UISwipeGestureRecognizer *)recognizer {
     if (self.restrictSizeToSmall)
         return;
     
-    if (self.isChatViewSmall == NO) {
-        self.isChatViewSmall = YES;
-        
-        // Calculate width and height
-        CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
-        CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
-        
-        self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-        self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
-    }
+    // Calculate width and height
+    CGFloat widthWithPadding = (2.0f * CHATVIEW_PADDING) + CHATVIEW_SMALL_WIDTH; // Account for padding around chat view
+    CGFloat heightWithPadding = CHATVIEW_PADDING + CHATVIEW_SMALL_HEIGHT;
+    
+    self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+    
+    [self resetFullscreenButtonLocation];
 }
 
 - (void)userPinchEvent:(UIPinchGestureRecognizer *)recognizer {
@@ -239,11 +418,10 @@ NSTimer *screenshotTimer;
         float newWidth = (self.leftView.frame.size.width - (2.0f * CHATVIEW_PADDING)) * scale;
         if (newWidth < CHATVIEW_SMALL_WIDTH) {
             newWidth = CHATVIEW_SMALL_WIDTH;
-            self.isChatViewSmall = YES;
         }
+        
         if (newWidth > CHATVIEW_LARGE_WIDTH) {
             newWidth = CHATVIEW_LARGE_WIDTH;
-            self.isChatViewSmall = NO;
         }
         
         // Min/max height
@@ -261,6 +439,8 @@ NSTimer *screenshotTimer;
         
         self.leftView.frame = CGRectMake(CHATVIEW_CENTERX - widthWithPadding + (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
         self.rightView.frame = CGRectMake(CHATVIEW_CENTERX - (CHATVIEW_PADDING / 2.0f), 0.0f, widthWithPadding, heightWithPadding);
+        
+        [self resetFullscreenButtonLocation];
 
         recognizer.scale = 1;
     }
@@ -297,6 +477,17 @@ NSTimer *screenshotTimer;
         [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:^(OTSubscriber* subscriber) {
             LogDebug(@"Subscriber connected");
             [self.leftView setOpentokVideoView:subscriber.view];
+            
+            // If we're in fullscreen mode set the subscriber video
+            if (inFullscreen) {
+                // Save the original bounds so we can put them back when fullscreen ends
+                UIView *subscriberVideo = [[PTVideoPhone sharedPhone] currentSubscriberView];
+                originalSubscriberBounds = subscriberVideo.bounds;
+                
+                // Add the videos to the fullscreen view
+                subscriberVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.subscriberVideoView.frame.size.width, fullscreenView.subscriberVideoView.frame.size.height);
+                [fullscreenView.subscriberVideoView addSubview:subscriberVideo];
+            }
         }];
 
         myToken = ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) ?
@@ -308,6 +499,17 @@ NSTimer *screenshotTimer;
         [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
             LogDebug(@"Publisher started streaming");
             [self.rightView setOpentokVideoView:aPublisher.view];
+            
+            // If we're in fullscreen mode set the publisher video
+            if (inFullscreen) {
+                // Save the original bounds so we can put them back when fullscreen ends
+                UIView *publisherVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+                originalPublisherBounds = publisherVideo.bounds;
+                
+                // Add the videos to the fullscreen view
+                publisherVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.publisherVideoView.frame.size.width, fullscreenView.publisherVideoView.frame.size.height);
+                [fullscreenView.publisherVideoView addSubview:publisherVideo];
+            }
         }];
         [[PTVideoPhone sharedPhone] connectToSession:mySession
                                            withToken:myToken
@@ -329,11 +531,23 @@ NSTimer *screenshotTimer;
      {
          [[PTVideoPhone sharedPhone] setPublisherDidStartStreamingBlock:^(OTPublisher *aPublisher) {
              LogDebug(@"Publisher started streaming");
-             [self.rightView setView:aPublisher.view];
+             [self.rightView setOpentokVideoView:aPublisher.view];
+             
+             // If we're in fullscreen mode set the publisher video
+             if (inFullscreen) {
+                 // Save the original bounds so we can put them back when fullscreen ends
+                 UIView *publisherVideo = [[PTVideoPhone sharedPhone] currentPublisherView];
+                 originalPublisherBounds = publisherVideo.bounds;
+                 
+                 // Add the videos to the fullscreen view
+                 publisherVideo.frame = CGRectMake(0.0f, 0.0f, fullscreenView.publisherVideoView.frame.size.width, fullscreenView.publisherVideoView.frame.size.height);
+                 [fullscreenView.publisherVideoView addSubview:publisherVideo];
+             }
          }];
          [[PTVideoPhone sharedPhone] setPublisherDidStopStreamingBlock:^(OTPublisher *aPublisher) {
              [self setCurrentUserPhoto];
          }];
+         [[PTVideoPhone sharedPhone] setSubscriberConnectedBlock:nil];
          [[PTVideoPhone sharedPhone] connectToSession:openTokSession
                                             withToken:openTokToken
                                               success:^(OTPublisher* publisher)
@@ -376,12 +590,11 @@ NSTimer *screenshotTimer;
     [anImageView addSubview:opacityView];
     
     // Create and align the loading crank in the opacity view
-    UIView *spinningCrank = [self createWaitingView];
-    spinningCrank.center = opacityView.center;
-    spinningCrank.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin |
-                                     UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
-    [opacityView addSubview:spinningCrank];
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 75.0f, 75.0f)];
+    spinner.center = opacityView.center;
+    spinner.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    [spinner startSpinning];
+    [opacityView addSubview:spinner];
     
     // Determine the playmate name label geometry
     CGSize maxSize = CGSizeMake(200.0f, 50.0f);
@@ -425,24 +638,6 @@ NSTimer *screenshotTimer;
     return dummyBackground;
 }
 
-- (UIView*)createWaitingView {
-    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
-    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
-    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
-    
-    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    
-    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
-    rotationAnimation.duration = 2.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 10000;
-    
-    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    return iconImageview;
-}
-
 - (UIImage*)placeholderImage {
     return [UIImage imageNamed:@"profile_default_2.png"];
 }
@@ -456,6 +651,17 @@ NSTimer *screenshotTimer;
         return NO; // ignore the touch
     }
     return YES; // handle the touch
+}
+
+#pragma mark - PTFullscreenChatViewDelegate methods
+
+- (void)fullscreenChatViewShouldClose:(UIView *)closingView {
+    [self hideFullscreenChat:YES];
+    
+    // Send a notification to pusher
+    [[PTPlayTellPusher sharedPusher] emitEventNamed:@"client-fullscreen_end"
+                                               data:[[NSDictionary alloc] init]
+                                            channel:playdate.pusherChannelName];
 }
 
 #pragma mark - Game-related methods

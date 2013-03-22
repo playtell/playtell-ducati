@@ -28,7 +28,7 @@
 
 @property (nonatomic, strong) UIView *background;
 @property (nonatomic, strong) UILabel *lblTitle;
-@property (nonatomic, strong) UIImage *snapshot;
+@property (nonatomic, strong) UIImage *postcardSnapshot;
 @property (nonatomic, strong) UIImageView *photo;
 @property (nonatomic, strong) UIView *video;
 @property (nonatomic, strong) PTCameraButton *btnCamera;
@@ -52,7 +52,7 @@
 
 @synthesize background;
 @synthesize lblTitle;
-@synthesize snapshot;
+@synthesize postcardSnapshot;
 @synthesize photo;
 @synthesize video;
 @synthesize btnCamera, btnSend;
@@ -63,7 +63,7 @@
 
 @synthesize sendPlayer, cameraPlayer;
 
-UIView *publisherView;
+OTVideoView *publisherView;
 CGRect originalFrame;
 int currentPostcard;
 BOOL gesturesEnabled;
@@ -130,8 +130,8 @@ CGRect offRightFrame;
         [self addSubview:lblTitle];
         
         // Layout the photo
-        self.snapshot = [PTUser currentUser].userPhoto;
-        photo = [[UIImageView alloc] initWithImage:snapshot];
+        self.postcardSnapshot = [PTUser currentUser].userPhoto;
+        photo = [[UIImageView alloc] initWithImage:postcardSnapshot];
         photo.frame = CGRectMake(centerFrame.origin.x + ((centerFrame.size.width - PHOTO_WIDTH) / 2), centerFrame.origin.y + ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         photo.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:photo];
@@ -239,7 +239,7 @@ CGRect offRightFrame;
 - (void)sendButtonPressed {
     if (delegate) {
         UIImageView *selectedPostcard = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[postcardNames objectAtIndex:currentPostcard]]];
-        UIImageView *photoCopy = [[UIImageView alloc] initWithImage:snapshot];
+        UIImageView *photoCopy = [[UIImageView alloc] initWithImage:postcardSnapshot];
         photoCopy.frame = CGRectMake((centerFrame.size.width - PHOTO_WIDTH) / 2, ((centerFrame.size.height - PHOTO_HEIGHT) / 2) - 70.0, PHOTO_WIDTH, PHOTO_HEIGHT);
         [selectedPostcard addSubview:photoCopy];
         
@@ -325,24 +325,26 @@ CGRect offRightFrame;
     shim.alpha = 1.0f;
     
     // Take the picture from the video publisher view
-    snapshot = [publisherView screenshotWithSave:NO];
-    photo.image = snapshot;
-    
-    // Animate out the video view
-    [UIView animateWithDuration:1.0f animations:^{
-        video.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        // Reset the publisher view
-        publisherView.frame = originalFrame;
+    [publisherView getImageWithBlock:^(UIImage *snapshot) {
+        postcardSnapshot = snapshot;
+        photo.image = postcardSnapshot;
         
-        lblTitle.text = @"WANT TO SEND YOUR PICTURE?";
-        
-        btnCamera.hidden = NO;
-        btnCamera.enabled = YES;
-        btnSend.hidden = NO;
-        btnSend.enabled = YES;
-        
-        [self enableGestures];
+        // Animate out the video view
+        [UIView animateWithDuration:1.0f animations:^{
+            video.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            // Reset the publisher view
+            publisherView.frame = originalFrame;
+            
+            lblTitle.text = @"WANT TO SEND YOUR PICTURE?";
+            
+            btnCamera.hidden = NO;
+            btnCamera.enabled = YES;
+            btnSend.hidden = NO;
+            btnSend.enabled = YES;
+            
+            [self enableGestures];
+        }];
     }];
 }
 

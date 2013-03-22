@@ -84,7 +84,12 @@
             buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
             buttonAction.frame = CGRectMake((tableWidth - 82.0f), 40.0f, 82.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
         case PTContactsTableBigCellModeCancelFriend: {
@@ -95,7 +100,12 @@
             buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
             buttonAction.frame = CGRectMake((tableWidth - 65.0f), 40.0f, 65.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsZero;
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
         case PTContactsTableBigCellModeAlreadyFriend: {
@@ -114,7 +124,12 @@
             buttonAction.frame = CGRectMake((tableWidth - 82.0f), 40.0f, 82.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
             [buttonAction setEnabled:NO];
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
     }

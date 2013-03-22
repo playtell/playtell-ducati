@@ -188,7 +188,7 @@
     if (self.endCallTooltip.superview != controller.view) {
         self.endCallTooltip.alpha = 0.0f;
         [self.endCallTooltip addToView:controller.view
-                      withCaretAtPoint:CGPointMake(78.0f, 36.0f)];
+                      withCaretAtPoint:CGPointMake(107.0f, 32.0f)];
     }
     
     [UIView animateWithDuration:0.5f animations:^{

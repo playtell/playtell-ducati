@@ -1,3 +1,1 @@
-[submodule "submodules/opentok"]
-	path = submodules/opentok
-	url = https://github.com/opentok/opentok-ios-sdk.git
+

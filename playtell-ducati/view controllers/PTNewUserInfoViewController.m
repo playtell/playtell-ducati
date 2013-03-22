@@ -70,7 +70,9 @@
     [buttonNextView addTarget:self action:@selector(nextDidPress:) forControlEvents:UIControlEventTouchUpInside];
     buttonNext = [[UIBarButtonItem alloc] initWithCustomView:buttonNextView];
     buttonNext.enabled = NO;
-    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonNext, buttonBack, nil]];
+    //[self.navigationItem setRightBarButtonItems:[NSArray arrayWithObjects:buttonNext, buttonBack, nil]];
+    
+    buttonBecomeMember.enabled = NO;
     
     // Content container style
     contentContainer.backgroundColor = [UIColor clearColor];
@@ -102,18 +104,23 @@
     [contentContainer.layer insertSublayer:roundedLayer atIndex:1];
     
     // Create the mom/kid layers
+    float momWidth = 142.0f;
+    float momHeight = 312.0f;
+    float kidWidth = 169.0f;
+    float kidHeight = 199.0f;
+    float bottomMargin = 150.0f;
     CALayer *momLayer = [CALayer layer];
-    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - 280.0f - 150.0f, 170.0f, 280.0f);
-    momLayer.contents = (id)[UIImage imageNamed:@"mom"].CGImage;
+    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - momHeight, momWidth, momHeight);
+    momLayer.contents = (id)[UIImage imageNamed:@"grandma"].CGImage;
     CALayer *kidLayer = [CALayer layer];
-    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - 135.0f + 1.0f, contentContainer.bounds.size.height - 203.0f - 150.0f, 135.0f, 203.0f);
+    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - kidWidth, contentContainer.bounds.size.height - kidHeight - bottomMargin, kidWidth, kidHeight);
     kidLayer.contents = (id)[UIImage imageNamed:@"kid"].CGImage;
     CALayer *separatorLayer = [CALayer layer];
-    separatorLayer.frame = CGRectMake(0, contentContainer.bounds.size.height - 150.0f, contentContainer.bounds.size.width, 1.0f);
+    separatorLayer.frame = CGRectMake(0, contentContainer.bounds.size.height - bottomMargin, contentContainer.bounds.size.width, 1.0f);
     separatorLayer.backgroundColor = [UIColor colorFromHex:@"#a4b6b8"].CGColor;
+    [roundedLayer addSublayer:separatorLayer];
     [roundedLayer addSublayer:momLayer];
     [roundedLayer addSublayer:kidLayer];
-    [roundedLayer addSublayer:separatorLayer];
     
     // Init the top shadow line
     topShadow = [[UIView alloc] initWithFrame:CGRectMake(-20.0f, -20.0f, 1024.0f + 40.0f, 20.0f)];
@@ -137,6 +144,35 @@
     
     // Errors table view
     errorsTableView.backgroundColor = [UIColor clearColor];
+    
+    // Bottom container
+    bottomContainer.backgroundColor = [UIColor clearColor];
+    
+    UIBezierPath *bottomMaskPath = [UIBezierPath bezierPathWithRoundedRect:bottomContainer.bounds
+                                                         byRoundingCorners:(UIRectCornerTopLeft|UIRectCornerTopRight)
+                                                               cornerRadii:CGSizeMake(4.0f, 4.0f)];
+    
+    // Create the shadow layer
+    CAShapeLayer *bottomShadowLayer = [CAShapeLayer layer];
+    [bottomShadowLayer setFrame:bottomContainer.bounds];
+    [bottomShadowLayer setMasksToBounds:NO];
+    [bottomShadowLayer setShadowPath:bottomMaskPath.CGPath];
+    bottomShadowLayer.shadowColor = [UIColor blackColor].CGColor;
+    bottomShadowLayer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    bottomShadowLayer.shadowOpacity = 0.2f;
+    bottomShadowLayer.shadowRadius = 10.0f;
+    
+    CALayer *bottomRoundedLayer = [CALayer layer];
+    [bottomRoundedLayer setFrame:bottomContainer.bounds];
+    [bottomRoundedLayer setBackgroundColor:[UIColor colorFromHex:@"#e4ecef"].CGColor];
+    
+    CAShapeLayer *bottomMaskLayer = [CAShapeLayer layer];
+    bottomMaskLayer.frame = bottomContainer.bounds;
+    bottomMaskLayer.path = bottomMaskPath.CGPath;
+    bottomRoundedLayer.mask = bottomMaskLayer;
+    
+    [bottomContainer.layer insertSublayer:bottomShadowLayer atIndex:0];
+    [bottomContainer.layer insertSublayer:bottomRoundedLayer atIndex:1];
 }
 
 - (void)viewDidUnload {
@@ -158,6 +194,7 @@
     
     // Enable next button?
     buttonNext.enabled = (![txtName.text isEqualToString:@""] && ![txtEmail.text isEqualToString:@""] && ![txtPassword.text isEqualToString:@""]);
+    buttonBecomeMember.enabled = buttonNext.enabled;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -237,6 +274,7 @@
 - (void)validateEmailAvailability {
     // Disable Next button for now
     buttonNext.enabled = NO;
+    buttonBecomeMember.enabled = NO;
     
     // Show spinning activity
     [activityEmailView startAnimating];
@@ -250,6 +288,7 @@
                                       // Email is available
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           buttonNext.enabled = YES;
+                                          buttonBecomeMember.enabled = YES;
                                           [activityEmailView stopAnimating];
                                           
                                           // Log the analytics event
@@ -258,6 +297,7 @@
                                           // Go to next step in account creation (profile photo)
                                           PTNewUserPhotoViewController *newUserPhotoViewController = [[PTNewUserPhotoViewController alloc] initWithNibName:@"PTNewUserPhotoViewController" bundle:nil];
                                           [self.navigationController pushViewController:newUserPhotoViewController animated:YES];
+                                          hasNextBeenPressed = NO;
                                       });
                                   } else {
                                       // Email is NOT available
@@ -266,6 +306,7 @@
                                           [formErrors addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"email", @"type", @"This email is taken, press sign in below", @"message", nil]];
                                           [self updateTableViewQuietly:NO];
                                           isEmailNotAvailable = YES;
+                                          hasNextBeenPressed = NO;
                                           
                                           // Hide the keyboard
 //                                          [self.view endEditing:YES];
@@ -286,7 +327,9 @@
                                   dispatch_async(dispatch_get_main_queue(), ^{
                                       // TODO: Display popup showing error
                                       buttonNext.enabled = YES;
+                                      buttonBecomeMember.enabled = YES;
                                       [activityEmailView stopAnimating];
+                                      hasNextBeenPressed = NO;
                                   });
                               }];
 }
@@ -351,6 +394,7 @@
     
     // Enable next button
     buttonNext.enabled = (![txtName.text isEqualToString:@""] && ![txtEmail.text isEqualToString:@""] && ![txtPassword.text isEqualToString:@""]) && ([formErrors count] == 0);
+    buttonBecomeMember.enabled = buttonNext.enabled;
 }
 
 #pragma mark - Keyboard notification handlers
@@ -380,6 +424,18 @@
 }
 
 - (void)nextDidPress:(id)sender {
+    if (hasNextBeenPressed == YES) {
+        // To avoid double press
+        return;
+    }
+    hasNextBeenPressed = YES;
+    [self.view endEditing:YES]; // Hides the keyboard
+    
+    // Verify email availability
+    [self validateEmailAvailability];
+}
+
+- (IBAction)becomeMemberDidPress:(id)sender {
     if (hasNextBeenPressed == YES) {
         // To avoid double press
         return;
@@ -434,10 +490,10 @@
             break;
         case 2: // Password
             [self validatePasswordQuietly:NO];
-            // Submit form?
-            if ([formErrors count] == 0) {
-                [self nextDidPress:nil];
-            }
+//            // Submit form?
+//            if ([formErrors count] == 0) {
+//                [self nextDidPress:nil];
+//            }
             break;
     }
 }

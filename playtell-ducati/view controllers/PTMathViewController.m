@@ -67,9 +67,6 @@
     // Game background
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-bg"]];
     
-    // Display chat HUD
-    [self.view addSubview:self.chatController.view];
-    
     // Setup "end playdate" button
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
     endPlaydate.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
@@ -77,10 +74,11 @@
     endPlaydate.layer.shadowRadius = 6.0f;
     
     // Setup available cards container
-    viewAvailableCards = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-160.0f, 1024.0f, 160.0f)];
+    viewAvailableCards = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-224.0f, 1024.0f, 224.0f)];
     viewAvailableCards.hidden = YES;
+    viewAvailableCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"game-drawer.png"]];
     [self.view addSubview:viewAvailableCards];
-    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(25.0f, 0.0f, 974.0f, 160.0f)];
+    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 224.0f)];
     viewAvailableCardsScroll.tag = 1;
     viewAvailableCardsScroll.userInteractionEnabled = YES;
     viewAvailableCardsScroll.canCancelContentTouches = NO;
@@ -120,14 +118,13 @@
     drawView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 465.0f, 394.0f)];
     drawView.backgroundColor = [UIColor clearColor];
     drawView.center = self.view.center;
-    drawView.backgroundColor = [UIColor blackColor];
     drawView.image = [UIImage imageNamed:@"memory-win"]; // Everybody wins!
     drawView.alpha = 0.0f;
     
     // Score views
-    scoreViewMe = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(768.0f, 75.0f, 56.0f, 75.0f) myScore:YES];
+    scoreViewMe = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(934.0f, 88.0f, 56.0f, 75.0f) myScore:YES];
     [self.view addSubview:scoreViewMe];
-    scoreViewOpponent = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(200.0f, 75.0f, 56.0f, 75.0f) myScore:NO];
+    scoreViewOpponent = [[PTMatchingScoreView alloc] initWithFrame:CGRectMake(36.0f, 88.0f, 56.0f, 75.0f) myScore:NO];
     [self.view addSubview:scoreViewOpponent];
     
     // Bottom shadow (when available cards are disabled)
@@ -135,6 +132,9 @@
     viewBottomShawdow.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"matching-bottom-shadow"]];
     viewBottomShawdow.alpha = 0;
     [self.view insertSubview:viewBottomShawdow aboveSubview:viewAvailableCards];
+    
+    // Display chat HUD
+    [self.view addSubview:self.chatController.view];
     
     // If not my turn, flip the game board
     if (myTurn == NO) {
@@ -195,13 +195,13 @@
     
     // Set scroll view frame size and content size
     CGFloat width = x;
-    viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-maxHeight-40.0f, 1024.0f, maxHeight+40.0f);
-    viewAvailableCardsScroll.frame = CGRectMake(25.0f, 0.0f, 974.0f, maxHeight+40.0f);
+    viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-224.0f, 1024.0f, 224.0f);
+    viewAvailableCardsScroll.frame = CGRectMake(0.0f, 0.0f, 1024.0f, 224.0f);
     [viewAvailableCardsScroll setContentSize:CGSizeMake(width, maxHeight)];
     
     // Center (vertically) each available card
     for (PTMathAvailableCardView *viewCard in viewAvailableCardsScroll.subviews) {
-        viewCard.frame = CGRectMake(viewCard.frame.origin.x, (maxHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
+        viewCard.frame = CGRectMake(viewCard.frame.origin.x, 50.0f + (maxHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
     }
     
     // Show the available cards container
@@ -348,7 +348,7 @@
     viewTrackingCardImage.image = [cardView getCardImage];
     viewTrackingCardImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [viewTrackingCard addSubview:viewTrackingCardImage];
-    [self.view addSubview:viewTrackingCard];
+    [self.view insertSubview:viewTrackingCard belowSubview:self.chatController.view];
     
     // Defaults
     canTrackingCardLand = NO;
@@ -760,21 +760,21 @@
 }
 
 - (void)displayWin {
-    [self.view addSubview:winnerView];
+    [self.view insertSubview:winnerView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         winnerView.alpha = 1.0f;
     }];
 }
 
 - (void)displayLose {
-    [self.view addSubview:loserView];
+    [self.view insertSubview:loserView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         loserView.alpha = 1.0f;
     }];
 }
 
 - (void)displayDraw {
-    [self.view addSubview:drawView];
+    [self.view insertSubview:drawView belowSubview:self.chatController.view];
     [UIView animateWithDuration:0.4f animations:^{
         drawView.alpha = 1.0f;
     }];
@@ -814,7 +814,8 @@
     viewAvailableCardsScroll.scrollEnabled = NO;
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-heightAvailableCards-40.0f+80.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height);
+                         //viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-heightAvailableCards-40.0f+80.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height);
+                         viewAvailableCards.frame = CGRectOffset(viewAvailableCards.frame, 0.0f, 80.0f);
                          viewBottomShawdow.alpha = 1.0f;
                      }];
 }
@@ -823,7 +824,8 @@
     viewAvailableCardsScroll.scrollEnabled = YES;
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-heightAvailableCards-40.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height);
+                         //viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-heightAvailableCards-40.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height);
+                         viewAvailableCards.frame = CGRectOffset(viewAvailableCards.frame, 0.0f, -80.0f);
                          viewBottomShawdow.alpha = 0.0f;
                      }];
 }

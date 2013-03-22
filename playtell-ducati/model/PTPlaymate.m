@@ -41,7 +41,13 @@
         self.userStatus = [playmateDictionary valueForKey:@"userStatus"];
         self.userID = [[playmateDictionary valueForKey:@"id"] unsignedIntValue];
 
-        NSURL* url = [NSURL URLWithString:[playmateDictionary valueForKey:@"profilePhoto"]];
+        NSURL *url;
+        @try {
+            url = [NSURL URLWithString:[playmateDictionary valueForKey:@"profilePhoto"]];
+        }
+        @catch (NSException *exception) {
+            url = [NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"];
+        }
         self.photoURL = url;
     }
     return  self;

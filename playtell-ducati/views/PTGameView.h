@@ -18,6 +18,9 @@
     NSMutableDictionary *layerActions;
     CALayer *rootLayer;
     CALayer *cover;
+    CALayer *imageLayer;
+    CAShapeLayer *shadowRadial;
+    CAShapeLayer *shadowHighlight;
     
     BOOL inFocus;
     
@@ -31,6 +34,7 @@
 
 - (id)initWithFrame:(CGRect)frame gameId:(NSInteger)_gameId gameLogo:(UIImage *)_gameLogo;
 - (void)setFocusLevel:(CGFloat)level;
+- (NSNumber *)getId;
 - (void)setPosition:(NSInteger)_position;
 - (NSInteger)getPosition;
 

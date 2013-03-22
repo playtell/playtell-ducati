@@ -43,103 +43,103 @@
     if (self.numCards == 6) {
         if (self.index == 0) {
             self.boardX = 96;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 1) {
             self.boardX = 429;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 2) {
             self.boardX = 758;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 3) {
             self.boardX = 96;
-            self.boardY = 406;
+            self.boardY = 446;
         }
         if (self.index == 4) {
             self.boardX = 429;
-            self.boardY = 406;
+            self.boardY = 446;
         }
         if (self.index == 5) {
             self.boardX = 758;
-            self.boardY = 406;
+            self.boardY = 446;
         }
     }
     if (self.numCards == 8) {
         if (self.index == 0) {
             self.boardX = 96;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 1) {
             self.boardX = 330;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 2) {
             self.boardX = 541;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 3) {
             self.boardX = 758;
-            self.boardY = 130;
+            self.boardY = 170;
         }
         if (self.index == 4) {
             self.boardX = 96;
-            self.boardY = 406;
+            self.boardY = 446;
         }
         if (self.index == 5) {
             self.boardX = 330;
-            self.boardY = 406;
+            self.boardY = 446;
         }
         if (self.index == 6) {
             self.boardX = 541;
-            self.boardY = 406;
+            self.boardY = 446;
         }
         if (self.index == 7) {
             self.boardX = 758;
-            self.boardY = 406;
+            self.boardY = 446;
         }
     }
     if (self.numCards == 10) {
         if (self.index == 0) {
             self.boardX = 76;
-            self.boardY = 132;
+            self.boardY = 172;
         }
         if (self.index == 1) {
             self.boardX = 254;
-            self.boardY = 132;
+            self.boardY = 172;
         }
         if (self.index == 2) {
             self.boardX = 432;
-            self.boardY = 132;
+            self.boardY = 172;
         }
         if (self.index == 3) {
             self.boardX = 610;
-            self.boardY = 132;
+            self.boardY = 172;
         }
         if (self.index == 4) {
             self.boardX = 788;
-            self.boardY = 132;
+            self.boardY = 172;
         }
         if (self.index == 5) {
             self.boardX = 76;
-            self.boardY = 403;
+            self.boardY = 443;
         }
         if (self.index == 6) {
             self.boardX = 254;
-            self.boardY = 403;
+            self.boardY = 443;
         }
         if (self.index == 7) {
             self.boardX = 432;
-            self.boardY = 403;
+            self.boardY = 443;
         }
         if (self.index == 8) {
             self.boardX = 610;
-            self.boardY = 403;
+            self.boardY = 443;
         }
         if (self.index == 9) {
             self.boardX = 788;
-            self.boardY = 403;
+            self.boardY = 443;
         }
     }
     if (self.numCards == 12) {

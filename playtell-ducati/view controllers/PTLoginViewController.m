@@ -18,6 +18,8 @@
 #import "PTUser.h"
 #import "PTErrorTableCell.h"
 #import "UAirship.h"
+#import "PTAnalytics.h"
+#import "PTResetPasswordRequest.h"
 
 @interface PTLoginViewController ()
 
@@ -99,11 +101,15 @@
     [contentContainer.layer insertSublayer:roundedLayer atIndex:1];
     
     // Create the mom/kid layers
+    float momWidth = 142.0f;
+    float momHeight = 312.0f;
+    float kidWidth = 169.0f;
+    float kidHeight = 199.0f;
     CALayer *momLayer = [CALayer layer];
-    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - 280.0f, 170.0f, 280.0f);
-    momLayer.contents = (id)[UIImage imageNamed:@"mom"].CGImage;
+    momLayer.frame = CGRectMake(-1.0f, contentContainer.bounds.size.height - momHeight, momWidth, momHeight);
+    momLayer.contents = (id)[UIImage imageNamed:@"grandma"].CGImage;
     CALayer *kidLayer = [CALayer layer];
-    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - 135.0f + 1.0f, contentContainer.bounds.size.height - 203.0f, 135.0f, 203.0f);
+    kidLayer.frame = CGRectMake(contentContainer.bounds.size.width - kidWidth, contentContainer.bounds.size.height - kidHeight, kidWidth, kidHeight);
     kidLayer.contents = (id)[UIImage imageNamed:@"kid"].CGImage;
     [roundedLayer addSublayer:momLayer];
     [roundedLayer addSublayer:kidLayer];
@@ -271,14 +277,28 @@
                           onSuccess:^(NSDictionary *result) {
                               NSString* token = [result valueForKey:@"token"];
                               NSNumber* userID = [result valueForKey:@"user_id"];
-                              NSURL* photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              NSURL* photoURL;
+                              @try {
+                                  photoURL = [NSURL URLWithString:[result valueForKey:@"profilePhoto"]];
+                              }
+                              @catch (NSException *exception) {
+                                  photoURL = [NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"];
+                              }
                               
                               // Save logged-in status
-                              [[PTUser currentUser] setUsername:txtEmail.text];
-                              [[PTUser currentUser] setEmail:txtEmail.text];
-                              [[PTUser currentUser] setAuthToken:token];
-                              [[PTUser currentUser] setUserID:[userID unsignedIntValue]];
-                              [[PTUser currentUser] setPhotoURL:photoURL];
+                              PTUser *currentUser = [PTUser currentUser];
+                              [currentUser setUsername:txtEmail.text];
+                              [currentUser setEmail:txtEmail.text];
+                              [currentUser setAuthToken:token];
+                              [currentUser setUserID:[userID unsignedIntValue]];
+                              [currentUser setPhotoURL:photoURL];
+                              [currentUser setUserPhoto:nil];
+                              
+                              // Setup people attributes in analytics
+                              NSMutableDictionary *attr = [[NSMutableDictionary alloc] init];
+                              [attr setObject:currentUser.email forKey:PeopleEmail];
+                              [attr setObject:currentUser.username forKey:PeopleUsername];
+                              [PTAnalytics setPeopleProperties:attr];
                               
                               // Get Urban Airship device token
                               PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
@@ -320,6 +340,31 @@
     // Transition to it
     [appDelegate.transitionController transitionToViewController:newUserNavigationController
                                                      withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+}
+
+- (IBAction)resetPasswordDidPress:(id)sender {
+    [self clearErrorsWithType:@"password"];
+    [self validateEmailQuietly:NO];
+    if ([formErrors count] == 0) {
+        PTResetPasswordRequest *request = [[PTResetPasswordRequest alloc] init];
+        [request resetPasswordForEmail:txtEmail.text
+                             onSuccess:^(NSDictionary *result) {
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset Password"
+                                                                                 message:@"Instructions for resetting your password have been sent to your email address."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"OK"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }
+                             onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reset Password"
+                                                                                 message:@"The password cannot be reset at this time. Please check the email address you entered and try again."
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"OK"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }];
+    }
 }
 
 #pragma mark - Textfield delegates & notification handler

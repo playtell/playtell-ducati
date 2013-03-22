@@ -209,6 +209,17 @@ static PTPlayTellPusher* instance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateFingerEnd" object:self userInfo:eventData];
     }];
     
+    // Fullscreen start
+    [aPlaydateChannel bindToEventNamed:@"client-fullscreen_start" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FullscreenStart" object:self userInfo:eventData];
+    }];
+    
+    // Fullscreen end
+    [aPlaydateChannel bindToEventNamed:@"client-fullscreen_end" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FullscreenEnd" object:self userInfo:eventData];
+    }];
 
     // ## GAMES START ##
     // tictactoe_new_game

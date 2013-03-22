@@ -166,7 +166,7 @@
         else {
             currentObject.alpha = 1;
         }
-        [self.view addSubview:currentObject];
+        [self.view insertSubview:currentObject belowSubview:self.chatController.view];
     }
 }
 
@@ -197,7 +197,7 @@
     
     [space startAnimating];
     // add the animation view to the main window
-    [self.view addSubview:space];
+    [self.view insertSubview:space belowSubview:self.chatController.view];
     
     //add it to the nsarray to keep track of it!
     [board_spaces addObject:space];
@@ -296,7 +296,7 @@
     
     [slash startAnimating];
     // add the animation view to the main window
-    [self.view addSubview:slash];
+    [self.view insertSubview:slash belowSubview:self.chatController.view];
     [self performSelector:@selector(beginSound:) withObject:(id)[NSNumber numberWithInt:STRIKEOUT_SOUND] afterDelay:.2];
 }
 
@@ -322,10 +322,10 @@
         youPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
         opponentPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
         
-        [self.view addSubview:youPlaceholder];
-        [self.view addSubview:opponentPlaceholder];
-        [self.view addSubview:youIndicator];
-        [self.view addSubview:opponentIndicator];
+//        [self.view addSubview:youPlaceholder];
+//        [self.view addSubview:opponentPlaceholder];
+//        [self.view addSubview:youIndicator];
+//        [self.view addSubview:opponentIndicator];
         
         self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, youPlaceholder, opponentPlaceholder, nil];
     }
@@ -340,10 +340,10 @@
         youPlaceholder.image = [UIImage imageNamed:@"x-placeholder"];
         opponentPlaceholder.image = [UIImage imageNamed:@"o-placeholder"];
         
-        [self.view addSubview:youPlaceholder];
-        [self.view addSubview:opponentPlaceholder];
-        [self.view addSubview:youIndicator];
-        [self.view addSubview:opponentIndicator];
+//        [self.view addSubview:youPlaceholder];
+//        [self.view addSubview:opponentPlaceholder];
+//        [self.view addSubview:youIndicator];
+//        [self.view addSubview:opponentIndicator];
         
         self->turn_indicators = [[NSArray alloc] initWithObjects:youIndicator, opponentIndicator, youPlaceholder, opponentPlaceholder, nil];
     }
@@ -541,7 +541,13 @@
     ttWaitYourTurn.image = [UIImage imageNamed:@"wait-your-turn"];
     ttWaitYourTurn.hidden = YES;
     ttWaitYourTurn.layer.zPosition = 700;
-    [self.view addSubview:ttWaitYourTurn];
+    [self.view insertSubview:ttWaitYourTurn belowSubview:self.chatController.view];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.view bringSubviewToFront:self.chatController.view];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -617,7 +623,7 @@
     [cats startAnimating];
     
     //fade screen here
-    [self.view addSubview:cats];
+    [self.view insertSubview:cats belowSubview:self.chatController.view];
     [self beginSound:(id)[NSNumber numberWithInt:LOSS_SOUND]];
         
     if (sendNewGame) {[self performSelector:@selector(newGame) withObject:nil afterDelay:2.0];};
@@ -637,7 +643,7 @@
     [win startAnimating];
 
     //fade screen here
-    [self.view addSubview:win];
+    [self.view insertSubview:win belowSubview:self.chatController.view];
     [self performSelector:@selector(newGame) withObject:nil afterDelay:2.0];
 }
 
@@ -655,7 +661,7 @@
     [defeat startAnimating];
     
     //TODOGIANCARLO fade screen here
-    [self.view addSubview:defeat];
+    [self.view insertSubview:defeat belowSubview:self.chatController.view];
 }
 
 -(void)removeButtons
@@ -672,7 +678,7 @@
     NSEnumerator *e = [board_buttons objectEnumerator];
     UIButton *currentSpace;
     while (currentSpace = [e nextObject]) {
-        [self.view addSubview:currentSpace];
+        [self.view insertSubview:currentSpace belowSubview:self.chatController.view];
     }
 }
 

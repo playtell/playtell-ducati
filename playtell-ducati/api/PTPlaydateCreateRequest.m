@@ -17,7 +17,7 @@
                        onSuccess:(PTPlaydateCreateRequestSuccessBlock)success
                        onFailure:(PTPlaydateCreateRequestFailureBlock)failure {
     
-    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_id", token, @"authentication_token", nil];
+    NSDictionary* postParameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_id", token, @"authentication_token", @"true", @"p2p_enabled", nil];
     
     NSURL* url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/api/playdate/create.json", ROOT_URL]];
     NSMutableURLRequest* request = [NSMutableURLRequest postRequestWithURL:url];

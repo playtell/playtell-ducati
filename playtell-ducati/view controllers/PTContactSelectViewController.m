@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 LovelyRide. All rights reserved.
 //
 
+#define LABEL_DEFAULT @"Didn't find who you're looking for?"
+
 #import "PTAppDelegate.h"
 #import "TransitionController.h"
 #import "PTContactImportViewController.h"
@@ -14,6 +16,8 @@
 #import "PTContactsCreateListRequest.h"
 #import "PTContactsGetListRequest.h"
 #import "PTContactsGetRelatedRequest.h"
+#import "PTContactsNavSendButton.h"
+#import "PTContactsSearchRequest.h"
 #import "PTUser.h"
 #import "PTInviteContactButton.h"
 #import "PTContactsTableBigCell.h"
@@ -24,6 +28,7 @@
 #import "PTContactsNavNextButton.h"
 #import "PTContactsNavCancelButton.h"
 #import "PTUsersCreateFriendshipRequest.h"
+#import "PTSpinnerView.h"
 #import "GTMOAuth2Authentication.h"
 #import <QuartzCore/QuartzCore.h>
 
@@ -82,6 +87,16 @@
                                                  selector:@selector(receiveContactAction:)
                                                      name:@"actionPerformedOnContact"
                                                    object:nil];
+        
+        // Notifications for keyboard actions
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -90,7 +105,7 @@
     [super viewDidLoad];
 
     // Background
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"date_bg"]];
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"photo-bg-dark.png"]];
     
     // Header view container
     headerContainer.backgroundColor = [UIColor colorFromHex:@"#3FA9F5"];
@@ -105,15 +120,15 @@
     [self.navigationController.navigationBar setTintColor:[UIColor colorFromHex:@"#3FA9F5"]];
     
     // Nav buttons
-    PTContactsNavBackButton *buttonBackView = [PTContactsNavBackButton buttonWithType:UIButtonTypeCustom];
-    buttonBackView.frame = CGRectMake(0.0f, 0.0f, 75.0f, 33.0f);
-    [buttonBackView setTitle:@"Cancel" forState:UIControlStateNormal];
-    [buttonBackView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
-    buttonBack = [[UIBarButtonItem alloc] initWithCustomView:buttonBackView];
-    [self.navigationItem setLeftBarButtonItem:buttonBack];
+    PTContactsNavSendButton *buttonDoneView = [PTContactsNavSendButton buttonWithType:UIButtonTypeCustom];
+    [buttonDoneView setTitle:@"Done" forState:UIControlStateNormal];
+    buttonDoneView.frame = CGRectMake(0.0f, 0.0f, 65.0f, 33.0f);
+    [buttonDoneView addTarget:self action:@selector(navigateBack:) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *navBackButton = [[UIBarButtonItem alloc] initWithCustomView:buttonDoneView];
+    [self.navigationItem setLeftBarButtonItem:navBackButton];
     
     // Filtering
-    [textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
+    //[textSearch addTarget:self action:@selector(searchStringDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     // Setup left box
     leftContainer.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
@@ -129,9 +144,10 @@
     // Setup loading view
     UILabel *loadingLbl = [[loadingView subviews] objectAtIndex:0];
     loadingLbl.textColor = [UIColor colorFromHex:@"#123542"];
-    UIView *loadingCrank = [self createLoadingCrank];
-    loadingCrank.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
-    [loadingView addSubview:loadingCrank];
+    PTSpinnerView *spinner = [[PTSpinnerView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 75.0f, 75.0f)];
+    spinner.center = CGPointMake(loadingView.bounds.size.width / 2.0f, (loadingView.bounds.size.height / 2.0f) - 55.0f);
+    [spinner startSpinning];
+    [loadingView addSubview:spinner];
     
     // Setup bottom bar
     bottomBar.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -160,24 +176,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
-}
-
-- (UIView *)createLoadingCrank {
-    UIImage *loadingIcon = [UIImage imageNamed:@"logo_loading.gif"];
-    UIImageView *iconImageview = [[UIImageView alloc] initWithImage:loadingIcon];
-    iconImageview.frame = CGRectMake(0, 0, loadingIcon.size.width, loadingIcon.size.height);
-    
-    CATransform3D rotationsTransform = CATransform3DMakeRotation(1.0f * M_PI, 0, 0, 1.0);
-    CABasicAnimation *rotationAnimation;
-    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    
-    rotationAnimation.toValue = [NSValue valueWithCATransform3D:rotationsTransform];
-    rotationAnimation.duration = 2.0f;
-    rotationAnimation.cumulative = YES;
-    rotationAnimation.repeatCount = 10000;
-    
-    [iconImageview.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
-    return iconImageview;
 }
 
 - (void)getContactList {
@@ -266,15 +264,45 @@
 }
 
 - (void)searchStringDidChange:(id)sender {
+    typedef NSComparisonResult (^ContactsCompareBlock)(NSMutableDictionary *, NSMutableDictionary *);
+    ContactsCompareBlock contactsCompareBlock = ^NSComparisonResult(NSMutableDictionary *contact1, NSMutableDictionary *contact2) {
+        NSString *name1 = [contact1 objectForKey:@"name"];
+        NSRange spaceLoc = [name1 rangeOfString:@" "];
+        NSString *compare1;
+        if (spaceLoc.location == NSNotFound) {
+            compare1 = name1;
+        } else {
+            NSString *last_name1 = [name1 substringFromIndex:(spaceLoc.location + spaceLoc.length)];
+            NSString *first_name1 = [name1 substringToIndex:spaceLoc.location];
+            compare1 = [NSString stringWithFormat:@"%@ %@", last_name1, first_name1];
+        }
+        
+        NSString *name2 = [contact2 objectForKey:@"name"];
+        spaceLoc = [name2 rangeOfString:@" "];
+        NSString *compare2;
+        if (spaceLoc.location == NSNotFound) {
+            compare2 = name2;
+        } else {
+            NSString *last_name2 = [name2 substringFromIndex:(spaceLoc.location + spaceLoc.length)];
+            NSString *first_name2 = [name2 substringToIndex:spaceLoc.location];
+            compare2 = [NSString stringWithFormat:@"%@ %@", last_name2, first_name2];
+        }
+        
+        return [compare1 compare:compare2];
+    };
+    
     // Trim the string
     searchString = [textSearch.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([searchString isEqualToString:@""]) {
+        lblManualInvite.text = LABEL_DEFAULT;
         inSearchMode = NO;
         [contactsTableView reloadData];
         return;
     }
-
-    // Filter contacts
+    
+    lblManualInvite.text = [NSString stringWithFormat:@"Don't see %@ in your results?", searchString];
+    
+    // Show the results from the local address book
     NSPredicate *resultPredicate = [NSPredicate
                                     predicateWithFormat:@"name contains[cd] %@ || email contains[cd] %@",
                                     searchString, searchString];
@@ -284,8 +312,69 @@
     filteredContactsNotOnPT = [contactsNotOnPT filteredArrayUsingPredicate:resultPredicate];
     inSearchMode = YES;
     
-    // Reload table
-    [contactsTableView reloadData];
+    // Show the loading view
+    [UIView animateWithDuration:0.2f animations:^{
+        // Hide table
+        contactsTableView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        contactsTableView.hidden = YES;
+        
+        // Show the loading view
+        loadingView.alpha = 0.0f;
+        loadingView.hidden = NO;
+        [UIView animateWithDuration:0.2f animations:^{
+            loadingView.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+            // Search on the server
+            PTContactsSearchRequest *contactsSearchRequest = [[PTContactsSearchRequest alloc] init];
+            [contactsSearchRequest searchWithAuthToken:[PTUser currentUser].authToken
+                                          searchString:searchString
+                                               success:^(NSArray *matches, NSString *responseSearchString)
+             {
+                 // Add the results from the search to the ones we know from the address book
+                 NSMutableArray *mutableFiltered = [NSMutableArray arrayWithArray:filteredContactsOnPT];
+                 for (NSDictionary *match in matches) {
+                     [mutableFiltered addObject:[NSMutableDictionary dictionaryWithDictionary:match]];
+                 }
+                 [mutableFiltered sortUsingComparator:contactsCompareBlock];
+                 filteredContactsOnPT = mutableFiltered;
+                 
+                 // Reload table
+                 [contactsTableView reloadData];
+                 
+                 // Hide the loading view
+                 [UIView animateWithDuration:0.2f animations:^{
+                     loadingView.alpha = 0.0f;
+                 } completion:^(BOOL finished) {
+                     loadingView.hidden = YES;
+                     
+                     // Show table
+                     contactsTableView.alpha = 0.0f;
+                     contactsTableView.hidden = NO;
+                     [UIView animateWithDuration:0.2f animations:^{
+                         contactsTableView.alpha = 1.0f;
+                     }];
+                 }];
+             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                 // Reload table
+                 [contactsTableView reloadData];
+                 
+                 // Hide the loading view
+                 [UIView animateWithDuration:0.2f animations:^{
+                     loadingView.alpha = 0.0f;
+                 } completion:^(BOOL finished) {
+                     loadingView.hidden = YES;
+                     
+                     // Show table
+                     contactsTableView.alpha = 0.0f;
+                     contactsTableView.hidden = NO;
+                     [UIView animateWithDuration:0.5f animations:^{
+                         contactsTableView.alpha = 1.0f;
+                     }];
+                 }];
+             }];
+        }];
+    }];
 }
 
 - (void)showComposeMessageController:(id)sender {
@@ -365,11 +454,14 @@
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     [textField performSelector:@selector(resignFirstResponder) withObject:nil afterDelay:0.1f];
-    return YES;
+    textField.text = @"";
+    [self searchStringDidChange:self];
+    return NO;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textSearch resignFirstResponder];
+    [self searchStringDidChange:self];
     return YES;
 }
 
@@ -500,6 +592,10 @@
     return 0.0f;
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [textSearch resignFirstResponder];
+}
+
 #pragma mark - Button handlers
 
 - (IBAction)viewSelected:(id)sender {
@@ -525,6 +621,15 @@
 - (IBAction)didPressManualInvite:(id)sender {
     PTContactImportViewController *contactImportViewController = [[PTContactImportViewController alloc] initWithNibName:@"PTContactImportViewController" bundle:nil];
     [self.navigationController pushViewController:contactImportViewController animated:YES];
+}
+
+- (IBAction)didPressOutsideTextField:(id)sender {
+    [textSearch resignFirstResponder];
+}
+
+- (IBAction)didPressSearchButton:(id)sender {
+    [textSearch resignFirstResponder];
+    [self searchStringDidChange:self];
 }
 
 #pragma mark - Contact select delegates
@@ -578,6 +683,30 @@
 
 - (void)contactDidPressManualInvite:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+#pragma mark - Keyboard notifications
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    //CGRect beginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    //CGRect endFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    float duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    [UIView animateWithDuration:duration animations:^{
+        bottomBar.frame = CGRectOffset(bottomBar.frame, 0.0f, -352.0f);
+    }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    //CGRect beginFrame = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    //CGRect endFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    float duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    
+    [UIView animateWithDuration:duration animations:^{
+        bottomBar.frame = CGRectOffset(bottomBar.frame, 0.0f, 352.0f);
+    }];
 }
 
 @end

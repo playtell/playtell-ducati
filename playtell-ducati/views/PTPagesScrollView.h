@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTBook.h"
 #import "PTPageView.h"
 #import "PTPagesScrollViewDelegate.h"
 
@@ -14,7 +15,7 @@
     NSInteger currentPage;
     CGSize pageSize;
     id<PTPagesScrollViewDelegate> pagesScrollDelegate;
-    NSMutableDictionary *book;
+    PTBook *book;
     NSMutableArray *pages;
     NSInteger totalPages;
 }
@@ -24,7 +25,7 @@
 @property (nonatomic) NSInteger totalPages;
 
 - (void)navigateToPage:(NSInteger)page;
-- (void)setCurrentBook:(NSMutableDictionary *)bookData;
+- (void)setCurrentBook:(PTBook *)bookData;
 - (PTPageView *)getPageViewAtPageNumber:(NSInteger)pageNumber;
 
 @end

@@ -14,6 +14,7 @@
 @implementation PTPlaymateView
 
 @synthesize delegate;
+@synthesize playmate;
 
 - (id)initWithFrame:(CGRect)frame playmate:(PTPlaymate *)playmateObj {
     self = [super initWithFrame:frame];
@@ -130,6 +131,17 @@
         playmate.userPhoto = image;
         profilePhotoView.image = image;
     }];
+    [photoRequest start];
+}
+
+- (void)reloadProfilePhoto:(NSURL *)url {    
+    NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url];
+    AFImageRequestOperation* photoRequest = [AFImageRequestOperation imageRequestOperationWithRequest:urlRequest
+                                                                                              success:^(UIImage *image)
+                                             {
+                                                 playmate.userPhoto = image;
+                                                 profilePhotoView.image = image;
+                                             }];
     [photoRequest start];
 }
 
@@ -399,8 +411,8 @@
 }
 
 - (void)enableFriendshipConfirmationButtons {
-    acceptButton.enabled = NO;
-    rejectButton.enabled = NO;
+    acceptButton.enabled = YES;
+    rejectButton.enabled = YES;
 }
 
 - (void)showAnimated:(BOOL)animated {

@@ -132,6 +132,9 @@
                                          token:currentUser.authToken
                                        success:^
      {
+         if (self.dialpadController) {
+             self.dialpadController = nil;
+         }
          self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
          self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
          // Check if push notification came in with playdate
@@ -152,6 +155,9 @@
                                          token:nil
                                        success:^
      {
+         if (self.dialpadController) {
+             self.dialpadController = nil;
+         }
          self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
          self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
          [self.transitionController transitionToViewController:self.dialpadController
@@ -212,6 +218,9 @@
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
+    // Register the token with Mixpanel for analytics
+    [PTAnalytics registerPushDeviceToken:deviceToken];
+    
     // Register device if user is logged in
     NSLog(@"Logged in? %@", [[PTUser currentUser] isLoggedIn] == YES ? @"YES" : @"NO");
     if ([[PTUser currentUser] isLoggedIn] == YES) {

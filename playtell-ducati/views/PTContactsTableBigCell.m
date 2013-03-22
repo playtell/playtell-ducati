@@ -68,13 +68,14 @@
     _mode = mode;
     switch (mode) {
         case PTContactsTableBigCellModeInvite: {
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteNormal"] forState:UIControlStateNormal];
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteHighlighted"] forState:UIControlStateHighlighted];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"Invite.png"] forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"invite-press.png"] forState:UIControlStateHighlighted];
             [buttonAction setTitle:@"Invite" forState:UIControlStateNormal];
+            [buttonAction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
-            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 82.0f), 40.0f, 82.0f, 33.0f);
-            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
+            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 113.0f), 40.0f, 113.0f, 38.0f);
+            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 25.0f, 0.0f, 0.0f);
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
             avatar.image = [UIImage imageNamed:@"contactsTableInvited"];
             break;
@@ -84,7 +85,7 @@
             [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonRemoveHighlighted"] forState:UIControlStateHighlighted];
             [buttonAction setTitle:@"Cancel" forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#2d383e"] forState:UIControlStateNormal];
-            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
             buttonAction.frame = CGRectMake((tableWidth - 31.0f - 94.0f), 40.0f, 94.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 28.0f, 0.0f, 0.0f);
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#cde7f7"];
@@ -92,15 +93,21 @@
             break;
         }
         case PTContactsTableBigCellModeFriend: {
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteNormal"] forState:UIControlStateNormal];
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonInviteHighlighted"] forState:UIControlStateHighlighted];
-            [buttonAction setTitle:@"Friend" forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"add-buddy.png"] forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"add-buddy-press.png"] forState:UIControlStateHighlighted];
+            [buttonAction setTitle:@"Add Buddy" forState:UIControlStateNormal];
+            [buttonAction setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
-            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 81.0f), 40.0f, 81.0f, 33.0f);
-            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
+            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 147.0f), 40.0f, 147.0f, 38.0f);
+            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 25.0f, 0.0f, 0.0f);
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#f0f7f7"];
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
         case PTContactsTableBigCellModeCancelFriend: {
@@ -108,31 +115,42 @@
             [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonUninviteHighlighted"] forState:UIControlStateHighlighted];
             [buttonAction setTitle:@"Cancel" forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
-            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
             buttonAction.frame = CGRectMake((tableWidth - 31.0f - 65.0f), 40.0f, 65.0f, 33.0f);
             buttonAction.titleEdgeInsets = UIEdgeInsetsZero;
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#cde7f7"];
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
         case PTContactsTableBigCellModeAlreadyFriend: {
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsNormal"] forState:UIControlStateNormal];
-            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buttonFriendsHighlighted"] forState:UIControlStateHighlighted];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buddies.png"] forState:UIControlStateNormal];
+            [buttonAction setBackgroundImage:[UIImage imageNamed:@"buddies.png"] forState:UIControlStateHighlighted];
             // Are we pending friends or confirmed friends?
             BOOL isConfirmedFriend = [[self.contact objectForKey:@"is_confirmed_friend"] boolValue];
             BOOL isPendingFriend = [[self.contact objectForKey:@"is_pending_friend"] boolValue];
             if (isConfirmedFriend == YES) {
-                [buttonAction setTitle:@"Friends" forState:UIControlStateNormal];
+                [buttonAction setTitle:@"Buddies!" forState:UIControlStateNormal];
             } else if (isPendingFriend == YES) {
                 [buttonAction setTitle:@"Pending" forState:UIControlStateNormal];
             }
-            [buttonAction setTitleShadowColor:[UIColor colorFromHex:@"#39586d"] forState:UIControlStateNormal];
-            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 101.0f), 40.0f, 101.0f, 33.0f);
-            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 22.0f, 0.0f, 0.0f);
+            [buttonAction setTitleColor:[UIColor colorFromHex:@"3FA9F5"] forState:UIControlStateNormal];
+            [buttonAction setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            buttonAction.titleLabel.font = [UIFont boldSystemFontOfSize:15.0f];
+            buttonAction.frame = CGRectMake((tableWidth - 31.0f - 147.0f), 40.0f, 147.0f, 38.0f);
+            buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 25.0f, 0.0f, 0.0f);
             [buttonAction setEnabled:NO];
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#cde7f7"];
-            [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            @try {
+                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+            }
+            @catch (NSException *exception) {
+                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            }
             break;
         }
     }
@@ -196,8 +214,16 @@
 
 - (void)actionPerformedOnContact:(NSNotification *)notification {
     NSMutableDictionary *contact = [[notification userInfo] objectForKey:@"contact"];
-    if (![[self.contact objectForKey:@"uid"] isEqualToString:[contact objectForKey:@"uid"]]) {
-        return;
+    if ([self.contact objectForKey:@"uid"] == nil) {
+        // This is from a server search
+        if ([self.contact objectForKey:@"user_id"] != [contact objectForKey:@"user_id"]) {
+            return;
+        }
+    } else {
+        // This is from the address book
+        if (![[self.contact objectForKey:@"uid"] isEqualToString:[contact objectForKey:@"uid"]]) {
+            return;
+        }
     }
 
     PTContactsTableBigCellAction action = [[[notification userInfo] objectForKey:@"action"] intValue];

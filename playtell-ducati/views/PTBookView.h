@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
+#import "PTBook.h"
+
 @protocol PTBookViewDelegate;
 
 @interface PTBookView : UIView <UIGestureRecognizerDelegate> {
@@ -20,13 +22,15 @@
     CALayer *coverOut;
     CALayer *coverIn;
     CALayer *right;
+    CAShapeLayer *shadowRadial;
+    CAShapeLayer *shadowHighlight;
 
     BOOL animating;
     BOOL isOpen;
     BOOL inFocus;
     
     id<PTBookViewDelegate> delegate;
-    NSMutableDictionary *book;
+    PTBook *book;
     NSInteger bookPosition;
     
     UIImage *firstPageImage;
@@ -37,7 +41,7 @@
 @property (nonatomic) BOOL isOpen;
 @property (nonatomic) BOOL inFocus;
 
-- (id)initWithFrame:(CGRect)frame andBook:(NSMutableDictionary *)bookDict;
+- (id)initWithFrame:(CGRect)frame andBook:(PTBook *)b;
 - (void)initLayers;
 - (void)resetLayerPosition;
 - (void)open;

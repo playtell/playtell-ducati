@@ -12,7 +12,6 @@
 @protocol PTPlaymateDelegate;
 
 @interface PTPlaymateView : UIView {
-    PTPlaymate *playmate;
     id<PTPlaymateDelegate> delegate;
     
     // Main contents
@@ -41,6 +40,7 @@
 }
 
 @property (nonatomic, retain) id<PTPlaymateDelegate> delegate;
+@property (nonatomic, retain) PTPlaymate *playmate;
 
 - (id)initWithFrame:(CGRect)frame playmate:(PTPlaymate *)playmate;
 - (void)showFriendshipConfirmationAnimated:(BOOL)animated;
@@ -55,6 +55,7 @@
 - (void)enableFriendshipConfirmationButtons;
 - (void)showAnimated:(BOOL)animated;
 - (void)hideAnimated:(BOOL)animated;
+- (void)reloadProfilePhoto:(NSURL *)url;
 
 @end
 
