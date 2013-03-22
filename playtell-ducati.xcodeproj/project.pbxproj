@@ -134,6 +134,8 @@
 		1A7503961653F40A00EC507D /* email-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A7503921653F40A00EC507D /* email-button@2x.png */; };
 		1A75039A1653F47F00EC507D /* PTCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7503991653F47F00EC507D /* PTCameraButton.m */; };
 		1A75039D1653F71100EC507D /* PTSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A75039C1653F71100EC507D /* PTSendButton.m */; };
+		1A82DC2816FBE6C500D2DC96 /* game-drawer.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A82DC2616FBE6C500D2DC96 /* game-drawer.png */; };
+		1A82DC2916FBE6C500D2DC96 /* game-drawer@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A82DC2716FBE6C500D2DC96 /* game-drawer@2x.png */; };
 		1A83B4DD1663CC2700B37368 /* camera.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DB1663CC2700B37368 /* camera.mp3 */; };
 		1A83B4DE1663CC2700B37368 /* jetmail.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1A83B4DC1663CC2700B37368 /* jetmail.mp3 */; };
 		1A83B4E31665158400B37368 /* PTPostcardCreateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A83B4E21665158400B37368 /* PTPostcardCreateRequest.m */; };
@@ -1284,6 +1286,8 @@
 		1A7503991653F47F00EC507D /* PTCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTCameraButton.m; sourceTree = "<group>"; };
 		1A75039B1653F71100EC507D /* PTSendButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTSendButton.h; sourceTree = "<group>"; };
 		1A75039C1653F71100EC507D /* PTSendButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PTSendButton.m; sourceTree = "<group>"; };
+		1A82DC2616FBE6C500D2DC96 /* game-drawer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "game-drawer.png"; path = "Math/game-drawer.png"; sourceTree = "<group>"; };
+		1A82DC2716FBE6C500D2DC96 /* game-drawer@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "game-drawer@2x.png"; path = "Math/game-drawer@2x.png"; sourceTree = "<group>"; };
 		1A83B4DB1663CC2700B37368 /* camera.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = camera.mp3; path = audio/camera.mp3; sourceTree = "<group>"; };
 		1A83B4DC1663CC2700B37368 /* jetmail.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = jetmail.mp3; path = audio/jetmail.mp3; sourceTree = "<group>"; };
 		1A83B4E11665158400B37368 /* PTPostcardCreateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPostcardCreateRequest.h; sourceTree = "<group>"; };
@@ -3137,6 +3141,8 @@
 		2340F37016513217007C22EB /* math */ = {
 			isa = PBXGroup;
 			children = (
+				1A82DC2616FBE6C500D2DC96 /* game-drawer.png */,
+				1A82DC2716FBE6C500D2DC96 /* game-drawer@2x.png */,
 				2340F4361651CB0F007C22EB /* math-placeholder-highlight.png */,
 				2340F4371651CB0F007C22EB /* math-placeholder-highlight@2x.png */,
 				2340F4381651CB0F007C22EB /* math-placeholder-outline.png */,
@@ -6314,6 +6320,8 @@
 				1A241D4916EE4BC300D3D2A0 /* end-call-button-press@2x.png in Resources */,
 				1A241D4A16EE4BC300D3D2A0 /* end-call-button.png in Resources */,
 				1A241D4B16EE4BC300D3D2A0 /* end-call-button@2x.png in Resources */,
+				1A82DC2816FBE6C500D2DC96 /* game-drawer.png in Resources */,
+				1A82DC2916FBE6C500D2DC96 /* game-drawer@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
