@@ -27,6 +27,7 @@
 @end
 
 @protocol PTMathGameDelegate <NSObject>
+- (void)mathGameAvailableCardTapped:(PTMathAvailableCardView *)cardView;
 - (void)mathGameAvailableCardTouchesBegan:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)mathGameAvailableCardTouchesMoved:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch;
 - (void)mathGameAvailableCardTouchesEnded:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch;
