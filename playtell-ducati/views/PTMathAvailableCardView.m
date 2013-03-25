@@ -20,6 +20,10 @@
         childView = [[UIImageView alloc] initWithFrame:self.bounds];
         [self addSubview:childView];
         
+        // Tap recognizer
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardDidTap:)];
+        [self addGestureRecognizer:recognizer];
+        
         // Load the card image
         //[self loadCardImage];
     }
@@ -32,21 +36,42 @@
 
 #pragma mark - Touches detection
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [delegate mathGameAvailableCardTouchesBegan:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+- (void)cardDidTap:(UIGestureRecognizer*)recognizer {
+//    // Temprarily dip opacity to imitate touch
+//    self.alpha = 0.5f;
+//    [self performSelector:@selector(returnToNormalOpacity) withObject:nil afterDelay:0.1f];
+    
+    // Notify delegate
+    if ([delegate respondsToSelector:@selector(mathGameAvailableCardTapped:)]) {
+        [delegate mathGameAvailableCardTapped:self];
+    }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [delegate mathGameAvailableCardTouchesCancelled:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+- (void)returnToNormalOpacity {
+    // Restore opacity
+    self.alpha = 1.0f;
+    
+    // Notify delegate
+    if ([delegate respondsToSelector:@selector(mathGameAvailableCardTapped:)]) {
+        [delegate mathGameAvailableCardTapped:self];
+    }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [delegate mathGameAvailableCardTouchesEnded:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [delegate mathGameAvailableCardTouchesMoved:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
-}
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [delegate mathGameAvailableCardTouchesBegan:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+//}
+//
+//- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [delegate mathGameAvailableCardTouchesCancelled:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+//}
+//
+//- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [delegate mathGameAvailableCardTouchesEnded:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+//}
+//
+//- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [delegate mathGameAvailableCardTouchesMoved:self touch:[[[event allTouches] allObjects] objectAtIndex:0]];
+//}
 
 #pragma mark - Card image loading
 

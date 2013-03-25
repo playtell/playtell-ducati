@@ -16,12 +16,15 @@
 #import "PTDialpadViewController.h"
 #import "PTPlaydateDisconnectRequest.h"
 #import "PTMatchingPairingCardView.h"
+#import "UIColor+ColorFromHex.h"
 
 @interface PTMathViewController ()
 
 @end
 
 @implementation PTMathViewController
+
+float drawerHeight;
 
 - (id)initWithNibName:(NSString*)nibNameOrNil
                bundle:(NSBundle*)nibBundleOrNil
@@ -64,6 +67,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    drawerHeight = 200.0f;
+    
     // Game background
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"math-bg"]];
     
@@ -74,15 +79,23 @@
     endPlaydate.layer.shadowRadius = 6.0f;
     
     // Setup available cards container
-    viewAvailableCards = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-224.0f, 1024.0f, 224.0f)];
+    viewAvailableCards = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-drawerHeight, 1024.0f, drawerHeight)];
     viewAvailableCards.hidden = YES;
-    viewAvailableCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"game-drawer.png"]];
+//    viewAvailableCards.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"game-drawer.png"]];
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = viewAvailableCards.bounds;
+    gradient.colors = [NSArray arrayWithObjects:(id)[[UIColor colorFromHex:@"#D9D9D9"] CGColor], (id)[[UIColor colorFromHex:@"#CCDBE6"] CGColor], nil];
+    [viewAvailableCards.layer insertSublayer:gradient atIndex:0];
+    [viewAvailableCards.layer setShadowColor:[[UIColor blackColor] CGColor]];
+    [viewAvailableCards.layer setShadowRadius:1.0f];
+    [viewAvailableCards.layer setShadowOffset:CGSizeMake(0.0f, -1.0f)];
+    [viewAvailableCards.layer setShadowOpacity:0.75f];
     [self.view addSubview:viewAvailableCards];
-    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 224.0f)];
+    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height)];
     viewAvailableCardsScroll.tag = 1;
     viewAvailableCardsScroll.userInteractionEnabled = YES;
     viewAvailableCardsScroll.canCancelContentTouches = NO;
-    viewAvailableCardsScroll.delaysContentTouches = NO;
+    viewAvailableCardsScroll.delaysContentTouches = YES;
     viewAvailableCardsScroll.showsHorizontalScrollIndicator = NO;
     viewAvailableCardsScroll.showsVerticalScrollIndicator = NO;
     [viewAvailableCards addSubview:viewAvailableCardsScroll];
@@ -195,13 +208,13 @@
     
     // Set scroll view frame size and content size
     CGFloat width = x;
-    viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-224.0f, 1024.0f, 224.0f);
-    viewAvailableCardsScroll.frame = CGRectMake(0.0f, 0.0f, 1024.0f, 224.0f);
+    viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-drawerHeight, 1024.0f, drawerHeight);
+    viewAvailableCardsScroll.frame = CGRectMake(0.0f, 0.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height);
     [viewAvailableCardsScroll setContentSize:CGSizeMake(width, maxHeight)];
     
     // Center (vertically) each available card
     for (PTMathAvailableCardView *viewCard in viewAvailableCardsScroll.subviews) {
-        viewCard.frame = CGRectMake(viewCard.frame.origin.x, 50.0f + (maxHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
+        viewCard.frame = CGRectMake(viewCard.frame.origin.x, (drawerHeight - viewCard.frame.size.height) / 2.0f, viewCard.frame.size.width, viewCard.frame.size.height);
     }
     
     // Show the available cards container
@@ -332,6 +345,46 @@
 }
 
 #pragma mark - Mathing game delegates
+
+- (void)mathGameAvailableCardTapped:(PTMathAvailableCardView *)cardView {
+    if (viewAvailableCardsScroll.scrollEnabled == NO) {
+        return;
+    }
+    
+    // Create the moving card
+    viewTrackingCard = [[UIView alloc] initWithFrame:[self.view convertRect:cardView.frame fromView:cardView.superview]];
+    viewTrackingCard.backgroundColor = [UIColor clearColor];
+    viewTrackingCardImage = [[UIImageView alloc] initWithFrame:viewTrackingCard.bounds];
+    viewTrackingCardImage.image = [cardView getCardImage];
+    viewTrackingCardImage.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [viewTrackingCard addSubview:viewTrackingCardImage];
+    [self.view insertSubview:viewTrackingCard belowSubview:self.chatController.view];
+    
+    // Defaults
+    isTrackingCardSmall = YES;
+    
+    // Save currently selected views
+    currentAvailableIndex = [cardView getCardIndex];
+    viewCurrentAvailableCardView = cardView;
+    
+    // Hide the available card
+    viewCurrentAvailableCardView.alpha = 0.0f;
+    
+    // Move it to its resting spot next to the right card
+    CGFloat x = rectLandingStrip.origin.x + (rectLandingStrip.size.width / 2.0f);
+    CGFloat y = rectLandingStrip.origin.y + (rectLandingStrip.size.height / 2.0f);
+    [UIView animateWithDuration:0.2f
+                     animations:^{
+                         viewTrackingCard.center = CGPointMake(x, y);
+                     }
+                     completion:^(BOOL finished) {
+                         // API call to play turn
+                         [self playTurn];
+                     }];
+    
+    // Disable highlight state of current pairing card's landing zone
+    [viewCurrentPairingCardView setLandingZoneAsInactive];
+}
 
 - (void)mathGameAvailableCardTouchesBegan:(PTMathAvailableCardView *)cardView touch:(UITouch *)touch {
     if (viewAvailableCardsScroll.scrollEnabled == NO) {
