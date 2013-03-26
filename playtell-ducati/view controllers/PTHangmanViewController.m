@@ -39,7 +39,7 @@
 #define WHOSE_TURN_INITIATOR 0
 #define WHOSE_TURN_PLAYMATE  1
 
-#define MAX_TURNS          3 // How many turns until game over?
+#define MAX_TURNS          7 // How many turns until game over?
 
 @implementation PTHangmanViewController
 
