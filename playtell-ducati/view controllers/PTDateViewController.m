@@ -358,11 +358,6 @@ NSTimer *postcardTimer;
         // Activity list
         activities = [[NSMutableArray alloc] init];
         
-        // TODO: remove this
-        // Add hangman
-        PTActivity *hangman = [[PTActivity alloc] initWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"999", @"id", @"Hangman", @"title", @"false", @"is_book", @"5", @"game_id", nil]];
-        [activities addObject:hangman];
-        
         NSArray *allActivities = [result valueForKey:@"activities"];
         for (NSDictionary *a in allActivities) {
             PTActivity *activity = [[PTActivity alloc] initWithDictionary:a];
@@ -496,6 +491,8 @@ NSTimer *postcardTimer;
     gameList = [[NSMutableArray alloc] init];
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
     
+    NSMutableArray *activitiesToRemove = [NSMutableArray array];
+    
     for (PTActivity *activity in activities) {
         if (activity.type == ActivityBook) {
             PTBook *book = [books objectForKey:activity.bookId];
@@ -537,8 +534,11 @@ NSTimer *postcardTimer;
                     // Hangman
                     coverImage = [UIImage imageNamed:@"hangman-logo"];
                     break;
-                default:
+                default: {
+                    [activitiesToRemove addObject:activity];
+                    continue;
                     break;
+                }
             }
             
             PTGameView *gameView = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
@@ -552,6 +552,10 @@ NSTimer *postcardTimer;
             xPos += booksScrollView.frame.size.width;
             i++;
         }
+    }
+    
+    for (PTActivity *activity in activitiesToRemove) {
+        [activities removeObject:activity];
     }
 //    for (NSNumber *bookId in books) {
 //        if (i == 0) {
