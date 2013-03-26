@@ -480,6 +480,8 @@ NSTimer *postcardTimer;
     gameList = [[NSMutableArray alloc] init];
     coversToLoad = [[NSMutableArray alloc] initWithCapacity:[books count]];
     
+    NSMutableArray *activitiesToRemove = [NSMutableArray array];
+    
     for (PTActivity *activity in activities) {
         if (activity.type == ActivityBook) {
             PTBook *book = [books objectForKey:activity.bookId];
@@ -517,8 +519,11 @@ NSTimer *postcardTimer;
                     // Math
                     coverImage = [UIImage imageNamed:@"math-logo"];
                     break;
-                default:
+                default: {
+                    [activitiesToRemove addObject:activity];
+                    continue;
                     break;
+                }
             }
             
             PTGameView *gameView = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
@@ -532,6 +537,10 @@ NSTimer *postcardTimer;
             xPos += booksScrollView.frame.size.width;
             i++;
         }
+    }
+    
+    for (PTActivity *activity in activitiesToRemove) {
+        [activities removeObject:activity];
     }
 //    for (NSNumber *bookId in books) {
 //        if (i == 0) {
