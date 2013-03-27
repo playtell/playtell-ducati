@@ -50,12 +50,14 @@
 #import "PTPlaydate+InitatorChecking.h"
 #import "PTMemoryNewGameRequest.h"
 #import "PTMatchingNewGameRequest.h"
+#import "PTHangmanNewGameRequest.h"
 
 //GAME VIEW CONTROLLERS
 #import "PTTictactoeViewController.h"
 #import "PTMemoryViewController.h"
 #import "PTMatchingViewController.h"
 #import "PTMathViewController.h"
+#import "PTHangmanViewController.h"
 
 @interface PTDateViewController ()
 @property (nonatomic, weak) OTSubscriber* playmateSubscriber;
@@ -239,6 +241,8 @@ NSTimer *postcardTimer;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMemoryNewGame:) name:@"PlayDateMemoryNewGame" object:nil];
     //listen for matching game
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateMatchingNewGame:) name:@"PlayDateMatchingNewGame" object:nil];
+    //listen for hangman game
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pusherPlayDateHangmanNewGame:) name:@"PlayDateHangmanNewGame" object:nil];
     
     // Setup end playdate & close book buttons
     endPlaydate.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -254,6 +258,12 @@ NSTimer *postcardTimer;
     // Setup end playdate popup
     endPlaydatePopup.backgroundColor = [[UIColor alloc] initWithPatternImage:[UIImage imageNamed:@"EndPlaydatePopupBg"]];
     endPlaydatePopup.hidden = YES;
+    
+//    UIButton *blah = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [blah setTitle:@"Hangman" forState:UIControlStateNormal];
+//    blah.frame = CGRectMake(100.0f, 100.0f, 150.0f, 35.0f);
+//    [blah addTarget:self action:@selector(hangmanTapped:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:blah];
 }
 
 - (void)showPostcardPrompt {
@@ -347,6 +357,7 @@ NSTimer *postcardTimer;
     {
         // Activity list
         activities = [[NSMutableArray alloc] init];
+        
         NSArray *allActivities = [result valueForKey:@"activities"];
         for (NSDictionary *a in allActivities) {
             PTActivity *activity = [[PTActivity alloc] initWithDictionary:a];
@@ -519,6 +530,10 @@ NSTimer *postcardTimer;
                     // Math
                     coverImage = [UIImage imageNamed:@"math-logo"];
                     break;
+                case 5:
+                    // Hangman
+                    coverImage = [UIImage imageNamed:@"hangman-logo"];
+                    break;
                 default: {
                     [activitiesToRemove addObject:activity];
                     continue;
@@ -603,6 +618,17 @@ NSTimer *postcardTimer;
 //    [gameView4 setDelegate:self];
 //    [booksScrollView addSubview:gameView4];
 //    [gameList addObject:gameView4];
+//    
+//    xPos += booksScrollView.frame.size.width;
+//    i++;
+//    
+//    PTGameView *gameView5 = [[PTGameView alloc] initWithFrame:CGRectMake(xPos, 0.0f, 800.0f, 600.0f)
+//                                                       gameId:5
+//                                                     gameLogo:[UIImage imageNamed:@"hangman-logo"]];
+//    [gameView5 setPosition:i];
+//    [gameView5 setDelegate:self];
+//    [booksScrollView addSubview:gameView5];
+//    [gameList addObject:gameView5];
     
     // Update scroll view width (based on # of books)
     CGFloat scroll_width = booksScrollView.frame.size.width * [activities count];
@@ -899,6 +925,7 @@ NSTimer *postcardTimer;
          NSLog(@"%@", error);
          NSLog(@"%@", request);
          NSLog(@"%@", JSON);
+         isGameOpen = NO;
      }];
 }
 
@@ -982,6 +1009,7 @@ NSTimer *postcardTimer;
         NSLog(@"New game API error: %@", error);
         NSLog(@"%@", request);
         NSLog(@"%@", JSON);
+        isGameOpen = NO;
     }];
 }
 
@@ -1084,6 +1112,7 @@ NSTimer *postcardTimer;
                                       NSLog(@"New game API error: %@", error);
                                       NSLog(@"%@", request);
                                       NSLog(@"%@", JSON);
+                                      isGameOpen = NO;
                                   }];
 }
 
@@ -1151,6 +1180,59 @@ NSTimer *postcardTimer;
                                      NSLog(@"New game API error: %@", error);
                                      NSLog(@"%@", request);
                                      NSLog(@"%@", JSON);
+                                     isGameOpen = NO;
+                                 }];
+}
+
+- (void)hangmanTapped:(id)sender {
+    // Only allow a game to be played if the delegate allows it
+    if (![self delegateAllowsPlayingGames]) {
+        return;
+    }
+    
+    // Find playmate user id
+    PTPlaymate *aPlaymate;
+    if ([self.playdate isUserIDInitiator:[[PTUser currentUser] userID]]) {
+        aPlaymate = self.playdate.playmate;
+    } else {
+        aPlaymate = self.playdate.initiator;
+    }
+    
+    PTHangmanNewGameRequest *newGameRequest = [[PTHangmanNewGameRequest alloc] init];
+    [newGameRequest newBoardWithPlaydateId:self.playdate.playdateID
+                                playmateId:aPlaymate.userID
+                                 authToken:[[PTUser currentUser] authToken]
+                                 onSuccess:^(NSDictionary *result) {
+                                     // Send analytics an event for starting the game
+                                     [PTAnalytics sendEventNamed:EventGamePlayed withProperties:[NSDictionary dictionaryWithObjectsAndKeys:@"Hangman", PropGameName, aPlaymate.username, PropPlaymateId, nil]];
+                                     
+                                     // Get response parameters
+                                     NSInteger boardId = [[result valueForKey:@"board_id"] integerValue];
+                                     
+                                     // Init the game controller
+                                     PTHangmanViewController *hangmanViewController = [[PTHangmanViewController alloc] initWithNibName:@"PTHangmanViewController"
+                                                                                                                                bundle:nil
+                                                                                                                              playdate:self.playdate
+                                                                                                                               boardId:boardId
+                                                                                                                             initiator:[PTUser currentUser]
+                                                                                                                              playmate:aPlaymate];
+                                     hangmanViewController.chatController = self.chatController;
+                                     
+                                     // Init game splash
+                                     UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+                                     splash.image = [UIImage imageNamed:@"hangman-splash"];
+                                     
+                                     // Bring up the view controller of the new game
+                                     PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+                                     [appDelegate.transitionController loadGame:hangmanViewController
+                                                                    withOptions:UIViewAnimationOptionTransitionCurlUp
+                                                                     withSplash:splash];
+                                 }
+                                 onFailure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+                                     NSLog(@"New game API error: %@", error);
+                                     NSLog(@"%@", request);
+                                     NSLog(@"%@", JSON);
+                                     isGameOpen = NO;
                                  }];
 }
 
@@ -1518,6 +1600,46 @@ NSTimer *postcardTimer;
                                            withOptions:UIViewAnimationOptionTransitionCurlUp
                                             withSplash:splash];
         }
+    }
+}
+
+- (void)pusherPlayDateHangmanNewGame:(NSNotification *)notification {
+    NSDictionary *eventData = notification.userInfo;
+    
+    // Get response parameters
+    NSInteger initiatorId = [[eventData objectForKey:@"initiator_id"] integerValue];
+    NSInteger boardId = [[eventData objectForKey:@"board_id"] integerValue];
+    
+    PTPlaymate *aInitiator;
+    PTPlaymate *aPlaymate;
+    if (self.playdate.initiator.userID == initiatorId) {
+        aInitiator = self.playdate.initiator;
+        aPlaymate = self.playdate.playmate;
+    } else {
+        aInitiator = self.playdate.playmate;
+        aPlaymate = self.playdate.initiator;
+    }
+    
+    // Someone invited us to play
+    if (initiatorId != [[PTUser currentUser] userID]) {
+        // Init the game controller
+        PTHangmanViewController *hangmanViewController = [[PTHangmanViewController alloc] initWithNibName:@"PTHangmanViewController"
+                                                                                                   bundle:nil
+                                                                                                 playdate:self.playdate
+                                                                                                  boardId:boardId
+                                                                                                initiator:aInitiator
+                                                                                                 playmate:aPlaymate];
+        hangmanViewController.chatController = self.chatController;
+        
+        // Init game splash
+        UIImageView *splash =  [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1024.0f, 768.0f)];
+        splash.image = [UIImage imageNamed:@"hangman-splash"];
+        
+        // Bring up the view controller of the new game
+        PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+        [appDelegate.transitionController loadGame:hangmanViewController
+                                       withOptions:UIViewAnimationOptionTransitionCurlUp
+                                        withSplash:splash];
     }
 }
 
@@ -2117,6 +2239,8 @@ NSTimer *postcardTimer;
             [self matchingTapped:nil];
         } else if ([gameId integerValue] == 4) {
             [self mathTapped:nil];
+        } else if ([gameId integerValue] == 5) {
+            [self hangmanTapped:nil];
         }
     }
 }

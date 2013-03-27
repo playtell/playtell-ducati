@@ -290,10 +290,32 @@ static PTPlayTellPusher* instance = nil;
         NSDictionary* eventData = channelEvent.data;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateMatchingPlayTurn" object:self userInfo:eventData];
     }];
+    
+    // Hangman game start
+    [aPlaydateChannel bindToEventNamed:@"games_hangman_new_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanNewGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_hangman_refresh_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanRefreshGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_hangman_end_game" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanEndGame" object:self userInfo:eventData];
+    }];
+    
+    [aPlaydateChannel bindToEventNamed:@"games_hangman_play_turn" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanPlayTurn" object:self userInfo:eventData];
+    }];
 
-    
-    
-    
+    [aPlaydateChannel bindToEventNamed:@"client-games_hangman_draw" handleWithBlock:^(PTPusherEvent *channelEvent) {
+        NSDictionary* eventData = channelEvent.data;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"PlayDateHangmanDraw" object:self userInfo:eventData];
+    }];
     
     self.isSubscribedToPlaydateChannel = YES;
 }
