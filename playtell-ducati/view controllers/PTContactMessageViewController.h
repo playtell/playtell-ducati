@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTConnectionLossViewController.h"
 #import "PTContactSelectDelegate.h"
 
 @interface PTContactMessageViewController : UIViewController <UIAlertViewDelegate, UITableViewDelegate, PTContactSelectDelegate> {
@@ -22,6 +23,10 @@
     IBOutlet UIView *composeBox;
     IBOutlet UILabel *mergeFieldName;
     IBOutlet UIView *linksBox;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withContacts:(NSMutableArray *)contactList;

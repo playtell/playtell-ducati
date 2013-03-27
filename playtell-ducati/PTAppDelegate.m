@@ -48,6 +48,7 @@
 @synthesize client;
 @synthesize phone;
 @synthesize chatController;
+@synthesize internetActive;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setup analytics
@@ -66,6 +67,13 @@
     } else {
         playdateRequestedViaPush = NO;
     }
+    
+    // Check for internet connection
+    internetActive = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNetworkStatus:) name:@"kNetworkReachabilityChangedNotification" object:nil];
+    
+    serverReachable = [Reachability reachabilityWithHostName:ROOT_URL];
+    [serverReachable startNotifier];
 
 #ifndef DEBUG
     // Override point for customization after application launch.
@@ -125,7 +133,6 @@
                    [[PTUser currentUser] setUserPhoto:image];
                }];
     [reqeust start];
-
     
     PTConcretePlaymateFactory* playmateFactory = [PTConcretePlaymateFactory sharedFactory];
     [playmateFactory refreshPlaymatesForUserID:currentUser.userID
@@ -145,7 +152,17 @@
                                                    withOptions:UIViewAnimationOptionTransitionCrossDissolve];
      } failure:^(NSError *error) {
          LogError(@"%@ error: %@", NSStringFromSelector(_cmd), error);
-         NSAssert(NO, @"Failed to load playmates");
+         if (self.dialpadController) {
+             self.dialpadController = nil;
+         }
+         self.dialpadController = [[PTDialpadViewController alloc] initWithNibName:nil bundle:nil];
+         self.dialpadController.playmates = [[PTConcretePlaymateFactory sharedFactory] allPlaymates];
+         // Check if push notification came in with playdate
+         if (playdateRequestedViaPush) {
+             [self.dialpadController setAwaitingPlaydateRequest:playdateRequestedViaPushId];
+         }
+         [self.transitionController transitionToViewController:self.dialpadController
+                                                   withOptions:UIViewAnimationOptionTransitionCrossDissolve];
      }];
 }
 
@@ -184,6 +201,43 @@
     [takeOffOptions setValue:theLaunchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
     [UAirship takeOff:takeOffOptions];
     [[UAPush shared] resetBadge];
+}
+
+- (void)checkNetworkStatus:(NSNotification *)notice {
+    // called after network status changes
+    NetworkStatus hostStatus = [serverReachable currentReachabilityStatus];
+    switch (hostStatus)
+    {
+        case UA_NotReachable:
+        {
+            if (internetActive) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
+//                                                                message:@"There is no connection to the PlayTell server. Please make sure the iPad is connected to the Internet."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"OK"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+                internetActive = NO;
+                [[NSNotificationCenter defaultCenter] postNotificationName:PTReachabilityInactiveNotification object:self];
+            }
+            break;
+        }
+        case UA_ReachableViaWiFi:
+        case UA_ReachableViaWWAN:
+        {
+            if (!internetActive) {
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Internet Connection"
+//                                                                message:@"The connection to the PlayTell server is back. Have fun playing on PlayTell."
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"OK"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+                internetActive = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:PTReachabilityActiveNotification object:self];
+            }
+            break;
+        }
+    }
 }
 
 - (void)loginControllerDidLogin:(PTLoginViewController*)controller {

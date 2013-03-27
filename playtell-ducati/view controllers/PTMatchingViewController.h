@@ -15,6 +15,7 @@
 #import "PTMatchingPairingCardView.h"
 #import "PTChatViewController.h"
 #import "PTMatchingScoreView.h"
+#import "PTConnectionLossViewController.h"
 
 @interface PTMatchingViewController : UIViewController <UIScrollViewDelegate, PTMachingGameDelegate> {
     // Game config
@@ -69,6 +70,10 @@
     
     // Shadow wedge
     UIView *viewBottomShawdow;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, strong) PTChatViewController* chatController;

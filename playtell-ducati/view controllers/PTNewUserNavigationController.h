@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTConnectionLossViewController.h"
 #import "PTNewUser.h"
 #import "PTPageIndicatorView.h"
 
 @interface PTNewUserNavigationController : UINavigationController <UINavigationControllerDelegate> {
     PTNewUser *currentUser;
     PTPageIndicatorView *pageControl;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, strong) PTNewUser *currentUser;

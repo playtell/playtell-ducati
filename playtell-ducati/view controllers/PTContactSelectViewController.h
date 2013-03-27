@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTConnectionLossViewController.h"
 #import "PTContactsSelectedViewController.h"
 #import "PTContactSelectDelegate.h"
 #import "PTContactsInvitationCountButton.h"
@@ -38,6 +39,10 @@
     // Bottom bar
     IBOutlet UIView *bottomBar;
     IBOutlet UILabel *lblManualInvite;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic, retain) NSString *sourceType;

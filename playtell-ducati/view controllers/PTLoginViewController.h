@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PTConnectionLossViewController.h"
 
 @class PTLoginViewController;
 
@@ -34,6 +35,10 @@
     NSMutableArray *formErrors;
     IBOutlet UIButton *buttonSignIn;
     BOOL isSigningIn;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic) id<PTLoginViewControllerDelegate> delegate;

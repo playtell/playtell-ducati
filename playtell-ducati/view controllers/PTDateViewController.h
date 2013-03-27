@@ -18,6 +18,7 @@
 #import "PTPlaydateEndViewController.h"
 #import "PTPlaymate.h"
 #import "PTCreatePostcardViewController.h"
+#import "PTConnectionLossViewController.h"
 
 #import <UIKit/UIKit.h>
 
@@ -76,6 +77,10 @@
     // Analytics
     NSDate *bookStart;
     NSDate *playdateStart;
+    
+    PTConnectionLossViewController *connectionLossController;
+    NSTimer *connectionLossTimer;
+    BOOL showingConnectionLossController;
 }
 
 @property (nonatomic) PTPlaydate *playdate;

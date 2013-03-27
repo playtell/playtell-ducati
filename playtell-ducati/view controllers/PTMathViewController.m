@@ -156,6 +156,32 @@ float drawerHeight;
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(internetConnectionLost)
+                                                 name:PTReachabilityInactiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(internetConnectionFound)
+                                                 name:PTReachabilityActiveNotification
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityInactiveNotification
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:PTReachabilityActiveNotification
+                                                  object:nil];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -168,6 +194,42 @@ float drawerHeight;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
+- (void)internetConnectionLost {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (!showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(showConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)internetConnectionFound {
+    [connectionLossTimer invalidate];
+    
+    if (connectionLossController == nil) {
+        connectionLossController = [[PTConnectionLossViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    if (showingConnectionLossController) {
+        connectionLossTimer = [NSTimer scheduledTimerWithTimeInterval:PTReachabilityDefaultTime target:self selector:@selector(hideConnectionLossController:) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)showConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController startBlinking];
+    [self presentModalViewController:connectionLossController animated:YES];
+    showingConnectionLossController = YES;
+}
+
+- (void)hideConnectionLossController:(NSTimer *)theTimer {
+    [connectionLossController stopBlinking];
+    [self dismissModalViewControllerAnimated:YES];
+    showingConnectionLossController = NO;
 }
 
 - (void)setupInitialPairingCard {

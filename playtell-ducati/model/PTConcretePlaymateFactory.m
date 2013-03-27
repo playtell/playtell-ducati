@@ -126,6 +126,7 @@ static PTConcretePlaymateFactory* sharedInstance = nil;
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         LogError(@"%@ - error: %@", NSStringFromSelector(_cmd), error);
+        self.playmates = [NSMutableArray arrayWithArray:self.robotPlaymates];
         if (failure) {
             failure(error);
         }
