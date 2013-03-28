@@ -83,9 +83,9 @@
     endPlaydate.layer.shadowRadius = 6.0f;
     
     // Setup available cards container
-    viewAvailableCards = [[PTMatchingAvailableCardsView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-160.0f-30.0f, 1024.0f, 160.0f)];
+    viewAvailableCards = [[PTMatchingAvailableCardsView alloc] initWithFrame:CGRectMake(0.0f, 768.0f-160.0f-60.0f, 1024.0f, 160.0f)];
     [self.view addSubview:viewAvailableCards];
-    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(442.0f, 0.0f, 140.0f, 160.0f)];
+    viewAvailableCardsScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, viewAvailableCards.frame.size.width, viewAvailableCards.frame.size.height)];
     viewAvailableCardsScroll.tag = 1;
     viewAvailableCardsScroll.delegate = self;
     viewAvailableCardsScroll.clipsToBounds = NO;
@@ -94,7 +94,7 @@
     viewAvailableCardsScroll.delaysContentTouches = NO;
     viewAvailableCardsScroll.showsHorizontalScrollIndicator = NO;
     viewAvailableCardsScroll.showsVerticalScrollIndicator = NO;
-    viewAvailableCardsScroll.pagingEnabled = YES;
+    //viewAvailableCardsScroll.pagingEnabled = YES;
     [viewAvailableCards addSubview:viewAvailableCardsScroll];
     
     // Setup available cards
@@ -268,7 +268,7 @@
         x += sizeCard.width;
     }
     [viewAvailableCardsScroll setContentSize:CGSizeMake((totalCards * sizeCard.width), 150.0f)];
-    [viewAvailableCardsScroll setContentOffset:CGPointMake(((totalCards / 2) * sizeCard.width), 0.0f) animated:NO];
+    viewAvailableCardsScroll.frame = CGRectMake((viewAvailableCards.frame.size.width - viewAvailableCardsScroll.contentSize.width) / 2, viewAvailableCardsScroll.frame.origin.y, viewAvailableCardsScroll.contentSize.width, viewAvailableCardsScroll.frame.size.height);
 }
 
 #pragma mark - Game actions
@@ -727,7 +727,7 @@
 
 - (void)updateAvailableScrollViewsPosition {
     // Figure out new scroll view content width
-    CGFloat newContentWidth = viewAvailableCardsScroll.frame.size.width * [viewAvailableCardsScroll.subviews count];
+    CGFloat newContentWidth = 140.0 * [viewAvailableCardsScroll.subviews count];
     //CGFloat currentContentWidth = viewAvailableCardsScroll.contentOffset.x;
     [viewAvailableCardsScroll setContentSize:CGSizeMake(newContentWidth, 150.0f)];
     
@@ -737,9 +737,10 @@
                          int i=0;
                          for (PTMatchingAvailableCardView *viewAvailableCard in viewAvailableCardsScroll.subviews) {
                              CGRect frame = viewAvailableCard.frame;
-                             viewAvailableCard.frame = CGRectMake(viewAvailableCardsScroll.frame.size.width * i, frame.origin.y, frame.size.width, frame.size.height);
+                             viewAvailableCard.frame = CGRectMake(140.0 * i, frame.origin.y, frame.size.width, frame.size.height);
                              i++;
                          }
+                         viewAvailableCardsScroll.frame = CGRectMake((viewAvailableCards.frame.size.width - newContentWidth) / 2, viewAvailableCardsScroll.frame.origin.y, newContentWidth, viewAvailableCardsScroll.frame.size.height);
                      }];
 }
 
@@ -909,7 +910,7 @@
     viewAvailableCardsScroll.scrollEnabled = NO;
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-160.0f-30.0f+80.0f, 1024.0f, 160.0f);
+                         viewAvailableCards.frame = CGRectOffset(viewAvailableCards.frame, 0.0f, 110.0f);
                          viewBottomShawdow.alpha = 1;
                      }];
 }
@@ -918,7 +919,7 @@
     viewAvailableCardsScroll.scrollEnabled = YES;
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         viewAvailableCards.frame = CGRectMake(0.0f, 768.0f-160.0f-30.0f, 1024.0f, 160.0f);
+                         viewAvailableCards.frame = CGRectOffset(viewAvailableCards.frame, 0.0f, -110.0f);
                          viewBottomShawdow.alpha = 0;
                      }];
 }
