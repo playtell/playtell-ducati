@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "UAPushNotificationHandler.h"
 #import "PTConnectionLossViewController.h"
+#import "PTModalInviterViewController.h"
 #import "PTPlaymateView.h"
 #import "PTShowPostcardsView.h"
 
-@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate, PTPlaymateDelegate> {
+@interface PTDialpadViewController : UIViewController <UIGestureRecognizerDelegate, PTPlaymateDelegate, PTModalInviterDelegate> {
     BOOL playdateRequestedViaPush;
     NSInteger playdateRequestedViaPushId;
     UIImageView* background;

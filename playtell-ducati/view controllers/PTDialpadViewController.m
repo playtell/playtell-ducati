@@ -1530,16 +1530,23 @@ BOOL postcardsShown;
     NSLog(@"---> Got contacts: %i", [abContacts count]);
     
     // Load select controller
-    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
-                                                                  initWithNibName:@"PTContactSelectViewController"
-                                                                  bundle:nil
-                                                                  withContacts:abContacts];
-    contactSelectViewController.sourceType = @"Address Book";
-    
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
-    
-    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+//    PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
+//                                                                  initWithNibName:@"PTContactSelectViewController"
+//                                                                  bundle:nil
+//                                                                  withContacts:abContacts];
+//    contactSelectViewController.sourceType = @"Address Book";
+//    
+//    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
+//    
+//    PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+    PTModalInviterViewController *inviter = [[PTModalInviterViewController alloc] init];
+    inviter.delegate = self;
+    [self presentModalViewController:inviter animated:YES];
+}
+
+- (void)modalShouldClose:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - New user flow methods
