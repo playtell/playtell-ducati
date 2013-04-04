@@ -12,6 +12,7 @@
 
 @implementation PTContactsTableBigCell
 
+@synthesize avatar;
 @synthesize lblTitle, lblDetail, delegate;
 @synthesize contact = _contact;
 
@@ -137,6 +138,8 @@
                 [buttonAction setTitle:@"Buddies!" forState:UIControlStateNormal];
             } else if (isPendingFriend == YES) {
                 [buttonAction setTitle:@"Pending" forState:UIControlStateNormal];
+            } else {
+                [buttonAction setTitle:@"Invited!" forState:UIControlStateNormal];
             }
             [buttonAction setTitleColor:[UIColor colorFromHex:@"3FA9F5"] forState:UIControlStateNormal];
             [buttonAction setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -145,11 +148,15 @@
             buttonAction.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 25.0f, 0.0f, 0.0f);
             [buttonAction setEnabled:NO];
             self.contentView.backgroundColor = [UIColor colorFromHex:@"#cde7f7"];
-            @try {
-                [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
-            }
-            @catch (NSException *exception) {
-                [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+            if (isConfirmedFriend == NO && isPendingFriend == NO) {
+                avatar.image = [UIImage imageNamed:@"contactsTableInvite"];
+            } else {
+                @try {
+                    [avatar setImageURL:[NSURL URLWithString:[self.contact objectForKey:@"profile_photo"]]];
+                }
+                @catch (NSException *exception) {
+                    [avatar setImageURL:[NSURL URLWithString:@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png"]];
+                }
             }
             break;
         }

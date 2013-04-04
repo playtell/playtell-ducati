@@ -36,6 +36,7 @@ typedef enum {
     id<PTContactSelectDelegate> delegate;
 }
 
+@property (nonatomic, retain) AsyncImageView *avatar;
 @property (nonatomic, retain) UILabel *lblTitle;
 @property (nonatomic, retain) UILabel *lblDetail;
 @property (nonatomic, retain) NSMutableDictionary *contact;

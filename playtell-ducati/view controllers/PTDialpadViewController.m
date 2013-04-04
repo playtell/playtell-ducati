@@ -1463,16 +1463,19 @@ BOOL postcardsShown;
                             [self getContactsFromAddressBook:addressBook];
                         } else {
                             // Go to the inviter screen with no contacts
-                            PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
-                                                                                          initWithNibName:@"PTContactSelectViewController"
-                                                                                          bundle:nil
-                                                                                          withContacts:[NSArray array]];
-                            contactSelectViewController.sourceType = @"Address Book";
-                            
-                            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
-                            
-                            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
-                            [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+//                            PTContactSelectViewController *contactSelectViewController = [[PTContactSelectViewController alloc]
+//                                                                                          initWithNibName:@"PTContactSelectViewController"
+//                                                                                          bundle:nil
+//                                                                                          withContacts:[NSArray array]];
+//                            contactSelectViewController.sourceType = @"Address Book";
+//                            
+//                            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:contactSelectViewController];
+//                            
+//                            PTAppDelegate* appDelegate = (PTAppDelegate*)[[UIApplication sharedApplication] delegate];
+//                            [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
+                            PTModalInviterViewController *inviter = [[PTModalInviterViewController alloc] init];
+                            inviter.delegate = self;
+                            [self presentModalViewController:inviter animated:YES];
                         }
                     });
                 });
@@ -1518,6 +1521,7 @@ BOOL postcardsShown;
                                          [fullName copy],                @"name",
                                          [[email copy] lowercaseString], @"email",
                                          @"iPad Address Book",           @"source",
+                                         //@"http://ragatzi.s3.amazonaws.com/uploads/profile_default_1.png", @"profile_photo",
                                          nil];
                 [abContacts addObject:contact];
             }
@@ -1542,11 +1546,13 @@ BOOL postcardsShown;
 //    [appDelegate.transitionController transitionToViewController:navController withOptions:UIViewAnimationOptionTransitionCrossDissolve];
     PTModalInviterViewController *inviter = [[PTModalInviterViewController alloc] init];
     inviter.delegate = self;
+    inviter.addressBookContacts = abContacts;
     [self presentModalViewController:inviter animated:YES];
 }
 
 - (void)modalShouldClose:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+    [self refreshPlaymates];
 }
 
 #pragma mark - New user flow methods
